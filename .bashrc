@@ -4,9 +4,7 @@ source ~/.dotfiles/.awsconfig
 source ~/.dotfiles/.osx
 
 # Homebrew bash completion
-if [ -f /usr/local/etc/bash_completion ]; then
-  . /usr/local/etc/bash_completion
-fi
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 # Add git completion to aliases
 function_exists() {

@@ -3,7 +3,7 @@ set nocompatible
 
 " Setup Vundle plugin manager
 so ~/.dotfiles/.vundler
- 
+
 " Make backspace behave in a sane manner.
 set backspace=indent,eol,start
 
@@ -11,15 +11,23 @@ set backspace=indent,eol,start
 noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>
 
 " Configure lightline status bar
+set noshowmode
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ 'component': {
-      \   'readonly': '%{&readonly?"":""}',
-      \ },
-      \ 'separator': { 'left': '', 'right': '' },
-      \ 'subseparator': { 'left': '', 'right': '' }
-      \ }
+  \ 'colorscheme': 'solarized',
+  \ 'component': {
+  \   'readonly': '%{&readonly?"⭤":""}',
+  \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+  \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():"⭠"}'
+  \ },
+  \ 'component_visible_condition': {
+  \   'readonly': '(&filetype!="help"&& &readonly)',
+  \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+  \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+  \ },
+  \ 'separator': { 'left': '⮀', 'right': '⮂' },
+  \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+\ }
 
 " Softtabs, 2 spaces
 set tabstop=2
@@ -29,6 +37,9 @@ set expandtab
 
 " Display extra whitespace
 set list listchars=tab:»·,trail:·,nbsp:·
+
+" Indicate wraped lines
+set showbreak=>\ \ \
 
 " Change cursor shape in iTerm
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -43,7 +54,7 @@ set colorcolumn=+1
 set number
 set relativenumber
 set numberwidth=5
- 
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
@@ -77,6 +88,9 @@ augroup vimrcEx
 
   " Allow stylesheets to autocomplete hyphenated words
   autocmd FileType css,scss,sass setlocal iskeyword+=-
+
+  " Remove trailing whitespace on save
+  autocmd BufWritePre * %s/\s\+$//e
 augroup END
 
 " Tab completion
