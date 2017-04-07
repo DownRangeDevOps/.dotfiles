@@ -56,7 +56,7 @@
     git nuke $BRANCH"
 
   f = "fetch -p"
-  fp = "!git fetch -p && git pull --rebase"
+  p = "!git fetch -p && git pull --rebase"
   rb = "!git rebase -i $1 && :"
   rbm = "!git rb origin/master"
   fpo = "push --force-with-lease origin HEAD"

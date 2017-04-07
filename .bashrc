@@ -1,7 +1,7 @@
 # .bashrc
 source ~/.dotfiles/.dockerconfig
 source ~/.dotfiles/.awsconfig
-source ~/.dotfiles/.mac
+source ~/.dotfiles/.osx
 
 # Homebrew bash completion
 if [ -f /usr/local/etc/bash_completion ]; then
