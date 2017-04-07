@@ -11,7 +11,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" Keep Plugin commands between vundle#begin/end.
+" ### Keep Plugin commands between vundle#begin/end.
 
 " Emmet support (http://emmet.io)
 Plugin 'mattn/emmet-vim'
@@ -22,7 +22,10 @@ Plugin 'tpope/vim-surround'
 " repeat.vim (https://github.com/tpope/vim-repeat)
 Plugin 'tpope/vim-repeat.git'
 
-" All of your Plugins must be added before the following line
+" lightline.vim (https://github.com/itchyny/lightline.vim)
+Plugin 'itchyny/lightline.vim'
+
+" ### All of your Plugins must be added before the following line
 call vundle#end()            " required
 "filetype plugin indent on   " required 
 

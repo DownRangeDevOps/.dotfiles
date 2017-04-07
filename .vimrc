@@ -10,6 +10,17 @@ set backspace=indent,eol,start
 " Paste from external source, copy to external source
 noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>
 
+" Configure lightline status bar
+set laststatus=2
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ 'component': {
+      \   'readonly': '%{&readonly?"":""}',
+      \ },
+      \ 'separator': { 'left': '', 'right': '' },
+      \ 'subseparator': { 'left': '', 'right': '' }
+      \ }
+
 " Softtabs, 2 spaces
 set tabstop=2
 set shiftwidth=2
