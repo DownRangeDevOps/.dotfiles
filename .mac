@@ -1,0 +1,7 @@
+# Mac helpers and shortcuts
+
+# Flush dns
+alias flushdns='sudo killall -HUP mDNSResponder'
+
+# Fix screen flash when audio process dies
+alias fixflash='sudo killall coreaudiod'

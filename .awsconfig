@@ -1,0 +1,9 @@
+# ebcli
+function eb() {
+  if [[ $1 == 'printenv' ]]; then
+    /usr/bin/env eb printenv "${@:2}" | sed -e "s/^[ \t]*//;s/ = \(.*\)/='\1'/;/^Environment.*/d" | sort
+  else
+    /usr/bin/env eb "$@"
+  fi
+}
+

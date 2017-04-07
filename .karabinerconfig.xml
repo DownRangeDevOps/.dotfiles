@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<root>
+	<!-- PhpStorm & EAP Version -->
+	<appdef>
+		<appname>PHPSTORM</appname>
+		<equal>com.jetbrains.PhpStorm-EAP</equal>
+		<equal>com.jetbrains.PhpStorm</equal>
+	</appdef>
+
+	<!-- PyCharm -->
+	<appdef>
+		<appname>PYCHARM</appname>
+		<equal>com.jetbrains.pycharm</equal>
+	</appdef>
+
+	<!-- ============================================================ -->
+
+	<item>
+		<name>Use FN keys in PhpStorm and PyCharm</name>
+		<identifier>private.app_phpstorm_switch_consumer_to_fn</identifier>
+
+		<only>PHPSTORM, PYCHARM</only>
+    <autogen>__KeyToKey__ ConsumerKeyCode::BRIGHTNESS_DOWN, KeyCode::F1</autogen>
+		<autogen>__KeyToKey__ KeyCode::BRIGHTNESS_DOWN, KeyCode::F1</autogen>
+    <autogen>__KeyToKey__ ConsumerKeyCode::BRIGHTNESS_UP, KeyCode::F2</autogen>
+		<autogen>__KeyToKey__ KeyCode::BRIGHTNESS_UP, KeyCode::F2</autogen>
+		<autogen>__KeyToKey__ KeyCode::EXPOSE_ALL, KeyCode::F3</autogen>
+		<autogen>__KeyToKey__ KeyCode::LAUNCHPAD, KeyCode::F4</autogen>
+		<autogen>__KeyToKey__ KeyCode::VK_CONSUMERKEY_KEYBOARDLIGHT_LOW, KeyCode::F5</autogen>
+		<autogen>__KeyToKey__ KeyCode::VK_CONSUMERKEY_KEYBOARDLIGHT_HIGH, KeyCode::F6</autogen>
+		<autogen>__KeyToKey__ ConsumerKeyCode::MUSIC_PREV, KeyCode::F7</autogen>
+		<autogen>__KeyToKey__ ConsumerKeyCode::MUSIC_PLAY, KeyCode::F8</autogen>
+		<autogen>__KeyToKey__ ConsumerKeyCode::MUSIC_NEXT, KeyCode::F9</autogen>
+    <!-- I want to use these while in PhpStorm/PyCharm
+		<autogen>__KeyToKey__ ConsumerKeyCode::VOLUME_MUTE, KeyCode::F10</autogen>
+		<autogen>__KeyToKey__ ConsumerKeyCode::VOLUME_DOWN, KeyCode::F11</autogen>
+		<autogen>__KeyToKey__ ConsumerKeyCode::VOLUME_UP, KeyCode::F12</autogen>
+	-->
+	</item>
+</root>

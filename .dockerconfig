@@ -1,0 +1,60 @@
+# Docker aliases for ease of use
+export COMPOSE_HTTP_TIMEOUT=999999
+
+# Youtily service portal
+alias syp='echo "==> Starting docker-machine..." &&
+  cd ~/dev/youtily/service-portal &&
+  docker-machine restart youtily-portal &&
+  docker-machine env youtily-portal &&
+  eval "$(docker-machine env youtily-portal)" &&
+  echo "==> Starting docker containers..." &&
+  docker-compose up -d'
+
+dc() {
+  if [[ $# -eq 1 ]]; then
+    case $1 in
+      'bash')
+        docker-compose exec webapp bash;;
+      'logs')
+        docker-compose logs -f webapp;;
+      'test')
+        docker-compose exec webapp python manage.py test -n;;
+      'up')
+          docker-compose up -d $args;;
+      *)
+        docker-compose "$@";;
+    esac
+  else
+    docker-compose "$@"
+  fi
+}
+
+dm() {
+  if [[ $# -eq 1 ]]; then
+    case $1 in
+      *)
+        docker-machine "$@";;
+    esac
+  else
+    docker-machine "$@"
+  fi
+}
+
+dme() {
+  if [[ $# -eq 0 ]]; then
+    echo 'Usage: dme <docker-machine name>'
+    return 1
+  fi
+
+  MACHINE=$1
+  AVAILABLE_MACHINES=($(docker-machine ls -q))
+
+  if [[ $(echo ${AVAILABLE_MACHINES[@]} | grep -x ${MACHINE} | wc -w) ]]; then
+    eval $(docker-machine env $MACHINE)
+    echo "==> ${MACHINE} configured for this session"
+  else
+    echo "${MACHINE} isn't available. Available docker-machine's:"
+    printf '%s\n' "${AVAILABLE_MACHINES[@]}"
+  fi
+}
+

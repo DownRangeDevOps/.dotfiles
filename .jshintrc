@@ -1,0 +1,11 @@
+{
+  "jquery": true,
+  "globals": {
+    "$": false,
+    "jQuery": false,
+    "FB": false,
+    "toastr": false,
+    "getCsrfCookie": false,
+    "Reverse": false
+  }
+}
