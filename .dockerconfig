@@ -13,19 +13,24 @@ alias syp='echo "==> Starting docker-machine..." &&
 dc() {
   if [[ $# -eq 1 ]]; then
     case $1 in
-      'bash')
-        docker-compose exec webapp bash;;
+     'bash')
+        docker-compose exec app bash;;
       'logs')
-        docker-compose logs -f webapp;;
+        docker-compose logs -f app;;
       'test')
-        docker-compose exec webapp python manage.py test -n;;
+        docker-compose exec app python manage.py test -n;;
       'up')
           docker-compose up -d $args;;
       *)
         docker-compose "$@";;
     esac
   else
-    docker-compose "$@"
+    case $1 in
+      'logs')
+        docker-compose logs -f "${@:2}";;
+      *)
+        docker-compose "$@";;
+    esac
   fi
 }
 
