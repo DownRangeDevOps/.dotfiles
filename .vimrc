@@ -115,7 +115,7 @@ let g:html_indent_tags = 'li\|p'
 " Enable file type detection and do language-dependent indenting.
 filetype plugin indent on
 
-" Easy escape from insert mode
+" Easy escape from insert/visual mode
 inoremap jj <Esc>
 
 " Get to next editing point after autocomplete

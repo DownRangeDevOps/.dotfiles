@@ -1,5 +1,8 @@
-# Docker aliases for ease of use
+
 export COMPOSE_HTTP_TIMEOUT=999999
+
+# Common commands
+
 
 # Youtily service portal
 alias syp='echo "==> Starting docker-machine..." &&
@@ -28,6 +31,8 @@ dc() {
     case $1 in
       'logs')
         docker-compose logs -f "${@:2}";;
+      'bash')
+        docker-compose exec "${@:2}" bash;;
       *)
         docker-compose "$@";;
     esac

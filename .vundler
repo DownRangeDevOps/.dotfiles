@@ -28,6 +28,9 @@ Plugin 'tpope/vim-fugitive'
 " lightline.vim (https://github.com/itchyny/lightline.vim)
 Plugin 'itchyny/lightline.vim'
 
+" Custom syntax files
+Plugin 'tmux-plugins/vim-tmux'
+
 " ### All of your Plugins must be added before the following line
 call vundle#end()            " required
 "filetype plugin indent on   " required
