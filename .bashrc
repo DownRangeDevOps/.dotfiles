@@ -11,7 +11,6 @@ export PATH=$PATH:vendor/bin
 
 # Use vi mode on command line
 set -o vi
-set show-mode-in-prompt on
 bind '"jj":vi-movement-mode'
 
 # Add git completion to aliases
@@ -51,10 +50,10 @@ edot() {
     vim "~/.dotfiles/${$@}"
   else
     shopt -s dotglob
-    options=$(find ~/.dotfiles/ -maxdepth 1 -type f -print0 | xargs -0 basename)
+    options=$(find ~/.dotfiles/ -name ".[^.]*" -maxdepth 1 -type f -print0 | xargs -0 basename | sed -e 's/^\.//g' | sort --ignore-case)
     select FILE in $options;
     do
-      vim ~/.dotfiles/$FILE
+      vim ~/.dotfiles/.$FILE
       break
     done
     shopt -u dotglob

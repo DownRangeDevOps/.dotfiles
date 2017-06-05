@@ -3,6 +3,8 @@ filetype off
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+
+" ### All of your Plugins must be added after this line
 call vundle#begin()
 
 " alternatively, pass a path where Vundle should install plugins
@@ -11,24 +13,15 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" ### Keep Plugin commands between vundle#begin/end.
+" ### My Plugins
 
-" Emmet support (http://emmet.io)
+Plugin 'davidhalter/jedi-vim'
+Plugin 'vim-syntastic/syntastic'
 Plugin 'mattn/emmet-vim'
-
-" Surround (https://github.com/tpope/vim-surround)
 Plugin 'tpope/vim-surround'
-
-" repeat.vim (https://github.com/tpope/vim-repeat)
 Plugin 'tpope/vim-repeat.git'
-
-" vim-fugitive (https://github.com/tpope/vim-fugitive)
 Plugin 'tpope/vim-fugitive'
-
-" lightline.vim (https://github.com/itchyny/lightline.vim)
 Plugin 'itchyny/lightline.vim'
-
-" Custom syntax files
 Plugin 'tmux-plugins/vim-tmux'
 
 " ### All of your Plugins must be added before the following line

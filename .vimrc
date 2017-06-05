@@ -4,6 +4,22 @@ set nocompatible
 " Setup Vundle plugin manager
 so ~/.dotfiles/.vundler
 
+" Configure Syntastic plugin (https://github.com/vim-syntastic/syntastic)
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" Configure vim-jedi plugin (https://github.com/davidhalter/jedi-vim)
+let g:jedi#use_splits_not_buffers = "left"
+
+" Auto change working directory to that of the current file
+set autochdir
+
 " Make backspace behave in a sane manner.
 set backspace=indent,eol,start
 
@@ -41,13 +57,16 @@ set list listchars=tab:»·,trail:·,nbsp:·
 " Indicate wraped lines
 set showbreak=>\ \ \
 
-" Change cursor shape in iTerm
+" Change cursor shape in iTerm2 & tmux in iTerm2
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 
-" Make it obvious where 100 characters is
-set textwidth=100
+" Make it obvious where 80 characters is
+set textwidth=80
 set colorcolumn=+1
 
 " Relitive line numbers
