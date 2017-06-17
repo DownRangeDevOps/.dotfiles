@@ -12,6 +12,7 @@ export PATH=$PATH:vendor/bin
 # Use vi mode on command line
 set -o vi
 bind '"jj":vi-movement-mode'
+set show-mode-in-prompt on
 
 # Add git completion to aliases
 function_exists() {
@@ -130,6 +131,9 @@ alias rm="rm -i"
 alias mv="mv -i"
 alias cp="cp -i"
 set -o noclobber
+
+# Force 256 colors in tmux
+alias tmux='tmux -2'
 
 # Listing, directories and motion
 function ls() {

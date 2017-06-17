@@ -80,6 +80,10 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
 
+" Highlight search pattern matches
+set incsearch
+set hlsearch
+
 augroup vimrcEx
   autocmd!
 
