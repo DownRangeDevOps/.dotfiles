@@ -55,7 +55,7 @@ set expandtab
 set list listchars=tab:»·,trail:·,nbsp:·
 
 " Indicate wraped lines
-set showbreak=>\ \ \
+set showbreak=↳\ \ \>
 
 " Change cursor shape in iTerm2 & tmux in iTerm2
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
