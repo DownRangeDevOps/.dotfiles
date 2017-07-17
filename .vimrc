@@ -31,6 +31,19 @@ syntax enable
 set background=dark
 colorscheme solarized8_dark
 
+" NOT WORKING Automatically set paste when in insert mode
+set pastetoggle=<F2>
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
 " Configure lightline status bar
 set noshowmode
 set laststatus=2

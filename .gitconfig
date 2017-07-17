@@ -19,7 +19,7 @@
 [branch]
 	autosetuprebase = always
 [commit]
-	template = /Users/ryanfisher/.stCommitMsg
+	template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
 	autocorrect = 1
 [alias]

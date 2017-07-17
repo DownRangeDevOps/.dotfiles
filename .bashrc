@@ -4,7 +4,9 @@ source ~/.dotfiles/.awsconfig
 source ~/.dotfiles/.osx
 
 # Add custom paths
-export PATH=$HOME/bin:$PATH:vendor/bin
+export GOPATH=$HOME/dev/go
+export BINPATH=$HOME/bin
+export PATH=$PATH:$GOPATH/bin:$BINPATH
 
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
