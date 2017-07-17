@@ -26,6 +26,11 @@ set backspace=indent,eol,start
 " Paste from external source, copy to external source
 noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>
 
+" Enable lifepillar/vim-solarized8 color scheme
+syntax enable
+set background=dark
+colorscheme solarized8_dark
+
 " Configure lightline status bar
 set noshowmode
 set laststatus=2

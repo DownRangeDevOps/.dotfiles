@@ -23,6 +23,7 @@ Plugin 'tpope/vim-repeat.git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tmux-plugins/vim-tmux'
+Plugin 'lifepillar/vim-solarized8'
 
 " ### All of your Plugins must be added before the following line
 call vundle#end()            " required
