@@ -7,6 +7,7 @@ source ~/.dotfiles/.osx
 export GOPATH=$HOME/dev/go
 export BINPATH=$HOME/bin
 export PATH=$PATH:$GOPATH/bin:$BINPATH
+export EDITOR=vi
 
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
@@ -136,6 +137,9 @@ set -o noclobber
 
 # Force 256 colors in tmux
 alias tmux='tmux -2'
+
+# easy kill tmux session
+alias tks='tmux kill-session -t '
 
 # Listing, directories and motion
 function ls() {

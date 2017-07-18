@@ -1,0 +1,8 @@
+name: default
+root: ~/
+windows:
+  - terminal:
+      layout: main-vertical
+      panes:
+        - bash
+        - bash

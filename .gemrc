@@ -1,0 +1,2 @@
+# install gems in the user's bin folder
+gem: -n/usr/local/bin

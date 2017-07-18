@@ -102,6 +102,9 @@ endif
 set incsearch
 set hlsearch
 
+" Clears search pattern matches with return
+nnoremap <CR> :noh<CR><CR>
+
 augroup vimrcEx
   autocmd!
 
