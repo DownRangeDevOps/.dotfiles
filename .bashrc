@@ -7,7 +7,7 @@ source ~/.dotfiles/.osx
 export GOPATH=$HOME/dev/go
 export BINPATH=$HOME/bin
 export PATH=$PATH:$GOPATH/bin:$BINPATH
-export EDITOR=vi
+export EDITOR=vim
 
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
