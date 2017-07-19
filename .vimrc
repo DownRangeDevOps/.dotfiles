@@ -72,6 +72,9 @@ set expandtab
 " Display extra whitespace
 set list listchars=tab:»·,trail:·,nbsp:·
 
+" Don't wrap lines in the display
+set nowrap
+
 " Indicate wraped lines
 set showbreak=↳\ \ \>
 
