@@ -3,11 +3,12 @@ source ~/.dotfiles/.dockerconfig
 source ~/.dotfiles/.awsconfig
 source ~/.dotfiles/.osx
 
-# Add custom paths
+# custom exports (e.g. paths, app configs)
 export GOPATH=$HOME/dev/go
 export BINPATH=$HOME/bin
 export PATH=$PATH:$GOPATH/bin:$BINPATH
 export EDITOR=vim
+export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion

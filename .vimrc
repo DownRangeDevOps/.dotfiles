@@ -4,6 +4,54 @@ set nocompatible
 " Setup Vundle plugin manager
 so ~/.dotfiles/.vundler
 
+" Configure vim-jedi plugin (https://github.com/davidhalter/jedi-vim)
+let g:jedi#use_splits_not_buffers = "left"
+
+" Prefrences
+filetype plugin indent on       " Enable file type detection and do language-dependent indenting.
+hi ColorColumn ctermbg=10       " Set the color of right margin marker
+set autochdir                   " Auto change working directory to that of the current file
+set autowrite                   " Automatically :write before running commands
+set backspace=2                 " Backspace deletes like most programs in insert mode
+set backspace=indent,eol,start  " Make backspace behave in a sane manner.
+set colorcolumn=81              " Make it obvious where 80 characters is
+set complete+=kspell            " Autocomplete with dictionary words when spell check is on
+set diffopt+=vertical           " Always use vertical diffs
+set history=50                  " store command history across sessions
+set hlsearch                    " hilight search matches
+set incsearch                   " do incremental searching
+set list listchars=tab:»·,trail:·,nbsp:·
+set noshowmode                  " hide the mode status line
+set nowrap                      " Don't wrap lines in the display
+set ruler                       " show the cursor position all the time
+set showbreak=↳\ \ \>           " Indicate wraped lines
+set showcmd                     " display incomplete commands
+set splitbelow                  " Open new split panes to the right/bottom
+set splitright
+set swapfile                    " use a swap file
+set dir=~/tmp                   " set where swapfile(s) are stored
+
+" Tabbing prefrences
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set shiftround
+set expandtab
+
+" Relitive line numbers
+set number
+set relativenumber
+set numberwidth=5
+
+" Key mappings
+inoremap <C-@> <C-Space>                            " Get to next editing point after autocomplete
+inoremap jj <Esc>                                   " Easy escape from insert/visual mode
+noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>  " Paste from external source, copy to external source
+set pastetoggle=<F2>                                " Toggle paste mode
+vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>  " Replace selected text
+let mapleader = " "
+nnoremap <CR> :noh<CR><CR>                          " Clear search pattern matches with return
+
 " Configure Syntastic plugin (https://github.com/vim-syntastic/syntastic)
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -14,38 +62,18 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" Configure vim-jedi plugin (https://github.com/davidhalter/jedi-vim)
-let g:jedi#use_splits_not_buffers = "left"
-
-" Auto change working directory to that of the current file
-set autochdir
-
-" Make backspace behave in a sane manner.
-set backspace=indent,eol,start
-
-" Paste from external source, copy to external source
-noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>
+" configure syntastic syntax checking to check on open as well as save
+let g:syntastic_check_on_open=1
+let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+let g:syntastic_eruby_ruby_quiet_messages =
+    \ {"regex": "possibly useless use of a variable in void context"}
 
 " Enable lifepillar/vim-solarized8 color scheme
 syntax enable
 set background=dark
 colorscheme solarized8_dark
 
-" NOT WORKING Automatically set paste when in insert mode
-set pastetoggle=<F2>
-let &t_SI .= "\<Esc>[?2004h"
-let &t_EI .= "\<Esc>[?2004l"
-
-inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
-
-function! XTermPasteBegin()
-  set pastetoggle=<Esc>[201~
-  set paste
-  return ""
-endfunction
-
 " Configure lightline status bar
-set noshowmode
 set laststatus=2
 let g:lightline = {
   \ 'colorscheme': 'solarized',
@@ -63,21 +91,6 @@ let g:lightline = {
   \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
 \ }
 
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
-set shiftround
-set expandtab
-
-" Display extra whitespace
-set list listchars=tab:»·,trail:·,nbsp:·
-
-" Don't wrap lines in the display
-set nowrap
-
-" Indicate wraped lines
-set showbreak=↳\ \ \>
-
 " Change cursor shape in iTerm2 & tmux in iTerm2
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
@@ -86,27 +99,11 @@ let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
 let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
 let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 
-" Make it obvious where 80 characters is
-set colorcolumn=81
-hi ColorColumn ctermbg=10
-
-" Relitive line numbers
-set number
-set relativenumber
-set numberwidth=5
-
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
-
-" Highlight search pattern matches
-set incsearch
-set hlsearch
-
-" Clears search pattern matches with return
-nnoremap <CR> :noh<CR><CR>
 
 augroup vimrcEx
   autocmd!
@@ -157,17 +154,6 @@ inoremap <S-Tab> <c-n>
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
-
-
-" Enable file type detection and do language-dependent indenting.
-filetype plugin indent on
-
-" Easy escape from insert/visual mode
-inoremap jj <Esc>
-
-" Get to next editing point after autocomplete
-inoremap <C-@> <C-Space>
-" inoremap <C-Space> <Esc>|:normal /[\)\]\}]|a
 
 " Get off my lawn
 nnoremap <Left> :echoe "Use h"<CR>
