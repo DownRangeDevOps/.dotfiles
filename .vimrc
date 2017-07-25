@@ -1,5 +1,5 @@
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+nnoremap <space> <leader>
+nnoremap <leader>d dd
 
 " Setup Vundle plugin manager
 so ~/.dotfiles/.vundler
@@ -29,6 +29,7 @@ set showcmd                     " display incomplete commands
 set splitbelow                  " Open new split panes to the right/bottom
 set splitright
 set swapfile                    " use a swap file
+set timeoutlen=500              " set a short leader timeout
 set dir=~/tmp                   " set where swapfile(s) are stored
 
 " Tabbing prefrences
@@ -49,7 +50,6 @@ inoremap jj <Esc>|                                  " Easy escape from insert/vi
 noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>| " Paste from external source, copy to external source
 set pastetoggle=<F2>                                " Toggle paste mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>| " Replace selected text
-let mapleader = " "
 nnoremap <CR> :noh<CR><CR>|                         " Clear search pattern matches with return
 
 " Configure Syntastic plugin (https://github.com/vim-syntastic/syntastic)
