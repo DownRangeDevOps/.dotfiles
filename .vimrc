@@ -44,13 +44,13 @@ set relativenumber
 set numberwidth=5
 
 " Key mappings
-inoremap <C-@> <C-Space>                            " Get to next editing point after autocomplete
-inoremap jj <Esc>                                   " Easy escape from insert/visual mode
-noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>  " Paste from external source, copy to external source
+inoremap <C-@> <C-Space>|                           " Get to next editing point after autocomplete
+inoremap jj <Esc>|                                  " Easy escape from insert/visual mode
+noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>| " Paste from external source, copy to external source
 set pastetoggle=<F2>                                " Toggle paste mode
-vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>  " Replace selected text
+vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>| " Replace selected text
 let mapleader = " "
-nnoremap <CR> :noh<CR><CR>                          " Clear search pattern matches with return
+nnoremap <CR> :noh<CR><CR>|                         " Clear search pattern matches with return
 
 " Configure Syntastic plugin (https://github.com/vim-syntastic/syntastic)
 set statusline+=%#warningmsg#
