@@ -13,7 +13,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" ### My Plugins
+" My Plugins
 
 Plugin 'davidhalter/jedi-vim'
 Plugin 'vim-syntastic/syntastic'
@@ -24,6 +24,8 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tmux-plugins/vim-tmux'
 Plugin 'lifepillar/vim-solarized8'
+Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/nerdtree'
 
 " ### All of your Plugins must be added before the following line
 call vundle#end()            " required

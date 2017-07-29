@@ -1,6 +1,3 @@
-nnoremap <space> <leader>
-nnoremap <leader>d dd
-
 " Setup Vundle plugin manager
 so ~/.dotfiles/.vundler
 
@@ -31,6 +28,8 @@ set splitright
 set swapfile                    " use a swap file
 set timeoutlen=500              " set a short leader timeout
 set dir=~/tmp                   " set where swapfile(s) are stored
+let g:ctrlp_working_path_mode='ra'
+let NERDTreeShowHidden=1        " Show NERDTree
 
 " Tabbing prefrences
 set tabstop=4
@@ -45,12 +44,26 @@ set relativenumber
 set numberwidth=5
 
 " Key mappings
+let mapleader=' '
 inoremap <C-@> <C-Space>|                           " Get to next editing point after autocomplete
 inoremap jj <Esc>|                                  " Easy escape from insert/visual mode
 noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>| " Paste from external source, copy to external source
 set pastetoggle=<F2>                                " Toggle paste mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>| " Replace selected text
 nnoremap <CR> :noh<CR><CR>|                         " Clear search pattern matches with return
+noremap <leader>1 :NERDTreeToggle<CR>               " Toggle NERDTree
+
+" Use The Silver Searcher if it is installed
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
 
 " Configure Syntastic plugin (https://github.com/vim-syntastic/syntastic)
 set statusline+=%#warningmsg#
