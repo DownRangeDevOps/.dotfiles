@@ -7,7 +7,7 @@
 	editor = /usr/bin/vim
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
@@ -59,4 +59,5 @@
   p = "!git fetch -p && git pull --rebase"
   rb = "!git rebase -i $1 && :"
   rbm = "!git rb origin/master"
+  rbd = "!git rb origin/develop"
   fpo = "push --force-with-lease origin HEAD"
