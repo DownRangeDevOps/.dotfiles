@@ -14,6 +14,10 @@ export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
 
+# Use homebrew binaries instead of OSX defaults
+alias grep='ggrep'
+alias python='python2.7'
+
 # Use vi mode on command line
 set -o vi
 bind '"jj":vi-movement-mode'
@@ -24,9 +28,6 @@ function_exists() {
   declare -f -F $1 > /dev/null
   return $?
 }
-
-# Allow Homebrew to load formulae from sbin
-# export PATH="/usr/local/sbin:$PATH"
 
 for git_alias in $(__git_aliases); do
   complete_alias=_git_$(__git_aliased_command $git_alias)
