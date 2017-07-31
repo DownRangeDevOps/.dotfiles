@@ -1,12 +1,12 @@
 name: dev
-root: ~/dev/measurabl
+root: ~/dev/measurabl/
 pre:
   - umount -f ~/dev/measurabl/msr/ 2>/dev/null
   - devbox up
   - devbox mount --to ~/dev/measurabl/msr
 windows:
     - terminal:
-        root: ~/dev/measurabl/msr
+        root: ~/dev/measurabl/msr/src
         layout: main-vertical
         panes:
           - bash
