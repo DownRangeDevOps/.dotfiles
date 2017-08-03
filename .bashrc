@@ -1,12 +1,12 @@
 # .bashrc
-source ~/.dotfiles/.dockerconfig
-source ~/.dotfiles/.awsconfig
-source ~/.dotfiles/.osx
+source ~/.dotfiles/.dockerconfig    # Docker helpers
+source ~/.dotfiles/.awsconfig       # aws helpers
+source ~/.dotfiles/.osx             # osx helpers
 
 # custom exports (e.g. paths, app configs)
-export GOPATH=$HOME/dev/go
-export BINPATH=$HOME/bin
-export PATH=$PATH:$GOPATH/bin:$BINPATH
+#export GOPATH=$HOME/dev/go
+#export BINPATH=$HOME/bin
+#export PATH=${PATH}:$GOPATH/bin:$BINPATH
 export EDITOR=vim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 
@@ -14,9 +14,16 @@ export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
 
-# Use homebrew binaries instead of OSX defaults
-alias grep='ggrep'
-alias python='python2.7'
+# Use custom binaries and those installed by Homebrew over OSX defaults
+source /etc/profile                                                 # Set base path
+export PATH="/usr/locexec/bin:${PATH}"                              # Homebrew
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"       # Homebrew coreutils
+export PATH="/usr/local/lib/python3.6/site-packages:${PATH}"        # Homebrew pip3 packages
+export PATH="/Users/ryanfisher/.gem/ruby/2.4.0:${PATH}"             # Ruby gems isntalled with --user
+export PATH="/usr/local/lib/ruby/gems/2.4.0:${PATH}"                # Ruby gems installed for the system
+export PATH="~/bin:${PATH}"                                         # Custom installed binaries
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"   # Hoembrew coreutils manpages
+#export PATH=${PATH}:/usr/local/mysql/bin
 
 # Use vi mode on command line
 set -o vi
@@ -57,7 +64,7 @@ edot() {
     vim "~/.dotfiles/${$@}"
   else
     shopt -s dotglob
-    options=$(find ~/.dotfiles/ -name ".[^.]*" -maxdepth 1 -type f -print0 | xargs -0 basename | sed -e 's/^\.//g' | sort --ignore-case)
+    options=$(find ~/.dotfiles -maxdepth 1 -type f -name ".[^.]*" -printf "%f\n" | sed -e 's/^\.//g' | sort --ignore-case)
     select FILE in $options;
     do
       vim ~/.dotfiles/.$FILE
@@ -83,9 +90,6 @@ confirm() {
 # Disable flow control commands (keeps C-s from freezing everything)
 stty start undef
 stty stop undef
-
-# User specific aliases and functions
-export PATH=${PATH}:/usr/local/mysql/bin:$HOME/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # Sexy Bash Prompt, inspired by "Extravagant Zsh Prompt"
 if [[ $COLORTERM = gnome-* && $TERM = xterm ]]  && infocmp gnome-256color >/dev/null 2>&1; then export TERM=gnome-256color
@@ -145,11 +149,10 @@ alias mv="mv -i"
 alias cp="cp -i"
 set -o noclobber
 
-# Force 256 colors in tmux
-alias tmux='tmux -2'
-
-# easy kill tmux session
-alias tks='tmux kill-session -t '
+# tmux & tmuxinator
+alias tmux='tmux -2'                # Force 256 colors in tmux
+alias tks='tmux kill-session -t '   # easy kill tmux session
+alias rc='reattach-to-user-namespace pbcopy'
 
 # Listing, directories and motion
 function ls() {
@@ -162,5 +165,6 @@ alias ..='cd ..'
 alias ...='cd ..;cd ..'
 
 # grep options
-export GREP_OPTIONS='--color=auto'
+alias grep='grep --color=auto '
+#export GREP_OPTIONS='--color=auto'  # deprecated in GNU grep, see grep alias above
 export GREP_COLOR='1;31' # green for matches
