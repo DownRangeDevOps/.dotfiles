@@ -11,6 +11,7 @@ set autochdir                   " Auto change working directory to that of the c
 set autowrite                   " Automatically :write before running commands
 set backspace=2                 " Backspace deletes like most programs in insert mode
 set backspace=indent,eol,start  " Make backspace behave in a sane manner.
+set clipboard=unnamed           " Copy to the system clipboard automatically
 set colorcolumn=81              " Make it obvious where 80 characters is
 set complete+=kspell            " Autocomplete with dictionary words when spell check is on
 set diffopt+=vertical           " Always use vertical diffs

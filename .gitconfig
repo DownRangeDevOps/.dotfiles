@@ -60,4 +60,5 @@
   rb = "!git rebase --interactive $1 && :"
   rbm = "!git rb origin/master"
   rbd = "!git rb origin/develop"
+  rbc = "!git rebase --continue"
   fpo = "push --force-with-lease origin HEAD"

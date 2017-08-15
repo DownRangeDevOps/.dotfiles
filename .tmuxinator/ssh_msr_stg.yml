@@ -1,0 +1,9 @@
+name: ssh_msr_dev
+root: ~/dev/measurabl/src
+windows:
+    - dev:
+        layout: tiled
+        panes:
+            - ssh stg1
+            - ssh stg2
+            - ssh stgpusher

@@ -1,0 +1,12 @@
+name: ssh_msr_prod
+root: ~/dev/measurabl/src
+windows:
+    - prod:
+        layout: tiled
+        panes:
+            - ssh bastion
+            - ssh prod1
+            - ssh prod2
+            - ssh pusher
+            - ssh science
+            - ssh wp
