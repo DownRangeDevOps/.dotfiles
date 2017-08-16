@@ -27,7 +27,7 @@ set showcmd                     " display incomplete commands
 set splitbelow                  " Open new split panes to the right/bottom
 set splitright
 set swapfile                    " use a swap file
-set timeoutlen=500              " set a short leader timeout
+set timeoutlen=300              " set a short leader timeout
 set dir=~/tmp                   " set where swapfile(s) are stored
 let g:ctrlp_working_path_mode='ra'
 let NERDTreeShowHidden=1        " Show NERDTree
@@ -75,12 +75,30 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_aggregate_errors = 1
+
+" Set syntastic checker when there is more than one option
+let g:syntastic_markdown_checkers = ['syntastic-markdown-mdl']
+let g:syntastic_json_checkers = ['syntastic-json-jsonlint']
+let g:syntastic_dockerfile_checkers = ['syntastic-dockerfile-dockerfile_lint']
+let g:syntastic_python_checkers = ['syntastic-python-prospector']
+let g:syntastic_yaml_checkers = ['syntastic-yaml-jsyaml', 'syntastic-yaml-yamllint']
+
+" Configure vim-auto-save plugin (https://github.com/vim-scripts/vim-auto-save)
+let g:auto_save = 1
+let g:auto_save_silent = 1  " Do not display the auto-save notification
 
 " configure syntastic syntax checking to check on open as well as save
 let g:syntastic_check_on_open=1
 let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
 let g:syntastic_eruby_ruby_quiet_messages =
     \ {"regex": "possibly useless use of a variable in void context"}
+
+" Configure ansible-vim
+let g:ansible_unindent_after_newline = 1            " Unindent after two newlines
+let g:ansible_extra_syntaxes = "sh.vim cfg.vim"     " Syntax highlight with the native language for *.j2 files
+let g:ansible_attribute_highlight = "ad"            " Dim all instances of key=
+let g:ansible_name_highlight = "b"                  " Brighten name: if at start
 
 " Enable lifepillar/vim-solarized8 color scheme
 syntax enable
@@ -119,6 +137,7 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
 
+" Put all autocmd settings here to load them only when vimrc is executed
 augroup vimrcEx
   autocmd!
 
@@ -134,6 +153,9 @@ augroup vimrcEx
   autocmd BufRead,BufNewFile Appraisals set filetype=ruby
   autocmd BufRead,BufNewFile *.md set filetype=markdown
 
+  " Set syntax highlighting for specific directories
+  autocmd BufRead,BufNewFile ~/dev/measurabl/src/orchestration/* set syntax=ansible
+
   " Enable spellchecking for Markdown
   autocmd FileType markdown setlocal spell
 
@@ -143,6 +165,7 @@ augroup vimrcEx
   " Automatically wrap at 72 characters and spell check git commit messages
   autocmd FileType gitcommit setlocal textwidth=72
   autocmd FileType gitcommit setlocal spell
+  autocmd FileType gitcommit set filetype=markdown
 
   " Allow stylesheets to autocomplete hyphenated words
   autocmd FileType css,scss,sass setlocal iskeyword+=-

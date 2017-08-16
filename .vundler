@@ -26,6 +26,8 @@ Plugin 'tmux-plugins/vim-tmux'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'pearofducks/ansible-vim'
+Plugin 'vim-scripts/vim-auto-save'
 
 " ### All of your Plugins must be added before the following line
 call vundle#end()            " required
