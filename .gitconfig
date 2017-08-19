@@ -4,15 +4,18 @@
 [core]
 	excludesfile = /Users/ryanfisher/.gitignore_global
 	autocrlf = input
-	editor = /usr/bin/vim
+	editor = /usr/local/bin/vim
+[merge]
+	conflictstyle = diff3
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
+	path = 
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+    keepBackup = false
 [push]
-	default = simple
+	default = upstream
 [rerere]
 	enabled = true
 	autoupdate = false

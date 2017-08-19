@@ -1,0 +1,15 @@
+name: ops
+root: ~/dev/measurabl/src
+windows:
+  - orchestration:
+      root: ~/dev/measurabl/src/orchestration
+      layout: 0ab1,318x54,0,0[318x39,0,0,0,318x14,0,40,2]
+      panes:
+        - vim -p -O3
+        - #bash
+  - ssh:
+      layout: horizontal-vertical
+      panes:
+        - #bash
+        - #bash
+        - #bash

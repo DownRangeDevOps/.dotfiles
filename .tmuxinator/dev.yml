@@ -1,16 +1,17 @@
-name: dev
+name: devbox
 root: ~/dev/measurabl/
 pre:
   - umount -f ~/dev/measurabl/msr/ 2>/dev/null
   - devbox up
   - devbox mount --to ~/dev/measurabl/msr
-windows:
+  windows:
     - terminal:
-        root: ~/dev/measurabl/msr/src
-        layout: main-vertical
-        panes:
-          - bash
-          - bash
+      root: ~/dev/measurabl/msr/src
+      layout: main-horizontal
+      panes:
+        - vim
+        - vim
+        - bash
     - devbox:
       - ssh devbox
       - m-serve

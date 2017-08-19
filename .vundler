@@ -15,7 +15,8 @@ Plugin 'VundleVim/Vundle.vim'
 
 " My Plugins
 
-Plugin 'davidhalter/jedi-vim'
+" YCM has it's own Jedi - Plugin 'davidhalter/jedi-vim'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-surround'
@@ -28,6 +29,17 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'vim-scripts/vim-auto-save'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'farmergreg/vim-lastplace'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'kana/vim-fakeclip'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'blueyed/vim-diminactive'
+Plugin 'junegunn/limelight.vim'
+Plugin 'tmux-plugins/vim-tmux-focus-events'
+Plugin 'othree/eregex.vim'
+Plugin 'krisajenkins/vim-projectlocal'
 
 " ### All of your Plugins must be added before the following line
 call vundle#end()            " required
