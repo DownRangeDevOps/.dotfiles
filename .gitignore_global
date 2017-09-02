@@ -1,5 +1,8 @@
 .DS_Store
 .idea/
 *.retry
-**/orchestration/manifest.sh
-**/orchestration/.vimrc
+**/manifest.sh
+**/.vimrc
+**/.ctags
+**/tags
+

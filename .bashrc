@@ -1,3 +1,4 @@
+# vim: set ft=sh:
 # .bashrc
 source ~/.dotfiles/.dockerconfig    # Docker helpers
 source ~/.dotfiles/.awsconfig       # aws helpers
@@ -9,6 +10,7 @@ source ~/.dotfiles/.osx             # osx helpers
 #export PATH=${PATH}:$GOPATH/bin:$BINPATH
 export EDITOR=vim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
+export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
@@ -47,6 +49,9 @@ _expand() { return 0; }
 # Use hub as git
 alias git=hub
 
+# Ansible vault shortcuts
+alias aav='ansible-vault view'
+
 # My helpers
 alias myip="curl icanhazip.com"
 vagrant_up() {
@@ -61,7 +66,7 @@ alias ebash="vim ~/.bashrc"
 # Easy edit custom dot files with menu prompt
 edot() {
   if [[ $# -gt 0 ]]; then
-    vim "~/.dotfiles/${$@}"
+    vim "~/${$@}"
   else
     shopt -s dotglob
     options=$(find ~/.dotfiles -maxdepth 1 -type f -name ".[^.]*" -printf "%f\n" | sed -e 's/^\.//g' | sort --ignore-case)
@@ -139,11 +144,7 @@ parse_git_branch () {
 }
 
 # http://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html
-PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$GREEN\]\w\[$WHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$WHITE\]\n→ \[$RESET\]"
-#PS1="\[${BOLD}${MAGENTA}\]\u\[$WHITE\]\
-#\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$WHITE\]\
-#\n\[$GREEN\]\w\[$WHITE\]\
-# → \[$RESET\]"
+PS1="\[${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$GREEN\]\w\[$WHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$WHITE\]\n→ \[$RESET\]"
 
 # color output for `ls`
 export LS_COLORS='no=00:fi=00:di=01;35:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.flac=01;35:*.mp3=01;35:*.mpc=01;35:*.ogg=01;35:*.wav=01;35:'
@@ -158,6 +159,9 @@ set -o noclobber
 alias tmux='tmux -2'                # Force 256 colors in tmux
 alias tks='tmux kill-session -t '   # easy kill tmux session
 alias rc='reattach-to-user-namespace pbcopy'
+
+# Generate password hash for MySQL
+alias mysqlpw="/usr/bin/python -c 'from hashlib import sha1; import getpass; print \"*\" + sha1(sha1(getpass.getpass(\"New MySQL Password:\")).digest()).hexdigest()'"
 
 # Listing, directories and motion
 function ls() {

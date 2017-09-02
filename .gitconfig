@@ -1,30 +1,35 @@
 [user]
-	name = Ryan Fisher
-	email = ryan@measurabl.com
+    name = Ryan Fisher
+    email = ryan@measurabl.com
 [core]
-	excludesfile = /Users/ryanfisher/.gitignore_global
-	autocrlf = input
-	editor = /usr/local/bin/vim
+    excludesfile = /Users/ryanfisher/.gitignore_global
+    autocrlf = input
+    editor = /usr/local/bin/vim
+[diff]
+    tool = vim-fugitive
+[difftool "vim-fugitive"]
+    cmd = 'vim -f -c "Gvdiff" "$MERGED"'
+    path =
 [merge]
-	conflictstyle = diff3
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    conflictstyle = diff3
+    tool = pycharm
+[mergetool "pycharm"]
+    cmd = /usr/local/bin/charm-ce merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+    trustExitCode = true
+    keepBackup = false
+[mergetool]
     keepBackup = false
 [push]
-	default = upstream
+    default = upstream
 [rerere]
-	enabled = true
-	autoupdate = false
+    enabled = true
+    autoupdate = false
 [branch]
-	autosetuprebase = always
+    autosetuprebase = always
 [commit]
-	template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
+    template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
-	autocorrect = 1
+    autocorrect = 1
 [alias]
   lg = !"git lg1"
   lg1 = !"git lg1-specific --all"
@@ -65,3 +70,4 @@
   rbd = "!git rb origin/develop"
   rbc = "!git rebase --continue"
   fpo = "push --force-with-lease origin HEAD"
+

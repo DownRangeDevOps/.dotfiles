@@ -1,3 +1,4 @@
+" vim: ft=vim:
 " required
 filetype off
 
@@ -15,9 +16,9 @@ Plugin 'VundleVim/Vundle.vim'
 
 " My Plugins
 
-" YCM has it's own Jedi - Plugin 'davidhalter/jedi-vim'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'vim-syntastic/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat.git'
@@ -25,21 +26,19 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tmux-plugins/vim-tmux'
 Plugin 'lifepillar/vim-solarized8'
-Plugin 'kien/ctrlp.vim'
-Plugin 'scrooloose/nerdtree'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'pearofducks/ansible-vim'
-Plugin 'vim-scripts/vim-auto-save'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'farmergreg/vim-lastplace'
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'kana/vim-fakeclip'
 Plugin 'easymotion/vim-easymotion'
-Plugin 'blueyed/vim-diminactive'
-Plugin 'junegunn/limelight.vim'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
-Plugin 'othree/eregex.vim'
 Plugin 'krisajenkins/vim-projectlocal'
+Plugin 'dbakker/vim-projectroot'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'vim-scripts/vim-auto-save'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-syntastic/syntastic'
 
 " ### All of your Plugins must be added before the following line
 call vundle#end()            " required
