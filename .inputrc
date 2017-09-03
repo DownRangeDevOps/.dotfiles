@@ -1,8 +1,3 @@
-# Show mode on command line
-set show-mode-in-prompt on
-set vi-ins-mode-string \1\e[5 q\2
-set vi-cmd-mode-string \1\e[1 q\2
-
-# Switch to block cursor before executing a command
-set keymap vi-insert
-RETURN: "\e\n"
+set show-mode-in-prompt
+set vi-ins-mode-string (+)
+set vi-cmd-mode-string (:)

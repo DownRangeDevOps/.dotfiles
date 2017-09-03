@@ -30,7 +30,6 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"   # Hoembrew c
 # Use vi mode on command line
 set -o vi
 bind '"jj":vi-movement-mode'
-set show-mode-in-prompt on
 
 # Add git completion to aliases
 function_exists() {
@@ -129,7 +128,7 @@ else
     RESET="\033[m"
 fi
 
-parse_git_dirty () {
+function parse_git_dirty () {
     case $(git status 2> /dev/null) in
         *"Changes not staged for commit"*)
             echo " ${MAGENTA}✗";;
@@ -139,12 +138,17 @@ parse_git_dirty () {
             echo "";;
     esac
 }
-parse_git_branch () {
+
+function parse_git_branch () {
   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
 
-# http://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html
-PS1="\[${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$GREEN\]\w\[$WHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$WHITE\]\n→ \[$RESET\]"
+function show_vi_mode () {
+    PS1=' → '
+    echo -e "$(date +%R) ${MAGENTA}$(whoami)${RESET} at ${ORANGE}$(hostname -s)${RESET} in ${GREEN}${PWD}${RESET}$([[ -n $(git branch 2>/dev/null) ]] && echo " on ")${PURPLE}$(parse_git_branch)${RESET}"
+}
+
+PROMPT_COMMAND='show_vi_mode'
 
 # color output for `ls`
 export LS_COLORS='no=00:fi=00:di=01;35:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.flac=01;35:*.mp3=01;35:*.mpc=01;35:*.ogg=01;35:*.wav=01;35:'
@@ -172,8 +176,8 @@ function ll() {
 }
 alias ..='cd ..'
 alias ...='cd ..;cd ..'
+alias ....='cd ..;cd ..;cd ..'
 
 # grep options
 alias grep='grep --color=auto '
-#export GREP_OPTIONS='--color=auto'  # deprecated in GNU grep, see grep alias above
 export GREP_COLOR='1;31' # green for matches

@@ -1,40 +1,40 @@
 " vim: set ft=vim:
-" Setup Vundle plugin manager
-so ~/.dotfiles/.vundler
+" Setup plugin manager
+so ~/.config/nvim/autoload/plug.vim
+so ~/.config/nvim/autoload/vim-repeat/autoload/repeat.vim
+so ~/.dotfiles/.plugins
 
 """ Prefrences
-filetype plugin indent on                       " Enable file type detection and do language-dependent indenting.
-set autochdir                                   " Auto change working directory to that of the current file
-set autowrite                                   " Automatically :write before running commands
-set autoread                                    " Automatically read files when they have changed
-set backspace=2                                 " Backspace deletes like most programs in insert mode
-set backspace=indent,eol,start                  " Make backspace behave in a sane manner.
-set colorcolumn=80                              " Make it obvious where 80 characters is
-set complete+=kspell                            " Autocomplete with dictionary words when spell check is on
-set diffopt+=vertical                           " Always use vertical diffs
-set history=50                                  " store command history across sessions
-set hlsearch                                    " hilight search matches
-set incsearch                                   " do incremental searching
-set list listchars=tab:»·,trail:·,nbsp:·        " Dispay tabs, non-breaking spaces, and trailing whitespace
-set noshowmode                                  " hide the mode status line
-"set nowrap                                     " Don't wrap lines in the display
-set ruler                                       " show the cursor position all the time
-set showbreak=↳\ \ \>                           " Indicate wraped lines
-set showcmd                                     " display incomplete commands
-set splitbelow                                  " Open new split panes to the right/bottom
+filetype plugin indent on           " Enable file type detection and do language-dependent indenting.
+set autochdir                       " Auto change working directory to that of the current file
+set autowrite                       " Automatically :write before running commands
+set autoread                        " Automatically read files when they have changed
+set backspace=2                     " Backspace deletes like most programs in insert mode
+set backspace=indent,eol,start      " Make backspace behave in a sane manner.
+set clipboard+=unnamedplus          " Always yank to the system clipboard
+set colorcolumn=80                  " Make it obvious where 80 characters is
+set complete+=kspell                " Autocomplete with dictionary words when spell check is on
+set diffopt+=vertical               " Always use vertical diffs
+set history=50                      " store command history across sessions
+set hlsearch                        " hilight search matches
+set incsearch                       " do incremental searching
+set list listchars=tab:»·,trail:·,nbsp:·  " Dispay tabs, non-breaking spaces, and trailing whitespace
+set noshowmode                      " hide the mode status line
+"set nowrap                         " Don't wrap lines in the display
+set ruler                           " show the cursor position all the time
+set showbreak=↳\ \ \>               " Indicate wraped lines
+set showcmd                         " display incomplete commands
+set splitbelow                      " Open new split panes to the right/bottom
 set splitright
-set swapfile                                    " use a swap file
-set timeoutlen=750                              " set a short leader timeout
-set dir=~/tmp                                   " set where swapfile(s) are stored
-let NERDTreeShowHidden=1                        " Show NERDTree
-let NERDTreeQuitOnOpen=1                        " Close NERDTree after file is opened
-set wildmode=list:longest,list:full             " Configure autocompletion see :help wildmode
-set secure                                      " Prevent shell, write, :autocmd unless file is owned by me
-set scrolloff=2                                 " Always show one line above/below the cursor
-if &diff                                        " only for diff mode/vimdiff
-  set diffopt=filler,context:1000000            " filler is default and inserts empty lines for sync
+set swapfile                        " use a swap file
+set timeoutlen=750                  " set a short leader timeout
+set dir=~/tmp                       " set where swapfile(s) are stored
+set wildmode=list:longest,list:full       " Configure autocompletion see :help wildmode
+set secure                          " Prevent shell, write, :autocmd unless file is owned by me
+set scrolloff=2                     " Always show one line above/below the cursor
+if &diff                            " only for diff mode/vimdiff
+  set diffopt=filler,context:1000000      " filler is default and inserts empty lines for sync
 endif
-
 
 " Default tabbing prefrences
 set tabstop=4
@@ -48,13 +48,20 @@ set number
 set relativenumber
 set numberwidth=5
 
-" Change cursor shape in iTerm2 & tmux in iTerm2
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+" Change cursor shape in iTerm2 & tmux in iTerm
+if has('nvim')
+   set guicursor=a:blinkwait1-blinkoff500-blinkon500-Cursor/lCursor,
+                \n-c-v-sm:block,
+                \i-ci-ve:ver25,
+                \r-cr-o:hor20
+else
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+endif
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -63,16 +70,28 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
 endif
 
 """ Key mappings
-let mapleader=' '
-inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
-inoremap jj <Esc>|                                          " Easy escape from insert/visual mode
-inoremap jk <Esc>|                                          " Easy escape from insert/visual mode
-noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<cr>|         " Paste from external source, copy to external source
+map <SPACE> <leader>
+let mapleader = ' '
+inoremap <C-@> <C-Space>|    " Get to next editing point after autocomplete
+inoremap jj <Esc>|           " Easy escape from insert/visual mode
+inoremap jk <Esc>|           " Easy escape from insert/visual mode
+noremap <D-v> :set paste<CR>o<exc>"*]p nopaste<CR>|         " Paste from external source, copy to external source
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
 nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
 nnoremap <CR> :noh<CR><CR>|                                 " Clear search pattern matches with return
 nnoremap K                                                  " Keep searching for man entries by accident
 vnoremap <C-c> :w !reattach-to-user-namespace pbcopy<CR>|   " Copy to system clipboar
+nnoremap <C-h> <C-w>h              " Move left a window
+nnoremap <C-j> <C-w>j              " Move down a window
+nnoremap <C-k> <C-w>k              " Move up a window
+nnoremap <C-l> <C-w>l              " Move right a window
+if has('nvim')
+    tnoremap <C-h> <C-\><C-n><C-w>h    " Move left a window
+    tnoremap <C-j> <C-\><C-n><C-w>j    " Move down a window
+    tnoremap <C-k> <C-\><C-n><C-w>k    " Move up a window
+    tnoremap <C-l> <C-\><C-n><C-w>l    " Move right a window
+endif
+
 
 " Use magic
 nnoremap // /\v
@@ -83,23 +102,29 @@ cnoremap %% %s/\v
 " nnoremap :g// :g//
 
 " Leader key remappings
-nnoremap <leader>\ :vsp<CR>|                                                " Open vertical split
-nnoremap <leader>- :sp<CR>|                                                 " Open horizontal split
-nnoremap <leader>q :q<CR>|                                                  " Close buffer
-nnoremap <leader>w :w<CR>|                                                  " Write buffer
-nnoremap <leader>1 :ProjectRootExe NERDTreeToggle<CR>|                      " Open/close NERDTree
-nnoremap <leader>2 :ProjectRootExe NERDTreeFind<CR>|                        " Open NERDTree and hilight the current file
-nnoremap <leader>r :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|         " Reload vimrc
-nnoremap <leader>n :enew<CR>|                                               " Open new buffer in current split
-nnoremap <leader>L :SyntasticToggleMode<CR>|                                " Togle syntastic mode
-nnoremap <leader>l :SyntasticCheck<CR>|                                     " Trigger syntastic check
-nnoremap <leader>/ :noh<CR>|                                                " Clear search pattern matches with return
+nnoremap <leader>\ :vsp<CR>|                            " Open vertical split
+nnoremap <leader>- :sp<CR>|                             " Open horizontal split
+nnoremap <leader>q :q<CR>|                              " Close buffer
+nnoremap <leader>w :w<CR>|                              " Write buffer
+nnoremap <leader>1 :ProjectRootExe NERDTreeToggle<CR>|  " Open/close NERDTree
+nnoremap <leader>2 :ProjectRootExe NERDTreeFind<CR>|    " Open NERDTree and hilight the current file
+nnoremap <leader>n :enew<CR>|                           " Open new buffer in current split
+nnoremap <leader>L :SyntasticToggleMode<CR>|            " Togle syntastic mode
+nnoremap <leader>l :SyntasticCheck<CR>|                 " Trigger syntastic check
+nnoremap <leader>/ :noh<CR>|                            " Clear search pattern matches with return
 nnoremap <leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>| " Bind K to grep word under cursor
-nnoremap <leader>m :!clear;ansible-lint %<CR>|                                     " Run ansible-lint on the current file
-nnoremap <leader>h <C-w>h                                       " Move to left window
-nnoremap <leader>j <C-w>j                                       " Move down a window
-nnoremap <leader>k <C-w>k                                       " Move up a window
-nnoremap <leader>l <C-w>l                                       " Move to right window
+nnoremap <leader>m :!clear;ansible-lint %<CR>|          " Run ansible-lint on the current file
+nnoremap <leader>h <C-w>h                               " Move to left window
+nnoremap <leader>j <C-w>j                               " Move down a window
+nnoremap <leader>k <C-w>k                               " Move up a window
+nnoremap <leader>l <C-w>l                               " Move to right window
+
+if has('nvim')
+    nnoremap <leader>r :so ~/.config/nvim/init.vim<CR>| " Reload vimrc
+else
+    nnoremap <leader>r :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
+endif
+
 
 " Commands (aliases)
 command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
@@ -111,6 +136,9 @@ command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | 
 
 
 """ Plugin config
+" Configure neovim (https://github.com/neovim/neovim/wiki)
+let g:python_host_prog  = '/usr/local/bin/python2'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 " Use The Silver Searcher if it is installed
 if executable('ag')
@@ -149,6 +177,8 @@ let g:vim_markdown_fenced_languages = [
     \ ]
 
 " Configure nerdtree-git-plugin (https://github.com/Xuyuanp/nerdtree-git-plugin)
+let NERDTreeShowHidden=1                        " Show NERDTree
+let NERDTreeQuitOnOpen=1                        " Close NERDTree after file is opened
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "•",
     \ "Staged"    : "+",
@@ -187,9 +217,9 @@ let g:ycm_semantic_triggers =  {
   \ }
 
 " Configure Syntastic plugin (https://github.com/vim-syntastic/syntastic)
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -319,17 +349,24 @@ augroup END
 
 " Remove trailing whitespace and return cursor to starting position
 function! <SID>StripTrailingWhitespaces()
-    if &readonly == 0 && &buftype != 'nofile' && &diff == 0
+    if &readonly == 0
+                \&& &buftype != 'nofile'
+                \&& &buftype != 'terminal'
+                \&& &diff == 0
         let l = line('.')
         let c = col('.')
         %s/\s\+$//e
         call cursor(l, c)
         retab
-    endif
+   endif
 endfunction
 
 function! WriteIfModifiable()
-    if buffer_name('%') != '' && &readonly == 0 && &buftype != 'nofile' && &diff == 0
+    if buffer_name('%') != ''
+                \&& &readonly == 0
+                \&& &buftype != 'nofile'
+                \&& &buftype != 'terminal'
+                \&& &diff == 0
         silent w
     endif
 endfunction
@@ -390,6 +427,7 @@ nnoremap <Down> :echoe "Use j"<CR>
 " Custom colors that override any theme loaded to this point
 hi ColorColumn ctermbg=8
 highlight Comment cterm=italic
+hi Normal ctermbg=0
 
 " This was all to set bg transparent so tmux active pane hilighting would work
 " hi Normal ctermbg=NONE
