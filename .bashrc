@@ -1,14 +1,15 @@
 # vim: set ft=sh:
 # .bashrc
-source ~/.dotfiles/.dockerconfig    # Docker helpers
-source ~/.dotfiles/.awsconfig       # aws helpers
-source ~/.dotfiles/.osx             # osx helpers
+source ~/.dotfiles/.dockerconfig        # Docker helpers
+source ~/.dotfiles/.awsconfig           # aws helpers
+source ~/.dotfiles/.osx                 # osx helpers
+source /usr/local/etc/profile.d/z.sh    # z cd autocompleation
 
 # custom exports (e.g. paths, app configs)
 #export GOPATH=$HOME/dev/go
 #export BINPATH=$HOME/bin
 #export PATH=${PATH}:$GOPATH/bin:$BINPATH
-export EDITOR=vim
+export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 
@@ -20,6 +21,8 @@ export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 source /etc/profile                                                 # Set base path
 export PATH="/usr/locexec/bin:${PATH}"                              # Homebrew
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"       # Homebrew coreutils
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"               # Homebrew python
+export PATH="/usr/local/lib/python2.7/site-packages:${PATH}"        # Homebrew pip2 packages
 export PATH="/usr/local/lib/python3.6/site-packages:${PATH}"        # Homebrew pip3 packages
 export PATH="/Users/ryanfisher/.gem/ruby/2.4.0:${PATH}"             # Ruby gems isntalled with --user
 export PATH="/usr/local/lib/ruby/gems/2.4.0:${PATH}"                # Ruby gems installed for the system
