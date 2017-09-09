@@ -100,14 +100,14 @@ cnoremap %% %s/\v
 " Leader key remappings
 nnoremap <leader>\ :vsp<CR>|                            " Open vertical split
 nnoremap <leader>- :sp<CR>|                             " Open horizontal split
-if has('vim')                                           " Close buffer(s)
+if has('nvim')                                           " Close buffer(s)
     nnoremap <leader>q :q<CR>|
     tnoremap <leader>q <C-\><C-n>:q<CR>|
-    nnoremap <leader>qq :qa<CR>|
-    tnoremap <leader>q <C-\><C-n>:qa<CR>|
+    nnoremap <leader>qq :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|
+    tnoremap <leader>qq <C-\><C-n>:qa<CR>|
 else
     nnoremap <leader>q :q<CR>|
-    nnoremap <leader>q :qa<CR>|
+    nnoremap <leader>qq :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|
 endif
 nnoremap <leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|     " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <leader>1 :ProjectRootExe NERDTreeToggle<CR>|  " Open/close NERDTree
