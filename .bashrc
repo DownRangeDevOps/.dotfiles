@@ -30,6 +30,9 @@ export PATH="~/bin:${PATH}"                                         # Custom ins
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"   # Hoembrew coreutils manpages
 #export PATH=${PATH}:/usr/local/mysql/bin
 
+# Enable `thefuck`
+eval "$(thefuck --alias)"
+
 # Use vi mode on command line
 set -o vi
 bind '"jj":vi-movement-mode'
@@ -100,9 +103,9 @@ stty start undef
 stty stop undef
 
 # Sexy Bash Prompt, inspired by "Extravagant Zsh Prompt"
-if [[ $COLORTERM = gnome-* && $TERM = xterm ]]  && infocmp gnome-256color >/dev/null 2>&1; then export TERM=gnome-256color
-elif [[ $TERM != dumb ]] && infocmp xterm-256color >/dev/null 2>&1; then export TERM=xterm-256color
-fi
+# if [[ $COLORTERM = gnome-* && $TERM = xterm ]]  && infocmp gnome-256color >/dev/null 2>&1; then export TERM=gnome-256color
+# elif [[ $TERM != dumb ]] && infocmp xterm-256color >/dev/null 2>&1; then export TERM=xterm-256color
+# fi
 
 if tput setaf 1 &> /dev/null; then
     tput sgr0

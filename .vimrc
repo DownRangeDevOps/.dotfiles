@@ -2,7 +2,7 @@
 " Setup plugin manager
 so ~/.dotfiles/.plugins
 
-""" Prefrences
+""" Prefrences ---------------------------------------------------------------
 filetype plugin indent on           " Enable file type detection and do language-dependent indenting.
 set autochdir                       " Auto change working directory to that of the current file
 set autowrite                       " Automatically :write before running commands
@@ -12,8 +12,10 @@ set backspace=indent,eol,start      " Make backspace behave in a sane manner.
 set colorcolumn=80                  " Make it obvious where 80 characters is
 set complete+=kspell                " Autocomplete with dictionary words when spell check is on
 set diffopt+=vertical               " Always use vertical diffs
+set formatoptions+=crjq             " See :help fo-table
 set history=50                      " store command history across sessions
 set hlsearch                        " hilight search matches
+nohlsearch
 set incsearch                       " do incremental searching
 set list listchars=tab:»·,trail:·,nbsp:·  " Dispay tabs, non-breaking spaces, and trailing whitespace
 set noshowmode                      " hide the mode status line
@@ -21,14 +23,16 @@ set noshowmode                      " hide the mode status line
 set ruler                           " show the cursor position all the time
 set showbreak=↳\ \ \>               " Indicate wraped lines
 set showcmd                         " display incomplete commands
+set spell spelllang=en_us           " Turn on spellchecking
 set splitbelow                      " Open new split panes to the right/bottom
 set splitright
 set swapfile                        " use a swap file
-set timeoutlen=750                  " set a short leader timeout
+set timeoutlen=700                  " set a short leader timeout
 set dir=~/tmp                       " set where swapfile(s) are stored
 set wildmode=list:longest,list:full       " Configure autocompletion see :help wildmode
 set secure                          " Prevent shell, write, :au unless file is owned by me
 set scrolloff=2                     " Always show one line above/below the cursor
+set termguicolors                   " Use truecolor
 if &diff                            " only for diff mode/vimdiff
   set diffopt=filler,context:1000000      " filler is default and inserts empty lines for sync
 endif
@@ -47,10 +51,10 @@ set numberwidth=5
 
 " Change cursor shape in iTerm2 & tmux in iTerm
 if has('nvim')
-   set guicursor=a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor,
-                \n-c-v-sm:block,
-                \i-ci-ve:ver25,
-                \r-cr-o:hor20
+   set guicursor=n-c-v-sm:block-Cursor/lCursor,
+                \i-ci-ve:ver25-Cursor/lCursor,
+                \r-cr-o:hor20-Cursor/lCursor,
+                \a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor
 else
     let &t_SI = "\<ESC>]50;CursorShape=1\x7"
     let &t_SR = "\<ESC>]50;CursorShape=2\x7"
@@ -64,9 +68,10 @@ endif
 " Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
+  set synmaxcol=200
 endif
 
-""" Key mappings
+""" Key mappings ---------------------------------------------------------------
 map <SPACE> <leader>
 let mapleader = ' '
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
@@ -81,7 +86,6 @@ nnoremap <C-j> <C-w>j                                       " Move down a window
 nnoremap <C-k> <C-w>k                                       " Move up a window
 nnoremap <C-l> <C-w>l                                       " Move right a window
 if has('nvim')
-    tnoremap <leader><ESC> <C-\><C-n>|                      " Easy escape from terminal in neovim
     tnoremap <C-h> <C-\><C-n><C-w>h                         " Move left a window
     tnoremap <C-j> <C-\><C-n><C-w>j                         " Move down a window
     tnoremap <C-k> <C-\><C-n><C-w>k                         " Move up a window
@@ -90,8 +94,8 @@ endif
 
 
 " Use magic in search/substitue
-nnoremap // /\v
-vnoremap // /\v
+nnoremap / /\v
+vnoremap / /\v
 cnoremap %% %s/\v
 " cnoremap \>s/ \>smagic/
 " nnoremap :g/ :g/\v
@@ -100,15 +104,11 @@ cnoremap %% %s/\v
 " Leader key remappings
 nnoremap <leader>\ :vsp<CR>|                            " Open vertical split
 nnoremap <leader>- :sp<CR>|                             " Open horizontal split
-if has('nvim')                                           " Close buffer(s)
-    nnoremap <leader>q :q<CR>|
-    tnoremap <leader>q <C-\><C-n>:q<CR>|
-    nnoremap <leader>qq :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|
-    tnoremap <leader>qq <C-\><C-n>:qa<CR>|
-else
-    nnoremap <leader>q :q<CR>|
-    nnoremap <leader>qq :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|
-endif
+nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|    " Close buffer(s)
+nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
+nnoremap <silent><leader>qq :q<CR>|
+nnoremap <silent><leader>Q :q<CR>|
+nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:set nospell<CR>i|
 nnoremap <leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|     " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <leader>1 :ProjectRootExe NERDTreeToggle<CR>|  " Open/close NERDTree
 nnoremap <leader>2 :ProjectRootExe NERDTreeFind<CR>|    " Open NERDTree and hilight the current file
@@ -118,19 +118,22 @@ nnoremap <leader>l :SyntasticCheck<CR>|                 " Trigger syntastic chec
 nnoremap <leader>/ :noh<CR>|                            " Clear search pattern matches with return
 nnoremap <leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>|     " Bind K to grep word under cursor
 nnoremap <leader>m :!clear;ansible-lint %<CR>|          " Run ansible-lint on the current file
+nnoremap <leader>p :CtrlP ProjectRootCD<CR>|            " Find the real root
+nnoremap <leader>ha <Plug>GitGutterStageHunk
+nnoremap <leader>hr <Plug>GitGutter
+
+" Easy window movement
 nnoremap <leader>h <C-w>h                               " Move to left window
 nnoremap <leader>j <C-w>j                               " Move down a window
 nnoremap <leader>k <C-w>k                               " Move up a window
 nnoremap <leader>l <C-w>l                               " Move to right window
-nnoremap <leader>p :CtrlP ProjectRootCD<CR>|            " Find the real root
-vnoremap  <leader>y  "+y                                " Copy to clipboard
-nnoremap  <leader>Y  "+yg_
-nnoremap  <leader>y  "+y
-nnoremap  <leader>yy  "+yy
-nnoremap <leader>p "+p                                  " Paste from clipboard
-nnoremap <leader>P "+P
-vnoremap <leader>p "+p
-vnoremap <leader>P "+P
+
+" Copy/paste to/from system clipboard
+vnoremap <leader>y  "+y
+nnoremap <leader>Y  "+yg_
+nnoremap <leader>y  "+y
+nnoremap <leader>yy  "+yy
+nnoremap <leader>p "+p 
 
 if has('nvim')
     nnoremap <leader>r :so ~/.config/nvim/init.vim<CR>|
@@ -148,10 +151,13 @@ endif
 " command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
 
-""" Plugin config
+""" Plugin config --------------------------------------------------------------
 " Configure neovim (https://github.com/neovim/neovim/wiki)
-let g:python_host_prog  = '/usr/local/bin/python2'
-let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python_host_prog  = '/usr/local/bin/python2'      " Enable python2 support
+let g:python3_host_prog = '/usr/local/bin/python3'      " Enable python3 support
+
+" Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
+let g:deoplete#enable_at_startup = 1
 
 if has('nvim')                                          " Prevent nested neovim instances when using :term
   let $VISUAL = 'nvr -cc split --remote-wait'
@@ -170,7 +176,7 @@ if executable('ag')
 endif
 
 " Define an Ag command to search for the provided text and open results in quickfix
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 5|redraw!
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
 
 " Configure CtrlP (https://github.com/kien/ctrlp.vim)
 let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=current file, r=nearest '.git/.svn/...', a=like c but current file)
@@ -271,10 +277,18 @@ let g:syntastic_ansible_checkers = ['syntastic-ansible-ansible_lint']
 let g:syntastic_ansible_ansible_lint_quiet_messages =
             \ {"regex": "trailing whitespace"}
 
+" Configure neomake (https://github.com/neomake/neomake)
+" let g:neomake_ansible_ansiblelint_maker = {
+"             \ 'exe': 'ansible-lint',
+"             \ 'args': ['-x ANSIBLE0002', '-p', '--nocolor'],
+"             \ 'errorformat': '%f:%l: [%tANSIBLE%n] %m'
+"             \ }
+let g:neomake_ansible_enabled_makers = ['ansiblelint']
+
 " Configure vim-auto-save plugin (https://github.com/vim-scripts/vim-auto-save)
 let g:auto_save = 1
-let g:auto_save_silent = 1                                                  " Do not display the auto-save notification
-let g:auto_save_no_updatetime = 1                                           " do not change the 'updatetime' option
+let g:auto_save_silent = 1              " Do not display the auto-save notification
+let g:auto_save_no_updatetime = 1       " do not change the 'updatetime' option
 
 " Configure vim-tmux-navigator (https://github.com/christoomey/vim-tmux-navigator)
 let g:tmux_navigator_save_on_switch = 2
@@ -290,29 +304,31 @@ let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cur
 let g:lastplace_ignore_buftype = "quickfix,nofile,help"
 
 " Configure vim-diminactive (https://github.com/blueyed/vim-diminactive)
-" let g:diminactive_use_syntax = 1
-" let g:diminactive_use_colorcolumn = 0
-" let g:diminactive_enable_focus = 1
+let g:diminactive_use_syntax = 1
+let g:diminactive_use_colorcolumn = 0
+let g:diminactive_enable_focus = 1
 
-" Enable lifepillar/vim-solarized8 color scheme
+" Enable icymind/NeoSolarized color scheme
 " NOTE: highlight customizations must be after this
-" syntax enable
+colorscheme NeoSolarized
 set background=dark
-let g:solarized_term_italics = 1
-if v:version >= 700
-    try
-        colorscheme solarized8_dark
-    catch
-    endtry
-endif
+let g:neosolarized_contrast = "high"
+let g:neosolarized_visibility = "low"
+let g:neosolarized_vertSplitBgTrans = 1
+let g:neosolarized_bold = 1
+let g:neosolarized_underline = 1
+let g:neosolarized_italic = 1
 
 " Custom colors that override any theme loaded to this point
-hi ColorColumn ctermbg=8
-hi Comment cterm=italic
-hi Normal ctermbg=0
-hi TermCursor ctermfg=1
-
-
+hi Cursor ctermbg=6 guibg=#2aa198
+hi ColorColumn ctermbg=8 guibg=#003741
+hi Normal ctermbg=NONE guibg=NONE
+hi Comment cterm=italic gui=italic
+hi MatchParen ctermbg=NONE guibg=NONE
+hi GitGutterAdd ctermbg=8 guibg=#003741
+hi GitGutterChange ctermbg=8 guibg=#003741
+hi GitGutterDelete ctermbg=8 guibg=#003741
+hi GitGutterChangeDelete ctermbg=8 guibg=#003741
 
 " Configure lightline status bar
 set laststatus=2
@@ -337,18 +353,21 @@ let g:lightline = {
 
 " Lightline functions
 function! LightLineFilename()
-    let prefix = '...'
     let limit = 3
-    let path_components = split(expand('%:p'), '/')
+    let project_root = projectroot#guess()
+    let path = substitute(expand('%:p'), project_root . '/', '', '')
+    let path_len = len(path)
+    let max_width = winwidth(0) - 65
 
-    if len(path_components) > limit
-        return join(path_components[-limit:-1], '/')
+    if path_len > max_width
+        let max_width += 3
+        return '...' . strpart(path, path_len - max_width)
     else
-        return join(path_components,'/')
+        return path
     endif
 endfunction
 
-" Put all au settings here to load them only when vimrc is executed
+""" Startup autocommands -------------------------------------------------------
 augroup vimrcEx
   au!
 
@@ -376,19 +395,25 @@ augroup vimrcEx
   au FileType css,scss,sass setlocal iskeyword+=-
 
   " Remove tabs and trailing whitespace on open and insert
-  " au BufRead,TextChanged,FocusGained *
-  "   \ :call <SID>StripTrailingWhitespaces()
+  au BufRead,BufEnter,BufLeave,TextChanged *
+        \call <SID>StripTrailingWhitespaces()
 
   " Autosave
-  au TextChanged * :call WriteIfModifiable()
+  au TextChanged * call <SID>WriteIfModifiable()
+
+  " Autoread
+  au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
+
+  " Auto lint on write
+  au BufWritePost * Neomake
 
 " augroup END
 
+""" Custom functions -----------------------------------------------------------
 " Remove trailing whitespace and return cursor to starting position
-function! <SID>StripTrailingWhitespaces()
+function! s:StripTrailingWhitespaces()
     if &readonly == 0
-                \&& &buftype != 'nofile'
-                \&& &buftype != 'terminal'
+                \&& &buftype == ''
                 \&& &diff == 0
         let cur_line = line('.')
         let cur_col = col('.')
@@ -398,7 +423,7 @@ function! <SID>StripTrailingWhitespaces()
    endif
 endfunction
 
-function! WriteIfModifiable()
+function! s:WriteIfModifiable()
     if buffer_name('%') != ''
                 \&& &readonly == 0
                 \&& &buftype != 'nofile'
@@ -406,6 +431,14 @@ function! WriteIfModifiable()
                 \&& &diff == 0
         silent w
     endif
+endfunction
+
+function! DeleteHiddenBuffers()
+    let tpbl=[]
+    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+        silent execute 'bwipeout!' buf
+    endfor
 endfunction
 
 " function! NERDTreeOpen()
@@ -418,7 +451,7 @@ endfunction
 
 " Tab completion
 " Will insert tab at beginning of line, will use completion if not at beginning
-function! InsertTabWrapper()
+function! s:InsertTabWrapper()
     let col = col('.') - 1
     if !col || getline('.')[col - 1] !~ '\k'
         return "\<tab>"
@@ -426,8 +459,30 @@ function! InsertTabWrapper()
         return "\<c-p>"
     endif
 endfunction
-inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <Tab> <c-r>=<SID>InsertTabWrapper()<cr>
 inoremap <S-Tab> <c-n>
+
+" Open previous buffer, wipe current, quit if only one buffer
+function! s:WipeBufOrQuit()
+    let num_bufs = len(getbufinfo({'buflisted':1}))
+    let prev_buf = bufnr('#')
+    if num_bufs <= 1
+        silent execute 'qall'
+    elseif prev_buf == -1 || &buftype != ''
+        silent execute 'quit'
+        if &buftype == 'terminal'
+            silent execute 'startinsert'
+        endif
+    else
+        silent execute 'buf #'
+        if bufnr('#') != -1
+            silent execute 'bwipeout! #'
+        endif
+        if &buftype == 'terminal'
+            silent execute 'startinsert'
+        endif
+    endif
+endfunction
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -437,19 +492,4 @@ nnoremap <Left> :echoe "Use h"<CR>
 nnoremap <Right> :echoe "Use l"<CR>
 nnoremap <Up> :echoe "Use k"<CR>
 nnoremap <Down> :echoe "Use j"<CR>
-
-" This was all to set bg transparent so tmux active pane hilighting would work
-" hi Normal ctermbg=NONE
-" hi SignColumn ctermbg=NONE
-" hi LineNr ctermbg=NONE
-" hi CursorLineNr ctermbg=NONE
-" hi NonText ctermbg=NONE
-" hi Special ctermbg=NONE
-" hi Comment ctermbg=NONE
-" hi Conceal ctermbg=NONE
-" hi SpecialKey ctermbg=NONE
-" hi GitGutterAdd ctermbg=NONE
-" hi GitGutterChange ctermbg=NONE
-" hi GitGutterDelete ctermbg=NONE
-" hi GitGutterChangeDelete ctermbg=NONE
 

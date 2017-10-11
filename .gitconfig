@@ -4,7 +4,7 @@
 [core]
     excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
-    editor = /usr/local/bin/nvim
+    editor = nvr --remote-wait-silent
 [diff]
     tool = vim-fugitive
 [difftool "vim-fugitive"]
@@ -29,7 +29,7 @@
 [commit]
     template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
-    autocorrect = 1
+    autocorrect = 0
 [alias]
   lg = !"git lg1"
   lg1 = !"git lg1-specific --all"
