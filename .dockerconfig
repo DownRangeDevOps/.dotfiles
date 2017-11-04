@@ -68,3 +68,16 @@ dme() {
   fi
 }
 
+de() {
+  PATTERN='help'
+  if [[ $# -eq 0 || $1 =~ $PATTERN ]]; then
+    echo 'Docker helper to connect to a running container'
+    echo 'Usage: de <container> [<command>]'
+    return 1
+  fi
+
+  CONTAINER=$1
+  COMMAND=${2:-bash}
+
+  docker exec -ti $CONTAINER $COMMAND
+}

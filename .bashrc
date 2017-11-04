@@ -1,9 +1,11 @@
 # vim: set ft=sh:
 # .bashrc
-source ~/.dotfiles/.dockerconfig        # Docker helpers
-source ~/.dotfiles/.awsconfig           # aws helpers
-source ~/.dotfiles/.osx                 # osx helpers
-source /usr/local/etc/profile.d/z.sh    # z cd autocompleation
+source ~/.dotfiles/.dockerconfig                # Docker helpers
+source ~/.dotfiles/.git_helpers                 # git helpers
+source ~/.dotfiles/.awsconfig                   # aws helpers
+source ~/.dotfiles/.osx                         # osx helpers
+source /usr/local/etc/profile.d/z.sh            # z cd autocompleation
+[[ ! $VIRTUAL_ENV ]] && source /usr/local/bin/virtualenvwrapper.sh      # setup virtualenvwrapper hooks
 
 # custom exports (e.g. paths, app configs)
 #export GOPATH=$HOME/dev/go
@@ -12,6 +14,8 @@ source /usr/local/etc/profile.d/z.sh    # z cd autocompleation
 export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
+export WORKON_HOME=$HOME/.virtualenvs   # python virtual env
+export PROJECT_HOME=$HOME/dev/python_virtualenv_projects
 
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
@@ -53,6 +57,7 @@ _expand() { return 0; }
 
 # Use hub as git
 alias git=hub
+alias g=hub
 
 # Ansible vault shortcuts
 alias aav='ansible-vault view'
@@ -146,11 +151,19 @@ function parse_git_dirty () {
 }
 
 function parse_git_branch () {
-  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+}
+
+function get_virtualenv () {
+    if [[ $VIRTUAL_ENV ]]; then
+        echo " ($(basename $VIRTUAL_ENV))"
+    else
+        echo ""
+    fi
 }
 
 function show_vi_mode () {
-    PS1=' → '
+    PS1='$(get_virtualenv) → '
     echo -e "$(date +%R) ${MAGENTA}$(whoami)${RESET} at ${ORANGE}$(hostname -s)${RESET} in ${GREEN}${PWD}${RESET}$([[ -n $(git branch 2>/dev/null) ]] && echo " on ")${PURPLE}$(parse_git_branch)${RESET}"
 }
 

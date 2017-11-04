@@ -29,5 +29,13 @@ Plug 'vim-scripts/vim-auto-save'
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'vim-syntastic/syntastic'  " slow... not working
 Plug 'neomake/neomake'
+
+" Deoplete and source plugins
+Plug 'zchee/deoplete-jedi'              " python
+Plug 'Shougo/neco-vim'                  " vim
+Plug 'fishbullet/deoplete-ruby'         " ruby
+Plug 'Shougo/context_filetype.vim'      " filetypes
+Plug 'Shougo/neoinclude.vim'            " include file and path
+Plug 'php-vim/phpcd.vim'                " php
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 call plug#end()

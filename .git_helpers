@@ -1,0 +1,70 @@
+# Alises
+alias g="git"
+alias gs="git status"
+alias gb="git branch"
+alias gba="git branch --all"
+alias gf="git fetch --prune"
+alias gp="gf && git pull --rebase"
+alias ga.="git add --all"
+alias gc="git commit --verbose"
+alias gco="git checkout"
+alias gcm="git checkout master"
+alias grb="git rebase --interactive"
+alias grbm="git rebase --interactive master"
+alias grbc="git rebase --continue"
+alias gpu="git remote | xargs -L1 -I remote git push -u remote HEAD"
+alias gfpo="git push --force-with-lease origin HEAD"
+alias gpm="git log origin/master.. && git diff --stat origin/master"
+
+# Add git completion
+add_git_completion_to_aliases() {
+    declare -f -F __git_complete > /dev/null
+    if [[ -n $? ]]; then
+        __git_complete gco _git_checkout
+    fi
+}
+
+# for git_func in (gffm, gcwm, )
+# add_git_completion_to_funcs() {
+#     declare -f -F __git_func_wrap > /dev/null
+#     if [[ -n $? ]]; then
+#         __git_func_wrap gffm _git_merge
+#     fi
+# complete -o bashdefault -o default -o nospace -F __git_wrap_git_checkout git_checkout
+# }
+
+# Functions
+gffm() {
+    if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
+        echo "Usage: gffm <branch>"
+        return 1
+    fi
+
+    git merge --ff-only $1
+}
+
+gcwm() {
+    if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
+        echo "Usage: gcwm <message>"
+        return 1
+    fi
+
+    git commit -m "$1"
+}
+
+gnuke() {
+    if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
+        echo "Usage: gnuke <branch>"
+        return 1
+    fi
+
+    git remote | xargs -L1 -I remote git push --delete remote $1
+    git branch -D $1
+}
+
+gnukethis() {
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+    git remote | xargs -L1 -I remote git push --delete remote ${BRANCH}
+    git branch -D ${BRANCH}
+}

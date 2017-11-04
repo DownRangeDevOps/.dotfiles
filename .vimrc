@@ -2,6 +2,7 @@
 " Setup plugin manager
 so ~/.dotfiles/.plugins
 
+
 """ Prefrences ---------------------------------------------------------------
 filetype plugin indent on           " Enable file type detection and do language-dependent indenting.
 set autochdir                       " Auto change working directory to that of the current file
@@ -18,8 +19,8 @@ set hlsearch                        " hilight search matches
 nohlsearch
 set incsearch                       " do incremental searching
 set list listchars=tab:»·,trail:·,nbsp:·  " Dispay tabs, non-breaking spaces, and trailing whitespace
+set mouse=a
 set noshowmode                      " hide the mode status line
-"set nowrap                         " Don't wrap lines in the display
 set ruler                           " show the cursor position all the time
 set showbreak=↳\ \ \>               " Indicate wraped lines
 set showcmd                         " display incomplete commands
@@ -71,6 +72,7 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   set synmaxcol=200
 endif
 
+
 """ Key mappings ---------------------------------------------------------------
 map <SPACE> <leader>
 let mapleader = ' '
@@ -109,16 +111,16 @@ nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
 nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:set nospell<CR>i|
-nnoremap <leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|     " wtf workaround bc broken from autowrite or...???? Write buffer
-nnoremap <leader>1 :ProjectRootExe NERDTreeToggle<CR>|  " Open/close NERDTree
-nnoremap <leader>2 :ProjectRootExe NERDTreeFind<CR>|    " Open NERDTree and hilight the current file
+nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|     " wtf workaround bc broken from autowrite or...???? Write buffer
+nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|  " Open/close NERDTree
+nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|    " Open NERDTree and hilight the current file
 nnoremap <leader>n :enew<CR>|                           " Open new buffer in current split
 nnoremap <leader>L :SyntasticToggleMode<CR>|            " Togle syntastic mode
 nnoremap <leader>l :SyntasticCheck<CR>|                 " Trigger syntastic check
 nnoremap <leader>/ :noh<CR>|                            " Clear search pattern matches with return
-nnoremap <leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>|     " Bind K to grep word under cursor
+nnoremap <silent><leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>|     " Bind K to grep word under cursor
 nnoremap <leader>m :!clear;ansible-lint %<CR>|          " Run ansible-lint on the current file
-nnoremap <leader>p :CtrlP ProjectRootCD<CR>|            " Find the real root
+nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|            " Find the real root
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
 
@@ -133,7 +135,7 @@ vnoremap <leader>y  "+y
 nnoremap <leader>Y  "+yg_
 nnoremap <leader>y  "+y
 nnoremap <leader>yy  "+yy
-nnoremap <leader>p "+p 
+nnoremap <leader>p "+p
 
 if has('nvim')
     nnoremap <leader>r :so ~/.config/nvim/init.vim<CR>|
@@ -158,6 +160,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'      " Enable python3 support
 
 " Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 
 if has('nvim')                                          " Prevent nested neovim instances when using :term
   let $VISUAL = 'nvr -cc split --remote-wait'
@@ -182,6 +185,8 @@ command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redra
 let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=current file, r=nearest '.git/.svn/...', a=like c but current file)
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:100,results:10'
 let g:ctrlp_brief_prompt = 1
+let g:ctrlp_show_hiden = 1
+let g:ctrlp_custom_ignore = 'roles.galaxy'
 
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
 let g:vim_markdown_folding_disabled = 1
@@ -367,6 +372,7 @@ function! LightLineFilename()
     endif
 endfunction
 
+
 """ Startup autocommands -------------------------------------------------------
 augroup vimrcEx
   au!
@@ -391,7 +397,7 @@ augroup vimrcEx
   au FileType gitcommit setlocal spell
   au FileType gitcommit set filetype=markdown
 
-  " Allow stylesheets to autocomplete hyphenated words
+  " Allow style sheets to auto-complete hyphenated words
   au FileType css,scss,sass setlocal iskeyword+=-
 
   " Remove tabs and trailing whitespace on open and insert
@@ -407,7 +413,11 @@ augroup vimrcEx
   " Auto lint on write
   au BufWritePost * Neomake
 
+  " Set spell check off in terminals
+  au BufNewFile * if buffer_name('%') =~ 'term://' | setlocal nospell
+
 " augroup END
+
 
 """ Custom functions -----------------------------------------------------------
 " Remove trailing whitespace and return cursor to starting position
@@ -481,6 +491,15 @@ function! s:WipeBufOrQuit()
         if &buftype == 'terminal'
             silent execute 'startinsert'
         endif
+    endif
+endfunction
+
+" Open NERDTree using ProjectRootExe if buffer isn't a terminal
+function! s:NvimNerdTreeToggle()
+    if &buftype == 'terminal'
+        silent execute 'NERDTreeToggle'
+    else
+        silent execute 'ProjectRootExe NERDTreeToggle'
     endif
 endfunction
 
