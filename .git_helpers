@@ -5,22 +5,27 @@ alias gb="git branch"
 alias gba="git branch --all"
 alias gf="git fetch --prune"
 alias gp="gf && git pull --rebase"
+alias ga="git add"
 alias ga.="git add --all"
 alias gc="git commit --verbose"
 alias gco="git checkout"
-alias gcm="git checkout master"
+alias gcom="git checkout master"
 alias grb="git rebase --interactive"
-alias grbm="git rebase --interactive master"
+alias grbm="git rebase --interactive origin/master"
 alias grbc="git rebase --continue"
 alias gpu="git remote | xargs -L1 -I remote git push -u remote HEAD"
 alias gfpo="git push --force-with-lease origin HEAD"
-alias gpm="git log origin/master.. && git diff --stat origin/master"
+alias gstat="echo '==> Log: '\
+    && git log origin/master.. \
+    && echo '' && echo '==> Diff:' \
+    && git diff --stat origin/master"
 
 # Add git completion
 add_git_completion_to_aliases() {
     declare -f -F __git_complete > /dev/null
     if [[ -n $? ]]; then
         __git_complete gco _git_checkout
+        __git_complete ga _git_add
     fi
 }
 

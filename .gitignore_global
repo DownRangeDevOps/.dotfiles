@@ -6,4 +6,4 @@
 **/.ctags
 **/tags
 **/.ignore
-
+*@neomake_*
