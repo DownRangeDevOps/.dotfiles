@@ -1,11 +1,5 @@
 # vim: set ft=sh:
 # .bashrc
-source ~/.dotfiles/.dockerconfig                # Docker helpers
-source ~/.dotfiles/.git_helpers                 # git helpers
-source ~/.dotfiles/.awsconfig                   # aws helpers
-source ~/.dotfiles/.osx                         # osx helpers
-source /usr/local/etc/profile.d/z.sh            # z cd autocompleation
-[[ ! $VIRTUAL_ENV ]] && source /usr/local/bin/virtualenvwrapper.sh      # setup virtualenvwrapper hooks
 
 # custom exports (e.g. paths, app configs)
 #export GOPATH=$HOME/dev/go
@@ -14,7 +8,7 @@ source /usr/local/etc/profile.d/z.sh            # z cd autocompleation
 export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
-export WORKON_HOME=$HOME/.virtualenvs   # python virtual env
+export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
 export PROJECT_HOME=$HOME/dev/python_virtualenv_projects
 
 # Homebrew bash completion
@@ -38,8 +32,14 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"   # Hoembrew c
 eval "$(thefuck --alias)"
 
 # Use vi mode on command line
-set -o vi
-bind '"jj":vi-movement-mode'
+# set -o vi
+# bind '"jj":vi-movement-mode'
+
+# Enable an iTerm2 clock badge
+function iterm2_print_user_vars() {
+  iterm2_set_user_var currTime $(date +%R)
+}
+((while [ 1 ] ; do iterm2_print_user_vars; sleep 5; done) &) &> /dev/null
 
 # Add git completion to aliases
 function_exists() {
@@ -72,6 +72,9 @@ alias vh="vagrant halt"
 alias vs="vagrant ssh"
 alias sb="source ~/.bashrc"
 alias ebash="vim ~/.bashrc"
+
+# Auto on Yubiswitch
+alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
 
 # Easy edit custom dot files with menu prompt
 edot() {
@@ -164,7 +167,7 @@ function get_virtualenv () {
 
 function show_vi_mode () {
     PS1='$(get_virtualenv) → '
-    echo -e "$(date +%R) ${MAGENTA}$(whoami)${RESET} at ${ORANGE}$(hostname -s)${RESET} in ${GREEN}${PWD}${RESET}$([[ -n $(git branch 2>/dev/null) ]] && echo " on ")${PURPLE}$(parse_git_branch)${RESET}"
+    echo -e "$(date +%R) ${GREEN}${PWD}${RESET}$([[ -n $(git branch 2>/dev/null) ]] && echo " on ")${PURPLE}$(parse_git_branch)${RESET}"
 }
 
 PROMPT_COMMAND='show_vi_mode'
@@ -196,7 +199,16 @@ function ll() {
 alias ..='cd ..'
 alias ...='cd ..;cd ..'
 alias ....='cd ..;cd ..;cd ..'
+alias .....='cd ..;cd ..;cd ..;cd ..'
 
 # grep options
 alias grep='grep --color=auto '
 export GREP_COLOR='1;31' # green for matches
+
+# helpers
+source ~/.dotfiles/.dockerconfig                # Docker helpers
+source ~/.dotfiles/.git_helpers                 # git helpers
+source ~/.dotfiles/.awsconfig                   # aws helpers
+source ~/.dotfiles/.osx                         # osx helpers
+source /usr/local/etc/profile.d/z.sh            # z cd autocompleation
+# [[ ! $VIRTUAL_ENV ]] && source /usr/local/bin/virtualenvwrapper.sh      # setup virtualenvwrapper hooks

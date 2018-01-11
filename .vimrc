@@ -24,10 +24,10 @@ set noshowmode                      " hide the mode status line
 set ruler                           " show the cursor position all the time
 set showbreak=↳\ \ \>               " Indicate wraped lines
 set showcmd                         " display incomplete commands
-set spell spelllang=en_us           " Turn on spellchecking
+" set spell spelllang=en_us           " Turn on spellchecking
 set splitbelow                      " Open new split panes to the right/bottom
 set splitright
-set swapfile                        " use a swap file
+set noswapfile                      " disable swap file
 set timeoutlen=700                  " set a short leader timeout
 set dir=~/tmp                       " set where swapfile(s) are stored
 set wildmode=list:longest,list:full       " Configure autocompletion see :help wildmode
@@ -79,14 +79,21 @@ let mapleader = ' '
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
 inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
+" nnoremap <CR> :call <SID>EnterInsertModeInTerminal()<CR>|
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
 nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
 nnoremap <CR> :noh<CR><CR>|                                 " Clear search pattern matches with return
 nnoremap K                                                  " Keep searching for man entries by accident
+
+" Easy split navigation
 nnoremap <C-h> <C-w>h                                       " Move left a window
 nnoremap <C-j> <C-w>j                                       " Move down a window
 nnoremap <C-k> <C-w>k                                       " Move up a window
 nnoremap <C-l> <C-w>l                                       " Move right a window
+inoremap <C-h> <ESC><C-w>h                                  " Move left a window
+inoremap <C-j> <ESC><C-w>j                                  " Move down a window
+inoremap <C-k> <ESC><C-w>k                                  " Move up a window
+inoremap <C-l> <ESC><C-w>l                                  " Move right a window
 if has('nvim')
     tnoremap <C-h> <C-\><C-n><C-w>h                         " Move left a window
     tnoremap <C-j> <C-\><C-n><C-w>j                         " Move down a window
@@ -96,39 +103,33 @@ endif
 
 
 " Use magic in search/substitue
-nnoremap / /\v
-vnoremap / /\v
+nnoremap / /\v\c
+vnoremap / /\v\c
 cnoremap %% %s/\v
 " cnoremap \>s/ \>smagic/
 " nnoremap :g/ :g/\v
 " nnoremap :g// :g//
 
 " Leader key remappings
-nnoremap <leader>\ :vsp<CR>|                            " Open vertical split
-nnoremap <leader>- :sp<CR>|                             " Open horizontal split
-nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|    " Close buffer(s)
+nnoremap <leader>\ :vsp<CR>|                                                                " Open vertical split
+nnoremap <leader>- :sp<CR>|                                                                 " Open horizontal split
+nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|                " Close buffer(s)
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
-nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:set nospell<CR>i|
-nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|     " wtf workaround bc broken from autowrite or...???? Write buffer
-nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|  " Open/close NERDTree
-nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|    " Open NERDTree and hilight the current file
-nnoremap <leader>n :enew<CR>|                           " Open new buffer in current split
-nnoremap <leader>L :SyntasticToggleMode<CR>|            " Togle syntastic mode
-nnoremap <leader>l :SyntasticCheck<CR>|                 " Trigger syntastic check
-nnoremap <leader>/ :noh<CR>|                            " Clear search pattern matches with return
-nnoremap <silent><leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>|     " Bind K to grep word under cursor
-nnoremap <leader>m :!clear;ansible-lint %<CR>|          " Run ansible-lint on the current file
-nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|            " Find the real root
+nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:setlocal nospell<CR>i|
+nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
+nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
+nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
+nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
+nnoremap <leader>L :SyntasticToggleMode<CR>|                                                " Togle syntastic mode
+nnoremap <leader>l :SyntasticCheck<CR>|                                                     " Trigger syntastic check
+nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
+nnoremap <silent><leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>|         " Bind K to grep word under cursor
+nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
+nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
-
-" Easy window movement
-nnoremap <leader>h <C-w>h                               " Move to left window
-nnoremap <leader>j <C-w>j                               " Move down a window
-nnoremap <leader>k <C-w>k                               " Move up a window
-nnoremap <leader>l <C-w>l                               " Move to right window
 
 " Copy/paste to/from system clipboard
 vnoremap <leader>y  "+y
@@ -136,6 +137,7 @@ nnoremap <leader>Y  "+yg_
 nnoremap <leader>y  "+y
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
+nnoremap <leader>l :let @+=expand("%") . ':' . line(".")<CR>
 
 if has('nvim')
     nnoremap <leader>r :so ~/.config/nvim/init.vim<CR>|
@@ -161,6 +163,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'      " Enable python3 support
 " Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
+call deoplete#custom#source('_', 'matchers', ['matcher_head'])
 
 if has('nvim')                                          " Prevent nested neovim instances when using :term
   let $VISUAL = 'nvr -cc split --remote-wait'
@@ -172,7 +175,7 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden --skip-vcs-ignores -g ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
@@ -288,7 +291,8 @@ let g:syntastic_ansible_ansible_lint_quiet_messages =
 "             \ 'args': ['-x ANSIBLE0002', '-p', '--nocolor'],
 "             \ 'errorformat': '%f:%l: [%tANSIBLE%n] %m'
 "             \ }
-let g:neomake_ansible_enabled_makers = ['ansiblelint']
+call neomake#configure#automake('nwr', 1000)
+let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
 
 " Configure vim-auto-save plugin (https://github.com/vim-scripts/vim-auto-save)
 let g:auto_save = 1
@@ -299,10 +303,11 @@ let g:auto_save_no_updatetime = 1       " do not change the 'updatetime' option
 let g:tmux_navigator_save_on_switch = 2
 
 " Configure ansible-vim
-let g:ansible_unindent_after_newline = 1                    " Unindent after two newlines
+let g:ansible_unindent_after_newline = 0                    " Unindent after two newlines
 let g:ansible_extra_syntaxes = "php.vim sh.vim cfg.vim"     " Syntax highlight with the native language for *.j2 files
 let g:ansible_attribute_highlight = "ad"                    " Dim all instances of key=
 let g:ansible_name_highlight = "b"                          " Brighten name: if at start
+let g:ansible_extra_keywords_highlight = 1                  " Highlight register, changed_when, no_log etc.
 
 " Configure vim-lastplace (https://github.com/farmergreg/vim-lastplace)
 let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cursor at top when opening these files
@@ -396,6 +401,12 @@ augroup vimrcEx
   au FileType gitcommit setlocal textwidth=72
   au FileType gitcommit setlocal spell
   au FileType gitcommit set filetype=markdown
+
+  " :set nowrap for some files
+  au BufRead, BufNewFile user_list.yml setlocal nowrap
+
+  " Disable line numbers in terminal
+  au TermOpen setlocal setlocal nonumber
 
   " Allow style sheets to auto-complete hyphenated words
   au FileType css,scss,sass setlocal iskeyword+=-
@@ -500,6 +511,19 @@ function! s:NvimNerdTreeToggle()
         silent execute 'NERDTreeToggle'
     else
         silent execute 'ProjectRootExe NERDTreeToggle'
+    endif
+endfunction
+
+" Make the enter key go into insert mode if on a terminal window
+function! s:EnterInsertModeInTerminal()
+    echo 'ran'
+    if &buftype == 'terminal'
+        if mode() == 'n'
+            call startinsert()
+        endif
+    else
+        execute 'nohlsearch'
+        return '\<CR>'
     endif
 endfunction
 

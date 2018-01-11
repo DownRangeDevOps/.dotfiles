@@ -7,3 +7,6 @@ function eb() {
   fi
 }
 
+# aws-shell using aws-vault
+alias msr-shell='aws-vault exec ryan-msr-admin -- aws-shell'
+alias amzn-shell='aws-vault exec ryan-msr-amzn -- aws-shell'

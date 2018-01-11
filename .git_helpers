@@ -1,15 +1,17 @@
 # Alises
 alias g="git"
 alias gs="git status"
+alias gd="git diff"
 alias gb="git branch"
 alias gba="git branch --all"
 alias gf="git fetch --prune"
 alias gp="gf && git pull --rebase"
 alias ga="git add"
 alias ga.="git add --all"
-alias gc="git commit --verbose"
+alias gc="git commit"
 alias gco="git checkout"
 alias gcom="git checkout master"
+alias gst="git stash"
 alias grb="git rebase --interactive"
 alias grbm="git rebase --interactive origin/master"
 alias grbc="git rebase --continue"
@@ -19,6 +21,7 @@ alias gstat="echo '==> Log: '\
     && git log origin/master.. \
     && echo '' && echo '==> Diff:' \
     && git diff --stat origin/master"
+alias grev="git rev-parse --abbrev-ref HEAD"
 
 # Add git completion
 add_git_completion_to_aliases() {
@@ -26,35 +29,76 @@ add_git_completion_to_aliases() {
     if [[ -n $? ]]; then
         __git_complete gco _git_checkout
         __git_complete ga _git_add
+        __git_complete gb _git_branch
+        __git_complete gd _git_diff
+        __git_complete gst _git_stash
     fi
 }
+add_git_completion_to_aliases
 
-# for git_func in (gffm, gcwm, )
-# add_git_completion_to_funcs() {
-#     declare -f -F __git_func_wrap > /dev/null
-#     if [[ -n $? ]]; then
-#         __git_func_wrap gffm _git_merge
-#     fi
-# complete -o bashdefault -o default -o nospace -F __git_wrap_git_checkout git_checkout
-# }
+__git_wrap_gffm() {
+    declare -f -F __git_func_wrap > /dev/null
+    if [[ -n $? ]]; then
+        __git_func_wrap _git_merge
+    fi
+}
+complete -o bashdefault -o default -o nospace -F __git_wrap_gffm gffm
+
+__git_wrap_gnuke() {
+    declare -f -F __git_func_wrap > /dev/null
+    if [[ -n $? ]]; then
+        __git_func_wrap _git_checkout
+    fi
+}
+complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
+
 
 # Functions
 gffm() {
-    if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
+    if [[ $1 == 'help' || $1 == '--help' ]]; then
         echo "Usage: gffm <branch>"
         return 1
     fi
 
-    git merge --ff-only $1
+    CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+    if [[ $1 == 'HEAD' || $1 == '' ]]; then
+        git log origin/master..
+        git checkout master
+        git pull -r
+        git merge --ff-only $CUR_BRANCH
+    else
+        BRANCH=$1
+        git log ${CUR_BRANCH}..${BRANCH}
+        git merge --ff-only $BRANCH
+    fi
+
 }
 
-gcwm() {
-    if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
-        echo "Usage: gcwm <message>"
+gcp() {
+    if [[ $1 == 'help' || $1 == '--help' ]]; then
+        echo "Optionally adds all unstaged changes, commits, and pushes to origin"
+        echo "Usage: gacp [-a] [-m <message>]"
         return 1
     fi
 
-    git commit -m "$1"
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    COMMAND=''
+
+    if [[ $1 == '-a' ]]; then
+        COMMAND+='git add --all && '
+        shift
+    fi
+
+    if [[ $1 == '-m' && $2 ]]; then
+        COMMAND+="git commit -m '$2' && "
+    else
+        COMMAND+='git commit && '
+    fi
+
+    COMMAND+="git push origin $BRANCH"
+
+    $COMMAND
 }
 
 gnuke() {

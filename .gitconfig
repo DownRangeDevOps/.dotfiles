@@ -1,8 +1,8 @@
 [user]
-    name = Ryan Fisher
-    email = ryan@measurabl.com
+	name = Ryan Fisher
+	email = ryan@measurabl.com
 [core]
-    excludesfile = /Users/ryanfisher/.gitignore_global
+	excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
 [diff]
@@ -27,7 +27,7 @@
 [branch]
     autosetuprebase = always
 [commit]
-    template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
+	template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
     autocorrect = 0
 [difftool "sourcetree"]
@@ -76,3 +76,5 @@
   rbc = "!git rebase --continue"
   fpo = "push --force-with-lease origin HEAD"
 
+[init]
+	templatedir = ~/.git-templates
