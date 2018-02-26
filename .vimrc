@@ -14,6 +14,10 @@ set colorcolumn=80                  " Make it obvious where 80 characters is
 set complete+=kspell                " Autocomplete with dictionary words when spell check is on
 set diffopt+=vertical               " Always use vertical diffs
 set formatoptions+=crjq             " See :help fo-table
+set foldenable                      " Code folding config
+set foldmethod=indent
+set foldlevelstart=20
+set foldcolumn=2
 set history=50                      " store command history across sessions
 set hlsearch                        " hilight search matches
 nohlsearch
@@ -23,6 +27,7 @@ set mouse=a
 set noshowmode                      " hide the mode status line
 set ruler                           " show the cursor position all the time
 set showbreak=↳\ \ \>               " Indicate wraped lines
+set fillchars+=vert:\ |
 set showcmd                         " display incomplete commands
 " set spell spelllang=en_us           " Turn on spellchecking
 set splitbelow                      " Open new split panes to the right/bottom
@@ -117,7 +122,7 @@ nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|    
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
-nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:setlocal nospell<CR>i|
+nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:setlocal nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
@@ -126,10 +131,12 @@ nnoremap <leader>L :SyntasticToggleMode<CR>|                                    
 nnoremap <leader>l :SyntasticCheck<CR>|                                                     " Trigger syntastic check
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
 nnoremap <silent><leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>|         " Bind K to grep word under cursor
-nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
+" nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
+nnoremap <silent><leader>m :Neomake
 nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
+nnoremap <silent><leader>cl :let @+=expand("%") . ':' . line(".")<CR>|  " Copy current line path/number
 
 " Copy/paste to/from system clipboard
 vnoremap <leader>y  "+y
@@ -291,8 +298,13 @@ let g:syntastic_ansible_ansible_lint_quiet_messages =
 "             \ 'args': ['-x ANSIBLE0002', '-p', '--nocolor'],
 "             \ 'errorformat': '%f:%l: [%tANSIBLE%n] %m'
 "             \ }
-call neomake#configure#automake('nwr', 1000)
+" call neomake#configure#automake('nwr', 1000)
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
+
+hi NeomakeErrorSign ctermbg=8
+hi NeomakeWarningSign ctermbg=8
+let g:neomake_error_sign = {'text': 'x', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {'text': '!', 'texthl': 'NeomakeWarningSign'}
 
 " Configure vim-auto-save plugin (https://github.com/vim-scripts/vim-auto-save)
 let g:auto_save = 1
@@ -304,7 +316,7 @@ let g:tmux_navigator_save_on_switch = 2
 
 " Configure ansible-vim
 let g:ansible_unindent_after_newline = 0                    " Unindent after two newlines
-let g:ansible_extra_syntaxes = "php.vim sh.vim cfg.vim"     " Syntax highlight with the native language for *.j2 files
+let g:ansible_extra_syntaxes = "python.vim ruby.vim php.vim sh.vim cfg.vim"     " Syntax highlight with the native language for *.j2 files
 let g:ansible_attribute_highlight = "ad"                    " Dim all instances of key=
 let g:ansible_name_highlight = "b"                          " Brighten name: if at start
 let g:ansible_extra_keywords_highlight = 1                  " Highlight register, changed_when, no_log etc.
@@ -318,27 +330,33 @@ let g:diminactive_use_syntax = 1
 let g:diminactive_use_colorcolumn = 0
 let g:diminactive_enable_focus = 1
 
+" Enable jnurmine/Zenburn color scheme
+" colorscheme Zenburn
+
+" Enable chriskempson/vim-tomorrow-theme
+colorscheme Tomorrow-Night-Eighties
+
 " Enable icymind/NeoSolarized color scheme
 " NOTE: highlight customizations must be after this
-colorscheme NeoSolarized
-set background=dark
-let g:neosolarized_contrast = "high"
-let g:neosolarized_visibility = "low"
-let g:neosolarized_vertSplitBgTrans = 1
-let g:neosolarized_bold = 1
-let g:neosolarized_underline = 1
-let g:neosolarized_italic = 1
+" colorscheme NeoSolarized
+" set background=dark
+" let g:neosolarized_contrast = "high"
+" let g:neosolarized_visibility = "low"
+" let g:neosolarized_vertSplitBgTrans = 1
+" let g:neosolarized_bold = 1
+" let g:neosolarized_underline = 1
+" let g:neosolarized_italic = 1
 
 " Custom colors that override any theme loaded to this point
-hi Cursor ctermbg=6 guibg=#2aa198
-hi ColorColumn ctermbg=8 guibg=#003741
-hi Normal ctermbg=NONE guibg=NONE
-hi Comment cterm=italic gui=italic
-hi MatchParen ctermbg=NONE guibg=NONE
-hi GitGutterAdd ctermbg=8 guibg=#003741
-hi GitGutterChange ctermbg=8 guibg=#003741
-hi GitGutterDelete ctermbg=8 guibg=#003741
-hi GitGutterChangeDelete ctermbg=8 guibg=#003741
+" hi Cursor ctermbg=6 guibg=#2aa198
+" hi ColorColumn ctermbg=8 guibg=#003741
+" hi Normal ctermbg=NONE guibg=NONE
+" hi Comment cterm=italic gui=italic
+" hi MatchParen ctermbg=NONE guibg=NONE
+" hi GitGutterAdd ctermbg=8 guibg=#003741
+" hi GitGutterChange ctermbg=8 guibg=#003741
+" hi GitGutterDelete ctermbg=8 guibg=#003741
+" hi GitGutterChangeDelete ctermbg=8 guibg=#003741
 
 " Configure lightline status bar
 set laststatus=2
@@ -346,7 +364,7 @@ let g:lightline = {
   \ 'component_function': {
     \  'filename': 'LightLineFilename'
   \ },
-  \ 'colorscheme': 'solarized',
+  \ 'colorscheme': 'Tomorrow_Night_Eighties',
   \ 'component': {
   \   'readonly': '%{&readonly?"⭤":""}',
   \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',

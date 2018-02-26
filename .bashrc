@@ -72,6 +72,7 @@ alias vh="vagrant halt"
 alias vs="vagrant ssh"
 alias sb="source ~/.bashrc"
 alias ebash="vim ~/.bashrc"
+alias c="clear"
 
 # Auto on Yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
@@ -202,7 +203,7 @@ alias ....='cd ..;cd ..;cd ..'
 alias .....='cd ..;cd ..;cd ..;cd ..'
 
 # grep options
-alias grep='grep --color=auto '
+alias grep='ag --color'
 export GREP_COLOR='1;31' # green for matches
 
 # helpers

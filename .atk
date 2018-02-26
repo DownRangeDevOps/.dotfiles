@@ -1,0 +1,6 @@
+# ansible-toolkit configuration (https://github.com/dellis23/ansible-toolkit)
+[vault]
+~/.ansible/msr-staging-pass
+
+[inventory]
+environments/staging/

@@ -3207,47 +3207,27 @@
 	<real>1</real>
 	<key>GlobalKeyMap</key>
 	<dict>
-		<key>0x68-0x80000</key>
+		<key>0x19-0x60000</key>
 		<dict>
 			<key>Action</key>
 			<integer>39</integer>
 			<key>Text</key>
 			<string></string>
 		</dict>
-		<key>0x68-0xc0000</key>
+		<key>0x46-0x120000</key>
 		<dict>
 			<key>Action</key>
 			<integer>25</integer>
 			<key>Text</key>
-			<string>Move Divider Left</string>
+			<string>Password Manager
+Password Manager</string>
 		</dict>
-		<key>0x6a-0xc0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>25</integer>
-			<key>Text</key>
-			<string>Move Divider Down</string>
-		</dict>
-		<key>0x6b-0xc0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>25</integer>
-			<key>Text</key>
-			<string>Move Divider Up</string>
-		</dict>
-		<key>0x6c-0x80000</key>
+		<key>0x9-0x40000</key>
 		<dict>
 			<key>Action</key>
 			<integer>32</integer>
 			<key>Text</key>
 			<string></string>
-		</dict>
-		<key>0x6c-0xc0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>25</integer>
-			<key>Text</key>
-			<string>Move Divider Right</string>
 		</dict>
 		<key>0xf700-0x300000</key>
 		<dict>
@@ -3448,11 +3428,11 @@
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>3530 768 620 392 2560 0 2560 1417 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>3190 429 606 469 2560 0 2560 1417 </string>
+	<string>630 429 606 469 0 0 2560 1418 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>3266 415 918 512 2560 0 2560 1417 </string>
+	<string>464 243 918 381 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>2560 4 2560 1413 2560 0 2560 1417 </string>
+	<string>0 0 1680 1027 0 0 1680 1028 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>2560 0 2560 1417 2560 0 2560 1417 </string>
 	<key>New Bookmarks</key>
@@ -3842,6 +3822,13 @@
 			</array>
 			<key>Keyboard Map</key>
 			<dict>
+				<key>0x2d-0x40000</key>
+				<dict>
+					<key>Action</key>
+					<integer>11</integer>
+					<key>Text</key>
+					<string>0x1f</string>
+				</dict>
 				<key>0x32-0x40000</key>
 				<dict>
 					<key>Action</key>
@@ -3896,14 +3883,8 @@
 					<key>Action</key>
 					<integer>25</integer>
 					<key>Text</key>
-					<string>Password Manager</string>
-				</dict>
-				<key>0x9-0x40000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>9</string>
+					<string>Password Manager
+Password Manager</string>
 				</dict>
 				<key>0xf700-0x220000</key>
 				<dict>
@@ -3926,13 +3907,6 @@
 					<key>Text</key>
 					<string>[1;6A</string>
 				</dict>
-				<key>0xf700-0x280000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>0x1b 0x1b 0x5b 0x41</string>
-				</dict>
 				<key>0xf701-0x220000</key>
 				<dict>
 					<key>Action</key>
@@ -3953,13 +3927,6 @@
 					<integer>10</integer>
 					<key>Text</key>
 					<string>[1;6B</string>
-				</dict>
-				<key>0xf701-0x280000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>0x1b 0x1b 0x5b 0x42</string>
 				</dict>
 				<key>0xf702-0x220000</key>
 				<dict>
@@ -3982,13 +3949,6 @@
 					<key>Text</key>
 					<string>[1;6D</string>
 				</dict>
-				<key>0xf702-0x280000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>0x1b 0x1b 0x5b 0x44</string>
-				</dict>
 				<key>0xf703-0x220000</key>
 				<dict>
 					<key>Action</key>
@@ -4009,13 +3969,6 @@
 					<integer>10</integer>
 					<key>Text</key>
 					<string>[1;6C</string>
-				</dict>
-				<key>0xf703-0x280000</key>
-				<dict>
-					<key>Action</key>
-					<integer>11</integer>
-					<key>Text</key>
-					<string>0x1b 0x1b 0x5b 0x43</string>
 				</dict>
 				<key>0xf704-0x20000</key>
 				<dict>
@@ -5361,7 +5314,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-12-21T19:51:09Z</date>
+	<date>2018-02-09T20:39:20Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
