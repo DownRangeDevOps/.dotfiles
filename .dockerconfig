@@ -13,6 +13,7 @@ alias syp='echo "==> Starting docker-machine..." &&
   echo "==> Starting docker containers..." &&
   docker-compose up -d'
 
+# Docker shortcuts
 dc() {
   if [[ $# -eq 1 ]]; then
     case $1 in

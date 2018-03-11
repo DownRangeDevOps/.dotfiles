@@ -1,7 +1,8 @@
 " vim: set ft=vim:
 " Setup plugin manager
 so ~/.dotfiles/.plugins
-
+so ~/.dotfiles/.vim-jenkins
+so ~/.dotfiles/assets/term_color.vim
 
 """ Prefrences ---------------------------------------------------------------
 filetype plugin indent on           " Enable file type detection and do language-dependent indenting.
@@ -15,8 +16,8 @@ set complete+=kspell                " Autocomplete with dictionary words when sp
 set diffopt+=vertical               " Always use vertical diffs
 set formatoptions+=crjq             " See :help fo-table
 set foldenable                      " Code folding config
-set foldmethod=indent
-set foldlevelstart=20
+" set foldmethod=syntax
+set foldlevelstart=2
 set foldcolumn=2
 set history=50                      " store command history across sessions
 set hlsearch                        " hilight search matches
@@ -116,8 +117,8 @@ cnoremap %% %s/\v
 " nnoremap :g// :g//
 
 " Leader key remappings
-nnoremap <leader>\ :vsp<CR>|                                                                " Open vertical split
-nnoremap <leader>- :sp<CR>|                                                                 " Open horizontal split
+nnoremap <leader>\ :call <SID>OpenNewSplit('\')<CR>|                                                                " Open vertical split
+nnoremap <leader>- :call <SID>OpenNewSplit('-')<CR>|                                                                 " Open horizontal split
 nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|                " Close buffer(s)
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
@@ -126,6 +127,7 @@ nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:setlocal no
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
+nnoremap <silent><leader>3 :ProjectRootExe e .<CR>|
 nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
 nnoremap <leader>L :SyntasticToggleMode<CR>|                                                " Togle syntastic mode
 nnoremap <leader>l :SyntasticCheck<CR>|                                                     " Trigger syntastic check
@@ -136,15 +138,16 @@ nnoremap <silent><leader>m :Neomake
 nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
-nnoremap <silent><leader>cl :let @+=expand("%") . ':' . line(".")<CR>|  " Copy current line path/number
+nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|  " Copy curgent line path/number
+nnoremap Y y$  " Make Y act like C and D
 
 " Copy/paste to/from system clipboard
 vnoremap <leader>y  "+y
-nnoremap <leader>Y  "+yg_
+vnoremap <LeftRelease> "+y<LeftRelease>
 nnoremap <leader>y  "+y
+nnoremap <leader>Y  "+yg_
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
-nnoremap <leader>l :let @+=expand("%") . ':' . line(".")<CR>
 
 if has('nvim')
     nnoremap <leader>r :so ~/.config/nvim/init.vim<CR>|
@@ -196,7 +199,7 @@ let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=curre
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:100,results:10'
 let g:ctrlp_brief_prompt = 1
 let g:ctrlp_show_hiden = 1
-let g:ctrlp_custom_ignore = 'roles.galaxy'
+let g:ctrlp_custom_ignore = 'roles.galaxy,src'
 
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
 let g:vim_markdown_folding_disabled = 1
@@ -217,6 +220,7 @@ let g:vim_markdown_fenced_languages = [
 " Configure vim-table-mode (https://github.com/dhruvasagar/vim-table-mode)
 
 " Configure nerdtree-git-plugin (https://github.com/Xuyuanp/nerdtree-git-plugin)
+let NERDTreeHijackNetrw=1                       " Open in current split with netrw
 let NERDTreeShowHidden=1                        " Show NERDTree
 let NERDTreeQuitOnOpen=1                        " Close NERDTree after file is opened
 let g:NERDTreeIndicatorMapCustom = {
@@ -298,7 +302,7 @@ let g:syntastic_ansible_ansible_lint_quiet_messages =
 "             \ 'args': ['-x ANSIBLE0002', '-p', '--nocolor'],
 "             \ 'errorformat': '%f:%l: [%tANSIBLE%n] %m'
 "             \ }
-" call neomake#configure#automake('nwr', 1000)
+call neomake#configure#automake('nwr', 1000)
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
 
 hi NeomakeErrorSign ctermbg=8
@@ -358,6 +362,14 @@ colorscheme Tomorrow-Night-Eighties
 " hi GitGutterDelete ctermbg=8 guibg=#003741
 " hi GitGutterChangeDelete ctermbg=8 guibg=#003741
 
+" Configure nathanaelkane/vim-indent-guides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+hi IndentGuidesOdd  guibg=#313131   ctermbg=235
+hi IndentGuidesEven guibg=#2d2d2d   ctermbg=237
+" hi IndentGuidesOdd  guibg=#2d2d2d   ctermbg=232
+" hi IndentGuidesEven guibg=#313131   ctermbg=237
+
 " Configure lightline status bar
 set laststatus=2
 let g:lightline = {
@@ -408,6 +420,7 @@ augroup vimrcEx
   au BufRead,BufNewFile */orchestration/*.yml set ft=ansible
   au BufRead,BufNewFile */orchestration/*.j2 set ft=ansible
   au FileType ansible set tabstop=2|set shiftwidth=2|set softtabstop=2
+  au BufRead,BufNewFile Jenkinsfile set ft=groovy
 
   " Enable spellchecking for Markdown
   au FileType markdown setlocal spell
@@ -422,9 +435,6 @@ augroup vimrcEx
 
   " :set nowrap for some files
   au BufRead, BufNewFile user_list.yml setlocal nowrap
-
-  " Disable line numbers in terminal
-  au TermOpen setlocal setlocal nonumber
 
   " Allow style sheets to auto-complete hyphenated words
   au FileType css,scss,sass setlocal iskeyword+=-
@@ -442,8 +452,8 @@ augroup vimrcEx
   " Auto lint on write
   au BufWritePost * Neomake
 
-  " Set spell check off in terminals
-  au BufNewFile * if buffer_name('%') =~ 'term://' | setlocal nospell
+  " Configure terminal settings
+  au BufNewFile * if buffer_name('%') =~ 'term://' | setl nospell | setl nonumber
 
 " augroup END
 
@@ -542,6 +552,30 @@ function! s:EnterInsertModeInTerminal()
     else
         execute 'nohlsearch'
         return '\<CR>'
+    endif
+endfunction
+
+" Get the path to the current line from the project root
+function! s:GetPathToCurrentLine()
+    let root = ProjectRootGet()
+    let full_path = expand("%:p") . ':' . line(".")
+    let basename = split(root, "/")
+    let basename = basename[-1]
+    let path_from_root = join([basename, substitute(full_path, root, "", "")], "")
+
+    return path_from_root
+endfunction
+
+" When opening a new split, create a new term if needed
+function! s:OpenNewSplit(splitType)
+    if a:splitType == '\'
+        silent execute 'vsp'
+    else
+        silent execute 'sp'
+    endif
+
+    if &buftype == 'terminal'
+        silent execute 'term'
     endif
 endfunction
 

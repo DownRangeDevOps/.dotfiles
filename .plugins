@@ -3,7 +3,6 @@
 call plug#begin()
 Plug 'digitalrounin/vim-yaml-folds'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'yuttie/hydrangea-vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -13,11 +12,12 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
-Plug 'tmux-plugins/vim-tmux'                " .tmux.conf syntax
+" Plug 'tmux-plugins/vim-tmux'                " .tmux.conf syntax
 " Plug 'lifepillar/vim-solarized8'
 " Plug 'icymind/NeoSolarized'
 " Plug 'flazz/vim-colorschemes'
 " Plug 'jnurmine/Zenburn'
+" Plug 'yuttie/hydrangea-vim'
 Plug 'chriskempson/vim-tomorrow-theme'
 " Plug 'blueyed/vim-diminactive'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -26,12 +26,14 @@ Plug 'airblade/vim-gitgutter'
 Plug 'farmergreg/vim-lastplace'
 " Plug 'christoomey/vim-tmux-navigator'
 Plug 'easymotion/vim-easymotion'
-Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'dbakker/vim-projectroot'              " Prfix to change to project root
 Plug 'plasticboy/vim-markdown'
 Plug 'vim-scripts/vim-auto-save'
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'vim-syntastic/syntastic'  " slow... not working
+Plug 'burnettk/vim-jenkins'
 Plug 'neomake/neomake'
 
 " Deoplete and source plugins
