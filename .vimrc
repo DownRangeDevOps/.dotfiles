@@ -413,16 +413,16 @@ augroup vimrcEx
   au!
 
   " Set syntax highlighting for specific file types
-  au BufRead,BufNewFile Appraisals setl ft=ruby
-  au BufRead,BufNewFile *.md setl ft=markdown | setl nofoldenable
-  au BufRead,BufNewFile *sudoers-* setl ft=sudoers
-  au BufRead,BufNewFile .vimrc setl ft=vim
-  au BufRead,BufNewFile */orchestration/*.yml setl ft=ansible
-    \| setl formatoptions+=crjq
-  au BufRead,BufNewFile */orchestration/*.j2 setl ft=ansible
-    \| setl formatoptions+=crjq
-  au FileType ansible setl tabstop=2|setl shiftwidth=2|setl softtabstop=2
-  au BufRead,BufNewFile Jenkinsfile setl ft=groovy
+  au BufRead,BufNewFile Appraisals set ft=ruby
+  au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
+  au BufRead,BufNewFile *sudoers-* set ft=sudoers
+  au BufRead,BufNewFile .vimrc set ft=vim
+  au BufRead,BufNewFile */orchestration/*.yml set ft=ansible
+    \| set formatoptions+=crjq
+  au BufRead,BufNewFile */orchestration/*.j2 set ft=ansible
+    \| set formatoptions+=crjq
+  au FileType ansible set tabstop=2|set shiftwidth=2|set softtabstop=2
+  au BufRead,BufNewFile Jenkinsfile set ft=groovy
 
   " Enable spellchecking for Markdown
   au FileType markdown setl spell
