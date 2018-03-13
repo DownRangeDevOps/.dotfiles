@@ -17,8 +17,8 @@ set diffopt+=vertical               " Always use vertical diffs
 set formatoptions+=crjq             " See :help fo-table
 set foldenable                      " Code folding config
 " set foldmethod=syntax
-set foldlevelstart=2
-set foldcolumn=2
+set foldlevelstart=1
+set foldcolumn=0
 set history=50                      " store command history across sessions
 set hlsearch                        " hilight search matches
 nohlsearch
@@ -123,7 +123,7 @@ nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|    
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
-nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:setlocal nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
@@ -192,7 +192,7 @@ if executable('ag')
 endif
 
 " Define an Ag command to search for the provided text and open results in quickfix
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 5|redraw!
 
 " Configure CtrlP (https://github.com/kien/ctrlp.vim)
 let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=current file, r=nearest '.git/.svn/...', a=like c but current file)
@@ -413,35 +413,36 @@ augroup vimrcEx
   au!
 
   " Set syntax highlighting for specific file types
-  au BufRead,BufNewFile Appraisals set ft=ruby
-  au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
-  au BufRead,BufNewFile *sudoers-* set ft=sudoers
-  au BufRead,BufNewFile .vimrc set ft=vim
-  au BufRead,BufNewFile */orchestration/*.yml set ft=ansible
-  au BufRead,BufNewFile */orchestration/*.j2 set ft=ansible
-  au FileType ansible set tabstop=2|set shiftwidth=2|set softtabstop=2
-  au BufRead,BufNewFile Jenkinsfile set ft=groovy
+  au BufRead,BufNewFile Appraisals setl ft=ruby
+  au BufRead,BufNewFile *.md setl ft=markdown | setl nofoldenable
+  au BufRead,BufNewFile *sudoers-* setl ft=sudoers
+  au BufRead,BufNewFile .vimrc setl ft=vim
+  au BufRead,BufNewFile */orchestration/*.yml setl ft=ansible
+    \| setl formatoptions+=crjq
+  au BufRead,BufNewFile */orchestration/*.j2 setl ft=ansible
+    \| setl formatoptions+=crjq
+  au FileType ansible setl tabstop=2|setl shiftwidth=2|setl softtabstop=2
+  au BufRead,BufNewFile Jenkinsfile setl ft=groovy
 
   " Enable spellchecking for Markdown
-  au FileType markdown setlocal spell
+  au FileType markdown setl spell
 
   " Automatically wrap at 80 characters for Markdown
-  au BufRead,BufNewFile *.md setlocal textwidth=80
+  au BufRead,BufNewFile *.md setl textwidth=80
 
   " Automatically wrap at 72 characters and spell check git commit messages
-  au FileType gitcommit setlocal textwidth=72
-  au FileType gitcommit setlocal spell
-  au FileType gitcommit set filetype=markdown
+  au FileType gitcommit setl textwidth=72
+    \| setl spell | setl filetype=markdown | setl commentstring=#%s
 
   " :set nowrap for some files
-  au BufRead, BufNewFile user_list.yml setlocal nowrap
+  au BufRead, BufNewFile user_list.yml setl nowrap
 
   " Allow style sheets to auto-complete hyphenated words
-  au FileType css,scss,sass setlocal iskeyword+=-
+  au FileType css,scss,sass setl iskeyword+=-
 
   " Remove tabs and trailing whitespace on open and insert
   au BufRead,BufEnter,BufLeave,TextChanged *
-        \call <SID>StripTrailingWhitespaces()
+    \call <SID>StripTrailingWhitespaces()
 
   " Autosave
   au TextChanged * call <SID>WriteIfModifiable()
@@ -453,7 +454,7 @@ augroup vimrcEx
   au BufWritePost * Neomake
 
   " Configure terminal settings
-  au BufNewFile * if buffer_name('%') =~ 'term://' | setl nospell | setl nonumber
+  au TermOpen * setl nospell | setl nonumber | setl norelativenumber
 
 " augroup END
 
@@ -462,8 +463,8 @@ augroup vimrcEx
 " Remove trailing whitespace and return cursor to starting position
 function! s:StripTrailingWhitespaces()
     if &readonly == 0
-                \&& &buftype == ''
-                \&& &diff == 0
+            \&& &buftype == ''
+            \&& &diff == 0
         let cur_line = line('.')
         let cur_col = col('.')
         %s/\s\+$//e
