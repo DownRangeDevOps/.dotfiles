@@ -1,8 +1,8 @@
-
+# vim: set ft=sh:
 export COMPOSE_HTTP_TIMEOUT=999999
 
-# Common commands
-
+# Alias
+alias d="docker"
 
 # Youtily service portal
 alias syp='echo "==> Starting docker-machine..." &&
@@ -70,15 +70,15 @@ dme() {
 }
 
 de() {
-  PATTERN='help'
-  if [[ $# -eq 0 || $1 =~ $PATTERN ]]; then
+  if [[ $# -eq 0 || ${1} =~ 'help' ]]; then
     echo 'Docker helper to connect to a running container'
     echo 'Usage: de <container> [<command>]'
     return 1
   fi
 
-  CONTAINER=$1
-  COMMAND=${2:-bash}
+  REQ_ARG=$1
+  DEF_ARG=${2:-bash}
+  OPT_ARG=${@:3}
 
-  docker exec -ti $CONTAINER $COMMAND
+  docker exec -ti $REQ_ARG $DEF_ARG $OPT_ARG
 }

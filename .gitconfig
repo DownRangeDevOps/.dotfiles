@@ -1,10 +1,13 @@
 [user]
     name = Ryan Fisher
     email = ryan@measurabl.com
+[include]
+    path = .gitconfig_aliases
 [core]
     excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
+    pager = diff-so-fancy | less --tabs=4 -RFX
 [diff]
     tool = vim-fugitive
 [difftool "vim-fugitive"]
@@ -31,50 +34,24 @@
 [help]
     autocorrect = 0
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[alias]
-    lg = !"git lg1"
-    lg1 = !"git lg1-specific --all"
-    lg2 = !"git lg2-specific --all"
-    lg3 = !"git lg3-specific --all"
-    lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
-    lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
-    lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
-
-    pmerge = "!git log origin/master.. &&\
-      git diff --stat origin/master"
-
-    mp = "!git checkout master &&\
-      git pull --rebase"
-
-    ffm = "!git merge --ff-only $1 && :"
-
-    nuke = "!git push --delete $1 $2 ;\
-      git branch -D $2 && :"
-
-    nukethis = "!BRANCH=$(git rev-parse --abbrev-ref HEAD) &&\
-      git checkout master &&\
-      git nuke $BRANCH"
-
-    mergenuke = "!BRANCH=$(git rev-parse --abbrev-ref HEAD) &&\
-      confirm 'Merge then delete $BRANCH into $1, and update ORIGIN? [y/N]' &&\
-      git push --force-with-lease origin $BRANCH &&\
-      git checkout $1 && : &&\
-      git ffm $BRANCH &&\
-      git push origin $1 &&\
-      git nuke $BRANCH"
-
-    f = "fetch -p"
-    p = "!git fetch --prune && git pull --rebase"
-    rb = "!git rebase --interactive $1 && :"
-    rbm = "!git rb origin/master"
-    rbd = "!git rb origin/develop"
-    rbc = "!git rebase --continue"
-    fpo = "push --force-with-lease origin HEAD"
-
+    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [init]
     templatedir = ~/.git-templates
+[color]
+    ui = true
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 88
+    newNormal = green bold
+    newHighlight = green bold 29
+[color "diff"]
+    meta = yellow
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse

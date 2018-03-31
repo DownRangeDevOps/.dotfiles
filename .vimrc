@@ -92,19 +92,22 @@ nnoremap <CR> :noh<CR><CR>|                                 " Clear search patte
 nnoremap K                                                  " Keep searching for man entries by accident
 
 " Easy split navigation
-nnoremap <C-h> <C-w>h                                       " Move left a window
-nnoremap <C-j> <C-w>j                                       " Move down a window
-nnoremap <C-k> <C-w>k                                       " Move up a window
-nnoremap <C-l> <C-w>l                                       " Move right a window
-inoremap <C-h> <ESC><C-w>h                                  " Move left a window
-inoremap <C-j> <ESC><C-w>j                                  " Move down a window
-inoremap <C-k> <ESC><C-w>k                                  " Move up a window
-inoremap <C-l> <ESC><C-w>l                                  " Move right a window
+nnoremap <C-h> <C-w>h                           " Move left a window
+nnoremap <C-j> <C-w>j                           " Move down a window
+nnoremap <C-k> <C-w>k                           " Move up a window
+nnoremap <C-l> <C-w>l                           " Move right a window
+nnoremap <c-w><c-w> <C-w>=                      " Set windows to equal size
+inoremap <C-h> <ESC><C-w>h                      " Move left a window
+inoremap <C-j> <ESC><C-w>j                      " Move down a window
+inoremap <C-k> <ESC><C-w>k                      " Move up a window
+inoremap <C-l> <ESC><C-w>l                      " Move right a window
+inoremap <c-w><c-w> <C-w>=                      " Set windows to equal size
 if has('nvim')
-    tnoremap <C-h> <C-\><C-n><C-w>h                         " Move left a window
-    tnoremap <C-j> <C-\><C-n><C-w>j                         " Move down a window
-    tnoremap <C-k> <C-\><C-n><C-w>k                         " Move up a window
-    tnoremap <C-l> <C-\><C-n><C-w>l                         " Move right a window
+    tnoremap <C-h> <C-\><C-n><C-w>h             " Move left a window
+    tnoremap <C-j> <C-\><C-n><C-w>j             " Move down a window
+    tnoremap <C-k> <C-\><C-n><C-w>k             " Move up a window
+    tnoremap <C-l> <C-\><C-n><C-w>l             " Move right a window
+    " breaks terminal ctrl+w for deleting tnoremap <c-w><c-w> <C-\><C-n><C-w>=        " Set windows to equal size
 endif
 
 
@@ -132,7 +135,7 @@ nnoremap <leader>n :enew<CR>|                                                   
 nnoremap <leader>L :SyntasticToggleMode<CR>|                                                " Togle syntastic mode
 nnoremap <leader>l :SyntasticCheck<CR>|                                                     " Trigger syntastic check
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
-nnoremap <silent><leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen<CR>|         " Bind K to grep word under cursor
+nnoremap <silent><leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
 " nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
 nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
@@ -167,15 +170,17 @@ endif
 
 """ Plugin config --------------------------------------------------------------
 " Configure neovim (https://github.com/neovim/neovim/wiki)
-let g:python_host_prog  = '/usr/local/bin/python2'      " Enable python2 support
+let g:python_host_prog  = '/usr/local/opt/python@2/bin/python2'      " Enable python2 support
 let g:python3_host_prog = '/usr/local/bin/python3'      " Enable python3 support
 
 " Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_delay = 20
 let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 call deoplete#custom#source('_', 'matchers', ['matcher_head'])
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
-if has('nvim')                                          " Prevent nested neovim instances when using :term
+if has('nvim')                                              " Prevent nested neovim instances when using :term
   let $VISUAL = 'nvr -cc split --remote-wait'
 endif
 
@@ -320,7 +325,7 @@ let g:tmux_navigator_save_on_switch = 2
 
 " Configure ansible-vim
 let g:ansible_unindent_after_newline = 0                    " Unindent after two newlines
-let g:ansible_extra_syntaxes = "python.vim ruby.vim php.vim sh.vim cfg.vim"     " Syntax highlight with the native language for *.j2 files
+let g:ansible_extra_syntaxes = "python,cfg,php,sh"     " Syntax highlight with the native language for *.j2 files
 let g:ansible_attribute_highlight = "ad"                    " Dim all instances of key=
 let g:ansible_name_highlight = "b"                          " Brighten name: if at start
 let g:ansible_extra_keywords_highlight = 1                  " Highlight register, changed_when, no_log etc.
@@ -423,6 +428,7 @@ augroup vimrcEx
     \| set formatoptions+=crjq
   au FileType ansible set tabstop=2|set shiftwidth=2|set softtabstop=2
   au BufRead,BufNewFile Jenkinsfile set ft=groovy
+  au BufRead,BufNewFile *.groovy.j2 set ft=groovy
 
   " Enable spellchecking for Markdown
   au FileType markdown setl spell
@@ -481,14 +487,6 @@ function! s:WriteIfModifiable()
                 \&& &diff == 0
         silent w
     endif
-endfunction
-
-function! DeleteHiddenBuffers()
-    let tpbl=[]
-    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
-    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
-        silent execute 'bwipeout!' buf
-    endfor
 endfunction
 
 " function! NERDTreeOpen()
@@ -584,8 +582,8 @@ endfunction
 let g:html_indent_tags = 'li\|p'
 
 " Get off my lawn
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
+" nnoremap <Left> :echoe "Use h"<CR>
+" nnoremap <Right> :echoe "Use l"<CR>
+" nnoremap <Up> :echoe "Use k"<CR>
+" nnoremap <Down> :echoe "Use j"<CR>
 

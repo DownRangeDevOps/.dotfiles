@@ -1,3 +1,11 @@
 # set show-mode-in-prompt
 # set vi-ins-mode-string (+)
 # set vi-cmd-mode-string (:)
+
+# Search history with arrows
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# Easier/faster completion
+set show-all-if-ambiguous on
+set completion-ignore-case on
