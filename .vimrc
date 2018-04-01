@@ -17,7 +17,7 @@ set diffopt+=vertical               " Always use vertical diffs
 set formatoptions+=crjq             " See :help fo-table
 set foldenable                      " Code folding config
 " set foldmethod=syntax
-set foldlevelstart=1
+set foldlevelstart=6
 set foldcolumn=0
 set history=50                      " store command history across sessions
 set hlsearch                        " hilight search matches
@@ -323,12 +323,19 @@ let g:auto_save_no_updatetime = 1       " do not change the 'updatetime' option
 " Configure vim-tmux-navigator (https://github.com/christoomey/vim-tmux-navigator)
 let g:tmux_navigator_save_on_switch = 2
 
-" Configure ansible-vim
-let g:ansible_unindent_after_newline = 0                    " Unindent after two newlines
-let g:ansible_extra_syntaxes = "python,cfg,php,sh"     " Syntax highlight with the native language for *.j2 files
-let g:ansible_attribute_highlight = "ad"                    " Dim all instances of key=
-let g:ansible_name_highlight = "b"                          " Brighten name: if at start
-let g:ansible_extra_keywords_highlight = 1                  " Highlight register, changed_when, no_log etc.
+" Configure ansible-vim (https://github.com/pearofducks/ansible-vim)
+let g:ansible_template_syntaxes = {
+            \'*.python.j2': 'python',
+            \'*.cfg.j2': 'cfg',
+            \'*.php.j2': 'php',
+            \'*.sh.j2': 'sh'
+            \}
+let g:ansible_attribute_highlight = "ad"
+let g:ansible_name_highlight = "d"
+let g:ansible_extra_keywords_highlight = 1
+let g:ansible_with_keywords_highlight = 'PreProc'
+let g:ansible_normal_keywords_highlight = 'Type'
+let g:ansible_yamlKeyName = 'yamlKey'
 
 " Configure vim-lastplace (https://github.com/farmergreg/vim-lastplace)
 let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cursor at top when opening these files
@@ -412,6 +419,12 @@ function! LightLineFilename()
     endif
 endfunction
 
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 """ Startup autocommands -------------------------------------------------------
 augroup vimrcEx
@@ -422,11 +435,12 @@ augroup vimrcEx
   au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
   au BufRead,BufNewFile *sudoers-* set ft=sudoers
   au BufRead,BufNewFile .vimrc set ft=vim
-  au BufRead,BufNewFile */orchestration/*.yml set ft=ansible
-    \| set formatoptions+=crjq
-  au BufRead,BufNewFile */orchestration/*.j2 set ft=ansible
-    \| set formatoptions+=crjq
-  au FileType ansible set tabstop=2|set shiftwidth=2|set softtabstop=2
+  " This is causing the command enter prompt since ansible-vim v2...
+  " au BufRead,BufNewFile */orchestration/*.yml set ft=yaml.ansible
+  au FileType ansible set tabstop=2
+              \| set shiftwidth=2
+              \| set softtabstop=2
+              \| set formatoptions+=crjq
   au BufRead,BufNewFile Jenkinsfile set ft=groovy
   au BufRead,BufNewFile *.groovy.j2 set ft=groovy
 
