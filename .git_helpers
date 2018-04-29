@@ -23,6 +23,23 @@ alias gstat="echo '==> Log: '\
     && git diff --stat origin/master"
 alias grev="git rev-parse --abbrev-ref HEAD"
 
+# Misc aliases for get based but non-git actions
+alias gac='git diff origin/master \
+    --stat \
+    --diff-filter=ACdMRTUxB \
+    !(roles.galaxy)'
+
+# Helper funciton to prompt user to continue
+prompt_to_continue() {
+    read -p "${1:-Continue?} (y)[es|no] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        return 0
+    fi
+
+    return 1
+}
+
 # Add git completion
 add_git_completion_to_aliases() {
     declare -f -F __git_complete > /dev/null
@@ -54,23 +71,29 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 
 
 # Functions
+# git merge --ff-only
 gffm() {
     if [[ $1 == 'help' || $1 == '--help' ]]; then
         echo "Usage: gffm <branch>"
         return 1
     fi
 
-    CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
     if [[ $1 == 'HEAD' || $1 == '' ]]; then
-        git log origin/master..
-        git checkout master
-        git pull -r
-        git merge --ff-only $CUR_BRANCH
+        git log origin/master.. && \
+        git diff --stat origin/master && \
+        git checkout master && \
+        git fetch -p && \
+        git pull -r && \
+        git merge --ff-only @{-1} && \
+        prompt_to_continue 'Push to origin?' && \
+        echo git push origin HEAD
     else
         BRANCH=$1
-        git log ${CUR_BRANCH}..${BRANCH}
-        git merge --ff-only $BRANCH
+        git log @{-1}..${BRANCH} && \
+        git diff --stat origin/master && \
+        git merge --ff-only $BRANCH && \
+        prompt_to_continue 'Push to origin?' && \
+        echo git push origin HEAD
     fi
 
 }
@@ -86,14 +109,14 @@ gcp() {
     COMMAND=''
 
     if [[ $1 == '-a' ]]; then
-        COMMAND+='git add --all && '
+        COMMAND1="git add --all && "
         shift
     fi
 
     if [[ $1 == '-m' && $2 ]]; then
         COMMAND+="git commit -m '$2' && "
     else
-        COMMAND+='git commit && '
+        COMMAND+="git commit && "
     fi
 
     COMMAND+="git push origin $BRANCH"

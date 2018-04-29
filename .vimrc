@@ -17,11 +17,10 @@ set diffopt+=vertical               " Always use vertical diffs
 set formatoptions+=crjq             " See :help fo-table
 set foldenable                      " Code folding config
 " set foldmethod=syntax
-set foldlevelstart=6
+set foldlevelstart=99
 set foldcolumn=0
 set history=50                      " store command history across sessions
 set hlsearch                        " hilight search matches
-nohlsearch
 set incsearch                       " do incremental searching
 set list listchars=tab:»·,trail:·,nbsp:·  " Dispay tabs, non-breaking spaces, and trailing whitespace
 set mouse=a
@@ -88,8 +87,9 @@ inoremap jk <ESC>|                                          " Easy escape from i
 " nnoremap <CR> :call <SID>EnterInsertModeInTerminal()<CR>|
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
 nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
-nnoremap <CR> :noh<CR><CR>|                                 " Clear search pattern matches with return
+nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
 nnoremap K                                                  " Keep searching for man entries by accident
+nnoremap Q <Plug>window:quickfix:toggle
 
 " Easy split navigation
 nnoremap <C-h> <C-w>h                           " Move left a window
@@ -135,7 +135,8 @@ nnoremap <leader>n :enew<CR>|                                                   
 nnoremap <leader>L :SyntasticToggleMode<CR>|                                                " Togle syntastic mode
 nnoremap <leader>l :SyntasticCheck<CR>|                                                     " Trigger syntastic check
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
-nnoremap <silent><leader>f :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
+nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
+nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
 " nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
 nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
@@ -199,6 +200,9 @@ endif
 " Define an Ag command to search for the provided text and open results in quickfix
 command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 5|redraw!
 
+" Define a decrypt command to decrypt the current file
+command! -nargs=+ -bar DecryptThis silent! ansible-vault --vault-password-file ~/.ansible/vault-passwords/orchestration/<args>
+
 " Configure CtrlP (https://github.com/kien/ctrlp.vim)
 let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=current file, r=nearest '.git/.svn/...', a=like c but current file)
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:100,results:10'
@@ -222,6 +226,9 @@ let g:vim_markdown_fenced_languages = [
     \ 'md=markdown'
     \ ]
 
+" Configure vim-markdown-toc (https://github.com/mzlogin/vim-markdown-toc)
+let g:vmt_dont_insert_fence = 1
+
 " Configure vim-table-mode (https://github.com/dhruvasagar/vim-table-mode)
 
 " Configure nerdtree-git-plugin (https://github.com/Xuyuanp/nerdtree-git-plugin)
@@ -241,7 +248,10 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 
-" Configure NERDCommenter (https://github.com/scrooloose/nerdcommenter)
+" Configure machakann/vim-sandwich
+runtime macros/sandwich/keymap/surround.vim     " Enable vim-surround keymappings
+
+" Configure NERDCommenter scrooloose/nerdcommenter
 let g:NERDSpaceDelims = 1                                               " Add spaces after comment delimiters by default
 let g:NERDCompactSexyComs = 1                                           " Use compact syntax for prettified multi-line comments
 let g:NERDDefaultAlign = 'left'                                         " Align line-wise comment delimiters flush left instead of following code indentation
@@ -364,6 +374,7 @@ colorscheme Tomorrow-Night-Eighties
 " let g:neosolarized_italic = 1
 
 " Custom colors that override any theme loaded to this point
+hi Search ctermfg=237 ctermbg=2 guifg=#3a3a3a guibg=#a8d4a9
 " hi Cursor ctermbg=6 guibg=#2aa198
 " hi ColorColumn ctermbg=8 guibg=#003741
 " hi Normal ctermbg=NONE guibg=NONE
@@ -435,9 +446,8 @@ augroup vimrcEx
   au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
   au BufRead,BufNewFile *sudoers-* set ft=sudoers
   au BufRead,BufNewFile .vimrc set ft=vim
-  " This is causing the command enter prompt since ansible-vim v2...
-  " au BufRead,BufNewFile */orchestration/*.yml set ft=yaml.ansible
-  au FileType ansible set tabstop=2
+  au BufRead,BufNewFile */orchestration/*.yml set ft=yaml.ansible
+  au BufRead,BufNewFile *.yaml,*.yml set tabstop=2
               \| set shiftwidth=2
               \| set softtabstop=2
               \| set formatoptions+=crjq
@@ -446,6 +456,9 @@ augroup vimrcEx
 
   " Enable spellchecking for Markdown
   au FileType markdown setl spell
+
+  " Auto set nowrap on some files
+  au BufRead */orchestration/environments/000_cross_env_users.yml setl nowrap
 
   " Automatically wrap at 80 characters for Markdown
   au BufRead,BufNewFile *.md setl textwidth=80
@@ -475,6 +488,9 @@ augroup vimrcEx
 
   " Configure terminal settings
   au TermOpen * setl nospell | setl nonumber | setl norelativenumber
+
+  " Bind q to close quickfix
+    au FileType quickfix nnoremap q :cclose
 
 " augroup END
 
@@ -563,7 +579,7 @@ function! s:EnterInsertModeInTerminal()
             call startinsert()
         endif
     else
-        execute 'nohlsearch'
+        silent execute 'nohlsearch'
         return '\<CR>'
     endif
 endfunction
@@ -591,6 +607,17 @@ function! s:OpenNewSplit(splitType)
         silent execute 'term'
     endif
 endfunction
+
+" Convert mac or dos line endings to unix
+function! s:ConvertLineEndingsToUnix()
+    :update
+    :edit ++ff=dos
+    :edit ++ff=mac
+    :setlocal ff=unix
+    :write
+endfunction
+
+command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'

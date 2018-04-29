@@ -1,44 +1,10 @@
 " vim: set ft=vim:
 
 call plug#begin()
-Plug 'arithran/vim-delete-hidden-buffers'
-Plug 'digitalrounin/vim-yaml-folds'
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/nerdcommenter'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-" Plug 'mattn/emmet-vim'
-Plug 'jiangmiao/auto-pairs'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-fugitive'
-Plug 'itchyny/lightline.vim'
-" Plug 'tmux-plugins/vim-tmux'                " .tmux.conf syntax
-" Plug 'lifepillar/vim-solarized8'
-" Plug 'icymind/NeoSolarized'
-" Plug 'flazz/vim-colorschemes'
-" Plug 'jnurmine/Zenburn'
-" Plug 'yuttie/hydrangea-vim'
-Plug 'chriskempson/vim-tomorrow-theme'
-" Plug 'blueyed/vim-diminactive'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'stephpy/vim-yaml'
-Plug 'pearofducks/ansible-vim'
-Plug 'airblade/vim-gitgutter'
-Plug 'farmergreg/vim-lastplace'
-" Plug 'christoomey/vim-tmux-navigator'
-Plug 'easymotion/vim-easymotion'
-Plug 'nathanaelkane/vim-indent-guides'
-" Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'dbakker/vim-projectroot'              " Prfix to change to project root
-Plug 'plasticboy/vim-markdown'
-" Plug 'tpope/vim-markdown'
-Plug 'vim-scripts/vim-auto-save'
+" Autocomplete
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'vim-syntastic/syntastic'  " slow... not working
-Plug 'burnettk/vim-jenkins'
-Plug 'neomake/neomake'
-
+"
 " Deoplete and source plugins
 Plug 'zchee/deoplete-jedi'              " python
 Plug 'Shougo/neco-vim'                  " vim
@@ -47,4 +13,56 @@ Plug 'Shougo/context_filetype.vim'      " filetypes
 Plug 'Shougo/neoinclude.vim'            " include file and path
 Plug 'php-vim/phpcd.vim'                " php
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+" Linting
+Plug 'neomake/neomake'
+
+" Utilities
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'arithran/vim-delete-hidden-buffers'
+Plug 'tpope/vim-fugitive'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'farmergreg/vim-lastplace'
+Plug 'easymotion/vim-easymotion'
+Plug 'dbakker/vim-projectroot'              " Prfix to change to project root
+Plug 'vim-scripts/vim-auto-save'
+" Plug 'tmux-plugins/vim-tmux'                " .tmux.conf syntax
+" Plug 'christoomey/vim-tmux-navigator'
+" Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'drmingdrmer/vim-toggle-quickfix'
+Plug 'mzlogin/vim-markdown-toc'
+
+" UI
+Plug 'itchyny/lightline.vim'
+Plug 'nathanaelkane/vim-indent-guides'
+" Plug 'blueyed/vim-diminactive'
+
+" Syntax
+Plug 'stephpy/vim-yaml'
+" Plug 'moby/moby' , { 'rtp': 'contrib/syntax/vim' }
+Plug 'pearofducks/ansible-vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'burnettk/vim-jenkins'
+
+" Formatting
+Plug 'digitalrounin/vim-yaml-folds'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'scrooloose/nerdcommenter'
+Plug 'jiangmiao/auto-pairs'
+Plug 'machakann/vim-sandwich'
+" Plug 'mattn/emmet-vim'
+" Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-repeat'
+" Plug 'tpope/vim-markdown'
+
+
+" Thememing
+Plug 'chriskempson/vim-tomorrow-theme'
+" Plug 'icymind/NeoSolarized'
+" Plug 'jnurmine/Zenburn'
+" Plug 'flazz/vim-colorschemes'
+" Plug 'lifepillar/vim-solarized8'
+" Plug 'yuttie/hydrangea-vim'
 call plug#end()

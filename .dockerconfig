@@ -80,5 +80,5 @@ de() {
   DEF_ARG=${2:-bash}
   OPT_ARG=${@:3}
 
-  docker exec -ti $REQ_ARG $DEF_ARG $OPT_ARG
+  docker exec -ti $REQ_ARG $DEF_ARG $OPT_ARG 2>/dev/null || docker exec -ti $REQ_ARG $DEF_ARG $OPT_ARG bash
 }

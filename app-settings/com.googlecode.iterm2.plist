@@ -4173,7 +4173,7 @@ Password Manager</string>
 	<key>HotKeyTogglesWindow</key>
 	<false/>
 	<key>Hotkey</key>
-	<true/>
+	<false/>
 	<key>HotkeyChar</key>
 	<integer>32</integer>
 	<key>HotkeyCode</key>
@@ -4266,15 +4266,15 @@ Password Manager</string>
 	<key>NSWindow Frame SUStatusFrame</key>
 	<string>-186 -372 400 129 -826 -1050 1680 1027 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>3530 768 620 392 2560 0 2560 1417 </string>
+	<string>649 -537 620 392 239 -900 1440 877 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>1514 1478 606 469 884 1050 2560 1417 </string>
+	<string>1468 1480 606 469 836 1050 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>1140 1908 796 473 884 1050 2560 1417 </string>
+	<string>554 451 958 451 0 0 1680 1028 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>855 1050 2560 1418 855 1050 2560 1418 </string>
+	<string>822 1050 2560 1418 822 1050 2560 1418 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>2560 0 2560 1417 2560 0 2560 1417 </string>
+	<string>-1738 1050 2560 1417 -1738 1050 2560 1417 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -6011,7 +6011,7 @@ Password Manager</string>
 	<key>OpenTmuxWindowsIn</key>
 	<integer>2</integer>
 	<key>PMPrintingExpandedStateForPrint2</key>
-	<false/>
+	<true/>
 	<key>PassOnControlClick</key>
 	<false/>
 	<key>PasteFromClipboard</key>
@@ -6074,7 +6074,7 @@ Password Manager</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-03-07T23:42:08Z</date>
+	<date>2018-04-28T11:47:48Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
