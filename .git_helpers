@@ -1,44 +1,55 @@
-# Alises
 alias g="git"
+
+# Logging
 alias gs="git status"
 alias gd="git diff"
-alias gb="git branch"
-alias gba="git branch --all"
-alias gf="git fetch --prune"
-alias gp="gf && git pull --rebase"
-alias ga="git add"
-alias ga.="git add --all"
-alias gc="git commit"
-alias gco="git checkout"
-alias gcom="git checkout master"
-alias gst="git stash"
-alias grb="git rebase --interactive"
-alias grbm="git rebase --interactive origin/master"
-alias grbc="git rebase --continue"
-alias gpu="git remote | xargs -L1 -I remote git push -u remote HEAD"
-alias gfpo="git push --force-with-lease origin HEAD"
+alias gdm="git diff HEAD..origin/master"
+alias gd1="git diff HEAD~1"
+alias gl="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+alias gl-="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+alias gL="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+# alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
+# alias lg3="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'"
 alias gstat="echo '==> Log: '\
     && git log origin/master.. \
     && echo '' && echo '==> Diff:' \
     && git diff --stat origin/master"
-alias grev="git rev-parse --abbrev-ref HEAD"
+
+# Branching
+alias gb="git branch"
+alias gbn="git rev-parse --abbrev-ref HEAD"
+alias gba="git branch --all"
+alias gf="git fetch --prune"
+alias gp="gf && git pull --rebase"
+alias gco="git checkout"
+alias gcom="git checkout master"
+alias gmerged="git branch --all --merged origin/master | egrep -v '>|master|develop'"
+alias gdmlocal="git branch -d $(echo $(gmerged | egrep -v '^\s+remotes/origin/'))"
+alias gdmremote="git push --delete origin $(echo $(gmerged | cut -d/ -f3-))"
+alias gsm="echo 'Branches that have been merged to master:' && gmerged"
+alias gdm="echo 'Deleting merged branches:' && gmerged && echo '' && gdmlocal && gdmremote"
+
+# Committing
+alias ga="git add"
+alias ga.="git add --all"
+alias gc="git commit"
+alias gst="git stash"
+
+# Rebasing
+alias grb="git rebase --interactive"
+alias grbm="git rebase --interactive origin/master"
+alias grbc="git rebase --continue"
+alias grba="git rebase --abort"
+
+# Pushing
+alias gpu="git remote | xargs -L1 -I remote git push -u remote HEAD"
+alias gfpo="git push --force-with-lease origin HEAD"
 
 # Misc aliases for get based but non-git actions
 alias gac='git diff origin/master \
     --stat \
     --diff-filter=ACdMRTUxB \
     !(roles.galaxy)'
-
-# Helper funciton to prompt user to continue
-prompt_to_continue() {
-    read -p "${1:-Continue?} (y)[es|no] " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        return 0
-    fi
-
-    return 1
-}
 
 # Add git completion
 add_git_completion_to_aliases() {
@@ -49,6 +60,7 @@ add_git_completion_to_aliases() {
         __git_complete gb _git_branch
         __git_complete gd _git_diff
         __git_complete gst _git_stash
+        __git_complete grb _git_rebase
     fi
 }
 add_git_completion_to_aliases
@@ -71,6 +83,21 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 
 
 # Functions
+#
+# TODO: accept ticket id and call assembla API for title
+# Auto branch w/ ticket name
+# gco -b rf/pipeline/$(echo '#7369 - Create a local docker test environment for build' | tr -d '#' | tr -s ' ' '-' | tr [:upper:] [:lower:])
+gcot() {
+  TICKET=$(echo "${@}" \
+    | tr -t "${@}" 50 \
+    | sed 's/^[\.\/]//' \
+    | tr -s ' ' '-' \
+    | tr -cd '[:alnum:]._-/' \
+    | tr [:upper:] [:lower:])
+
+  gco -b ${TICKET}
+}
+
 # git merge --ff-only
 gffm() {
     if [[ $1 == 'help' || $1 == '--help' ]]; then
@@ -81,23 +108,26 @@ gffm() {
     if [[ $1 == 'HEAD' || $1 == '' ]]; then
         git log origin/master.. && \
         git diff --stat origin/master && \
+        prompt_to_continue 'Merge to master?' && \
         git checkout master && \
         git fetch -p && \
         git pull -r && \
         git merge --ff-only @{-1} && \
         prompt_to_continue 'Push to origin?' && \
-        echo git push origin HEAD
+        git push origin HEAD
     else
         BRANCH=$1
         git log @{-1}..${BRANCH} && \
         git diff --stat origin/master && \
+        prompt_to_continue "Merge to ${1}?" && \
         git merge --ff-only $BRANCH && \
         prompt_to_continue 'Push to origin?' && \
-        echo git push origin HEAD
+        git push origin HEAD
     fi
 
 }
 
+# git commit and push
 gcp() {
     if [[ $1 == 'help' || $1 == '--help' ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
@@ -124,6 +154,7 @@ gcp() {
     $COMMAND
 }
 
+# delete local and remote branch
 gnuke() {
     if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
         echo "Usage: gnuke <branch>"
@@ -134,9 +165,33 @@ gnuke() {
     git branch -D $1
 }
 
+# delete current branch and it's remote
 gnukethis() {
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
     git remote | xargs -L1 -I remote git push --delete remote ${BRANCH}
     git branch -D ${BRANCH}
+}
+
+# git log copy - copy the git log for this branch to the clipboard
+glc() {
+  LOG=$(git log origin/master..HEAD | tail -n +5)
+
+  pbcopy <<EOF
+<pre><code>
+${LOG}
+</code></pre>
+EOF
+}
+
+# [o]pen [m]erge [r]equest - open a merge request for the current branch
+omr() {
+    HOST="https://measurabl.assembla.com"
+    ROUTE="spaces/green-in-a-box/git-9/compare"
+    QUERY="show_merge_request_form=true"
+    REPO=$(git remote -v | awk -F'[\.: ]' 'NR==1{ print $4 "." $5 }')
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+    glc
+    open "${HOST}/${ROUTE}/${REPO}:${BRANCH}...${REPO}:master?${QUERY}"
 }

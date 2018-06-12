@@ -99,17 +99,24 @@ edot() {
   fi
 }
 
-# Generic function to add a confirmation prompt
-confirm() {
-    read -r -p "${1:-Are you sure? [y/N]} " response
-    case "$response" in
-        [yY][eE][sS]|[yY])
-            true
-            ;;
-        *)
-            false
-            ;;
-    esac
+### Helper funcitons
+
+# Prompt user to continue
+prompt_to_continue() {
+    echo ''
+    read -p "${1:-Continue?} (y)[es|no] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        return 0
+    fi
+
+    return 1
+}
+
+# Join array
+function join() {
+    local IFS=$1
+    __="${*:2}"
 }
 
 # Disable flow control commands (keeps C-s from freezing everything)
@@ -131,8 +138,12 @@ WHITE=$(tput setaf 7)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+function parse_git_branch () {
+    git_branch | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+}
+
 function parse_git_dirty () {
-    case $(git status 2> /dev/null) in
+    case $(git status 2>/dev/null) in
         *"Changes not staged for commit"*)
             echo " ${RED}✗";;
         *"Changes to be committed"*)
@@ -140,10 +151,6 @@ function parse_git_dirty () {
         *"nothing to commit"*)
             echo "";;
     esac
-}
-
-function parse_git_branch () {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
 
 function get_virtualenv () {
@@ -154,17 +161,29 @@ function get_virtualenv () {
     fi
 }
 
-function project_root () {
+function git_project_parent() {
+    echo -n "$(git rev-parse --show-toplevel 2>/dev/null)/.."
+}
+
+function git_project_root () {
     if [[ -n $(git branch 2>/dev/null) ]]; then
-        echo "git@$(realpath --relative-to=$(git rev-parse --show-toplevel)/.. .)"
+        echo "git@$(realpath --relative-to=$(git_project_parent) .)"
     else
         echo ${PWD/~/\~}
     fi
 }
 
+function git_branch () {
+    git branch --no-color 2>/dev/null
+}
+
 function __ps1_prompt () {
-    PS1="$(get_virtualenv) \[${CYAN}==> \[${RESET} "
-    echo -e "$(date +%R) ${YELLOW}$(project_root)${RESET}$([[ -n $(git branch 2>/dev/null) ]] && echo " on ")${MAGENTA}$(parse_git_branch)${RESET}"
+    PS1="$(get_virtualenv) \[${CYAN}\]→ \[${RESET}\]"
+    echo -e "\
+$(date +%R) \
+${YELLOW}$(git_project_root)${RESET}\
+$([[ -n $(git_branch) ]] && echo " on ")\
+${MAGENTA}$(parse_git_branch)${RESET}"
 }
 
 history -a
@@ -199,8 +218,7 @@ alias ..='cd ..'
 alias ...='cd ..;cd ..'
 alias ....='cd ..;cd ..;cd ..'
 alias .....='cd ..;cd ..;cd ..;cd ..'
-alias ..r="cd $(git rev-parse --show-toplevel)"
-alias ...r='cd ~'
+alias ..r='cd $(git rev-parse --show-toplevel 2>/dev/null)'
 alias ..~='cd ~'
 
 # grep options

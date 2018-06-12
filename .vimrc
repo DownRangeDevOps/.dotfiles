@@ -126,7 +126,8 @@ nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|    
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
-nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR><C-\><C-n>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>~ :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
@@ -135,8 +136,6 @@ nnoremap <leader>n :enew<CR>|                                                   
 nnoremap <leader>L :SyntasticToggleMode<CR>|                                                " Togle syntastic mode
 nnoremap <leader>l :SyntasticCheck<CR>|                                                     " Trigger syntastic check
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
-nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
-nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
 " nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
 nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
@@ -144,6 +143,11 @@ nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
 nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|  " Copy curgent line path/number
 nnoremap Y y$  " Make Y act like C and D
+
+" Find/replace
+nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
+nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
+nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 
 " Copy/paste to/from system clipboard
 vnoremap <leader>y  "+y
@@ -153,10 +157,11 @@ nnoremap <leader>Y  "+yg_
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
 
+
 if has('nvim')
-    nnoremap <leader>r :so ~/.config/nvim/init.vim<CR>|
+    nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>|
 else
-    nnoremap <leader>r :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
+    nnoremap <leader>rc :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
 endif
 
 
@@ -211,11 +216,13 @@ let g:ctrlp_show_hiden = 1
 let g:ctrlp_custom_ignore = 'roles.galaxy,src'
 
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
-let g:vim_markdown_folding_disabled = 1
-let g:vim_markdown_conceal = 0
+" let g:vim_markdown_folding_disabled = 1
+" let g:vim_markdown_conceal = 0
 let g:tex_conceal = ""
 let g:vim_markdown_math = 1
-let g:vim_markdown_autowrite = 1
+let g:vim_markdown_follow_anchor = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_new_list_item_indent = 2
 let g:vim_markdown_fenced_languages = [
     \ 'viml=vim',
     \ 'bash=sh',
@@ -260,57 +267,6 @@ let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }   " Add yo
 let g:NERDCommentEmptyLines = 1                                         " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDTrimTrailingWhitespace = 1                                    " Enable trimming of trailing whitespace when uncommenting
 
-" Configure YouCompleteMe (https://github.com/Valloric/YouCompleteMe)
-let g:ycm_semantic_triggers =  {
-  \   'c' : ['->', '.'],
-  \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-  \             're!\[.*\]\s'],
-  \   'ocaml' : ['.', '#'],
-  \   'cpp,objcpp' : ['->', '.', '::'],
-  \   'perl' : ['->'],
-  \   'php' : ['->', '::'],
-  \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go,groovy' : ['.'],
-  \   'ruby' : ['.', '::'],
-  \   'lua' : ['.', ':'],
-  \   'erlang' : [':'],
-  \ }
-
-" Configure Syntastic plugin (https://github.com/vim-syntastic/syntastic)
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_loc_list_height = 5
-let g:syntastic_enable_highlighting = 1
-let g:syntastic_auto_jump = 2
-let g:syntastic_echo_current_error = 1
-let g:syntastic_cursor_column = 1
-let g:syntastic_enable_signs=1
-
-" Set syntastic's default mode
-let syntastic_mode_map = { 'mode': 'passive' }
-
-" Set syntastic checker when there is more than one option
-let g:syntastic_markdown_checkers = ['syntastic-markdown-mdl']
-let g:syntastic_json_checkers = ['syntastic-json-jsonlint']
-let g:syntastic_dockerfile_checkers = ['syntastic-dockerfile-dockerfile_lint']
-let g:syntastic_python_checkers = ['syntastic-python-prospector']
-let g:syntastic_yaml_checkers = ['syntastic-yaml-yamllint']
-let g:syntastic_ansible_checkers = ['syntastic-ansible-ansible_lint']
-
-" Syntastic linter specific filters
-" let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
-" let g:syntastic_eruby_ruby_quiet_messages =
-"     \ {"regex": "possibly useless use of a variable in void context"}
-let g:syntastic_ansible_ansible_lint_quiet_messages =
-            \ {"regex": "trailing whitespace"}
-
 " Configure neomake (https://github.com/neomake/neomake)
 " let g:neomake_ansible_ansiblelint_maker = {
 "             \ 'exe': 'ansible-lint',
@@ -338,7 +294,8 @@ let g:ansible_template_syntaxes = {
             \'*.python.j2': 'python',
             \'*.cfg.j2': 'cfg',
             \'*.php.j2': 'php',
-            \'*.sh.j2': 'sh'
+            \'*.sh.j2': 'sh',
+            \'*.groovy.j2': 'groovy'
             \}
 let g:ansible_attribute_highlight = "ad"
 let g:ansible_name_highlight = "d"
@@ -384,6 +341,10 @@ hi Search ctermfg=237 ctermbg=2 guifg=#3a3a3a guibg=#a8d4a9
 " hi GitGutterChange ctermbg=8 guibg=#003741
 " hi GitGutterDelete ctermbg=8 guibg=#003741
 " hi GitGutterChangeDelete ctermbg=8 guibg=#003741
+hi DiffDelete ctermfg=8 ctermbg=0 gui=bold guifg=#2d2d2d guibg=#484A4A
+hi DiffAdd ctermbg=108  guibg=#366344
+hi DiffChange ctermbg=31 guibg=#385570
+hi DiffText ctermbg=208 guibg=#6E3935
 
 " Configure nathanaelkane/vim-indent-guides
 let g:indent_guides_enable_on_vim_startup = 1
@@ -441,6 +402,9 @@ endfunc
 augroup vimrcEx
   au!
 
+  " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
+  autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
+
   " Set syntax highlighting for specific file types
   au BufRead,BufNewFile Appraisals set ft=ruby
   au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
@@ -452,7 +416,6 @@ augroup vimrcEx
               \| set softtabstop=2
               \| set formatoptions+=crjq
   au BufRead,BufNewFile Jenkinsfile set ft=groovy
-  au BufRead,BufNewFile *.groovy.j2 set ft=groovy
 
   " Enable spellchecking for Markdown
   au FileType markdown setl spell
@@ -490,7 +453,7 @@ augroup vimrcEx
   au TermOpen * setl nospell | setl nonumber | setl norelativenumber
 
   " Bind q to close quickfix
-    au FileType quickfix nnoremap q :cclose
+  au FileType quickfix nnoremap q :cclose
 
 " augroup END
 

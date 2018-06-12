@@ -40,6 +40,10 @@
 	<integer>1</integer>
 	<key>Coprocess MRU</key>
 	<array>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py j</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py j</string>
@@ -4062,6 +4066,20 @@
 			<string>Password Manager
 Password Manager</string>
 		</dict>
+		<key>0x68-0x140000</key>
+		<dict>
+			<key>Action</key>
+			<integer>2</integer>
+			<key>Text</key>
+			<string></string>
+		</dict>
+		<key>0x6c-0x140000</key>
+		<dict>
+			<key>Action</key>
+			<integer>0</integer>
+			<key>Text</key>
+			<string></string>
+		</dict>
 		<key>0x9-0x40000</key>
 		<dict>
 			<key>Action</key>
@@ -4262,19 +4280,19 @@ Password Manager</string>
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame NSFontPanel</key>
-	<string>753 215 445 77 0 0 2560 1417 </string>
+	<string>314 293 445 77 0 0 1680 1028 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
 	<string>-186 -372 400 129 -826 -1050 1680 1027 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>649 -537 620 392 239 -900 1440 877 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>1468 1480 606 469 836 1050 2560 1417 </string>
+	<string>1393 1480 606 469 761 1050 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>554 451 958 451 0 0 1680 1028 </string>
+	<string>345 -639 1016 512 239 -900 1440 878 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>822 1050 2560 1418 822 1050 2560 1418 </string>
+	<string>762 1050 2560 1417 762 1050 2560 1418 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>-1738 1050 2560 1417 -1738 1050 2560 1417 </string>
+	<string>0 0 1680 1027 0 0 1680 1027 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -4654,6 +4672,34 @@ Password Manager</string>
 					<string>Password Manager
 Password Manager</string>
 				</dict>
+				<key>0x68-0x100000</key>
+				<dict>
+					<key>Action</key>
+					<integer>35</integer>
+					<key>Text</key>
+					<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
+				</dict>
+				<key>0x6a-0x100000</key>
+				<dict>
+					<key>Action</key>
+					<integer>35</integer>
+					<key>Text</key>
+					<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py j</string>
+				</dict>
+				<key>0x6b-0x100000</key>
+				<dict>
+					<key>Action</key>
+					<integer>35</integer>
+					<key>Text</key>
+					<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
+				</dict>
+				<key>0x6c-0x100000</key>
+				<dict>
+					<key>Action</key>
+					<integer>35</integer>
+					<key>Text</key>
+					<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
+				</dict>
 				<key>0xf700-0x220000</key>
 				<dict>
 					<key>Action</key>
@@ -4877,7 +4923,7 @@ Password Manager</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>Powerline-Consolas 15</string>
+			<string>Powerline-Consolas 14</string>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
 			<key>Place Prompt at First Column</key>
@@ -5053,7 +5099,7 @@ Password Manager</string>
 			<key>Use Non-ASCII Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
-			<real>1.4268437029367469</real>
+			<real>1.5</real>
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
@@ -6074,7 +6120,7 @@ Password Manager</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-04-28T11:47:48Z</date>
+	<date>2018-06-04T19:59:39Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -6128,7 +6174,7 @@ Password Manager</string>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.1.5</string>
+	<string>3.1.6</string>
 	<key>kCPFavoritesUserDefaultsKey</key>
 	<array>
 		<data>
