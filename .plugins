@@ -13,6 +13,7 @@ Plug 'fishbullet/deoplete-ruby'         " ruby
 Plug 'Shougo/context_filetype.vim'      " filetypes
 Plug 'Shougo/neoinclude.vim'            " include file and path
 Plug 'php-vim/phpcd.vim'                " php
+Plug 'ludovicchabant/vim-gutentags'     " Automatic ctags
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Linting

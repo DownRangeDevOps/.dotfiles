@@ -12,6 +12,11 @@ export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
+export MEASURABL_ORCHESTRATION_PATH=/Users/ryanfisher/dev/measurabl/src/orchestration
+export MEASURABL_LOG_PATH=/Users/ryanfisher/tmp/docker_volumes/measurabl/logs
+export MEASURABL_JENKINS_HOME_PATH=/Users/ryanfisher/tmp/docker_volumes/measurabl/jenkins_home
+mkdir -p ${MEASURABL_LOG_PATH}
+mkdir -p ${MEASURABL_JENKINS_HOME_PATH}
 
 # Configure virtualenvwrapper
 export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
@@ -52,10 +57,10 @@ function_exists() {
   return $?
 }
 
-for git_alias in $(__git_aliases); do
-  complete_alias=_git_$(__git_aliased_command $git_alias)
-  function_exists $complete_alias && __git_complete $complete_alias
-done
+# for git_alias in $(__git_aliases); do
+#   complete_alias=_git_$(__git_aliased_command $git_alias)
+#   function_exists $complete_alias && __git_complete $complete_alias
+# done
 
 # Don't expand paths
 _expand() { return 0; }
@@ -66,6 +71,14 @@ alias g=hub
 
 # Ansible vault shortcuts
 alias aav='ansible-vault view'
+function ade() {
+  find "environments/${1}/" \
+    -type f \
+    -iname '*.vault.*' \
+    -exec sh -c "ansible-vault decrypt \
+      --vault-password-file ~/.ansible/vault-passwords/${1} {}" \
+      \;
+}
 
 # My helpers
 alias myip="curl icanhazip.com"
@@ -223,8 +236,8 @@ alias ..~='cd ~'
 
 # grep options
 alias grep='ag'
-alias ag='ag --color --color-match=$(tput setaf 40)'
-export GREP_COLOR='$(tput setaf 40)' # green for matches
+alias ag="ag --color --color-match='$(tput setaf 2 && tput setab 29 | tr -d m)'"
+export GREP_COLOR="$(tput setaf 2 && tput setab 29)" # green for matches
 
 # helpers
 source ~/.dotfiles/.dockerconfig                # Docker helpers

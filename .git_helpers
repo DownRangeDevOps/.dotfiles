@@ -3,11 +3,13 @@ alias g="git"
 # Logging
 alias gs="git status"
 alias gd="git diff"
-alias gdm="git diff HEAD..origin/master"
+alias gdm="git diff origin/master"
+alias gdmh="git diff origin/master..HEAD"
 alias gd1="git diff HEAD~1"
 alias gl="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 alias gl-="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 alias gL="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+alias gL-="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 # alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
 # alias lg3="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'"
 alias gstat="echo '==> Log: '\
@@ -26,8 +28,8 @@ alias gcom="git checkout master"
 alias gmerged="git branch --all --merged origin/master | egrep -v '>|master|develop'"
 alias gdmlocal="git branch -d $(echo $(gmerged | egrep -v '^\s+remotes/origin/'))"
 alias gdmremote="git push --delete origin $(echo $(gmerged | cut -d/ -f3-))"
-alias gsm="echo 'Branches that have been merged to master:' && gmerged"
-alias gdm="echo 'Deleting merged branches:' && gmerged && echo '' && gdmlocal && gdmremote"
+alias gsmb="echo 'Branches that have been merged to master:' && gmerged"
+alias gdmb="echo 'Deleting merged branches:' && gmerged && echo '' && gdmlocal && gdmremote"
 
 # Committing
 alias ga="git add"
@@ -175,7 +177,7 @@ gnukethis() {
 
 # git log copy - copy the git log for this branch to the clipboard
 glc() {
-  LOG=$(git log origin/master..HEAD | tail -n +5)
+  LOG=$(git log origin/master..HEAD)
 
   pbcopy <<EOF
 <pre><code>
@@ -193,5 +195,5 @@ omr() {
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
     glc
-    open "${HOST}/${ROUTE}/${REPO}:${BRANCH}...${REPO}:master?${QUERY}"
+    open "${HOST}/${ROUTE}/${REPO}:${BRANCH}...${REPO}:develop?${QUERY}"
 }

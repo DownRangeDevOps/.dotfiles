@@ -10,11 +10,12 @@
     pager = diff-so-fancy | less --tabs=4 -RFX
 [diff]
     tool = vim-fugitive
+    algorithm = histogram
 [difftool "vim-fugitive"]
     cmd = 'vim -f -c "Gvdiff" "$MERGED"'
     path =
 [merge]
-    conflictstyle = diff3
+    ; conflictstyle = diff3
     tool = pycharm
 [mergetool "pycharm"]
     cmd = /usr/local/bin/charm-ce merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"

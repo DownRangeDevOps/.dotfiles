@@ -2,16 +2,17 @@
 export COMPOSE_HTTP_TIMEOUT=999999
 
 # Alias
-alias d="docker"
+alias d='docker'
+alias di='docker image'
+alias dr='docker run'
+alias dstp='docker stop'
+alias dst='docker start'
+alias dv='docker volume'
+alias dps='docker ps | less -SFX'
+alias dpsa='docker ps -a | less -SFX'
 
-# Youtily service portal
-alias syp='echo "==> Starting docker-machine..." &&
-  cd ~/dev/youtily/service-portal &&
-  docker-machine restart youtily-portal &&
-  docker-machine env youtily-portal &&
-  eval "$(docker-machine env youtily-portal)" &&
-  echo "==> Starting docker containers..." &&
-  docker-compose up -d'
+# Start measurabl
+alias dcm="docker-compose -f ~/dev/measurabl/src/docker/docker-compose.yml $@"
 
 # Docker shortcuts
 dc() {
@@ -76,9 +77,5 @@ de() {
     return 1
   fi
 
-  REQ_ARG=$1
-  DEF_ARG=${2:-bash}
-  OPT_ARG=${@:3}
-
-  docker exec -ti $REQ_ARG $DEF_ARG $OPT_ARG 2>/dev/null || docker exec -ti $REQ_ARG $DEF_ARG $OPT_ARG bash
+  docker exec -ti $@ 2>/dev/null || docker exec -ti $@ /bin/bash
 }

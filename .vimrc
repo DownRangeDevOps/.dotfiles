@@ -29,7 +29,7 @@ set ruler                           " show the cursor position all the time
 set showbreak=↳\ \ \>               " Indicate wraped lines
 set fillchars+=vert:\ |
 set showcmd                         " display incomplete commands
-" set spell spelllang=en_us           " Turn on spellchecking
+set nospell spelllang=en_us         " Turn off spellchecking by default
 set splitbelow                      " Open new split panes to the right/bottom
 set splitright
 set noswapfile                      " disable swap file
@@ -57,7 +57,7 @@ set numberwidth=5
 
 " Change cursor shape in iTerm2 & tmux in iTerm
 if has('nvim')
-   set guicursor=n-c-v-sm:block-Cursor/lCursor,
+    set guicursor=n-c-v-sm:block-Cursor/lCursor,
                 \i-ci-ve:ver25-Cursor/lCursor,
                 \r-cr-o:hor20-Cursor/lCursor,
                 \a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor
@@ -205,8 +205,9 @@ endif
 " Define an Ag command to search for the provided text and open results in quickfix
 command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 5|redraw!
 
-" Define a decrypt command to decrypt the current file
-command! -nargs=+ -bar DecryptThis silent! ansible-vault --vault-password-file ~/.ansible/vault-passwords/orchestration/<args>
+" Define a decrypt/encrypt command to decrypt the current file
+command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 
 " Configure CtrlP (https://github.com/kien/ctrlp.vim)
 let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=current file, r=nearest '.git/.svn/...', a=like c but current file)
@@ -268,16 +269,10 @@ let g:NERDCommentEmptyLines = 1                                         " Allow 
 let g:NERDTrimTrailingWhitespace = 1                                    " Enable trimming of trailing whitespace when uncommenting
 
 " Configure neomake (https://github.com/neomake/neomake)
-" let g:neomake_ansible_ansiblelint_maker = {
-"             \ 'exe': 'ansible-lint',
-"             \ 'args': ['-x ANSIBLE0002', '-p', '--nocolor'],
-"             \ 'errorformat': '%f:%l: [%tANSIBLE%n] %m'
-"             \ }
 call neomake#configure#automake('nwr', 1000)
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
 
-hi NeomakeErrorSign ctermbg=8
-hi NeomakeWarningSign ctermbg=8
+" Note colors are in the section after the color scheme is loaded
 let g:neomake_error_sign = {'text': 'x', 'texthl': 'NeomakeErrorSign'}
 let g:neomake_warning_sign = {'text': '!', 'texthl': 'NeomakeWarningSign'}
 
@@ -319,6 +314,9 @@ let g:diminactive_enable_focus = 1
 " Enable chriskempson/vim-tomorrow-theme
 colorscheme Tomorrow-Night-Eighties
 
+hi Cursor ctermbg=6 guibg=#76d4d6
+hi NeomakeErrorSign ctermfg=196 guifg=#d70000
+hi NeomakeWarningSign ctermfg=226 guifg=#ffff00
 " Enable icymind/NeoSolarized color scheme
 " NOTE: highlight customizations must be after this
 " colorscheme NeoSolarized
@@ -331,7 +329,7 @@ colorscheme Tomorrow-Night-Eighties
 " let g:neosolarized_italic = 1
 
 " Custom colors that override any theme loaded to this point
-hi Search ctermfg=237 ctermbg=2 guifg=#3a3a3a guibg=#a8d4a9
+hi Search ctermfg=2 ctermbg=29 guifg=#a8d4a9 guibg=#134f2f
 " hi Cursor ctermbg=6 guibg=#2aa198
 " hi ColorColumn ctermbg=8 guibg=#003741
 " hi Normal ctermbg=NONE guibg=NONE
