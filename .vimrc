@@ -121,13 +121,13 @@ cnoremap %% %s/\v
 
 " Leader key remappings
 nnoremap <leader>\ :call <SID>OpenNewSplit('\')<CR>|                                                                " Open vertical split
-nnoremap <leader>\| :call <SID>OpenNewSplit('-')<CR>|                                                                 " Open horizontal split
+nnoremap <leader>- :call <SID>OpenNewSplit('-')<CR>|                                                                 " Open horizontal split
 nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|                " Close buffer(s)
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
-nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
-nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>~ :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
@@ -138,7 +138,7 @@ nnoremap <leader>l :SyntasticCheck<CR>|                                         
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
 " nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
-nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                        " Find the real root
+nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
 nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|  " Copy curgent line path/number
@@ -147,8 +147,7 @@ nnoremap Y y$  " Make Y act like C and D
 " Find/replace
 nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
 nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
-" nnoremap <leader>r :%s/\<<C-r><C-w>\>/
-nnoremap <leader>r :call LanguageClient_contextMenu()<CR>
+nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 
 " Copy/paste to/from system clipboard
 vnoremap <leader>y  "+y
@@ -158,13 +157,13 @@ nnoremap <leader>Y  "+yg_
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
 
-" NeoVim configuration
+
 if has('nvim')
-    let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
     nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>|
 else
     nnoremap <leader>rc :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
 endif
+
 
 " Commands (aliases)
 " command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
@@ -180,40 +179,42 @@ endif
 let g:python_host_prog  = '/usr/local/opt/python@2/bin/python2'      " Enable python2 support
 let g:python3_host_prog = '/usr/local/bin/python3'      " Enable python3 support
 
-" LanguageClient-neovim (https://github.com/autozimu/LanguageClient-neovim)
-set hidden
+" Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_delay = 20
+let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
+call deoplete#custom#source('_', 'matchers', ['matcher_head'])
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
-" NCM2 (https://github.com/ncm2/ncm2)
-" :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"|       " Use <TAB> to select the popup menu:
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"|   " Use <TAB> to select the popup menu:
+if has('nvim')                                              " Prevent nested neovim instances when using :term
+  let $VISUAL = 'nvr -cc split --remote-wait'
+endif
+
+" Use The Silver Searcher if it is installed
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden --skip-vcs-ignores -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
 
 " Define an Ag command to search for the provided text and open results in quickfix
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 5|redraw!
 
 " Define a decrypt/encrypt command to decrypt the current file
 command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 
-" Configure fzf (https://github.com/junegunn/fzf and https://github.com/junegunn/fzf.vim)
-let g:fzf_commits_log_options = "git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)"
-
-" Customize fzf colors to match your color scheme
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'String'],
-  \ 'fg+':     ['fg', 'Statement', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'String'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Type'],
-  \ 'pointer': ['fg', 'Constant'],
-  \ 'marker':  ['fg', 'Type'],
-  \ 'spinner': ['fg', 'Comment'],
-  \ 'header':  ['fg', 'Comment'] }
+" Configure CtrlP (https://github.com/kien/ctrlp.vim)
+let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=current file, r=nearest '.git/.svn/...', a=like c but current file)
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:100,results:10'
+let g:ctrlp_brief_prompt = 1
+let g:ctrlp_show_hiden = 1
+let g:ctrlp_custom_ignore = 'roles.galaxy,src'
 
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
 " let g:vim_markdown_folding_disabled = 1
@@ -399,8 +400,8 @@ endfunc
 augroup vimrcEx
   au!
 
-  " Enable ncm2 for all buffers
-  autocmd BufEnter * call ncm2#enable_for_buffer()
+  " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
+  autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
 
   " Set syntax highlighting for specific file types
   au BufRead,BufNewFile Appraisals set ft=ruby
@@ -409,9 +410,9 @@ augroup vimrcEx
   au BufRead,BufNewFile .vimrc set ft=vim
   au BufRead,BufNewFile */orchestration/*.yml set ft=yaml.ansible
   au BufRead,BufNewFile *.yaml,*.yml set tabstop=2
-    \| set shiftwidth=2
-    \| set softtabstop=2
-    \| set formatoptions+=crjq
+              \| set shiftwidth=2
+              \| set softtabstop=2
+              \| set formatoptions+=crjq
   au BufRead,BufNewFile Jenkinsfile set ft=groovy
 
   " Enable spellchecking for Markdown
@@ -425,10 +426,7 @@ augroup vimrcEx
 
   " Automatically wrap at 72 characters and spell check git commit messages
   au FileType gitcommit setl textwidth=72
-    \| setlocal colorcolumn=50,72
-    \| setl spell
-    \| setl filetype=markdown
-    \| setl commentstring=#%s
+    \| setl spell | setl filetype=markdown | setl commentstring=#%s
 
   " :set nowrap for some files
   au BufRead, BufNewFile user_list.yml setl nowrap
@@ -455,11 +453,6 @@ augroup vimrcEx
   " Bind q to close quickfix
   au FileType quickfix nnoremap q :cclose
 
-  " Hide the status line for FZF buffer
-  autocmd! FileType fzf
-    autocmd  FileType fzf set laststatus=0 noshowmode noruler
-    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
 " augroup END
 
 
@@ -482,11 +475,31 @@ function! s:WriteIfModifiable()
                 \&& &readonly == 0
                 \&& &buftype != 'nofile'
                 \&& &buftype != 'terminal'
-                \&& &buftype != 'nowrite'
                 \&& &diff == 0
         silent w
     endif
 endfunction
+
+" function! NERDTreeOpen()
+"     if buffer_name('%') =~ 'NERD_tree_'
+"         NERDTreeToggle
+"     else
+"         ProjectRootExe NERDTreeFind
+"     endif
+" endfunction
+
+" Tab completion
+" Will insert tab at beginning of line, will use completion if not at beginning
+function! s:InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+inoremap <Tab> <c-r>=<SID>InsertTabWrapper()<cr>
+inoremap <S-Tab> <c-n>
 
 " Open previous buffer, wipe current, quit if only one buffer
 function! s:WipeBufOrQuit()

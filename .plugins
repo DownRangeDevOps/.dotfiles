@@ -5,25 +5,16 @@ call plug#begin()
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'vim-syntastic/syntastic'  " slow... not working
 "
-" Autocomplete and source plugins
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-
-Plug 'ncm2/ncm2-jedi'                   " python
-Plug 'ncm2/ncm2-go'                     " golang
-Plug 'phpactor/ncm2-phpactor'           " php
-Plug 'ncm2/ncm2-tern'                   " javascript
-Plug 'ncm2/ncm2-vim'                    " vimscript
-Plug 'ncm2/ncm2-markdown-subscope'
-
-Plug 'jsfaint/gen_tags.vim'             " Automatic ctags
+" Deoplete and source plugins
+Plug 'zchee/deoplete-jedi'              " python
+Plug 'artur-shaik/vim-javacomplete2'    " java/groovy
+Plug 'Shougo/neco-vim'                  " vim
+Plug 'fishbullet/deoplete-ruby'         " ruby
 Plug 'Shougo/context_filetype.vim'      " filetypes
-Plug 'ncm2/ncm2-path'                   " file/path
-" Plug 'ncm2/ncm2-github'                 " github user/links
-Plug 'ncm2/ncm2-syntax'
-Plug 'Shougo/neco-syntax'
-Plug 'ncm2/ncm2-neoinclude'
-Plug 'Shougo/neoinclude.vim'
+Plug 'Shougo/neoinclude.vim'            " include file and path
+Plug 'php-vim/phpcd.vim'                " php
+Plug 'ludovicchabant/vim-gutentags'     " Automatic ctags
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Linting
 Plug 'neomake/neomake'
@@ -33,8 +24,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'arithran/vim-delete-hidden-buffers'
 Plug 'tpope/vim-fugitive'
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'farmergreg/vim-lastplace'
 Plug 'easymotion/vim-easymotion'
