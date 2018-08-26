@@ -138,7 +138,7 @@ nnoremap <leader>l :SyntasticCheck<CR>|                                         
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
 " nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
-nnoremap <silent><leader>p :CtrlP ProjectRootCD<CR>|                                        " Find the real root
+nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
 nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|  " Copy curgent line path/number
@@ -209,12 +209,24 @@ command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 5|redraw
 command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 
-" Configure CtrlP (https://github.com/kien/ctrlp.vim)
-let g:ctrlp_working_path_mode='ra'     " set root to vim start location (c=current file, r=nearest '.git/.svn/...', a=like c but current file)
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:100,results:10'
-let g:ctrlp_brief_prompt = 1
-let g:ctrlp_show_hiden = 1
-let g:ctrlp_custom_ignore = 'roles.galaxy,src'
+" Configure fzf (https://github.com/junegunn/fzf and https://github.com/junegunn/fzf.vim)
+let g:fzf_commits_log_options = "git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)"
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'String'],
+  \ 'fg+':     ['fg', 'Statement', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'String'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Type'],
+  \ 'pointer': ['fg', 'Constant'],
+  \ 'marker':  ['fg', 'Type'],
+  \ 'spinner': ['fg', 'Comment'],
+  \ 'header':  ['fg', 'Comment'] }
 
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
 " let g:vim_markdown_folding_disabled = 1
@@ -452,6 +464,11 @@ augroup vimrcEx
 
   " Bind q to close quickfix
   au FileType quickfix nnoremap q :cclose
+
+  " Hide the status line for FZF buffer
+  autocmd! FileType fzf
+    autocmd  FileType fzf set laststatus=0 noshowmode noruler
+    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
 " augroup END
 
