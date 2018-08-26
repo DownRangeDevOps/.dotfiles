@@ -121,13 +121,13 @@ cnoremap %% %s/\v
 
 " Leader key remappings
 nnoremap <leader>\ :call <SID>OpenNewSplit('\')<CR>|                                                                " Open vertical split
-nnoremap <leader>- :call <SID>OpenNewSplit('-')<CR>|                                                                 " Open horizontal split
+nnoremap <leader>\| :call <SID>OpenNewSplit('\|')<CR>|                                                                 " Open horizontal split
 nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|                " Close buffer(s)
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
-nnoremap <silent><leader>` :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
-nnoremap <silent><leader>~ :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
@@ -158,12 +158,13 @@ nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
 
 
+" NeoVim configuration
 if has('nvim')
+    let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
     nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>|
 else
     nnoremap <leader>rc :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
 endif
-
 
 " Commands (aliases)
 " command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
@@ -203,7 +204,7 @@ if executable('ag')
 endif
 
 " Define an Ag command to search for the provided text and open results in quickfix
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 5|redraw!
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
 
 " Define a decrypt/encrypt command to decrypt the current file
 command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
@@ -438,7 +439,10 @@ augroup vimrcEx
 
   " Automatically wrap at 72 characters and spell check git commit messages
   au FileType gitcommit setl textwidth=72
-    \| setl spell | setl filetype=markdown | setl commentstring=#%s
+    \| setlocal colorcolumn=50,72
+    \| setl spell
+    \| setl filetype=markdown
+    \| setl commentstring=#%s
 
   " :set nowrap for some files
   au BufRead, BufNewFile user_list.yml setl nowrap
@@ -492,18 +496,11 @@ function! s:WriteIfModifiable()
                 \&& &readonly == 0
                 \&& &buftype != 'nofile'
                 \&& &buftype != 'terminal'
+                \&& &buftype != 'nowrite'
                 \&& &diff == 0
         silent w
     endif
 endfunction
-
-" function! NERDTreeOpen()
-"     if buffer_name('%') =~ 'NERD_tree_'
-"         NERDTreeToggle
-"     else
-"         ProjectRootExe NERDTreeFind
-"     endif
-" endfunction
 
 " Tab completion
 " Will insert tab at beginning of line, will use completion if not at beginning
