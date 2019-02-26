@@ -1,13 +1,12 @@
 [user]
-    name = Ryan Fisher
-    email = ryan@measurabl.com
+	name = Ryan Fisher
+	email = ryan@measurabl.com
 [include]
     path = .gitconfig_aliases
 [core]
-    excludesfile = /Users/ryanfisher/.gitignore_global
+	excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
-    pager = diff-so-fancy | less --tabs=4 -RFX
 [diff]
     tool = vim-fugitive
     algorithm = histogram
@@ -31,7 +30,7 @@
 [branch]
     autosetuprebase = always
 [commit]
-    template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
+	template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
     autocorrect = 0
 [difftool "sourcetree"]

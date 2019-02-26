@@ -40,8 +40,8 @@
 	<integer>1</integer>
 	<key>Coprocess MRU</key>
 	<array>
-		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py j</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py l</string>
@@ -4058,6 +4058,14 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
+		<key>0x3b-0x100000</key>
+		<dict>
+			<key>Action</key>
+			<integer>25</integer>
+			<key>Text</key>
+			<string>Edit Session…
+Edit Session…</string>
+		</dict>
 		<key>0x46-0x120000</key>
 		<dict>
 			<key>Action</key>
@@ -4183,7 +4191,7 @@ Password Manager</string>
 	<key>HideScrollbar</key>
 	<false/>
 	<key>HideTab</key>
-	<true/>
+	<false/>
 	<key>HighlightTabLabels</key>
 	<true/>
 	<key>HotKeyBookmark</key>
@@ -4280,19 +4288,19 @@ Password Manager</string>
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame NSFontPanel</key>
-	<string>314 293 445 77 0 0 1680 1028 </string>
+	<string>1300 1319 445 77 762 1050 2560 1417 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>-186 -372 400 129 -826 -1050 1680 1027 </string>
+	<string>1283 2338 400 129 871 1050 2560 1417 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>1732 1818 620 392 762 1050 2560 1417 </string>
+	<string>1841 1836 620 392 871 1050 2560 1440 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>1394 1497 606 469 762 1050 2560 1417 </string>
+	<string>1503 1603 606 469 871 1050 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>1564 1931 796 473 761 1050 2560 1418 </string>
+	<string>1675 1997 958 470 871 1050 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>-244 909 1914 1038 -244 900 1920 1057 </string>
+	<string>0 0 1680 1050 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>0 0 1680 1027 0 0 1680 1027 </string>
+	<string>0 100 810 677 0 0 1280 777 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -6124,7 +6132,7 @@ Password Manager</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-07-21T09:51:15Z</date>
+	<date>2018-10-31T18:41:39Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -6180,7 +6188,7 @@ Password Manager</string>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.1.7</string>
+	<string>3.2.4</string>
 	<key>kCPFavoritesUserDefaultsKey</key>
 	<array>
 		<data>

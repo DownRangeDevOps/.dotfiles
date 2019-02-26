@@ -5,6 +5,8 @@
 **/.vimrc
 **/.ctags
 **/tags
+**/tags.temp
+**/tags.lock
 **/.tags
 **/.ignore
 *@neomake_*

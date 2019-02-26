@@ -1,13 +1,11 @@
+# vim: set ft=sh:
 alias g="git"
 
 # Logging
 alias gs="git status"
-alias gd="git diff"
-alias gdm="git diff origin/master"
-alias gdmh="git diff origin/master..HEAD"
-alias gd1="git diff HEAD~1"
 alias gl="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 alias gl-="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+alias gl--="git log --color --format=format:'• %C(white)%s%C(reset)' | LESS -SFX -R"
 alias gL="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 alias gL-="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 # alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
@@ -25,17 +23,256 @@ alias gf="git fetch --prune"
 alias gp="gf && git pull --rebase"
 alias gco="git checkout"
 alias gcom="git checkout master"
+alias gcod="git checkout develop"
+# vim: set ft=sh:
+alias g="git"
+
+# Logging
+alias gs="git status"
+alias gdm="git diff origin/master"
+alias gdd="git diff origin/develop"
+alias gddh="git diff origin/develop..HEAD"
+alias gd1="git diff HEAD~1"
+alias gl="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+alias gl-="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+alias gl--="git log --color --format=format:'• %C(white)%s%C(reset)' | LESS -SFX -R"
+alias gL="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+alias gL-="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
+# alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
+# alias lg3="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'"
+alias gstat="echo '==> Log: '\
+    && git log origin/master.. \
+    && echo '' && echo '==> Diff:' \
+    && git diff --stat origin/master"
+alias gstatd="echo '==> Log: '\
+    && git log origin/develop.. \
+    && echo '' && echo '==> Diff:' \
+    && git diff --stat origin/develop"
+
+# Branching
+alias gb="git branch"
+alias gbn="git rev-parse --abbrev-ref HEAD"
+alias gba="git branch --all"
+alias gf="git fetch --prune"
+alias gp="gf && git pull --rebase"
+alias gco="git checkout"
+alias gcom="git checkout master"
+alias gcod="git checkout develop"
 alias gmerged="git branch --all --merged origin/master | egrep -v '>|master|develop'"
-alias gdmlocal="git branch -d $(echo $(gmerged | egrep -v '^\s+remotes/origin/'))"
-alias gdmremote="git push --delete origin $(echo $(gmerged | cut -d/ -f3-))"
-alias gsmb="echo 'Branches that have been merged to master:' && gmerged"
-alias gdmb="echo 'Deleting merged branches:' && gmerged && echo '' && gdmlocal && gdmremote"
+alias gdmlocal="[[ ! -z \"$(echo $(gmerged | cut -d/ -f3-))\" ]] && \
+  git branch -d $(echo $(gmerged | egrep -v '^\s+remotes/origin/' | tr -d ' ')) 2>/dev/null"
+alias gdmremote="[[ ! -z \"$(echo $(gmerged | cut -d/ -f3-))\" ]] && \
+  git push --delete origin $(echo $(gmerged | cut -d/ -f3-)) 2>/dev/null"
+alias gsmb="echo 'Fetching updates...'; \
+  gf; \
+  echo ''; \
+  echo 'Branches that have been merged to master:'; \
+  gmerged"
+alias gdmb="echo 'Fetching updates...'; \
+  gcom &>/dev/null; \
+  gp &>/dev/null; \
+  echo ''; \
+  echo 'Deleting merged branches:'; \
+  gmerged; \
+  echo ''; \
+  gdmlocal; \
+  gdmremote; \
+  gco - 2>/dev/null"
+
+function gdmlocal() {
+    BRANCHES=$(echo $(gmerged | egrep -v '^\s+remotes/origin/' | awk '{print $2}'))
+    git branch -d ${BRANCHES} 2>/dev/null
+}
+
+function gdmremote() {
+    BRANCHES=$(echo $(gmerged | sed -e 's/^\s*remotes\/origin\///g' | awk '{print $2}'))
+    git push --delete origin ${BRANCHES}
+}
 
 # Committing
 alias ga="git add"
 alias ga.="git add --all"
 alias gc="git commit"
 alias gst="git stash"
+alias gcp="git cherry-pick -x"
+
+# Rebasing
+alias grb="git rebase --interactive"
+alias grbc="git rebase --continue"
+alias grba="git rebase --abort"
+alias grbm="gf && git rebase --interactive origin/master"
+alias grbd="gf && git rebase --interactive origin/develop"
+
+# Pushing
+alias gpu="git remote | xargs -L1 -I remote git push -u remote HEAD"
+alias gfpo="git push --force-with-lease origin HEAD"
+
+# Misc aliases for get based but non-git actions
+alias gac='git diff origin/master \
+    --stat \
+    --diff-filter=ACdMRTUxB \
+    !(roles.galaxy)'
+
+# Add git completion
+add_git_completion_to_aliases() {
+    declare -f -F __git_complete > /dev/null
+    if [[ -n $? ]]; then
+        __git_complete gco _git_checkout
+        __git_complete ga _git_add
+        __git_complete gb _git_branch
+        __git_complete gd _git_diff
+        __git_complete gst _git_stash
+        __git_complete grb _git_rebase
+    fi
+}
+add_git_completion_to_aliases
+
+__git_wrap_gffm() {
+    declare -f -F __git_func_wrap > /dev/null
+    if [[ -n $? ]]; then
+        __git_func_wrap _git_merge
+    fi
+}
+complete -o bashdefault -o default -o nospace -F __git_wrap_gffm gffm
+
+__git_wrap_gnuke() {
+    declare -f -F __git_func_wrap > /dev/null
+    if [[ -n $? ]]; then
+        __git_func_wrap _git_checkout
+    fi
+}
+complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
+
+
+# Functions
+#
+# TODO: accept ticket id and call assembla API for title
+# Auto branch w/ ticket name
+# gco -b rf/pipeline/$(echo '#7369 - Create a local docker test environment for build' | tr -d '#' | tr -s ' ' '-' | tr [:upper:] [:lower:])
+gcot() {
+  TICKET=$(echo "${@}" \
+    | tr -t "${@}" 50 \
+    | sed 's/^[\.\/]//' \
+    | tr -s ' ' '-' \
+    | tr -cd '[:alnum:]._-/' \
+    | tr [:upper:] [:lower:])
+
+  gco -b ${TICKET}
+}
+
+gd() {
+    git diff --color ${1:-} | diff-so-fancy | less --tabs=4 -RFX
+}
+
+# git merge --ff-only
+gffm() {
+    if [[ $1 == 'help' || $1 == '--help' ]]; then
+        echo "Usage: gffm <branch>"
+        return 1
+    fi
+
+    if [[ $1 == 'HEAD' || $1 == '' ]]; then
+        git log origin/master.. && \
+        git diff --stat origin/master && \
+        prompt_to_continue 'Merge to master?' && \
+        git checkout master && \
+        git fetch -p && \
+        git pull -r && \
+        git merge --ff-only @{-1} && \
+        prompt_to_continue 'Push to origin?' && \
+        git push origin HEAD
+    else
+        BRANCH=$1
+        git log @{-1}..${BRANCH} && \
+        git diff --stat origin/master && \
+        prompt_to_continue "Merge to ${1}?" && \
+        git merge --ff-only $BRANCH && \
+        prompt_to_continue 'Push to origin?' && \
+        git push origin HEAD
+    fi
+
+}
+
+# git commit and push
+gcpu() {
+    if [[ $1 == 'help' || $1 == '--help' ]]; then
+        echo "Optionally adds all unstaged changes, commits, and pushes to origin"
+        echo "Usage: gacp [-a] [-m <message>]"
+        return 1
+    fi
+
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    COMMAND=''
+
+    if [[ $1 == '-a' ]]; then
+        COMMAND1="git add --all && "
+        shift
+    fi
+
+    if [[ $1 == '-m' && $2 ]]; then
+        COMMAND+="git commit -m '$2' && "
+    else
+        COMMAND+="git commit && "
+    fi
+
+    COMMAND+="git push origin $BRANCH"
+
+    $COMMAND
+}
+
+# delete local and remote branch
+gnuke() {
+    if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
+        echo "Usage: gnuke <branch>"
+        return 1
+    fi
+
+    git remote | xargs -L1 -I remote git push --delete remote $1
+    git branch -D $1
+}
+
+# delete current branch and it's remote
+gnukethis() {
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+    git remote | xargs -L1 -I remote git push --delete remote ${BRANCH}
+    git branch -D ${BRANCH}
+}
+
+# git log copy - copy the git log for this branch to the clipboard
+glc() {
+  LOG=$(git log origin/master..HEAD)
+
+  pbcopy <<EOF
+
+\`\`\`
+${LOG}
+\`\`\`
+EOF
+}
+
+# [o]pen [m]erge [r]equest - open a merge request for the current branch
+opr() {
+    REPO=$(basename $(pwd))
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    TITLE=$(git log -n1 --pretty=format:'%s')
+    BRANCH_ENCODED=$(python3 -c "from urllib.parse import quote_plus;s=quote_plus('${BRANCH}');print(s)")
+    TITLE_ENCODED=$(python3 -c "from urllib.parse import quote_plus;s=quote_plus('${TITLE}');print(s)")
+
+    HOST="https://bitbucket.org/measurabl"
+    ROUTE="${REPO}/pull-requests/new"
+    QUERY="source=${BRANCH_ENCODED}&t=${TITLE_ENCODED}"
+
+    glc
+    open "${HOST}/${ROUTE}?${QUERY}"
+}
+
+# Committing
+alias ga="git add"
+alias ga.="git add --all"
+alias gc="git commit"
+alias gst="git stash"
+alias gcp="git cherry-pick -x"
 
 # Rebasing
 alias grb="git rebase --interactive"
@@ -100,6 +337,10 @@ gcot() {
   gco -b ${TICKET}
 }
 
+gd() {
+    git diff --color ${1:-} | diff-so-fancy | less --tabs=4 -RFX
+}
+
 # git merge --ff-only
 gffm() {
     if [[ $1 == 'help' || $1 == '--help' ]]; then
@@ -130,7 +371,7 @@ gffm() {
 }
 
 # git commit and push
-gcp() {
+gcpu() {
     if [[ $1 == 'help' || $1 == '--help' ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
         echo "Usage: gacp [-a] [-m <message>]"
@@ -180,20 +421,25 @@ glc() {
   LOG=$(git log origin/master..HEAD)
 
   pbcopy <<EOF
-<pre><code>
+
+\`\`\`
 ${LOG}
-</code></pre>
+\`\`\`
 EOF
 }
 
 # [o]pen [m]erge [r]equest - open a merge request for the current branch
-omr() {
-    HOST="https://measurabl.assembla.com"
-    ROUTE="spaces/green-in-a-box/git-9/compare"
-    QUERY="show_merge_request_form=true"
-    REPO=$(git remote -v | awk -F'[\.: ]' 'NR==1{ print $4 "." $5 }')
+opr() {
+    REPO=$(basename $(pwd))
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    TITLE=$(git log -n1 --pretty=format:'%s')
+    BRANCH_ENCODED=$(python3 -c "from urllib.parse import quote_plus;s=quote_plus('${BRANCH}');print(s)")
+    TITLE_ENCODED=$(python3 -c "from urllib.parse import quote_plus;s=quote_plus('${TITLE}');print(s)")
+
+    HOST="https://bitbucket.org/measurabl"
+    ROUTE="${REPO}/pull-requests/new"
+    QUERY="source=${BRANCH_ENCODED}&t=${TITLE_ENCODED}"
 
     glc
-    open "${HOST}/${ROUTE}/${REPO}:${BRANCH}...${REPO}:develop?${QUERY}"
+    open "${HOST}/${ROUTE}?${QUERY}"
 }

@@ -14,6 +14,7 @@ Plug 'Shougo/context_filetype.vim'      " filetypes
 Plug 'Shougo/neoinclude.vim'            " include file and path
 Plug 'php-vim/phpcd.vim'                " php
 Plug 'ludovicchabant/vim-gutentags'     " Automatic ctags
+Plug 'hashivim/vim-terraform'           " Automatic ctags
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Linting
@@ -36,6 +37,8 @@ Plug 'vim-scripts/vim-auto-save'
 " Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'drmingdrmer/vim-toggle-quickfix'
 Plug 'mzlogin/vim-markdown-toc'
+Plug 'svermeulen/vim-easyclip'
+Plug 'rizzatti/dash.vim'
 
 " UI
 Plug 'itchyny/lightline.vim'
@@ -44,11 +47,13 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'bradens/vim-iterm2-navigator'
 
 " Syntax
+Plug 'vim-scripts/bash-support.vim'
 Plug 'stephpy/vim-yaml'
 " Plug 'moby/moby' , { 'rtp': 'contrib/syntax/vim' }
 Plug 'pearofducks/ansible-vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'burnettk/vim-jenkins'
+Plug 'Vimjas/vim-python-pep8-indent'
 
 " Formatting
 Plug 'digitalrounin/vim-yaml-folds'
@@ -58,9 +63,9 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'machakann/vim-sandwich'
 " Plug 'mattn/emmet-vim'
 " Plug 'tpope/vim-surround'
-" Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-repeat'
 " Plug 'tpope/vim-markdown'
-
+Plug 'junegunn/vim-easy-align'
 
 " Thememing
 Plug 'chriskempson/vim-tomorrow-theme'

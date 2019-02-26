@@ -1,4 +1,4 @@
-# vim: set ft=sh:
+# # vim: set ft=sh:
 # .bashrc
 
 # Always append to ~/.bash_history
@@ -12,17 +12,12 @@ export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
-export MEASURABL_ORCHESTRATION_PATH=/Users/ryanfisher/dev/measurabl/src/orchestration
-export MEASURABL_LOG_PATH=/Users/ryanfisher/tmp/docker_volumes/measurabl/logs
-export MEASURABL_JENKINS_HOME_PATH=/Users/ryanfisher/tmp/docker_volumes/measurabl/jenkins_home
-mkdir -p ${MEASURABL_LOG_PATH}
-mkdir -p ${MEASURABL_JENKINS_HOME_PATH}
+export BETTER_EXCEPTIONS=1  # python better exceptions
 
-# Configure virtualenvwrapper
-export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
-export PROJECT_HOME=$HOME/dev
-export VIRTUALENVWRAPPER_SCRIPT=/usr/local/bin/virtualenvwrapper.sh
-source /usr/local/bin/virtualenvwrapper_lazy.sh
+# Configure measurable docker-compose mount paths
+export ANSIBLE_VAULT_PASSWORDS=${HOME}/.ansible/vault-passwords
+export BITBUCKET_SSH_KEY=${HOME}/.ssh/id_rsa
+export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
 
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
@@ -30,13 +25,24 @@ source /usr/local/bin/virtualenvwrapper_lazy.sh
 
 # Use custom binaries and those installed by Homebrew over OSX defaults
 source /etc/profile                                                 # Set base path
-# export PATH="/usr/locexec/bin:${PATH}"                              # Homebrew
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"       # Homebrew coreutils
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"   # Hoembrew coreutils manpages
-export PATH="/usr/local/opt/python@2/bin:$PATH"                     # Homebrew python
 export PATH="/Users/ryanfisher/.gem/ruby/2.4.0:${PATH}"             # Ruby gems isntalled with --user
 export PATH="/usr/local/lib/ruby/gems/2.4.0:${PATH}"                # Ruby gems installed for the system
 export PATH="~/bin:${PATH}"                                         # Custom installed binaries
+
+# Configure virtualenvwrapper
+export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
+export PROJECT_HOME=$HOME/dev
+export VIRTUALENVWRAPPER_SCRIPT=/usr/local/bin/virtualenvwrapper.sh
+# source /usr/local/bin/virtualenvwrapper_lazy.sh  # use pyenv instead
+
+# Enable pyenv shims and pyenv-virtualenvwrapper
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+eval "$(pyenv init -)"
+pyenv virtualenvwrapper_lazy
 
 # Enable `thefuck`
 eval "$(thefuck --alias)"
@@ -190,8 +196,18 @@ function git_branch () {
     git branch --no-color 2>/dev/null
 }
 
+function get_shell_lvl () {
+    LEVEL=1
+    [[ -n NVIM_LISTEN_ADDRESS ]] && LEVEL=2
+    [[ $SHLVL > $LEVEL ]] && echo "($SHLVL)"
+}
+
+function get_aws_vault () {
+    [[ -n $AWS_VAULT ]] && echo "($AWS_VAULT)"
+}
+
 function __ps1_prompt () {
-    PS1="$(get_virtualenv) \[${CYAN}\]→ \[${RESET}\]"
+    PS1="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv) \[${CYAN}\]→ \[${RESET}\]"
     echo -e "\
 $(date +%R) \
 ${YELLOW}$(git_project_root)${RESET}\
@@ -236,12 +252,12 @@ alias ..~='cd ~'
 
 # grep options
 alias grep='ag'
-alias ag="ag --color --color-match='$(tput setaf 2 && tput setab 29 | tr -d m)'"
+alias ag="ag --ignore tags --color --color-match='$(tput setaf 2 && tput setab 29 | tr -d m)'"
 export GREP_COLOR="$(tput setaf 2 && tput setab 29)" # green for matches
 
 # helpers
 source ~/.dotfiles/.dockerconfig                # Docker helpers
-source ~/.dotfiles/.git_helpers                 # git helpers
+source ~/.dotfiles/.git_helpers 2>/dev/null     # git helpers
 source ~/.dotfiles/.awsconfig                   # aws helpers
 source ~/.dotfiles/.osx                         # osx helpers
 source /usr/local/etc/profile.d/z.sh            # z cd autocompleation

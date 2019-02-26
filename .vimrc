@@ -14,7 +14,7 @@ set backspace=indent,eol,start      " Make backspace behave in a sane manner.
 set colorcolumn=80                  " Make it obvious where 80 characters is
 set complete+=kspell                " Autocomplete with dictionary words when spell check is on
 set diffopt+=vertical               " Always use vertical diffs
-set formatoptions+=crjq             " See :help fo-table
+set formatoptions=croqnlj           " See :help fo-table
 set foldenable                      " Code folding config
 " set foldmethod=syntax
 set foldlevelstart=99
@@ -86,7 +86,7 @@ inoremap jj <ESC>|                                          " Easy escape from i
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
 " nnoremap <CR> :call <SID>EnterInsertModeInTerminal()<CR>|
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
-nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
+nnoremap \ :ProjectRootCD<CR>:Ag -iQ<SPACE>|                 " bind \ (backward slash) to grep shortcut
 nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
 nnoremap K                                                  " Keep searching for man entries by accident
 nnoremap Q <Plug>window:quickfix:toggle
@@ -139,15 +139,23 @@ nnoremap <leader>/ :noh<CR>|                                                    
 " nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
 nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
+nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
 nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|  " Copy curgent line path/number
 nnoremap Y y$  " Make Y act like C and D
+nnoremap <leader>d :Dash<CR>
 
 " Find/replace
 nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
 nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
 nnoremap <leader>r :%s/\<<C-r><C-w>\>/
+
+" Cut
+nmap <leader>x <Plug>MoveMotionPlug
+xmap <leader>x <Plug>MoveMotionXPlug
+nmap <leader>xx <Plug>MoveMotionLinePlug
+nmap <leader>X <Plug>MoveMotionEndOfLinePlug
 
 " Copy/paste to/from system clipboard
 vnoremap <leader>y  "+y
@@ -175,14 +183,26 @@ endif
 " command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
 
+""" Custom commands ------------------------------------------------------------
+" Define an Ag command to search for the provided text and open results in quickfix
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
+
+" Define a decrypt/encrypt command to decrypt the current file
+command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+
+" Git aliases
+command! -nargs=0 Grbm silent! Git rebase -i origin/master
+
+
 """ Plugin config --------------------------------------------------------------
 " Configure neovim (https://github.com/neovim/neovim/wiki)
-let g:python_host_prog  = '/usr/local/opt/python@2/bin/python2'      " Enable python2 support
-let g:python3_host_prog = '/usr/local/bin/python3'      " Enable python3 support
+let g:python_host_prog  = '/Users/ryanfisher/.pyenv/shims/python2'      " Enable python2 support
+let g:python3_host_prog = '/Users/ryanfisher/.pyenv/shims/python3'      " Enable python3 support
 
 " Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 20
+let g:deoplete#auto_complete_delay = 100
 let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 call deoplete#custom#source('_', 'matchers', ['matcher_head'])
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
@@ -203,13 +223,6 @@ if executable('ag')
   let g:ctrlp_use_caching = 0
 endif
 
-" Define an Ag command to search for the provided text and open results in quickfix
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
-
-" Define a decrypt/encrypt command to decrypt the current file
-command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
-command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
-
 " Configure fzf (https://github.com/junegunn/fzf and https://github.com/junegunn/fzf.vim)
 let g:fzf_commits_log_options = "git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)"
 
@@ -228,6 +241,9 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Type'],
   \ 'spinner': ['fg', 'Comment'],
   \ 'header':  ['fg', 'Comment'] }
+
+" Configure dash.vim (https://github.com/rizzatti/dash.vim)
+let g:dash_activate=0
 
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
 " let g:vim_markdown_folding_disabled = 1
@@ -272,6 +288,12 @@ let g:NERDTreeIndicatorMapCustom = {
 " Configure machakann/vim-sandwich
 runtime macros/sandwich/keymap/surround.vim     " Enable vim-surround keymappings
 
+" Configure (https://github.com/junegunn/vim-easy-align)
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
 " Configure NERDCommenter scrooloose/nerdcommenter
 let g:NERDSpaceDelims = 1                                               " Add spaces after comment delimiters by default
 let g:NERDCompactSexyComs = 1                                           " Use compact syntax for prettified multi-line comments
@@ -281,9 +303,14 @@ let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }   " Add yo
 let g:NERDCommentEmptyLines = 1                                         " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDTrimTrailingWhitespace = 1                                    " Enable trimming of trailing whitespace when uncommenting
 
+" Configure vim-easyclip (https://github.com/svermeulen/vim-easyclip)
+let g:EasyClipUseCutDefaults = 0
+let g:EasyClipUseSubstituteDefaults = 1
+
 " Configure neomake (https://github.com/neomake/neomake)
 call neomake#configure#automake('nwr', 1000)
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
+let g:neomake_python_enabled_makers = ['pep8', 'flake8', 'python']
 
 " Note colors are in the section after the color scheme is loaded
 let g:neomake_error_sign = {'text': 'x', 'texthl': 'NeomakeErrorSign'}
@@ -425,16 +452,11 @@ augroup vimrcEx
   au BufRead,BufNewFile *.yaml,*.yml set tabstop=2
               \| set shiftwidth=2
               \| set softtabstop=2
-              \| set formatoptions+=crjq
   au BufRead,BufNewFile Jenkinsfile set ft=groovy
 
-  " Enable spellchecking for Markdown
+  " Enable spellchecking and textwrap for Markdown
   au FileType markdown setl spell
-
-  " Auto set nowrap on some files
-  au BufRead */orchestration/environments/000_cross_env_users.yml setl nowrap
-
-  " Automatically wrap at 80 characters for Markdown
+    \| setl formatoptions+=t
   au BufRead,BufNewFile *.md setl textwidth=80
 
   " Automatically wrap at 72 characters and spell check git commit messages
@@ -443,6 +465,15 @@ augroup vimrcEx
     \| setl spell
     \| setl filetype=markdown
     \| setl commentstring=#%s
+    \| setl formatoptions+=t
+
+  " Set Makefile to ft make and don't expand tabs
+  au BufRead,BufNewfile Makefile set ft=make
+  au FileType make setl noexpandtab
+              \| setl list listchars=tab:\ \ ,trail:·,nbsp:·
+
+  " Auto set nowrap on some files
+  au BufRead */environments/000_cross_env_users.yml setl nowrap
 
   " :set nowrap for some files
   au BufRead, BufNewFile user_list.yml setl nowrap
