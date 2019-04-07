@@ -1,10 +1,10 @@
 [user]
-	name = Ryan Fisher
-	email = ryan@measurabl.com
+    name = Ryan Fisher
+    email = ryan@measurabl.com
 [include]
     path = .gitconfig_aliases
 [core]
-	excludesfile = /Users/ryanfisher/.gitignore_global
+    excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
 [diff]
@@ -30,15 +30,15 @@
 [branch]
     autosetuprebase = always
 [commit]
-	template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
+    template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
     autocorrect = 0
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [init]
     templatedir = ~/.git-templates
 [color]

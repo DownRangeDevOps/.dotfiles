@@ -54,6 +54,7 @@ Plug 'pearofducks/ansible-vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'burnettk/vim-jenkins'
 Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'mpyatishev/vim-sqlformat'
 
 " Formatting
 Plug 'digitalrounin/vim-yaml-folds'

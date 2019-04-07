@@ -309,6 +309,7 @@ let g:EasyClipUseSubstituteDefaults = 1
 
 " Configure neomake (https://github.com/neomake/neomake)
 call neomake#configure#automake('nwr', 1000)
+" call neomake#configure#automake('w')  " use when on battery
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
 let g:neomake_python_enabled_makers = ['pep8', 'flake8', 'python']
 

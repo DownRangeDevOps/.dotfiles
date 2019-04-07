@@ -4290,15 +4290,15 @@ Password Manager</string>
 	<key>NSWindow Frame NSFontPanel</key>
 	<string>1300 1319 445 77 762 1050 2560 1417 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>1283 2338 400 129 871 1050 2560 1417 </string>
+	<string>-1282 2338 400 129 -1694 1050 2560 1417 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>1841 1836 620 392 871 1050 2560 1440 </string>
+	<string>970 768 620 392 0 0 2560 1417 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>1503 1603 606 469 871 1050 2560 1417 </string>
+	<string>1498 1722 606 469 866 1050 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>1675 1997 958 470 871 1050 2560 1417 </string>
+	<string>1670 2038 770 429 866 1050 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1680 1050 0 0 1680 1027 </string>
+	<string>-1694 1050 2560 1440 -1694 1050 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>0 100 810 677 0 0 1280 777 </string>
 	<key>New Bookmarks</key>
@@ -6009,6 +6009,8 @@ Password Manager</string>
 			<string>/Users/ryanfisher</string>
 		</dict>
 	</array>
+	<key>NoSyncHaveRequestedFullDiskAccess</key>
+	<true/>
 	<key>NoSyncHaveWarnedAboutPasteConfirmationChange</key>
 	<true/>
 	<key>NoSyncInstallationId</key>
@@ -6132,7 +6134,7 @@ Password Manager</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-10-31T18:41:39Z</date>
+	<date>2019-04-02T19:28:18Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -6152,6 +6154,8 @@ Password Manager</string>
 	<key>SwitchWindowModifier</key>
 	<integer>6</integer>
 	<key>TabStyle</key>
+	<integer>1</integer>
+	<key>TabStyleWithAutomaticOption</key>
 	<integer>1</integer>
 	<key>TabViewType</key>
 	<integer>0</integer>
@@ -6188,7 +6192,7 @@ Password Manager</string>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.2.4</string>
+	<string>3.2.8</string>
 	<key>kCPFavoritesUserDefaultsKey</key>
 	<array>
 		<data>
