@@ -39,12 +39,14 @@ Plug 'drmingdrmer/vim-toggle-quickfix'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'svermeulen/vim-easyclip'
 Plug 'rizzatti/dash.vim'
+Plug 'stefandtw/quickfix-reflector.vim'
 
 " UI
 Plug 'itchyny/lightline.vim'
 Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'blueyed/vim-diminactive'
 Plug 'bradens/vim-iterm2-navigator'
+Plug 'gcmt/taboo.vim'
 
 " Syntax
 Plug 'vim-scripts/bash-support.vim'

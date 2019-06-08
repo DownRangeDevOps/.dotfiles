@@ -5,42 +5,43 @@ so ~/.dotfiles/.vim-jenkins
 so ~/.dotfiles/assets/term_color.vim
 
 """ Prefrences ---------------------------------------------------------------
-filetype plugin indent on           " Enable file type detection and do language-dependent indenting.
-set autochdir                       " Auto change working directory to that of the current file
-set autowrite                       " Automatically :write before running commands
-set autoread                        " Automatically read files when they have changed
-set backspace=2                     " Backspace deletes like most programs in insert mode
-set backspace=indent,eol,start      " Make backspace behave in a sane manner.
-set colorcolumn=80                  " Make it obvious where 80 characters is
-set complete+=kspell                " Autocomplete with dictionary words when spell check is on
-set diffopt+=vertical               " Always use vertical diffs
-set formatoptions=croqnlj           " See :help fo-table
-set foldenable                      " Code folding config
+filetype plugin indent on                " Enable file type detection and do language-dependent indenting.
 " set foldmethod=syntax
-set foldlevelstart=99
-set foldcolumn=0
-set history=50                      " store command history across sessions
-set hlsearch                        " hilight search matches
-set incsearch                       " do incremental searching
-set list listchars=tab:»·,trail:·,nbsp:·  " Dispay tabs, non-breaking spaces, and trailing whitespace
-set mouse=a
-set noshowmode                      " hide the mode status line
-set ruler                           " show the cursor position all the time
-set showbreak=↳\ \ \>               " Indicate wraped lines
+set autochdir                            " Auto change working directory to that of the current file
+set autoread                             " Automatically read files when they have changed
+set autowrite                            " Automatically :write before running commands
+set backspace=2                          " Backspace deletes like most programs in insert mode
+set backspace=indent,eol,start           " Make backspace behave in a sane manner.
+set colorcolumn=80                       " Make it obvious where 80 characters is
+set complete+=kspell                     " Autocomplete with dictionary words when spell check is on
+set diffopt+=vertical                    " Always use vertical diffs
+set dir=~/tmp                            " set where swapfile(s) are stored
 set fillchars+=vert:\ |
-set showcmd                         " display incomplete commands
-set nospell spelllang=en_us         " Turn off spellchecking by default
-set splitbelow                      " Open new split panes to the right/bottom
+set foldcolumn=0
+set foldenable                           " Code folding config
+set foldlevelstart=99
+set formatoptions=croqnlj                " See :help fo-table
+set history=50                           " store command history across sessions
+set hlsearch                             " hilight search matches
+set incsearch                            " do incremental searching
+set list listchars=tab:»·,trail:·,nbsp:· " Dispay tabs, non-breaking spaces, and trailing whitespace
+set mouse=a
+set noshowmode                           " hide the mode status line
+set nospell spelllang=en_us              " Turn off spellchecking by default
+set noswapfile                           " disable swap file
+set ruler                                " show the cursor position all the time
+set scrolloff=2                          " Always show one line above/below the cursor
+set secure                               " Prevent shell, write, :au unless file is owned by me
+set sessionoptions+=tabpages,globals     " Allow Taboo to maintain tab names across sessions
+set showbreak=↳\ \ \>                    " Indicate wraped lines
+set showcmd                              " display incomplete commands
+set splitbelow                           " Open new split panes to the right/bottom
 set splitright
-set noswapfile                      " disable swap file
-set timeoutlen=700                  " set a short leader timeout
-set dir=~/tmp                       " set where swapfile(s) are stored
-set wildmode=list:longest,list:full       " Configure autocompletion see :help wildmode
-set secure                          " Prevent shell, write, :au unless file is owned by me
-set scrolloff=2                     " Always show one line above/below the cursor
-set termguicolors                   " Use truecolor
-if &diff                            " only for diff mode/vimdiff
-  set diffopt=filler,context:1000000      " filler is default and inserts empty lines for sync
+set termguicolors                        " Use truecolor
+set timeoutlen=700                       " set a short leader timeout
+set wildmode=list:longest,list:full      " Configure autocompletion see :help wildmode
+if &diff                                 " only for diff mode/vimdiff
+  set diffopt=filler,context:1000000     " filler is default and inserts empty lines for sync
 endif
 
 " Default tabbing prefrences
@@ -80,6 +81,7 @@ endif
 
 """ Key mappings ---------------------------------------------------------------
 map <SPACE> <leader>
+map <S-SPACE> <leader>
 let mapleader = ' '
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
 inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
@@ -108,13 +110,21 @@ if has('nvim')
     tnoremap <C-k> <C-\><C-n><C-w>k             " Move up a window
     tnoremap <C-l> <C-\><C-n><C-w>l             " Move right a window
     " breaks terminal ctrl+w for deleting tnoremap <c-w><c-w> <C-\><C-n><C-w>=        " Set windows to equal size
+    tnoremap <s-space> <space>
 endif
 
+" Easy tab navigation
+nnoremap <silent><leader><S-w> :tabclose<CR>          " Move right a window
+nnoremap <silent><leader><S-h> :tabprevious<CR>       " Move left a window
+nnoremap <silent><leader><S-l> :tabnext<CR>           " Move right a window
+inoremap <silent><leader><S-h> <ESC>:tabprevious<CR>  " Move leeft a window
+inoremap <silent><leader><S-l> <ESC>:tabnext<CR>      " Move right a window
 
 " Use magic in search/substitue
 nnoremap / /\v\c
 vnoremap / /\v\c
 cnoremap %% %s/\v
+cnoremap %%% s/\v
 " cnoremap \>s/ \>smagic/
 " nnoremap :g/ :g/\v
 " nnoremap :g// :g//
@@ -133,12 +143,9 @@ nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                 
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
 nnoremap <silent><leader>3 :ProjectRootExe e .<CR>|
 nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
-nnoremap <leader>L :SyntasticToggleMode<CR>|                                                " Togle syntastic mode
-nnoremap <leader>l :SyntasticCheck<CR>|                                                     " Trigger syntastic check
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
 " nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
-nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
 nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
@@ -167,7 +174,7 @@ nnoremap <leader>p "+p
 
 
 " NeoVim configuration
-if has('nvim')
+if has('nvim') && !exists('g:gui_oni')
     let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
     nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>|
 else
@@ -202,10 +209,12 @@ let g:python3_host_prog = '/Users/ryanfisher/.pyenv/shims/python3'      " Enable
 
 " Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 100
+let g:deoplete#auto_complete_delay = 300
+let g:deoplete#sources#jedi#enable_typeinfo = 0
 let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 call deoplete#custom#source('_', 'matchers', ['matcher_head'])
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 if has('nvim')                                              " Prevent nested neovim instances when using :term
   let $VISUAL = 'nvr -cc split --remote-wait'
@@ -395,9 +404,14 @@ hi IndentGuidesEven guibg=#2d2d2d   ctermbg=237
 
 " Configure lightline status bar
 set laststatus=2
+
+if exists('g:gui_oni')
+  set laststatus=0 noshowmode
+endif
+
 let g:lightline = {
   \ 'component_function': {
-    \  'filename': 'LightLineFilename'
+  \    'filename': 'LightLineFilename'
   \ },
   \ 'colorscheme': 'Tomorrow_Night_Eighties',
   \ 'component': {

@@ -2,11 +2,17 @@
 alias g="git"
 
 # Logging
+function gd() {
+    git diff --color ${1:-} | diff-so-fancy | less --tabs=4 -RFX
+}
+
 alias gs="git status"
-alias gdm="git diff origin/master"
-alias gdd="git diff origin/develop"
-alias gddh="git diff origin/develop..HEAD"
-alias gd1="git diff HEAD~1"
+alias gdm="gd origin/master"
+alias gdmh="gd origin/master..HEAD"
+alias gdd="gd origin/develop"
+alias gddh="gd origin/develop..HEAD"
+alias gdm="gd origin/master"
+alias gd1="gd HEAD~"
 alias gl="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 alias gl-="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 alias gl--="git log --color --format=format:'• %C(white)%s%C(reset)' | LESS -SFX -R"
@@ -32,25 +38,15 @@ alias gp="gf && git pull --rebase"
 alias gco="git checkout"
 alias gcom="git checkout master"
 alias gcod="git checkout develop"
-alias gmerged="git branch --all --merged origin/master | egrep -v '>|master|develop'"
+alias gmerged="git branch --all --merged origin/master \
+    | egrep -v '>|master|develop' \
+    | tr -d ' '"
+alias gdmb="git_delete_merged_branches"
 
-function gsmb() {
+function git_delete_merged_branches() {
+    REMOTES=${@:-origin}
     echo '==> Fetching updates...'
-    gf
-
-    BRANCHES=$(gmerged)
-
-    if [[ ! -z ${BRANCHES} ]]; then
-        echo '==> Branches that have been merged to master:'
-        echo ${BRANCHES}
-    else
-        echo '==> No merged branches to delete.'
-    fi
-}
-
-function gdmb() {
-    echo '==> Fetching updates...'
-    gf &>/dev/null
+    git fetch --prune &>/dev/null
 
     CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     LOCAL_BRANCHES=$(echo $(gmerged \
@@ -60,26 +56,27 @@ function gdmb() {
     REMOTE_BRANCHES=$(echo $(gmerged \
         | egrep '^\s+remotes/origin/' \
         | sed -e 's/^\s*remotes\/origin\///g' \
-        | egrep -v "${CUR_BRANCH}" \
         | awk '{print $1}'))
 
     if [[ ! -z ${LOCAL_BRANCHES} || ! -z ${REMOTE_BRANCHES} ]]; then
-        echo '==> Deleting merged branches:'
+        echo '==> Branches that have been merged to master:'
         gmerged
+
+        prompt_to_continue 'Delete branches?' || return 0
+
         echo ''
-        gdmlocal ${LOCAL_BRANCHES}
-        gdmremote ${REMOTE_BRANCHES}
+        echo '==> Deleting merged local branches...'
+        # git branch --delete ${LOCAL_BRANCHES}
+        for REMOTE in ${REMOTES}; do
+            echo "==> Deleting merged remote branches from ${REMOTE}..."
+            # git push --delete ${REMOTE} ${REMOTE_BRANCHES}
+        done
+        git fetch --prune &>/dev/null
+        echo '==> Merged branches deleted'
+        echo '==> Everyone should run `git fetch --prune` to sync with this remote'
     else
         echo '==> No merged branches to delete.'
     fi
-}
-
-function gdmlocal() {
-    [[ ! -z ${1} ]] && git branch -d ${1}
-}
-
-function gdmremote() {
-    [[ ! -z ${1} ]] && git push --delete origin ${1}
 }
 
 # Committing
@@ -114,7 +111,6 @@ add_git_completion_to_aliases() {
         __git_complete gco _git_checkout
         __git_complete ga _git_add
         __git_complete gb _git_branch
-        __git_complete gd _git_diff
         __git_complete gst _git_stash
         __git_complete grb _git_rebase
     fi
@@ -151,10 +147,6 @@ gcot() {
     | tr [:upper:] [:lower:])
 
   gco -b ${TICKET}
-}
-
-gd() {
-    git diff --color ${1:-} | diff-so-fancy | less --tabs=4 -RFX
 }
 
 # git merge --ff-only

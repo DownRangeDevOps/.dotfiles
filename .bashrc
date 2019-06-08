@@ -25,11 +25,20 @@ export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
 
 # Use custom binaries and those installed by Homebrew over OSX defaults
 source /etc/profile                                                 # Set base path
+
+for tool in 'gnu-tar' 'gnu-which' 'gnu-sed'; do
+    export PATH="/usr/local/opt/${tool}/libexec/gnubin:$PATH"           # Homebrew gnu tools
+    export PATH="/usr/local/opt/${tool}/libexec/gnuman:$PATH"           # Homebrew gnu manpages
+done
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"       # Homebrew coreutils
-export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"   # Hoembrew coreutils manpages
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:${MANPATH}" # Hoembrew coreutils manpages
 export PATH="/Users/ryanfisher/.gem/ruby/2.4.0:${PATH}"             # Ruby gems isntalled with --user
 export PATH="/usr/local/lib/ruby/gems/2.4.0:${PATH}"                # Ruby gems installed for the system
 export PATH="~/bin:${PATH}"                                         # Custom installed binaries
+export PATH="/usr/local/sbin:${PATH}"                               # Homebrew bin path
+
+# Configure FZF command
+export FZF_DEFAULT_COMMAND='ag -g ""'
 
 # Configure virtualenvwrapper
 export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
@@ -100,6 +109,7 @@ alias c="clear"
 
 # Auto on Yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
+alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 
 # Easy edit custom dot files with menu prompt
 edot() {
@@ -252,7 +262,7 @@ alias ..~='cd ~'
 
 # grep options
 alias grep='ag'
-alias ag="ag --ignore tags --color --color-match='$(tput setaf 2 && tput setab 29 | tr -d m)'"
+alias ag="ag --hidden --ignore tags --ignore .git --color --color-match='$(tput setaf 2 && tput setab 29 | tr -d m)'"
 export GREP_COLOR="$(tput setaf 2 && tput setab 29)" # green for matches
 
 # helpers
