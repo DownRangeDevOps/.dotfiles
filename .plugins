@@ -5,76 +5,83 @@ call plug#begin()
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'vim-syntastic/syntastic'  " slow... not working
 "
-" Deoplete and source plugins
-Plug 'zchee/deoplete-jedi'              " python
-Plug 'artur-shaik/vim-javacomplete2'    " java/groovy
-Plug 'Shougo/neco-vim'                  " vim
-Plug 'fishbullet/deoplete-ruby'         " ruby
-Plug 'Shougo/context_filetype.vim'      " filetypes
-Plug 'Shougo/neoinclude.vim'            " include file and path
-Plug 'php-vim/phpcd.vim'                " php
-Plug 'ludovicchabant/vim-gutentags'     " Automatic ctags
-Plug 'hashivim/vim-terraform'           " Automatic ctags
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Auto-complete/LSP
+" Plug 'svermeulen/ncm2-yoink'  # bugged?
+Plug 'ObserverOfTime/ncm2-jc2'
+Plug 'Shougo/neco-syntax'
+Plug 'fgrsnau/ncm2-otherbuf', { 'branch': 'ncm2' }
+Plug 'mhartington/nvim-typescript'
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-cssomni'
+Plug 'ncm2/ncm2-go'
+Plug 'ncm2/ncm2-jedi'
+Plug 'ncm2/ncm2-match-highlight'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-syntax'
+Plug 'ncm2/ncm2-tern'
+Plug 'ncm2/ncm2-vim'
+Plug 'phpactor/ncm2-phpactor'
+Plug 'roxma/nvim-yarp'
 
 " Linting
 Plug 'neomake/neomake'
 
 " Utilities
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'arithran/vim-delete-hidden-buffers'
-Plug 'tpope/vim-fugitive'
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
-Plug 'airblade/vim-gitgutter'
-Plug 'farmergreg/vim-lastplace'
-Plug 'easymotion/vim-easymotion'
-Plug 'dbakker/vim-projectroot'              " Prfix to change to project root
-Plug 'vim-scripts/vim-auto-save'
-" Plug 'tmux-plugins/vim-tmux'                " .tmux.conf syntax
 " Plug 'christoomey/vim-tmux-navigator'
+" Plug 'tmux-plugins/vim-tmux'                " .tmux.conf syntax
 " Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug '/usr/local/opt/fzf'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'
+Plug 'arithran/vim-delete-hidden-buffers'
+Plug 'dbakker/vim-projectroot'              " Prfix to change to project root
 Plug 'drmingdrmer/vim-toggle-quickfix'
+Plug 'easymotion/vim-easymotion'
+Plug 'farmergreg/vim-lastplace'
+Plug 'junegunn/fzf.vim'
 Plug 'mzlogin/vim-markdown-toc'
-Plug 'svermeulen/vim-easyclip'
 Plug 'rizzatti/dash.vim'
+Plug 'scrooloose/nerdtree'
 Plug 'stefandtw/quickfix-reflector.vim'
+Plug 'svermeulen/vim-easyclip'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-scripts/vim-auto-save'
 
 " UI
-Plug 'itchyny/lightline.vim'
-Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'blueyed/vim-diminactive'
 Plug 'bradens/vim-iterm2-navigator'
 Plug 'gcmt/taboo.vim'
+Plug 'itchyny/lightline.vim'
+Plug 'nathanaelkane/vim-indent-guides'
 
 " Syntax
-Plug 'vim-scripts/bash-support.vim'
-Plug 'stephpy/vim-yaml'
 " Plug 'moby/moby' , { 'rtp': 'contrib/syntax/vim' }
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'burnettk/vim-jenkins'
+Plug 'mpyatishev/vim-sqlformat'
 Plug 'pearofducks/ansible-vim'
 Plug 'plasticboy/vim-markdown'
-Plug 'burnettk/vim-jenkins'
-Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'mpyatishev/vim-sqlformat'
+Plug 'stephpy/vim-yaml'
+Plug 'vim-scripts/bash-support.vim'
 
 " Formatting
-Plug 'digitalrounin/vim-yaml-folds'
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'scrooloose/nerdcommenter'
-Plug 'jiangmiao/auto-pairs'
-Plug 'machakann/vim-sandwich'
 " Plug 'mattn/emmet-vim'
-" Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
 " Plug 'tpope/vim-markdown'
+" Plug 'tpope/vim-surround'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'digitalrounin/vim-yaml-folds'
+Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-easy-align'
+Plug 'machakann/vim-sandwich'
+Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-repeat'
 
 " Thememing
-Plug 'chriskempson/vim-tomorrow-theme'
+" Plug 'flazz/vim-colorschemes'
 " Plug 'icymind/NeoSolarized'
 " Plug 'jnurmine/Zenburn'
-" Plug 'flazz/vim-colorschemes'
 " Plug 'lifepillar/vim-solarized8'
 " Plug 'yuttie/hydrangea-vim'
+Plug 'chriskempson/vim-tomorrow-theme'
 call plug#end()

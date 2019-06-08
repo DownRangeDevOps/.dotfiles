@@ -74,14 +74,13 @@ endif
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-  syntax on
-  set synmaxcol=200
+    syntax on
+    set synmaxcol=200
 endif
 
 
 """ Key mappings ---------------------------------------------------------------
 map <SPACE> <leader>
-map <S-SPACE> <leader>
 let mapleader = ' '
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
 inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
@@ -94,21 +93,21 @@ nnoremap K                                                  " Keep searching for
 nnoremap Q <Plug>window:quickfix:toggle
 
 " Easy split navigation
-nnoremap <C-h> <C-w>h                           " Move left a window
-nnoremap <C-j> <C-w>j                           " Move down a window
-nnoremap <C-k> <C-w>k                           " Move up a window
-nnoremap <C-l> <C-w>l                           " Move right a window
-nnoremap <c-w><c-w> <C-w>=                      " Set windows to equal size
-inoremap <C-h> <ESC><C-w>h                      " Move left a window
-inoremap <C-j> <ESC><C-w>j                      " Move down a window
-inoremap <C-k> <ESC><C-w>k                      " Move up a window
-inoremap <C-l> <ESC><C-w>l                      " Move right a window
-inoremap <c-w><c-w> <C-w>=                      " Set windows to equal size
+nnoremap <C-h> <C-w>h                   " Move left a window
+nnoremap <C-j> <C-w>j                   " Move down a window
+nnoremap <C-k> <C-w>k                   " Move up a window
+nnoremap <C-l> <C-w>l                   " Move right a window
+nnoremap <c-w><c-w> <C-w>=              " Set windows to equal size
+inoremap <C-h> <ESC><C-w>h              " Move left a window
+inoremap <C-j> <ESC><C-w>j              " Move down a window
+inoremap <C-k> <ESC><C-w>k              " Move up a window
+inoremap <C-l> <ESC><C-w>l              " Move right a window
+inoremap <c-w><c-w> <C-w>=              " Set windows to equal size
 if has('nvim')
-    tnoremap <C-h> <C-\><C-n><C-w>h             " Move left a window
-    tnoremap <C-j> <C-\><C-n><C-w>j             " Move down a window
-    tnoremap <C-k> <C-\><C-n><C-w>k             " Move up a window
-    tnoremap <C-l> <C-\><C-n><C-w>l             " Move right a window
+    tnoremap <C-h> <C-\><C-n><C-w>h     " Move left a window
+    tnoremap <C-j> <C-\><C-n><C-w>j     " Move down a window
+    tnoremap <C-k> <C-\><C-n><C-w>k     " Move up a window
+    tnoremap <C-l> <C-\><C-n><C-w>l     " Move right a window
     " breaks terminal ctrl+w for deleting tnoremap <c-w><c-w> <C-\><C-n><C-w>=        " Set windows to equal size
     tnoremap <s-space> <space>
 endif
@@ -172,7 +171,6 @@ nnoremap <leader>Y  "+yg_
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
 
-
 " NeoVim configuration
 if has('nvim') && !exists('g:gui_oni')
     let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
@@ -200,21 +198,6 @@ command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-passwo
 
 " Git aliases
 command! -nargs=0 Grbm silent! Git rebase -i origin/master
-
-
-""" Plugin config --------------------------------------------------------------
-" Configure neovim (https://github.com/neovim/neovim/wiki)
-let g:python_host_prog  = '/Users/ryanfisher/.pyenv/shims/python2'      " Enable python2 support
-let g:python3_host_prog = '/Users/ryanfisher/.pyenv/shims/python3'      " Enable python3 support
-
-" Configure deoplete.nvim (https://github.com/Shougo/deoplete.nvim)
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 300
-let g:deoplete#sources#jedi#enable_typeinfo = 0
-let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
-call deoplete#custom#source('_', 'matchers', ['matcher_head'])
-inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 if has('nvim')                                              " Prevent nested neovim instances when using :term
   let $VISUAL = 'nvr -cc split --remote-wait'
@@ -304,13 +287,13 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " Configure NERDCommenter scrooloose/nerdcommenter
-let g:NERDSpaceDelims = 1                                               " Add spaces after comment delimiters by default
-let g:NERDCompactSexyComs = 1                                           " Use compact syntax for prettified multi-line comments
-let g:NERDDefaultAlign = 'left'                                         " Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDAltDelims_java = 1                                            " Set a language to use its alternate delimiters by default
-let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }   " Add your own custom formats or override the defaults
-let g:NERDCommentEmptyLines = 1                                         " Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDTrimTrailingWhitespace = 1                                    " Enable trimming of trailing whitespace when uncommenting
+let g:NERDSpaceDelims = 1                                             " Add spaces after comment delimiters by default
+let g:NERDCompactSexyComs = 1                                         " Use compact syntax for prettified multi-line comments
+let g:NERDDefaultAlign = 'left'                                       " Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDAltDelims_java = 1                                          " Set a language to use its alternate delimiters by default
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } } " Add your own custom formats or override the defaults
+let g:NERDCommentEmptyLines = 1                                       " Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDTrimTrailingWhitespace = 1                                  " Enable trimming of trailing whitespace when uncommenting
 
 " Configure vim-easyclip (https://github.com/svermeulen/vim-easyclip)
 let g:EasyClipUseCutDefaults = 0
@@ -320,7 +303,17 @@ let g:EasyClipUseSubstituteDefaults = 1
 call neomake#configure#automake('nwr', 1000)
 " call neomake#configure#automake('w')  " use when on battery
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
-let g:neomake_python_enabled_makers = ['pep8', 'flake8', 'python']
+let g:neomake_python_enabled_makers = ['flake8', 'python']
+
+" Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
+set completeopt=noinsert,menuone,noselect
+set shortmess+=c
+let g:ncm2#match_highlight = 'bold'  " ncm2-match-highlight plugin
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Configure auto-pairs (https://github.com/jiangmiao/auto-pairs)
+let g:AutoPairsMapCR=0
 
 " Note colors are in the section after the color scheme is loaded
 let g:neomake_error_sign = {'text': 'x', 'texthl': 'NeomakeErrorSign'}
@@ -328,20 +321,20 @@ let g:neomake_warning_sign = {'text': '!', 'texthl': 'NeomakeWarningSign'}
 
 " Configure vim-auto-save plugin (https://github.com/vim-scripts/vim-auto-save)
 let g:auto_save = 1
-let g:auto_save_silent = 1              " Do not display the auto-save notification
-let g:auto_save_no_updatetime = 1       " do not change the 'updatetime' option
+let g:auto_save_silent = 1        " Do not display the auto-save notification
+let g:auto_save_no_updatetime = 1 " do not change the 'updatetime' option
 
 " Configure vim-tmux-navigator (https://github.com/christoomey/vim-tmux-navigator)
 let g:tmux_navigator_save_on_switch = 2
 
 " Configure ansible-vim (https://github.com/pearofducks/ansible-vim)
 let g:ansible_template_syntaxes = {
-            \'*.python.j2': 'python',
-            \'*.cfg.j2': 'cfg',
-            \'*.php.j2': 'php',
-            \'*.sh.j2': 'sh',
-            \'*.groovy.j2': 'groovy'
-            \}
+    \'*.python.j2': 'python',
+    \'*.cfg.j2': 'cfg',
+    \'*.php.j2': 'php',
+    \'*.sh.j2': 'sh',
+    \'*.groovy.j2': 'groovy'
+    \}
 let g:ansible_attribute_highlight = "ad"
 let g:ansible_name_highlight = "d"
 let g:ansible_extra_keywords_highlight = 1
@@ -406,26 +399,26 @@ hi IndentGuidesEven guibg=#2d2d2d   ctermbg=237
 set laststatus=2
 
 if exists('g:gui_oni')
-  set laststatus=0 noshowmode
+    set laststatus=0 noshowmode
 endif
 
 let g:lightline = {
-  \ 'component_function': {
-  \    'filename': 'LightLineFilename'
-  \ },
-  \ 'colorscheme': 'Tomorrow_Night_Eighties',
-  \ 'component': {
-  \   'readonly': '%{&readonly?"⭤":""}',
-  \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-  \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():"⭠"}'
-  \ },
-  \ 'component_visible_condition': {
-  \   'readonly': '(&filetype!="help"&& &readonly)',
-  \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-  \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
-  \ },
-  \ 'separator': { 'left': '⮀', 'right': '⮂' },
-  \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+    \ 'component_function': {
+    \    'filename': 'LightLineFilename'
+    \ },
+    \ 'colorscheme': 'Tomorrow_Night_Eighties',
+    \ 'component': {
+    \   'readonly': '%{&readonly?"⭤":""}',
+    \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+    \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():"⭠"}'
+    \ },
+    \ 'component_visible_condition': {
+    \   'readonly': '(&filetype!="help"&& &readonly)',
+    \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+    \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+    \ },
+    \ 'separator': { 'left': '⮀', 'right': '⮂' },
+    \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
 \ }
 
 " Lightline functions
@@ -453,72 +446,76 @@ endfunc
 
 """ Startup autocommands -------------------------------------------------------
 augroup vimrcEx
-  au!
+    au!
 
-  " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
-  autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
+    " enable ncm2 for all buffers
+    au BufEnter * call ncm2#enable_for_buffer()
+    au TextChangedI * call ncm2#auto_trigger()
 
-  " Set syntax highlighting for specific file types
-  au BufRead,BufNewFile Appraisals set ft=ruby
-  au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
-  au BufRead,BufNewFile *sudoers-* set ft=sudoers
-  au BufRead,BufNewFile .vimrc set ft=vim
-  au BufRead,BufNewFile */orchestration/*.yml set ft=yaml.ansible
-  au BufRead,BufNewFile *.yaml,*.yml set tabstop=2
-              \| set shiftwidth=2
-              \| set softtabstop=2
-  au BufRead,BufNewFile Jenkinsfile set ft=groovy
+    " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
+    " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
 
-  " Enable spellchecking and textwrap for Markdown
-  au FileType markdown setl spell
-    \| setl formatoptions+=t
-  au BufRead,BufNewFile *.md setl textwidth=80
+    " Set syntax highlighting for specific file types
+    au BufRead,BufNewFile Appraisals set ft=ruby
+    au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
+    au BufRead,BufNewFile *sudoers-* set ft=sudoers
+    au BufRead,BufNewFile .vimrc set ft=vim
+    au BufRead,BufNewFile */orchestration/*.yml set ft=yaml.ansible
+    au BufRead,BufNewFile *.yaml,*.yml set tabstop=2
+                \| set shiftwidth=2
+                \| set softtabstop=2
+    au BufRead,BufNewFile Jenkinsfile set ft=groovy
 
-  " Automatically wrap at 72 characters and spell check git commit messages
-  au FileType gitcommit setl textwidth=72
-    \| setlocal colorcolumn=50,72
-    \| setl spell
-    \| setl filetype=markdown
-    \| setl commentstring=#%s
-    \| setl formatoptions+=t
+    " Enable spellchecking and textwrap for Markdown
+    au FileType markdown setl spell
+        \| setl formatoptions+=t
+    au BufRead,BufNewFile *.md setl textwidth=80
 
-  " Set Makefile to ft make and don't expand tabs
-  au BufRead,BufNewfile Makefile set ft=make
-  au FileType make setl noexpandtab
-              \| setl list listchars=tab:\ \ ,trail:·,nbsp:·
+    " Automatically wrap at 72 characters and spell check git commit messages
+    au FileType gitcommit setl textwidth=72
+        \| setlocal colorcolumn=50,72
+        \| setl spell
+        \| setl filetype=markdown
+        \| setl commentstring=#%s
+        \| setl formatoptions+=t
 
-  " Auto set nowrap on some files
-  au BufRead */environments/000_cross_env_users.yml setl nowrap
+    " Set Makefile filetype and don't expand tabs
+    au BufRead,BufNewfile Makefile set ft=make
+    au FileType make setl noexpandtab
+                \| setl list listchars=tab:\ \ ,trail:·,nbsp:·
 
-  " :set nowrap for some files
-  au BufRead, BufNewFile user_list.yml setl nowrap
+    " Auto set nowrap on some files
+    au BufRead */environments/000_cross_env_users.yml setl nowrap
 
-  " Allow style sheets to auto-complete hyphenated words
-  au FileType css,scss,sass setl iskeyword+=-
+    " :set nowrap for some files
+    au BufRead, BufNewFile user_list.yml setl nowrap
 
-  " Remove tabs and trailing whitespace on open and insert
-  au BufRead,BufEnter,BufLeave,TextChanged *
-    \call <SID>StripTrailingWhitespaces()
+    " Allow style sheets to auto-complete hyphenated words
+    au FileType css,scss,sass setl iskeyword+=-
 
-  " Autosave
-  au TextChanged * call <SID>WriteIfModifiable()
+    " Remove tabs and trailing whitespace on open and insert
+    au BufRead,BufEnter,BufLeave,TextChanged *
+        \call <SID>StripTrailingWhitespaces()
 
-  " Autoread
-  au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
+    " Autosave
+    au TextChanged * call <SID>WriteIfModifiable()
 
-  " Auto lint on write
-  au BufWritePost * Neomake
+    " Autoread
+    au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
 
-  " Configure terminal settings
-  au TermOpen * setl nospell | setl nonumber | setl norelativenumber
+    " Auto lint on write
+    au BufWritePost * Neomake
 
-  " Bind q to close quickfix
-  au FileType quickfix nnoremap q :cclose
+    " Configure terminal settings
+    au TermOpen * setl nospell | setl nonumber | setl norelativenumber
 
-  " Hide the status line for FZF buffer
-  autocmd! FileType fzf
-    autocmd  FileType fzf set laststatus=0 noshowmode noruler
-    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+    " Bind q to close quickfix
+    au FileType quickfix nnoremap q :cclose
+
+    " Hide the status line for FZF buffer
+    au! FileType fzf
+        au  FileType fzf set laststatus=0 noshowmode noruler
+        \| au BufLeave <buffer> set laststatus=2 showmode ruler
 
 " augroup END
 
@@ -544,6 +541,7 @@ function! s:WriteIfModifiable()
                 \&& &buftype != 'terminal'
                 \&& &buftype != 'nowrite'
                 \&& &diff == 0
+                \&& buffer_name('%') !~ 'quickfix-'
         silent w
     endif
 endfunction
