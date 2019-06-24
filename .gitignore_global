@@ -10,3 +10,6 @@
 **/.tags
 **/.ignore
 *@neomake_*
+**/GPATH
+**/GTAGS
+**/GRTAGS

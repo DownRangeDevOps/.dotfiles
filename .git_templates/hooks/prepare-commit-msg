@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# Get the ticket ID from the branch name
+ISSUE_ID=$(git rev-parse --abbrev-ref HEAD | egrep -o '\/[A-Z]*-[0-9]*' | tr -d '/')
+
+sed -ie "s/\$ISSUE_ID/$ISSUE_ID/g" "$1"

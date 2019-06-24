@@ -5,8 +5,12 @@ so ~/.dotfiles/.vim-jenkins
 so ~/.dotfiles/assets/term_color.vim
 
 """ Prefrences ---------------------------------------------------------------
+" Use space as leader key
+let mapleader=" "
+nnoremap <space> <leader>
+
+" Config
 filetype plugin indent on                " Enable file type detection and do language-dependent indenting.
-" set foldmethod=syntax
 set autochdir                            " Auto change working directory to that of the current file
 set autoread                             " Automatically read files when they have changed
 set autowrite                            " Automatically :write before running commands
@@ -18,8 +22,10 @@ set diffopt+=vertical                    " Always use vertical diffs
 set dir=~/tmp                            " set where swapfile(s) are stored
 set fillchars+=vert:\ |
 set foldcolumn=0
+set foldnestmax=2                        " methods of classes are folded, but not internal statements
 set foldenable                           " Code folding config
-set foldlevelstart=99
+set foldlevelstart=1
+set foldmethod=indent
 set formatoptions=croqnlj                " See :help fo-table
 set history=50                           " store command history across sessions
 set hlsearch                             " hilight search matches
@@ -41,7 +47,7 @@ set termguicolors                        " Use truecolor
 set timeoutlen=700                       " set a short leader timeout
 set wildmode=list:longest,list:full      " Configure autocompletion see :help wildmode
 if &diff                                 " only for diff mode/vimdiff
-  set diffopt=filler,context:1000000     " filler is default and inserts empty lines for sync
+set diffopt=filler,context:1000000     " filler is default and inserts empty lines for sync
 endif
 
 " Default tabbing prefrences
@@ -78,36 +84,45 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
     set synmaxcol=200
 endif
 
+" Keep undo history across sessions by storing it in a file
+if has('persistent_undo')
+    let undo_dir = expand('$HOME/.vim/undo_dir')
+    if !isdirectory(undo_dir)
+        call mkdir(undo_dir, "", 0700)
+    endif
+    set undodir=$HOME/.vim/undo_dir
+    set undofile
+endif
 
-""" Key mappings ---------------------------------------------------------------
-map <SPACE> <leader>
-let mapleader = ' '
+
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
 inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
 " nnoremap <CR> :call <SID>EnterInsertModeInTerminal()<CR>|
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
-nnoremap \ :ProjectRootCD<CR>:Ag -iQ<SPACE>|                 " bind \ (backward slash) to grep shortcut
+nnoremap \ :ProjectRootCD<CR>:Ag -iQ<SPACE>|                " bind \ (backward slash) to grep shortcut
 nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
 nnoremap K                                                  " Keep searching for man entries by accident
 nnoremap Q <Plug>window:quickfix:toggle
 
 " Easy split navigation
-nnoremap <C-h> <C-w>h                   " Move left a window
-nnoremap <C-j> <C-w>j                   " Move down a window
-nnoremap <C-k> <C-w>k                   " Move up a window
-nnoremap <C-l> <C-w>l                   " Move right a window
-nnoremap <c-w><c-w> <C-w>=              " Set windows to equal size
-inoremap <C-h> <ESC><C-w>h              " Move left a window
-inoremap <C-j> <ESC><C-w>j              " Move down a window
-inoremap <C-k> <ESC><C-w>k              " Move up a window
-inoremap <C-l> <ESC><C-w>l              " Move right a window
-inoremap <c-w><c-w> <C-w>=              " Set windows to equal size
+nnoremap <leader>\ :call <SID>OpenNewSplit('\')<CR>|        " Open vertical split
+nnoremap <leader>\| :call <SID>OpenNewSplit('\|')<CR>|      " Open horizontal split
+" noremap <C-h> <Esc>:silent SwitchWindow h<CR>
+" noremap <C-l> <Esc>:silent SwitchWindow l<CR>
+" noremap <C-j> <Esc>:silent SwitchWindow j<CR>
+" noremap <C-k> <Esc>:silent SwitchWindow k<CR>
+noremap <C-h> <C-w>h                                       " Move left a window
+let g:BASH_Ctrl_j = "off"
+noremap <C-j> <C-w>j                                       " Move down a window
+noremap <C-k> <C-w>k                                       " Move up a window
+noremap <C-l> <C-w>l                                       " Move right a window
+nnoremap <c-w><c-w> <ESC><C-w>=                            " Set windows to equal size
 if has('nvim')
-    tnoremap <C-h> <C-\><C-n><C-w>h     " Move left a window
-    tnoremap <C-j> <C-\><C-n><C-w>j     " Move down a window
-    tnoremap <C-k> <C-\><C-n><C-w>k     " Move up a window
-    tnoremap <C-l> <C-\><C-n><C-w>l     " Move right a window
+    tnoremap <C-h> <C-\><C-n><C-w>h                         " Move left a window
+    tnoremap <C-j> <C-\><C-n><C-w>j                         " Move down a window
+    tnoremap <C-k> <C-\><C-n><C-w>k                         " Move up a window
+    tnoremap <C-l> <C-\><C-n><C-w>l                         " Move right a window
     " breaks terminal ctrl+w for deleting tnoremap <c-w><c-w> <C-\><C-n><C-w>=        " Set windows to equal size
     tnoremap <s-space> <space>
 endif
@@ -116,8 +131,6 @@ endif
 nnoremap <silent><leader><S-w> :tabclose<CR>          " Move right a window
 nnoremap <silent><leader><S-h> :tabprevious<CR>       " Move left a window
 nnoremap <silent><leader><S-l> :tabnext<CR>           " Move right a window
-inoremap <silent><leader><S-h> <ESC>:tabprevious<CR>  " Move leeft a window
-inoremap <silent><leader><S-l> <ESC>:tabnext<CR>      " Move right a window
 
 " Use magic in search/substitue
 nnoremap / /\v\c
@@ -128,9 +141,8 @@ cnoremap %%% s/\v
 " nnoremap :g/ :g/\v
 " nnoremap :g// :g//
 
-" Leader key remappings
-nnoremap <leader>\ :call <SID>OpenNewSplit('\')<CR>|                                                                " Open vertical split
-nnoremap <leader>\| :call <SID>OpenNewSplit('\|')<CR>|                                                                 " Open horizontal split
+" Utility
+nnoremap ` za
 nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|                " Close buffer(s)
 nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
 nnoremap <silent><leader>qq :q<CR>|
@@ -140,16 +152,15 @@ nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:sta
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
-nnoremap <silent><leader>3 :ProjectRootExe e .<CR>|
+nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                                                 " Open NERDTree and hilight the current file
 nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
-" nnoremap <leader>m :!clear;ansible-lint %<CR>|                                              " Run ansible-lint on the current file
 nnoremap <silent><leader>m :Neomake
 nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
 nnoremap <leader>ha <Plug>GitGutterStageHunk
 nnoremap <leader>hr <Plug>GitGutter
-nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|  " Copy curgent line path/number
-nnoremap Y y$  " Make Y act like C and D
+nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|                         " Copy curgent line path/number
+nnoremap Y y$                                                                               " Make Y act like C and D
 nnoremap <leader>d :Dash<CR>
 
 " Find/replace
@@ -281,10 +292,15 @@ let g:NERDTreeIndicatorMapCustom = {
 runtime macros/sandwich/keymap/surround.vim     " Enable vim-surround keymappings
 
 " Configure (https://github.com/junegunn/vim-easy-align)
-" Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+let g:easy_align_delimiters = {
+    \ "#": {
+        \ "pattern": "#\+",
+        \ "ignore_groups": ["String"],
+        \ "delimiter_align": "l"
+    \}
+\ }
 
 " Configure NERDCommenter scrooloose/nerdcommenter
 let g:NERDSpaceDelims = 1                                             " Add spaces after comment delimiters by default
@@ -299,6 +315,9 @@ let g:NERDTrimTrailingWhitespace = 1                                  " Enable t
 let g:EasyClipUseCutDefaults = 0
 let g:EasyClipUseSubstituteDefaults = 1
 
+" Configure editorconfig-vim (https://github.com/editorconfig/editorconfig-vim)
+let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
+
 " Configure neomake (https://github.com/neomake/neomake)
 call neomake#configure#automake('nwr', 1000)
 " call neomake#configure#automake('w')  " use when on battery
@@ -308,12 +327,27 @@ let g:neomake_python_enabled_makers = ['flake8', 'python']
 " Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
 set completeopt=noinsert,menuone,noselect
 set shortmess+=c
-let g:ncm2#match_highlight = 'bold'  " ncm2-match-highlight plugin
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
+au User Ncm2Plugin call ncm2#register_source({
+    \ 'on_complete': ['ncm2#on_complete#delay',
+    \                  300,
+    \                 'ncm2#on_complete#omni',
+    \                 'csscomplete#CompleteCSS'],
+    \ })
+
+
+" Configure ncm2-utilisnips (https://github.com/ncm2/ncm2-ultisnips)
+let g:UltiSnipsJumpForwardTrigger   = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger  = "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
+
 " Configure auto-pairs (https://github.com/jiangmiao/auto-pairs)
 let g:AutoPairsMapCR=0
+
+" Configure FastFold (https://github.com/Konfekt/FastFold)
+let g:fastfold_savehook = 0
 
 " Note colors are in the section after the color scheme is loaded
 let g:neomake_error_sign = {'text': 'x', 'texthl': 'NeomakeErrorSign'}
@@ -342,17 +376,12 @@ let g:ansible_with_keywords_highlight = 'PreProc'
 let g:ansible_normal_keywords_highlight = 'Type'
 let g:ansible_yamlKeyName = 'yamlKey'
 
+" Configure vim-stay (https://github.com/zhimsel/vim-stay)
+set viewoptions=cursor,folds,slash,unix
+
 " Configure vim-lastplace (https://github.com/farmergreg/vim-lastplace)
-let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cursor at top when opening these files
-let g:lastplace_ignore_buftype = "quickfix,nofile,help"
-
-" Configure vim-diminactive (https://github.com/blueyed/vim-diminactive)
-let g:diminactive_use_syntax = 1
-let g:diminactive_use_colorcolumn = 0
-let g:diminactive_enable_focus = 1
-
-" Enable jnurmine/Zenburn color scheme
-" colorscheme Zenburn
+" let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cursor at top when opening these files
+" let g:lastplace_ignore_buftype = "terminal,quickfix,nofile,help"
 
 " Enable chriskempson/vim-tomorrow-theme
 colorscheme Tomorrow-Night-Eighties
@@ -360,16 +389,7 @@ colorscheme Tomorrow-Night-Eighties
 hi Cursor ctermbg=6 guibg=#76d4d6
 hi NeomakeErrorSign ctermfg=196 guifg=#d70000
 hi NeomakeWarningSign ctermfg=226 guifg=#ffff00
-" Enable icymind/NeoSolarized color scheme
-" NOTE: highlight customizations must be after this
-" colorscheme NeoSolarized
-" set background=dark
-" let g:neosolarized_contrast = "high"
-" let g:neosolarized_visibility = "low"
-" let g:neosolarized_vertSplitBgTrans = 1
-" let g:neosolarized_bold = 1
-" let g:neosolarized_underline = 1
-" let g:neosolarized_italic = 1
+hi FoldColumn guifg=#313131 ctermfg=235
 
 " Custom colors that override any theme loaded to this point
 hi Search ctermfg=2 ctermbg=29 guifg=#a8d4a9 guibg=#134f2f
@@ -397,25 +417,30 @@ hi IndentGuidesEven guibg=#2d2d2d   ctermbg=237
 
 " Configure lightline status bar
 set laststatus=2
+set noshowmode
 
 if exists('g:gui_oni')
     set laststatus=0 noshowmode
 endif
 
 let g:lightline = {
+    \ 'colorscheme': 'Tomorrow_Night_Eighties',
+    \ 'active': {
+    \   'left': [['mode', 'paste'],
+    \            ['fugitive', 'readonly', 'modified', 'filename']]
+    \ },
     \ 'component_function': {
     \    'filename': 'LightLineFilename'
     \ },
-    \ 'colorscheme': 'Tomorrow_Night_Eighties',
     \ 'component': {
     \   'readonly': '%{&readonly?"⭤":""}',
     \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-    \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():"⭠"}'
+    \   'fugitive': '%{&filetype=="help"?"":exists("*fugitive#head")?fugitive#head():"⭠"}'
     \ },
     \ 'component_visible_condition': {
     \   'readonly': '(&filetype!="help"&& &readonly)',
     \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-    \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+    \   'fugitive': '(&filetype!="help"&&exists("*fugitive#head") && ""!=fugitive#head())'
     \ },
     \ 'separator': { 'left': '⮀', 'right': '⮂' },
     \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
@@ -456,33 +481,40 @@ augroup vimrcEx
     " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
 
     " Set syntax highlighting for specific file types
-    au BufRead,BufNewFile Appraisals set ft=ruby
-    au BufRead,BufNewFile *.md set ft=markdown | set nofoldenable
-    au BufRead,BufNewFile *sudoers-* set ft=sudoers
-    au BufRead,BufNewFile .vimrc set ft=vim
-    au BufRead,BufNewFile */orchestration/*.yml set ft=yaml.ansible
-    au BufRead,BufNewFile *.yaml,*.yml set tabstop=2
-                \| set shiftwidth=2
-                \| set softtabstop=2
-    au BufRead,BufNewFile Jenkinsfile set ft=groovy
+    au BufRead,BufNewFile Appraisals setl ft=ruby
+    au BufRead,BufNewFile *.md setl ft=markdown | setl nofoldenable
+    au BufRead,BufNewFile *sudoers-* setl ft=sudoers
+    au BufRead,BufNewFile .vimrc setl ft=vim
+    au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
+    au BufRead,BufNewFile *.yaml,*.yml setl tabstop=2
+                \ shiftwidth=2
+                \ softtabstop=2
+    au BufRead,BufNewFile Jenkinsfile setl ft=groovy
 
     " Enable spellchecking and textwrap for Markdown
     au FileType markdown setl spell
-        \| setl formatoptions+=t
+        \ formatoptions+=t
     au BufRead,BufNewFile *.md setl textwidth=80
 
-    " Automatically wrap at 72 characters and spell check git commit messages
+    " Wrap at 72 characters and spell check git commit messages
     au FileType gitcommit setl textwidth=72
-        \| setlocal colorcolumn=50,72
-        \| setl spell
-        \| setl filetype=markdown
-        \| setl commentstring=#%s
-        \| setl formatoptions+=t
+        \ colorcolumn=50,72
+        \ spell
+        \ filetype=markdown
+        \ commentstring=#%s
+        \ formatoptions+=t
+
+    " Override bats indentation to four (4) spaces
+    au FileType bats setl tabstop=4
+        \ shiftwidth=4
+        \ softtabstop=4
+        \ shiftround
+        \ expandtab
 
     " Set Makefile filetype and don't expand tabs
-    au BufRead,BufNewfile Makefile set ft=make
+    au BufRead,BufNewfile Makefile setl ft=make
     au FileType make setl noexpandtab
-                \| setl list listchars=tab:\ \ ,trail:·,nbsp:·
+                \ list listchars=tab:\ \ ,trail:·,nbsp:·
 
     " Auto set nowrap on some files
     au BufRead */environments/000_cross_env_users.yml setl nowrap
@@ -507,15 +539,17 @@ augroup vimrcEx
     au BufWritePost * Neomake
 
     " Configure terminal settings
-    au TermOpen * setl nospell | setl nonumber | setl norelativenumber
+    au TermOpen * setl nospell
+        \ nonumber
+        \ norelativenumber
 
     " Bind q to close quickfix
     au FileType quickfix nnoremap q :cclose
 
     " Hide the status line for FZF buffer
     au! FileType fzf
-        au  FileType fzf set laststatus=0 noshowmode noruler
-        \| au BufLeave <buffer> set laststatus=2 showmode ruler
+        au  FileType fzf setl laststatus=0 noshowmode noruler
+        \| au BufLeave <buffer> setl laststatus=2 showmode ruler
 
 " augroup END
 
@@ -545,19 +579,6 @@ function! s:WriteIfModifiable()
         silent w
     endif
 endfunction
-
-" Tab completion
-" Will insert tab at beginning of line, will use completion if not at beginning
-function! s:InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-p>"
-    endif
-endfunction
-inoremap <Tab> <c-r>=<SID>InsertTabWrapper()<cr>
-inoremap <S-Tab> <c-n>
 
 " Open previous buffer, wipe current, quit if only one buffer
 function! s:WipeBufOrQuit()

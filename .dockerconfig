@@ -41,29 +41,34 @@ function docker-tags () {
 
 # Docker shortcuts
 dc() {
-  if [[ $# -eq 1 ]]; then
-    case $1 in
-     'bash')
-        docker-compose exec app bash;;
-      'logs')
-        docker-compose logs -f app;;
-      'test')
-        docker-compose exec app python manage.py test -n;;
-      'up')
-          docker-compose up -d $args;;
-      *)
-        docker-compose "$@";;
-    esac
-  else
-    case $1 in
-      'logs')
-        docker-compose logs -f "${@:2}";;
-      'bash')
-        docker-compose exec "${@:2}" bash;;
-      *)
-        docker-compose "$@";;
-    esac
-  fi
+  docker-compose ${@}
+  # if [[ ${#} -eq 2 ]]; then
+  #   if [[ -z $(docker ps --quiet --filter "name=${1}") ]]; then
+  #     case ${2} in
+  #       'bash')
+  #           docker-compose exec ${1} bash;;
+  #       'sh')
+  #           docker-compose exec ${1} sh;;
+  #       'logs')
+  #           docker-compose logs -f ${1};;
+  #         *)
+  #           docker-compose "${@}";;
+  #     esac
+  #   else
+  #     docker-compose "${@}"
+  #   fi
+  # else
+  #   case ${1} in
+  #     'up')
+  #         docker-compose up -d ${@};;
+  #     'logs')
+  #       docker-compose logs -f "${@:2}";;
+  #     'bash')
+  #       docker-compose exec "${@:2}" bash;;
+  #     *)
+  #       docker-compose "${@}";;
+  #   esac
+  # fi
 }
 
 dm() {

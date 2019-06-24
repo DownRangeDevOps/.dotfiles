@@ -5,9 +5,6 @@
 shopt -s histappend
 
 # custom exports (e.g. paths, app configs)
-#export GOPATH=$HOME/dev/go
-#export BINPATH=$HOME/bin
-#export PATH=${PATH}:$GOPATH/bin:$BINPATH
 export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
@@ -24,31 +21,18 @@ export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
 [ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
 
 # Use custom binaries and those installed by Homebrew over OSX defaults
-source /etc/profile                                                 # Set base path
-
-for tool in 'gnu-tar' 'gnu-which' 'gnu-sed'; do
-    export PATH="/usr/local/opt/${tool}/libexec/gnubin:$PATH"           # Homebrew gnu tools
-    export PATH="/usr/local/opt/${tool}/libexec/gnuman:$PATH"           # Homebrew gnu manpages
-done
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"       # Homebrew coreutils
-export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:${MANPATH}" # Hoembrew coreutils manpages
-export PATH="/Users/ryanfisher/.gem/ruby/2.4.0:${PATH}"             # Ruby gems isntalled with --user
-export PATH="/usr/local/lib/ruby/gems/2.4.0:${PATH}"                # Ruby gems installed for the system
-export PATH="~/bin:${PATH}"                                         # Custom installed binaries
-export PATH="/usr/local/sbin:${PATH}"                               # Homebrew bin path
+source /etc/profile                # Set base path
+export PATH="${HOME}/bin:${PATH}"  # Custom installed binaries
 
 # Configure FZF command
-export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden --ignore tags --ignore .git -g ''"
 
 # Configure virtualenvwrapper
 export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
 export PROJECT_HOME=$HOME/dev
 export VIRTUALENVWRAPPER_SCRIPT=/usr/local/bin/virtualenvwrapper.sh
-# source /usr/local/bin/virtualenvwrapper_lazy.sh  # use pyenv instead
 
 # Enable pyenv shims and pyenv-virtualenvwrapper
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 eval "$(pyenv init -)"
 pyenv virtualenvwrapper_lazy
@@ -106,6 +90,15 @@ alias vs="vagrant ssh"
 alias sb="source ~/.bashrc"
 alias ebash="vim ~/.bashrc"
 alias c="clear"
+
+# If -r/--git-version is not supplied, mount the current directory and run migrations
+function msr-migrate() {
+    if [[ " ${@} " =~ " -r " || " ${@} " =~ " --git-version " ]]; then
+        docker run msr-migrate ${@}
+    else
+        docker run -v ${PWD}:/src msr-migrate ${@}
+    fi
+}
 
 # Auto on Yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"

@@ -3,7 +3,7 @@ alias g="git"
 
 # Logging
 function gd() {
-    git diff --color ${1:-} | diff-so-fancy | less --tabs=4 -RFX
+    git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
 }
 
 alias gs="git status"
@@ -39,43 +39,52 @@ alias gco="git checkout"
 alias gcom="git checkout master"
 alias gcod="git checkout develop"
 alias gmerged="git branch --all --merged origin/master \
-    | egrep -v '>|master|develop' \
+    | egrep -v '>|master|develop|release' \
     | tr -d ' '"
 alias gdmb="git_delete_merged_branches"
 
 function git_delete_merged_branches() {
-    REMOTES=${@:-origin}
+    REMOTES="${@:-origin}"
     echo '==> Fetching updates...'
     git fetch --prune &>/dev/null
+    git remote prune origin &>/dev/null
 
     CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    LOCAL_BRANCHES=$(echo $(gmerged \
-        | egrep -v '^\s+remotes/origin/' \
-        | egrep -v "${CUR_BRANCH}" \
-        | awk '{print $1}'))
-    REMOTE_BRANCHES=$(echo $(gmerged \
-        | egrep '^\s+remotes/origin/' \
+    LOCAL_BRANCHES=$(gmerged \
+        | grep -Ev '^\s*remotes/origin/' \
+        | grep -Ev "${CUR_BRANCH}" \
+        | awk '{print $1}')
+    REMOTE_BRANCHES=$(gmerged \
+        | grep -E '^\s*remotes/origin/' \
         | sed -e 's/^\s*remotes\/origin\///g' \
-        | awk '{print $1}'))
+        | awk '{print $1}')
 
-    if [[ ! -z ${LOCAL_BRANCHES} || ! -z ${REMOTE_BRANCHES} ]]; then
+    if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
         echo '==> Branches that have been merged to master:'
         gmerged
 
         prompt_to_continue 'Delete branches?' || return 0
 
         echo ''
-        echo '==> Deleting merged local branches...'
-        # git branch --delete ${LOCAL_BRANCHES}
-        for REMOTE in ${REMOTES}; do
-            echo "==> Deleting merged remote branches from ${REMOTE}..."
-            # git push --delete ${REMOTE} ${REMOTE_BRANCHES}
-        done
+
+        if [[ -n ${LOCAL_BRANCHES} ]]; then
+            echo '==> Deleting merged local branches...'
+            git branch --delete "${LOCAL_BRANCHES}"
+        fi
+
+        if [[ -n ${REMOTE_BRANCHES} ]]; then
+            for REMOTE in "${REMOTES}"; do
+                echo "==> Deleting merged remote branches from ${REMOTE}..."
+                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
+            done
+        fi
+
         git fetch --prune &>/dev/null
-        echo '==> Merged branches deleted'
-        echo '==> Everyone should run `git fetch --prune` to sync with this remote'
+        git remote prune origin &>/dev/null
+        echo "==> Merged branches deleted"
+        echo "==> Everyone should run \`git fetch --prune\` to sync with this remote"
     else
-        echo '==> No merged branches to delete.'
+        echo "==> No merged branches to delete."
     fi
 }
 
@@ -95,14 +104,14 @@ alias grbm="gf && git rebase --interactive origin/master"
 alias grbd="gf && git rebase --interactive origin/develop"
 
 # Pushing
-alias gpu="git push -u $(git remote) HEAD"
+alias gpu="git push -u \$(git remote) HEAD"
 alias gfpo="git push --force-with-lease origin HEAD"
 
 # Misc aliases for get based but non-git actions
-alias gac='git diff origin/master \
+alias gac="git diff origin/master \
     --stat \
     --diff-filter=ACdMRTUxB \
-    !(roles.galaxy)'
+    !(roles.galaxy)"
 
 # Add git completion
 add_git_completion_to_aliases() {
@@ -144,9 +153,9 @@ gcot() {
     | sed 's/^[\.\/]//' \
     | tr -s ' ' '-' \
     | tr -cd '[:alnum:]._-/' \
-    | tr [:upper:] [:lower:])
+    | tr "[:upper:]" "[:lower:]")
 
-  gco -b ${TICKET}
+  gco -b "${TICKET}"
 }
 
 # git merge --ff-only
@@ -168,10 +177,10 @@ gffm() {
         git push origin HEAD
     else
         BRANCH=$1
-        git log @{-1}..${BRANCH} && \
+        git log @{-1}.."${BRANCH}" && \
         git diff --stat origin/master && \
         prompt_to_continue "Merge to ${1}?" && \
-        git merge --ff-only $BRANCH && \
+        git merge --ff-only "$BRANCH" && \
         prompt_to_continue 'Push to origin?' && \
         git push origin HEAD
     fi
@@ -190,7 +199,7 @@ gcpu() {
     COMMAND=''
 
     if [[ $1 == '-a' ]]; then
-        COMMAND1="git add --all && "
+        COMMAND="git add --all && "
         shift
     fi
 
@@ -212,16 +221,16 @@ gnuke() {
         return 1
     fi
 
-    git remote | xargs -L1 -I remote git push --delete remote $@ 2>/dev/null
-    git branch -D $@ 2>/dev/null
+    git remote | xargs -L1 -I remote git push --delete remote "$@" 2>/dev/null
+    git branch -D "$@" 2>/dev/null
 }
 
 # delete current branch and it's remote
 gnukethis() {
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-    git remote | xargs -L1 -I remote git push --delete remote ${BRANCH}
-    git branch -D ${BRANCH}
+    git remote | xargs -L1 -I remote git push --delete remote "${BRANCH}"
+    git branch -D "${BRANCH}"
 }
 
 # git log copy - copy the git log for this branch to the clipboard
@@ -238,7 +247,7 @@ EOF
 
 # [o]pen [p]ull [r]equest - open a pull request for the current branch
 opr() {
-    REPO=$(basename $(pwd))
+    REPO=$(basename "$(pwd)")
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
     TITLE=$(git log -n1 --pretty=format:'%s')
     BRANCH_ENCODED=$(python3 -c "from urllib.parse import quote_plus; import json;s=quote_plus(json.dumps(\"${BRANCH}\"));print(s)")

@@ -4077,14 +4077,28 @@ Password Manager</string>
 		<key>0x68-0x140000</key>
 		<dict>
 			<key>Action</key>
-			<integer>2</integer>
+			<integer>18</integer>
+			<key>Text</key>
+			<string></string>
+		</dict>
+		<key>0x6a-0x140000</key>
+		<dict>
+			<key>Action</key>
+			<integer>21</integer>
+			<key>Text</key>
+			<string></string>
+		</dict>
+		<key>0x6b-0x140000</key>
+		<dict>
+			<key>Action</key>
+			<integer>20</integer>
 			<key>Text</key>
 			<string></string>
 		</dict>
 		<key>0x6c-0x140000</key>
 		<dict>
 			<key>Action</key>
-			<integer>0</integer>
+			<integer>19</integer>
 			<key>Text</key>
 			<string></string>
 		</dict>
@@ -4290,15 +4304,15 @@ Password Manager</string>
 	<key>NSWindow Frame NSFontPanel</key>
 	<string>1300 1319 445 77 762 1050 2560 1417 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>-1282 2338 400 129 -1694 1050 2560 1417 </string>
+	<string>304 836 400 129 0 0 1680 1027 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>970 768 620 392 0 0 2560 1417 </string>
+	<string>530 493 620 392 0 0 1680 1050 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>1498 1722 606 469 866 1050 2560 1417 </string>
+	<string>1486 1777 606 469 854 1050 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>1670 2038 770 429 866 1050 2560 1417 </string>
+	<string>1485 1648 958 470 839 1050 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>-1694 1050 2560 1440 -1694 1050 2560 1417 </string>
+	<string>701 900 2560 1440 701 900 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>0 100 810 677 0 0 1280 777 </string>
 	<key>New Bookmarks</key>
@@ -6134,7 +6148,7 @@ Password Manager</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-04-02T19:28:18Z</date>
+	<date>2019-06-19T19:03:21Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -6192,7 +6206,7 @@ Password Manager</string>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.2.8</string>
+	<string>3.2.9</string>
 	<key>kCPFavoritesUserDefaultsKey</key>
 	<array>
 		<data>
