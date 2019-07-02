@@ -30,16 +30,32 @@ alias gstatd="echo '==> Log: '\
     && git diff --stat origin/develop"
 
 # Branching
-alias gb="git branch"
+function gb() {
+    git branch "${@}"| fzf
+}
 alias gbn="git rev-parse --abbrev-ref HEAD"
 alias gba="git branch --all"
 alias gf="git fetch --prune"
 alias gp="gf && git pull --rebase"
-alias gco="git checkout"
+function gco() {
+    if [[ ${1} ]]; then
+        git checkout "${@}"
+    else
+        git branch -a \
+            | tr -d ' ' \
+            | sed -e 's,^remotes/origin/,,' \
+            | sed -e 's,^HEAD.*,,' \
+            | sort \
+            | uniq \
+            | fzf \
+            | xargs git checkout
+    fi
+}
+
 alias gcom="git checkout master"
 alias gcod="git checkout develop"
 alias gmerged="git branch --all --merged origin/master \
-    | egrep -v '>|master|develop|release' \
+    | /usr/local/opt/grep/libexec/gnubin/grep -Ev '>|master|develop|release' \
     | tr -d ' '"
 alias gdmb="git_delete_merged_branches"
 
@@ -51,11 +67,11 @@ function git_delete_merged_branches() {
 
     CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     LOCAL_BRANCHES=$(gmerged \
-        | grep -Ev '^\s*remotes/origin/' \
-        | grep -Ev "${CUR_BRANCH}" \
+        | /usr/local/opt/grep/libexec/gnubin/grep -Ev '^\s*remotes/origin/' \
+        | /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" \
         | awk '{print $1}')
     REMOTE_BRANCHES=$(gmerged \
-        | grep -E '^\s*remotes/origin/' \
+        | /usr/local/opt/grep/libexec/gnubin/grep -E '^\s*remotes/origin/' \
         | sed -e 's/^\s*remotes\/origin\///g' \
         | awk '{print $1}')
 
@@ -247,7 +263,8 @@ EOF
 
 # [o]pen [p]ull [r]equest - open a pull request for the current branch
 opr() {
-    REPO=$(basename "$(pwd)")
+    REPO=$(basename "$(git rev-parse --show-toplevel)")
+
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
     TITLE=$(git log -n1 --pretty=format:'%s')
     BRANCH_ENCODED=$(python3 -c "from urllib.parse import quote_plus; import json;s=quote_plus(json.dumps(\"${BRANCH}\"));print(s)")

@@ -1,6 +1,19 @@
 # # vim: set ft=sh:
 # .bashrc
 
+# Configure path, must be first...
+export PATH=""                                                          # Reset
+source /etc/profile                                                     # Base
+export PATH="/opt/X11/bin:${PATH}"
+export PATH="/Users/ryanfisher/.pyenv/shims:${PATH}"
+export PATH="/usr/local/opt/ruby/bin:${PATH}"                           # Homebrew Ruby
+for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils'; do
+    export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}"         # Homebrew gnu tools
+    export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}"         # Homebrew gnu manpages
+done
+export PATH="/usr/local/sbin:${PATH}"                                   # Homebrew bin path
+export PATH="${HOME}/bin:${PATH}"                                       # Custom installed binaries
+
 # Always append to ~/.bash_history
 shopt -s histappend
 
@@ -10,6 +23,8 @@ export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
 export BETTER_EXCEPTIONS=1  # python better exceptions
+export AWS_ASSUME_ROLE_TTL=1h
+export AWS_SESSION_TTL=12h
 
 # Configure measurable docker-compose mount paths
 export ANSIBLE_VAULT_PASSWORDS=${HOME}/.ansible/vault-passwords
@@ -20,11 +35,8 @@ export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
 
-# Use custom binaries and those installed by Homebrew over OSX defaults
-source /etc/profile                # Set base path
-export PATH="${HOME}/bin:${PATH}"  # Custom installed binaries
-
 # Configure FZF command
+export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
 export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden --ignore tags --ignore .git -g ''"
 
 # Configure virtualenvwrapper

@@ -24,7 +24,7 @@ set fillchars+=vert:\ |
 set foldcolumn=0
 set foldnestmax=2                        " methods of classes are folded, but not internal statements
 set foldenable                           " Code folding config
-set foldlevelstart=1
+set foldlevelstart=2
 set foldmethod=indent
 set formatoptions=croqnlj                " See :help fo-table
 set history=50                           " store command history across sessions
@@ -324,25 +324,6 @@ call neomake#configure#automake('nwr', 1000)
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
 let g:neomake_python_enabled_makers = ['flake8', 'python']
 
-" Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
-set completeopt=noinsert,menuone,noselect
-set shortmess+=c
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-au User Ncm2Plugin call ncm2#register_source({
-    \ 'on_complete': ['ncm2#on_complete#delay',
-    \                  300,
-    \                 'ncm2#on_complete#omni',
-    \                 'csscomplete#CompleteCSS'],
-    \ })
-
-
-" Configure ncm2-utilisnips (https://github.com/ncm2/ncm2-ultisnips)
-let g:UltiSnipsJumpForwardTrigger   = "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger  = "<c-k>"
-let g:UltiSnipsRemoveSelectModeMappings = 0
-
 " Configure auto-pairs (https://github.com/jiangmiao/auto-pairs)
 let g:AutoPairsMapCR=0
 
@@ -367,7 +348,8 @@ let g:ansible_template_syntaxes = {
     \'*.cfg.j2': 'cfg',
     \'*.php.j2': 'php',
     \'*.sh.j2': 'sh',
-    \'*.groovy.j2': 'groovy'
+    \'*.groovy.j2': 'groovy',
+    \'*nginx.conf.j2': 'nginx'
     \}
 let g:ansible_attribute_highlight = "ad"
 let g:ansible_name_highlight = "d"
@@ -382,6 +364,23 @@ set viewoptions=cursor,folds,slash,unix
 " Configure vim-lastplace (https://github.com/farmergreg/vim-lastplace)
 " let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cursor at top when opening these files
 " let g:lastplace_ignore_buftype = "terminal,quickfix,nofile,help"
+
+" Configure ncm2-utilisnips (https://github.com/ncm2/ncm2-ultisnips)
+let g:UltiSnipsJumpForwardTrigger   = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger  = "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
+
+" Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
+set completeopt=noinsert,menuone,noselect
+set shortmess+=c
+au User Ncm2Plugin call ncm2#register_source({
+    \ 'on_complete': ['ncm2#on_complete#delay',
+    \                  300,
+    \                 'ncm2#on_complete#omni',
+    \                 'csscomplete#CompleteCSS'],
+    \ })
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Enable chriskempson/vim-tomorrow-theme
 colorscheme Tomorrow-Night-Eighties

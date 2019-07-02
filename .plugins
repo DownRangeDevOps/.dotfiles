@@ -74,6 +74,8 @@ Plug 'plasticboy/vim-markdown'
 Plug 'stephpy/vim-yaml'
 Plug 'vim-scripts/bash-support.vim'
 Plug 'aliou/bats.vim'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'chr4/nginx.vim'
 
 " Formatting
 " Plug 'mattn/emmet-vim'
