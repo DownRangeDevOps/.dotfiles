@@ -324,6 +324,14 @@ call neomake#configure#automake('nwr', 1000)
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
 let g:neomake_python_enabled_makers = ['flake8', 'python']
 
+" Seems to not be working...
+" https://github.com/jhinch/nginx-linter
+" let g:neomake_nginx_maker = {
+"     \ 'exe': 'nginx-linter',
+"     \ 'args': ['--include'],
+"     \ 'errorformat': '%f:%l:%c: %m',
+"     \ }
+
 " Configure auto-pairs (https://github.com/jiangmiao/auto-pairs)
 let g:AutoPairsMapCR=0
 
@@ -349,7 +357,9 @@ let g:ansible_template_syntaxes = {
     \'*.php.j2': 'php',
     \'*.sh.j2': 'sh',
     \'*.groovy.j2': 'groovy',
-    \'*nginx.conf.j2': 'nginx'
+    \'*.conf.j2': 'nginx',
+    \'*.route.j2': 'nginx',
+    \'*.upstream.j2': 'nginx'
     \}
 let g:ansible_attribute_highlight = "ad"
 let g:ansible_name_highlight = "d"
@@ -503,7 +513,14 @@ augroup vimrcEx
         \ commentstring=#%s
         \ formatoptions+=t
 
-    " Override bats indentation to four (4) spaces
+    " Force indentation to two spaces
+    au FileType tf setl tabstop=2
+        \ shiftwidth=2
+        \ softtabstop=2
+        \ shiftround
+        \ expandtab
+
+    " Force indentation to four spaces
     au FileType bats setl tabstop=4
         \ shiftwidth=4
         \ softtabstop=4

@@ -64,7 +64,7 @@ eval "$(thefuck --alias)"
 
 # Add git completion to aliases
 function_exists() {
-  declare -f -F $1 > /dev/null
+  declare -f -F "${1}" > /dev/null
   return $?
 }
 
@@ -103,35 +103,9 @@ alias sb="source ~/.bashrc"
 alias ebash="vim ~/.bashrc"
 alias c="clear"
 
-# If -r/--git-version is not supplied, mount the current directory and run migrations
-function msr-migrate() {
-    if [[ " ${@} " =~ " -r " || " ${@} " =~ " --git-version " ]]; then
-        docker run msr-migrate ${@}
-    else
-        docker run -v ${PWD}:/src msr-migrate ${@}
-    fi
-}
-
 # Auto on Yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
 alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
-
-# Easy edit custom dot files with menu prompt
-edot() {
-  if [[ $# -gt 0 ]]; then
-    vim "~/${$@}"
-  else
-    shopt -s dotglob
-    options=$(find ~/.dotfiles -maxdepth 1 -type f -name ".[^.]*" -printf "%f\n" | sed -e 's/^\.//g' | sort --ignore-case)
-    COLUMNS=80
-    select FILE in $options;
-    do
-      vim ~/.dotfiles/.$FILE
-      break
-    done
-    shopt -u dotglob
-  fi
-}
 
 ### Helper funcitons
 
@@ -172,6 +146,16 @@ WHITE=$(tput setaf 7)
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
+export RED
+export GREEN
+export YELLOW
+export BLUE
+export MAGENTA
+export CYAN
+export WHITE
+export BOLD
+export RESET
+
 function parse_git_branch () {
     git_branch | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
@@ -203,7 +187,7 @@ function git_project_root () {
     if [[ -n $(git branch 2>/dev/null) ]]; then
         echo "git@$(realpath --relative-to=$(git_project_parent) .)"
     else
-        echo ${PWD/~/\~}
+        echo "${PWD/~/\~}"
     fi
 }
 
@@ -213,7 +197,7 @@ function git_branch () {
 
 function get_shell_lvl () {
     LEVEL=1
-    [[ -n NVIM_LISTEN_ADDRESS ]] && LEVEL=2
+    [[ -n $NVIM_LISTEN_ADDRESS ]] && LEVEL=2
     [[ $SHLVL > $LEVEL ]] && echo "($SHLVL)"
 }
 
@@ -267,8 +251,8 @@ alias ..~='cd ~'
 
 # grep options
 alias grep='ag'
-alias ag="ag --hidden --ignore tags --ignore .git --color --color-match='$(tput setaf 2 && tput setab 29 | tr -d m)'"
-export GREP_COLOR="$(tput setaf 2 && tput setab 29)" # green for matches
+alias ag='ag --hidden --ignore tags --ignore .git --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
+# export GREP_COLOR="$(tput setaf 2 && tput setab 29)" # green for matches
 
 # helpers
 source ~/.dotfiles/.dockerconfig                # Docker helpers

@@ -31,6 +31,9 @@ Plug 'ludovicchabant/vim-gutentags'
 " Linting
 Plug 'neomake/neomake'
 
+" Helpers
+Plug 'itchyny/vim-gitbranch'
+
 " Utilities
 " Plug 'christoomey/vim-tmux-navigator'
 " Plug 'tmux-plugins/vim-tmux'                " .tmux.conf syntax
@@ -76,6 +79,7 @@ Plug 'vim-scripts/bash-support.vim'
 Plug 'aliou/bats.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'chr4/nginx.vim'
+Plug 'hashivim/vim-terraform'
 
 " Formatting
 " Plug 'mattn/emmet-vim'
