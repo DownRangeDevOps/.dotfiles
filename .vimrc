@@ -33,7 +33,7 @@ set incsearch                            " do incremental searching
 set list listchars=tab:»·,trail:·,nbsp:· " Dispay tabs, non-breaking spaces, and trailing whitespace
 set mouse=a
 set noshowmode                           " hide the mode status line
-set nospell spelllang=en_us              " Turn off spellchecking by default
+set spell spelllang=en_us              " Turn off spellchecking by default
 set noswapfile                           " disable swap file
 set ruler                                " show the cursor position all the time
 set scrolloff=2                          " Always show one line above/below the cursor
@@ -100,7 +100,7 @@ inoremap jj <ESC>|                                          " Easy escape from i
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
 " nnoremap <CR> :call <SID>EnterInsertModeInTerminal()<CR>|
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
-nnoremap \ :ProjectRootCD<CR>:Ag -iQ<SPACE>|                " bind \ (backward slash) to grep shortcut
+nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                " bind \ (backward slash) to grep shortcut
 nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
 nnoremap K                                                  " Keep searching for man entries by accident
 nnoremap Q <Plug>window:quickfix:toggle
@@ -322,7 +322,16 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 call neomake#configure#automake('nwr', 1000)
 " call neomake#configure#automake('w')  " use when on battery
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
+let g:neomake_yaml_enabled_makers = ['yamllint']
 let g:neomake_python_enabled_makers = ['flake8', 'python']
+let g:neomake_go_enabled_makers = ['go vet']
+let g:neomake_java_enabled_makers = ['mvn']
+let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_markdown_enabled_makers = ['markdownlint']
+let g:neomake_ruby_enabled_makers = ['rubocop', 'rubylint']
+let g:neomake_shell_enabled_makers = ['shellcheck']
+let g:neomake_text_enabled_makers = ['writegood']
+let g:neomake_vim_enabled_makers = ['vint']
 
 " Seems to not be working...
 " https://github.com/jhinch/nginx-linter
@@ -495,10 +504,8 @@ augroup vimrcEx
     au BufRead,BufNewFile *sudoers-* setl ft=sudoers
     au BufRead,BufNewFile .vimrc setl ft=vim
     au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
-    au BufRead,BufNewFile *.yaml,*.yml setl tabstop=2
-                \ shiftwidth=2
-                \ softtabstop=2
     au BufRead,BufNewFile Jenkinsfile setl ft=groovy
+    au BufRead,BufNewFile .envrc setl ft=sh
 
     " Enable spellchecking and textwrap for Markdown
     au FileType markdown setl spell
@@ -506,22 +513,24 @@ augroup vimrcEx
     au BufRead,BufNewFile *.md setl textwidth=80
 
     " Wrap at 72 characters and spell check git commit messages
-    au FileType gitcommit setl textwidth=72
+    au FileType gitcommit setl filetype=markdown
+        \ textwidth=72
         \ colorcolumn=50,72
         \ spell
-        \ filetype=markdown
         \ commentstring=#%s
         \ formatoptions+=t
 
-    " Force indentation to two spaces
-    au FileType tf setl tabstop=2
-        \ shiftwidth=2
-        \ softtabstop=2
-        \ shiftround
-        \ expandtab
+    " " Force indentation to two spaces
+    " au FileType tf,yaml,yaml.*,*.yaml,yml,*.yml,ansible,ansible.* setl tabstop=2
+    "     \ tabstop=2
+    "     \ shiftwidth=2
+    "     \ softtabstop=2
+    "     \ shiftround
+    "     \ expandtab
 
     " Force indentation to four spaces
     au FileType bats setl tabstop=4
+        \ tabstop=4
         \ shiftwidth=4
         \ softtabstop=4
         \ shiftround
@@ -558,6 +567,12 @@ augroup vimrcEx
     au TermOpen * setl nospell
         \ nonumber
         \ norelativenumber
+
+    " Force spell/nospell
+    au FileType terraform setl spell
+    au FileType ansible setl nospell
+    au FileType yaml setl nospell
+    au FileType Dockerfile setl nospell
 
     " Bind q to close quickfix
     au FileType quickfix nnoremap q :cclose

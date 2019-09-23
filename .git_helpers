@@ -1,4 +1,4 @@
-# vim: set ft=sh:
+# vim: set ft=bash:
 alias g="git"
 
 # Logging
@@ -60,8 +60,8 @@ alias gmerged="git branch --all --merged origin/master \
 alias gdmb="git_delete_merged_branches"
 
 function git_delete_merged_branches() {
-    REMOTES="${@:-origin}"
-    echo '==> Fetching updates...'
+    REMOTES="${*:-origin}"
+    printf "%s\n" "==> Fetching updates..."
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
@@ -76,31 +76,30 @@ function git_delete_merged_branches() {
         | awk '{print $1}')
 
     if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
-        echo '==> Branches that have been merged to master:'
+        printf "%s\n" "==> Branches that have been merged to master:"
         gmerged
 
         prompt_to_continue 'Delete branches?' || return 0
-
-        echo ''
+        echo
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
-            echo '==> Deleting merged local branches...'
-            git branch --delete "${LOCAL_BRANCHES}"
+            printf "%s\n" "==> Deleting merged local branches..."
+            git branch --delete ${LOCAL_BRANCHES}
         fi
 
         if [[ -n ${REMOTE_BRANCHES} ]]; then
-            for REMOTE in "${REMOTES}"; do
-                echo "==> Deleting merged remote branches from ${REMOTE}..."
-                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
+            for REMOTE in ${REMOTES}; do
+                printf  "%s\n" "==> Deleting merged remote branches from ${REMOTE}..."
+                git push --delete "${REMOTE}" ${REMOTE_BRANCHES}
             done
         fi
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
-        echo "==> Merged branches deleted"
-        echo "==> Everyone should run \`git fetch --prune\` to sync with this remote"
+        printf "%s\n" "==> Merged branches have been deleted..."
+        printf "%s\n" "==> Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        echo "==> No merged branches to delete."
+        printf "%s\n" "==> No merged branches to delete."
     fi
 }
 

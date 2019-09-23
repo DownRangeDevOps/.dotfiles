@@ -55,7 +55,10 @@ Plug 'stefandtw/quickfix-reflector.vim'
 Plug 'svermeulen/vim-easyclip'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/vim-auto-save'
+
+" Previewers
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'FuDesign2008/mermaidViewer.vim'
 
 " UI
 " Plug 'blueyed/vim-diminactive'

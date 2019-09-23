@@ -1,20 +1,74 @@
 # vim: set ft=sh:
-export COMPOSE_HTTP_TIMEOUT=999999
+#export COMPOSE_HTTP_TIMEOUT=999999
 
 # Alias
-alias d='docker'
-alias di='docker image'
-alias dr='docker run'
-alias dstp='docker stop'
-alias dst='docker start'
-alias dv='docker volume'
+alias d="docker"
+alias da="docker attach"
+alias db="docker build"
+alias dcm="docker commit"
+alias dcp="docker cp"
+alias dcr="docker create"
+alias ddep="docker deploy"
+alias dd="docker diff"
+alias dev="docker events"
+alias de="docker_exec"
+alias dex="docker export"
+alias dh="docker history"
+alias di="docker image"
+alias dim="docker import"
+alias din="docker info"
+alias dins="docker inspect"
+alias dk="docker kill"
+alias dld="docker load"
+alias dlin="docker login"
+alias dlout="docker logout"
+alias dl="docker logs"
+alias dn="docker network"
+alias dp="docker pause"
+alias dpt="docker port"
+alias dps="docker_ps"
+alias dpl="docker pull"
+alias dpu="docker push"
+alias drn="docker rename"
+alias drst="docker restart"
+alias drm="docker rm"
+alias drmi="docker rmi"
+alias dr="docker run"
+alias ds="docker save"
+alias dsr="docker search"
+alias dst="docker start"
+alias dsts="docker stats"
+alias dstp="docker stop"
+alias dtg="docker tag"
+alias dt="docker top"
+alias dunp="docker unpause"
+alias dup="docker update"
+alias dV="docker version"
+alias dv="docker volume"
+alias dw="docker wait"
 
-dps() {
-    docker ps ${1:-}| less -RSFX
+function dvrm() {
+    volumes=$(docker volume ls \
+        | awk '{if (NR!=1) {print $2}}' \
+        | grep "${1:-.*}" --no-color)
+
+    if [[ ${volumes} ]]; then
+        printf "%s\n" "Volumes to remove:"
+        printf "%s\n" "${volumes}"
+        prompt_to_continue 'Delete volumes?' || return 0
+
+        # User selected yes...
+        for volume in $volumes; do
+            docker volume rm "${volume}"
+        done
+    else
+        printf "%s\n" "No matching volumes found."
+    fi
 }
 
-# Start measurabl
-alias dcm="docker-compose -f ~/dev/measurabl/src/docker/docker-compose.yml $@"
+function docker_ps() {
+    docker ps ${1:-}| less -RSFX
+}
 
 # Search tags on docker hub
 function docker-tags () {
@@ -40,8 +94,8 @@ function docker-tags () {
 }
 
 # Docker shortcuts
-dc() {
-  docker-compose ${@}
+function dc() {
+  docker-compose "${@}"
   # if [[ ${#} -eq 2 ]]; then
   #   if [[ -z $(docker ps --quiet --filter "name=${1}") ]]; then
   #     case ${2} in
@@ -71,7 +125,7 @@ dc() {
   # fi
 }
 
-dm() {
+function dm() {
   if [[ $# -eq 1 ]]; then
     case $1 in
       *)
@@ -82,7 +136,7 @@ dm() {
   fi
 }
 
-dme() {
+function dme() {
   if [[ $# -eq 0 ]]; then
     echo 'Usage: dme <docker-machine name>'
     return 1
@@ -100,12 +154,12 @@ dme() {
   fi
 }
 
-de() {
+function docker_exec() {
   if [[ $# -eq 0 || ${1} =~ 'help' ]]; then
     echo 'Docker helper to connect to a running container'
     echo 'Usage: de <container> [<command>]'
     return 1
   fi
 
-  docker exec -ti $@ 2>/dev/null || docker exec -ti $@ /bin/bash
+  docker exec -ti "$@" 2>/dev/null || docker exec -ti "$@" /bin/bash
 }
