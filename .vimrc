@@ -149,6 +149,7 @@ nnoremap <silent><leader>qq :q<CR>|
 nnoremap <silent><leader>Q :q<CR>|
 nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>s :call ToggleSpell()<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
@@ -200,12 +201,12 @@ endif
 
 
 """ Custom commands ------------------------------------------------------------
-" Define an Ag command to search for the provided text and open results in quickfix
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
-
 " Define a decrypt/encrypt command to decrypt the current file
 command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+
+" Terraform
+command! -nargs=0 -bar Tff silent! !terraform fmt %:p
 
 " Git aliases
 command! -nargs=0 Grbm silent! Git rebase -i origin/master
@@ -215,17 +216,20 @@ if has('nvim')                                              " Prevent nested neo
 endif
 
 " Use The Silver Searcher if it is installed
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
+
 if executable('ag')
   " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
+  set grepprg="ag --nogroup --nocolor --ignore .git --ignore tags"
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden --skip-vcs-ignores -g ""'
+  let g:ctrlp_user_command = 'ag %s --files-with-matches --nocolor --hidden --ignore .git  --ignore tags --skip-vcs-ignores --filename-pattern ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
 endif
 
+""" Plugin configuration ------------------------------------------------------------
 " Configure fzf (https://github.com/junegunn/fzf and https://github.com/junegunn/fzf.vim)
 let g:fzf_commits_log_options = "git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)"
 
@@ -520,14 +524,6 @@ augroup vimrcEx
         \ commentstring=#%s
         \ formatoptions+=t
 
-    " " Force indentation to two spaces
-    " au FileType tf,yaml,yaml.*,*.yaml,yml,*.yml,ansible,ansible.* setl tabstop=2
-    "     \ tabstop=2
-    "     \ shiftwidth=2
-    "     \ softtabstop=2
-    "     \ shiftround
-    "     \ expandtab
-
     " Force indentation to four spaces
     au FileType bats setl tabstop=4
         \ tabstop=4
@@ -537,9 +533,8 @@ augroup vimrcEx
         \ expandtab
 
     " Set Makefile filetype and don't expand tabs
-    au BufRead,BufNewfile Makefile setl ft=make
+    au BufRead,BufNewfile Makefile* setl ft=make
     au FileType make setl noexpandtab
-                \ list listchars=tab:\ \ ,trail:·,nbsp:·
 
     " Auto set nowrap on some files
     au BufRead */environments/000_cross_env_users.yml setl nowrap
@@ -551,7 +546,7 @@ augroup vimrcEx
     au FileType css,scss,sass setl iskeyword+=-
 
     " Remove tabs and trailing whitespace on open and insert
-    au BufRead,BufEnter,BufLeave,TextChanged *
+    au BufRead,BufLeave,TextChanged *
         \call <SID>StripTrailingWhitespaces()
 
     " Autosave
@@ -686,6 +681,27 @@ function! s:ConvertLineEndingsToUnix()
     :edit ++ff=mac
     :setlocal ff=unix
     :write
+endfunction
+
+" Toggle spell check
+hi clear SpellCap
+hi clear SpellRare
+hi clear SpellLocal
+function! ToggleSpell()
+  if !exists('g:showingSpell')
+    let g:showingSpell=1
+    execute 'hi SpellBad cterm=underline gui=underline'
+  endif
+
+  if g:showingSpell==0
+    execute 'hi SpellBad cterm=underline gui=underline'
+    let g:showingSpell=1
+    echom "Spellcheck enabled"
+  else
+    execute 'hi clear SpellBad'
+    let g:showingSpell=0
+    echom "Spellcheck disabled"
+  endif
 endfunction
 
 command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()

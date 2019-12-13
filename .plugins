@@ -55,6 +55,7 @@ Plug 'stefandtw/quickfix-reflector.vim'
 Plug 'svermeulen/vim-easyclip'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/vim-auto-save'
+Plug 'tpope/vim-abolish'
 
 " Previewers
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }

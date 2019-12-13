@@ -1,4 +1,4 @@
-# vim: set ft=bash:
+# vim: set ft=sh:
 alias g="git"
 
 # Logging
@@ -7,11 +7,8 @@ function gd() {
 }
 
 alias gs="git status"
-alias gdm="gd origin/master"
-alias gdmh="gd origin/master..HEAD"
-alias gdd="gd origin/develop"
-alias gddh="gd origin/develop..HEAD"
-alias gdm="gd origin/master"
+alias gdm="gd origin/master..."
+alias gdd="gd origin/develop..."
 alias gd1="gd HEAD~"
 alias gl="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 alias gl-="git log --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
@@ -84,7 +81,7 @@ function git_delete_merged_branches() {
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
             printf "%s\n" "==> Deleting merged local branches..."
-            git branch --delete ${LOCAL_BRANCHES}
+            git branch --delete --force ${LOCAL_BRANCHES}
         fi
 
         if [[ -n ${REMOTE_BRANCHES} ]]; then
@@ -109,7 +106,7 @@ alias ga.="git add --all"
 alias gc="git commit"
 alias gst="git stash"
 alias gcp="git cherry-pick -x"
-alias gqf="ga. && gc --amend --no-edit && gfpo"
+alias gqf="ga -u && gc --amend --no-edit && gfpo"
 
 # Rebasing
 alias grb="git rebase --interactive"
@@ -117,6 +114,7 @@ alias grbc="git rebase --continue"
 alias grba="git rebase --abort"
 alias grbm="gf && git rebase --interactive origin/master"
 alias grbd="gf && git rebase --interactive origin/develop"
+alias grbs="gf && git rebase --interactive $(git merge-base HEAD origin/master)"
 
 # Pushing
 alias gpu="git push -u \$(git remote) HEAD"

@@ -6,10 +6,9 @@ export PATH=""                                                          # Reset
 source /etc/profile                                                     # Base
 export PATH="${HOME}/go/bin:${PATH}"                                          # Go binaries
 export PATH="/opt/X11/bin:${PATH}"
-export PATH="${HOME}/.pyenv/shims:${PATH}"                                    # pyenv
 export PATH="${HOME}/.local/bin:${PATH}"                                      # pipx
 export PATH="/usr/local/opt/ruby/bin:${PATH}"                           # Homebrew Ruby
-for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils'; do
+for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils' 'make'; do
     export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}"         # Homebrew gnu tools
     export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}"         # Homebrew gnu manpages
 done
@@ -41,12 +40,9 @@ export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
 export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
 export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden -g ''"
 
-# Configure virtualenvwrapper
+# Enable pyenv shims and pyenv-virtualenvwrapper
 export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
 export PROJECT_HOME=$HOME/dev
-export VIRTUALENVWRAPPER_SCRIPT=${HOME}/.pyenv/shims/virtualenvwrapper.sh
-
-# Enable pyenv shims and pyenv-virtualenvwrapper
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 eval "$(pyenv init -)"
 pyenv virtualenvwrapper_lazy
@@ -88,15 +84,48 @@ alias g=hub
 # Ansible vault shortcuts
 alias aav='ansible-vault view'
 function ade() {
+    if [[ -z $1 ]]; then
+        printf "%s\n" "Usage:"
+        printf "%s\n" "    ade <environment>"
+        return 1
+    fi
   find "environments/${1}/" \
     -type f \
     -iname '*.vault.*' \
     -exec sh -c "ansible-vault decrypt \
-      --vault-password-file ${HOME}/.ansible/vault-passwords/${1} {}" \
+      --vault-id ${HOME}/.ansible/vault-passwords/${1} {}" \
       \;
 }
 
+function aes() {
+    if [[ -z $1 || -z $2 ]]; then
+        printf "%s\n" "Usage:"
+        printf "%s\n" "    aes <environment> <variable name>"
+        return 1
+    fi
+    read -p "String to encrypt: " -sr
+    ansible-vault encrypt_string --vault-id "~/.ansible/vault-passwords/${1}" -n "${2}" "${REPLY}" \
+        | sed 's/^  */  /' \
+        | tee /dev/tty \
+        | pbcopy
+    printf "%s\n" "The result has been copied to your clipboard."
+}
+
+function ads() {
+    if [[ -z $1 || -z $2 || -z $3 ]]; then
+        printf "%s\n" "Usage:"
+        printf "%s\n" "    ads <environment> <yaml_file> <variable_path>"
+        return 1
+    fi
+    yq -t read "${2}" "${3}" \
+    | ansible-vault decrypt --vault-password-file "~/.ansible/vault-passwords/${1}" \
+    | tee /dev/tty \
+    | pbcopy
+    printf "%s\n" "The result has been copied to your clipboard."
+}
+
 # My helpers
+alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
 vagrant_up() {
   if [[ $1 && $1 == '-p' || $1 == '--provision' ]]; then vagrant up --provision; elif [[ $1 && $1 != '-p' ]]; then echo 'Unknown argument...'; else vagrant up; fi
@@ -105,8 +134,9 @@ alias vu="vagrant_up"
 alias vh="vagrant halt"
 alias vs="vagrant ssh"
 alias sb="source ${HOME}/.bashrc"
-alias ebash="vim ${HOME}/.bashrc"
+alias ebash="nvim ${HOME}/.bashrc"
 alias c="clear"
+alias vim="nvim"
 
 # Auto on Yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
@@ -165,28 +195,30 @@ function ll() {
   /bin/ls -GFlash "$@"
 }
 alias ..='cd ..'
-alias ...='cd ..;cd ..'
-alias ....='cd ..;cd ..;cd ..'
-alias .....='cd ..;cd ..;cd ..;cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
 alias ..r='cd $(git rev-parse --show-toplevel 2>/dev/null)'
 alias ..~='cd ${HOME}'
 
 # grep options
-alias grep='ag'
+alias grep="grep --color"
+export GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for matches
 alias ag='ag --hidden --ignore tags --ignore .git --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
-# export GREP_COLOR="$(tput setaf 2 && tput setab 29)" # green for matches
 
 # helpers
-source "${HOME}/.dotfiles/.dockerconfig"                # Docker helpers
-source "${HOME}/.dotfiles/.terraform"                   # Terraform helpers
-source "${HOME}/.dotfiles/.git_helpers" 2>/dev/null     # git helpers
-source "${HOME}/.dotfiles/.awsconfig"                   # aws helpers
-source "${HOME}/.dotfiles/.osx"                         # osx helpers
-source /usr/local/etc/profile.d/z.sh                    # z cd auto completion
-source "${HOME}/.dotfiles/.ps1"                         # Custom PS1
+source ~/.dotfiles/.dockerconfig                # Docker helpers
+source ~/.dotfiles/.terraform                   # Terraform helpers
+source ~/.dotfiles/.git_helpers 2>/dev/null     # git helpers
+source ~/.dotfiles/.awsconfig                   # aws helpers
+source ~/.dotfiles/.osx                         # osx helpers
+source /usr/local/etc/profile.d/z.sh            # z cd auto completion
+source ~/.dotfiles/.ps1                         # Custom PS1
 
 # Add the direnv hook to PROMPT_COMMAND
-source "${HOME}/.direnvrc"
+# source ~/.direnvrc
 eval "$(direnv hook bash)"
 
 complete -C /usr/local/bin/terraform terraform

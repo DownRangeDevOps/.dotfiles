@@ -1,5 +1,14 @@
 # vim: set ft=sh:
 
+# aws-vault
+alias av="aws-vault"
+alias ave="aws-vault exec"
+alias avr="aws-vault exec msr-root --"
+alias ava="aws-vault exec msr-amzn --"
+alias avs="aws-vault exec msr-staging --"
+alias avo="aws-vault exec msr-ops-sbx --"
+alias avsci="aws-vault exec msr-sci-sbx --"
+
 # ebcli
 function eb() {
   if [[ $1 == 'printenv' ]]; then
