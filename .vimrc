@@ -1,11 +1,11 @@
-" vim: set ft=vim:
+" vim: set encoding=utf-8 ft=vim:
 " Setup plugin manager
 so ~/.dotfiles/.plugins
 so ~/.dotfiles/assets/term_color.vim
 
 """ Prefrences ---------------------------------------------------------------
 " Use space as leader key
-let mapleader=" "
+let mapleader=' '
 nnoremap <space> <leader>
 
 " Config
@@ -78,7 +78,7 @@ endif
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+if (&t_Co > 2 || has('gui_running')) && !exists('syntax_on')
     syntax on
     set synmaxcol=200
 endif
@@ -87,7 +87,7 @@ endif
 if has('persistent_undo')
     let undo_dir = expand('$HOME/.vim/undo_dir')
     if !isdirectory(undo_dir)
-        call mkdir(undo_dir, "", 0700)
+        call mkdir(undo_dir, '', 0700)
     endif
     set undodir=$HOME/.vim/undo_dir
     set undofile
@@ -112,7 +112,7 @@ nnoremap <leader>\| :call <SID>OpenNewSplit('\|')<CR>|      " Open horizontal sp
 " noremap <C-j> <Esc>:silent SwitchWindow j<CR>
 " noremap <C-k> <Esc>:silent SwitchWindow k<CR>
 noremap <C-h> <C-w>h                                       " Move left a window
-let g:BASH_Ctrl_j = "off"
+let g:BASH_Ctrl_j = 'off'
 noremap <C-j> <C-w>j                                       " Move down a window
 noremap <C-k> <C-w>k                                       " Move up a window
 noremap <C-l> <C-w>l                                       " Move right a window
@@ -254,7 +254,7 @@ let g:dash_activate=0
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
 " let g:vim_markdown_folding_disabled = 1
 " let g:vim_markdown_conceal = 0
-let g:tex_conceal = ""
+let g:tex_conceal = ''
 let g:vim_markdown_math = 1
 let g:vim_markdown_follow_anchor = 1
 let g:vim_markdown_frontmatter = 1
@@ -279,16 +279,16 @@ let NERDTreeHijackNetrw=1                       " Open in current split with net
 let NERDTreeShowHidden=1                        " Show NERDTree
 let NERDTreeQuitOnOpen=1                        " Close NERDTree after file is opened
 let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "•",
-    \ "Staged"    : "+",
-    \ "Untracked" : "*",
-    \ "Renamed"   : "⇢",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "x",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✓",
-    \ 'Ignored'   : "⌀",
-    \ "Unknown"   : "?"
+    \ 'Modified'  : '•',
+    \ 'Staged'    : '+',
+    \ 'Untracked' : '*',
+    \ 'Renamed'   : '⇢',
+    \ 'Unmerged'  : '═',
+    \ 'Deleted'   : 'x',
+    \ 'Dirty'     : '✗',
+    \ 'Clean'     : '✓',
+    \ 'Ignored'   : '⌀',
+    \ 'Unknown'   : '?'
     \ }
 
 " Configure machakann/vim-sandwich
@@ -298,10 +298,10 @@ runtime macros/sandwich/keymap/surround.vim     " Enable vim-surround keymapping
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 let g:easy_align_delimiters = {
-    \ "#": {
-        \ "pattern": "#\+",
-        \ "ignore_groups": ["String"],
-        \ "delimiter_align": "l"
+    \ '#': {
+        \ 'pattern': '#\+',
+        \ 'ignore_groups': ['String'],
+        \ 'delimiter_align': 'l'
     \}
 \ }
 
@@ -373,8 +373,8 @@ let g:ansible_template_syntaxes = {
     \'*.route.j2': 'nginx',
     \'*.upstream.j2': 'nginx'
     \}
-let g:ansible_attribute_highlight = "ad"
-let g:ansible_name_highlight = "d"
+let g:ansible_attribute_highlight = 'ad'
+let g:ansible_name_highlight = 'd'
 let g:ansible_extra_keywords_highlight = 1
 let g:ansible_with_keywords_highlight = 'PreProc'
 let g:ansible_normal_keywords_highlight = 'Type'
@@ -388,19 +388,13 @@ set viewoptions=cursor,folds,slash,unix
 " let g:lastplace_ignore_buftype = "terminal,quickfix,nofile,help"
 
 " Configure ncm2-utilisnips (https://github.com/ncm2/ncm2-ultisnips)
-let g:UltiSnipsJumpForwardTrigger   = "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger  = "<c-k>"
+let g:UltiSnipsJumpForwardTrigger   = '<c-j>'
+let g:UltiSnipsJumpBackwardTrigger  = '<c-k>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
 " Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
 set completeopt=noinsert,menuone,noselect
 set shortmess+=c
-au User Ncm2Plugin call ncm2#register_source({
-    \ 'on_complete': ['ncm2#on_complete#delay',
-    \                  300,
-    \                 'ncm2#on_complete#omni',
-    \                 'csscomplete#CompleteCSS'],
-    \ })
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
@@ -484,7 +478,7 @@ function! LightLineFilename()
 endfunction
 
 function! SynStack()
-  if !exists("*synstack")
+  if !exists('*synstack')
     return
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
@@ -497,6 +491,12 @@ augroup vimrcEx
     " enable ncm2 for all buffers
     au BufEnter * call ncm2#enable_for_buffer()
     au TextChangedI * call ncm2#auto_trigger()
+    au User Ncm2Plugin call ncm2#register_source({
+        \ 'on_complete': ['ncm2#on_complete#delay',
+        \                  300,
+        \                 'ncm2#on_complete#omni',
+        \                 'csscomplete#CompleteCSS'],
+        \ })
 
     " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
     " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
@@ -583,7 +583,7 @@ augroup vimrcEx
 " Remove trailing whitespace and return cursor to starting position
 function! s:StripTrailingWhitespaces()
     if &readonly == 0
-            \&& &buftype == ''
+            \&& &buftype ==? ''
             \&& &diff == 0
         let cur_line = line('.')
         let cur_col = col('.')
@@ -594,13 +594,13 @@ function! s:StripTrailingWhitespaces()
 endfunction
 
 function! s:WriteIfModifiable()
-    if buffer_name('%') != ''
+    if buffer_name('%') !=? ''
                 \&& &readonly == 0
-                \&& &buftype != 'nofile'
-                \&& &buftype != 'terminal'
-                \&& &buftype != 'nowrite'
+                \&& &buftype !=? 'nofile'
+                \&& &buftype !=? 'terminal'
+                \&& &buftype !=? 'nowrite'
                 \&& &diff == 0
-                \&& buffer_name('%') !~ 'quickfix-'
+                \&& buffer_name('%') !~? 'quickfix-'
         silent w
     endif
 endfunction
@@ -611,9 +611,9 @@ function! s:WipeBufOrQuit()
     let prev_buf = bufnr('#')
     if num_bufs <= 1
         silent execute 'qall'
-    elseif prev_buf == -1 || &buftype != ''
+    elseif prev_buf == -1 || &buftype !=? ''
         silent execute 'quit'
-        if &buftype == 'terminal'
+        if &buftype ==? 'terminal'
             silent execute 'startinsert'
         endif
     else
@@ -621,7 +621,7 @@ function! s:WipeBufOrQuit()
         if bufnr('#') != -1
             silent execute 'bwipeout! #'
         endif
-        if &buftype == 'terminal'
+        if &buftype ==? 'terminal'
             silent execute 'startinsert'
         endif
     endif
@@ -629,7 +629,7 @@ endfunction
 
 " Open NERDTree using ProjectRootExe if buffer isn't a terminal
 function! s:NvimNerdTreeToggle()
-    if &buftype == 'terminal'
+    if &buftype ==? 'terminal'
         silent execute 'NERDTreeToggle'
     else
         silent execute 'ProjectRootExe NERDTreeToggle'
@@ -639,8 +639,8 @@ endfunction
 " Make the enter key go into insert mode if on a terminal window
 function! s:EnterInsertModeInTerminal()
     echo 'ran'
-    if &buftype == 'terminal'
-        if mode() == 'n'
+    if &buftype ==? 'terminal'
+        if mode() ==? 'n'
             call startinsert()
         endif
     else
@@ -652,23 +652,23 @@ endfunction
 " Get the path to the current line from the project root
 function! s:GetPathToCurrentLine()
     let root = ProjectRootGet()
-    let full_path = expand("%:p") . ':' . line(".")
-    let basename = split(root, "/")
+    let full_path = expand('%:p') . ':' . line('.')
+    let basename = split(root, '/')
     let basename = basename[-1]
-    let path_from_root = join([basename, substitute(full_path, root, "", "")], "")
+    let path_from_root = join([basename, substitute(full_path, root, '', '')], '')
 
     return path_from_root
 endfunction
 
 " When opening a new split, create a new term if needed
 function! s:OpenNewSplit(splitType)
-    if a:splitType == '\'
+    if a:splitType ==? '\'
         silent execute 'vsp'
     else
         silent execute 'sp'
     endif
 
-    if &buftype == 'terminal'
+    if &buftype ==? 'terminal'
         silent execute 'term'
     endif
 endfunction
@@ -676,9 +676,9 @@ endfunction
 " Convert mac or dos line endings to unix
 function! s:ConvertLineEndingsToUnix()
     :update
-    :edit ++ff=dos
-    :edit ++ff=mac
-    :setlocal ff=unix
+    :edit ++fileformat=dos
+    :edit ++fileformat=mac
+    :setlocal fileformat=unix
     :write
 endfunction
 
@@ -695,11 +695,11 @@ function! ToggleSpell()
   if g:showingSpell==0
     execute 'hi SpellBad cterm=underline gui=underline'
     let g:showingSpell=1
-    echom "Spellcheck enabled"
+    echom 'Spellcheck enabled'
   else
     execute 'hi clear SpellBad'
     let g:showingSpell=0
-    echom "Spellcheck disabled"
+    echom 'Spellcheck disabled'
   endif
 endfunction
 
@@ -713,4 +713,3 @@ let g:html_indent_tags = 'li\|p'
 " nnoremap <Right> :echoe "Use l"<CR>
 " nnoremap <Up> :echoe "Use k"<CR>
 " nnoremap <Down> :echoe "Use j"<CR>
-
