@@ -40,8 +40,8 @@
 	<integer>1</integer>
 	<key>Coprocess MRU</key>
 	<array>
-		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py j</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py l</string>
@@ -4058,14 +4058,6 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
-		<key>0x3b-0x100000</key>
-		<dict>
-			<key>Action</key>
-			<integer>25</integer>
-			<key>Text</key>
-			<string>Edit Session…
-Edit Session…</string>
-		</dict>
 		<key>0x46-0x120000</key>
 		<dict>
 			<key>Action</key>
@@ -4077,28 +4069,14 @@ Password Manager</string>
 		<key>0x68-0x140000</key>
 		<dict>
 			<key>Action</key>
-			<integer>18</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
-		<key>0x6a-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>21</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
-		<key>0x6b-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>20</integer>
+			<integer>2</integer>
 			<key>Text</key>
 			<string></string>
 		</dict>
 		<key>0x6c-0x140000</key>
 		<dict>
 			<key>Action</key>
-			<integer>19</integer>
+			<integer>0</integer>
 			<key>Text</key>
 			<string></string>
 		</dict>
@@ -4207,7 +4185,7 @@ Password Manager</string>
 	<key>HideScrollbar</key>
 	<false/>
 	<key>HideTab</key>
-	<false/>
+	<true/>
 	<key>HighlightTabLabels</key>
 	<true/>
 	<key>HotKeyBookmark</key>
@@ -4236,6 +4214,10 @@ Password Manager</string>
 	<true/>
 	<key>MaxVertically</key>
 	<false/>
+	<key>NSColorPanelMode</key>
+	<string>6</string>
+	<key>NSColorPickerPreferredRGBEntryMode</key>
+	<integer>2</integer>
 	<key>NSFontPanelSizeList</key>
 	<array>
 		<string>9</string>
@@ -4245,7 +4227,6 @@ Password Manager</string>
 		<string>13</string>
 		<string>14</string>
 		<string>15</string>
-		<string>16</string>
 		<string>18</string>
 		<string>24</string>
 		<string>36</string>
@@ -4255,12 +4236,12 @@ Password Manager</string>
 		<string>96</string>
 		<string>144</string>
 		<string>288</string>
-		<string>17</string>
+		<string>16</string>
 	</array>
 	<key>NSFontPanelSizeSliderParams</key>
 	<string>2 0 100</string>
 	<key>NSNavLastRootDirectory</key>
-	<string>~/.dotfiles/assets/iTerm2-Color-Schemes/schemes</string>
+	<string>~/.dotfiles/assets</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{712, 448}</string>
 	<key>NSNavPanelExpandedSizeForSaveMode</key>
@@ -4277,17 +4258,17 @@ Password Manager</string>
 	<false/>
 	<key>NSSplitView Subview Frames NSColorPanelSplitView</key>
 	<array>
-		<string>0.000000, 0.000000, 224.000000, 258.000000, NO, NO</string>
-		<string>0.000000, 259.000000, 224.000000, 48.000000, NO, NO</string>
+		<string>0.000000, 0.000000, 228.000000, 280.000000, NO, NO</string>
+		<string>0.000000, 281.000000, 228.000000, 48.000000, NO, NO</string>
 	</array>
 	<key>NSTableView Columns v2 KeyBingingTable</key>
 	<data>
 	YnBsaXN0MDDUAQIDBAUGNjdYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 	AAGGoK4HCA8aGxwdHh8gJjAxMlUkbnVsbNIJCgsOWk5TLm9iamVjdHNWJGNsYXNzogwN
 	gAKACoAN0xAJChEVGVdOUy5rZXlzoxITFIADgASABaMWFxiABoAHgAiACVpJZGVudGlm
-	aWVyVVdpZHRoVkhpZGRlblEwI0BegAAAAAAACNIhIiMkWiRjbGFzc25hbWVYJGNsYXNz
+	aWVyVVdpZHRoVkhpZGRlblEwI0BowAAAAAAACNIhIiMkWiRjbGFzc25hbWVYJGNsYXNz
 	ZXNcTlNEaWN0aW9uYXJ5oiMlWE5TT2JqZWN00xAJCicrGaMSExSAA4AEgAWjLC0YgAuA
-	DIAIgAlRMSNAeWGdsi0OVtIhIjM0Xk5TTXV0YWJsZUFycmF5ozM1JVdOU0FycmF5XxAP
+	DIAIgAlRMSNAdKAAAAAAANIhIjM0Xk5TTXV0YWJsZUFycmF5ozM1JVdOU0FycmF5XxAP
 	TlNLZXllZEFyY2hpdmVy0Tg5VUFycmF5gAEACAARABoAIwAtADIANwBGAEwAUQBcAGMA
 	ZgBoAGoAbABzAHsAfwCBAIMAhQCJAIsAjQCPAJEAnACiAKkAqwC0ALUAugDFAM4A2wDe
 	AOcA7gDyAPQA9gD4APwA/gEAAQIBBAEGAQ8BFAEjAScBLwFBAUQBSgAAAAAAAAIBAAAA
@@ -4308,22 +4289,26 @@ Password Manager</string>
 		<key>TB Is Shown</key>
 		<integer>1</integer>
 	</dict>
+	<key>NSWindow Frame NSColorPanel</key>
+	<string>497 408 228 297 0 0 1920 1057 </string>
 	<key>NSWindow Frame NSFontPanel</key>
-	<string>1300 1319 445 77 762 1050 2560 1417 </string>
+	<string>2794 103 445 77 1920 0 1920 1057 </string>
+	<key>NSWindow Frame Preferences</key>
+	<string>199 331 606 456 0 0 1920 1057 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>564 1596 400 129 -196 900 1920 1057 </string>
+	<string>760 696 400 129 0 0 1920 1057 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>454 1398 620 392 -196 900 1920 1057 </string>
-	<key>NSWindow Frame SessionsPreferences</key>
-	<string>1501 1777 606 469 869 1050 2560 1417 </string>
+	<string>530 476 620 392 0 0 1680 1027 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>235 1332 770 429 -177 900 1920 1057 </string>
-	<key>NSWindow Frame UKCrashReporter</key>
-	<string>293 323 592 584 0 0 1680 1027 </string>
+	<string>2240 491 918 381 1920 0 1920 1057 </string>
+	<key>NSWindow Frame com.apple.typography_panel_ConsolasForPowerline</key>
+	<string>493 -497 260 156 247 -900 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>-216 900 1920 1057 -216 900 1920 1057 </string>
+	<string>0 23 1680 1004 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>0 100 810 677 0 0 1280 777 </string>
+	<string>-810 282 810 652 -1920 0 1920 1057 </string>
+	<key>NSWindow Frame iTerm Window 2</key>
+	<string>1923 275 1025 779 1920 0 1920 1058 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -4612,8 +4597,6 @@ Password Manager</string>
 			<key>Disable Smcup Rmcup</key>
 			<false/>
 			<key>Disable Window Resizing</key>
-			<true/>
-			<key>Draw Powerline Glyphs</key>
 			<true/>
 			<key>Flashing Bell</key>
 			<false/>
@@ -4960,7 +4943,7 @@ Password Manager</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>Powerline-Consolas 14</string>
+			<string>Menlo-Regular 11</string>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
 			<key>Place Prompt at First Column</key>
@@ -6036,56 +6019,38 @@ Password Manager</string>
 	</array>
 	<key>NoSyncAllAppVersions</key>
 	<array>
-		<string>3.3.6</string>
-		<string>3.3.4</string>
-		<string>3.3.1</string>
-		<string>3.3.3</string>
-		<string>3.3.0</string>
-		<string>3.3.2</string>
-		<string>3.2.9</string>
+		<string>3.2.7</string>
+		<string>3.3.7</string>
 	</array>
-	<key>NoSyncCoprocessCommandsToIgnoreErrorOutput</key>
-	<array>
-		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
-	</array>
-	<key>NoSyncFrame_SessionsPreferences</key>
-	<dict>
-		<key>screenFrame</key>
-		<string>{{-212, 900}, {1920, 1080}}</string>
-		<key>topLeft</key>
-		<string>{57, 1495}</string>
-	</dict>
+	<key>NoSyncConfirmBeta</key>
+	<true/>
 	<key>NoSyncFrame_SharedPreferences</key>
 	<dict>
 		<key>screenFrame</key>
-		<string>{{841, 1050}, {2560, 1440}}</string>
+		<string>{{0, 0}, {1680, 1050}}</string>
 		<key>topLeft</key>
-		<string>{1092, 1807}</string>
+		<string>{518, 823}</string>
 	</dict>
 	<key>NoSyncHaveRequestedFullDiskAccess</key>
+	<true/>
+	<key>NoSyncHaveShownPromoWithId_4</key>
 	<true/>
 	<key>NoSyncHaveWarnedAboutPasteConfirmationChange</key>
 	<true/>
 	<key>NoSyncInstallationId</key>
-	<string>E2342D06-ECEF-499C-931B-6B9CAA7D77CB</string>
-	<key>NoSyncLastTipTime</key>
-	<real>523910390.11228901</real>
+	<string>DF4CC30D-60A4-4EBE-8CCE-E523FFB9E2EE</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>22</integer>
+	<integer>4</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
 	<integer>0</integer>
-	<key>NoSyncNewWindowOrTabFromTmuxOpensTmux</key>
-	<true/>
-	<key>NoSyncNewWindowOrTabFromTmuxOpensTmux_selection</key>
-	<integer>0</integer>
 	<key>NoSyncNextAnnoyanceTime</key>
-	<real>586479590.55840302</real>
+	<real>597434302.16134405</real>
 	<key>NoSyncOnboardingWindowHasBeenShown</key>
 	<true/>
 	<key>NoSyncPermissionToShowTip</key>
-	<true/>
+	<false/>
 	<key>NoSyncRecordedVariables</key>
 	<dict>
 		<key>0</key>
@@ -6329,14 +6294,6 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>tab</string>
-				<key>nonterminalContext</key>
-				<integer>0</integer>
-			</dict>
-			<dict>
-				<key>isTerminal</key>
-				<true/>
-				<key>name</key>
 				<string>autoNameFormat</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
@@ -6436,15 +6393,7 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentTab.currentSession.terminalWindowName</string>
-				<key>nonterminalContext</key>
-				<integer>0</integer>
-			</dict>
-			<dict>
-				<key>isTerminal</key>
-				<true/>
-				<key>name</key>
-				<string>currentTab.currentSession.terminalIconName</string>
+				<string>currentTab.currentSession.termid</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6484,6 +6433,14 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
+				<string>currentTab.currentSession.name</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
 				<string>titleOverride</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
@@ -6492,7 +6449,7 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentTab.currentSession.name</string>
+				<string>number</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6509,14 +6466,6 @@ Password Manager</string>
 				<true/>
 				<key>name</key>
 				<string>currentTab.currentSession.commandLine</string>
-				<key>nonterminalContext</key>
-				<integer>0</integer>
-			</dict>
-			<dict>
-				<key>isTerminal</key>
-				<true/>
-				<key>name</key>
-				<string>number</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6565,14 +6514,6 @@ Password Manager</string>
 				<true/>
 				<key>name</key>
 				<string>currentTab.currentSession.jobName</string>
-				<key>nonterminalContext</key>
-				<integer>0</integer>
-			</dict>
-			<dict>
-				<key>isTerminal</key>
-				<true/>
-				<key>name</key>
-				<string>currentTab.currentSession.tab</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6631,14 +6572,6 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentSession.tab</string>
-				<key>nonterminalContext</key>
-				<integer>0</integer>
-			</dict>
-			<dict>
-				<key>isTerminal</key>
-				<true/>
-				<key>name</key>
 				<string>tmuxWindowName</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
@@ -6655,7 +6588,7 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>window</string>
+				<string>currentSession.tty</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6671,7 +6604,15 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentSession.jobPid</string>
+				<string>currentSession.name</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>window</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6695,7 +6636,15 @@ Password Manager</string>
 				<key>isTerminal</key>
 				<true/>
 				<key>name</key>
-				<string>currentSession.path</string>
+				<string>currentSession.username</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>currentSession.termid</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6712,6 +6661,22 @@ Password Manager</string>
 				<true/>
 				<key>name</key>
 				<string>titleOverrideFormat</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>currentSession.hostname</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>currentSession.path</string>
 				<key>nonterminalContext</key>
 				<integer>0</integer>
 			</dict>
@@ -6776,45 +6741,12 @@ Password Manager</string>
 			</dict>
 		</array>
 	</dict>
-	<key>NoSyncSearchHistory</key>
-	<array>
-		<string>jjkjj</string>
-	</array>
-	<key>NoSyncSuppressBroadcastInputWarning</key>
-	<true/>
-	<key>NoSyncSuppressBroadcastInputWarning_selection</key>
-	<integer>0</integer>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
-	<real>519580615.06862497</real>
-	<key>NoSyncTipsDisabled</key>
-	<true/>
-	<key>NoSyncTipsToNotShow</key>
-	<array>
-		<string>000</string>
-		<string>0000</string>
-		<string>0001</string>
-		<string>0002</string>
-		<string>0003</string>
-		<string>0004</string>
-		<string>0005</string>
-		<string>0006</string>
-		<string>0007</string>
-		<string>0008</string>
-		<string>0009</string>
-		<string>0010</string>
-		<string>0011</string>
-		<string>0012</string>
-		<string>0013</string>
-		<string>0014</string>
-		<string>0015</string>
-		<string>0016</string>
-		<string>0017</string>
-		<string>0018</string>
-		<string>0019</string>
-		<string>0020</string>
-		<string>0021</string>
-		<string>0022</string>
-	</array>
+	<real>487721114.23104501</real>
+	<key>NoSyncTimeOfLastPromo</key>
+	<real>477854261.10211599</real>
+	<key>NoSyncTimeOfLastPromoDownload</key>
+	<real>487709086.220496</real>
 	<key>OnlyWhenMoreTabs</key>
 	<true/>
 	<key>OpenArrangementAtStartup</key>
@@ -6883,15 +6815,15 @@ Password Manager</string>
 	<key>SUFeedAlternateAppNameKey</key>
 	<string>iTerm</string>
 	<key>SUFeedURL</key>
-	<string>https://iterm2.com/appcasts/final_new.xml?shard=62</string>
+	<string>https://iterm2.com/appcasts/final_new.xml?shard=25</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-10-21T06:43:31Z</date>
+	<date>2020-05-02T19:42:28Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
-	<key>SUUpdateRelaunchingMarker</key>
-	<false/>
+	<key>SUSkippedVersion</key>
+	<string>3.3.9</string>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -6905,9 +6837,7 @@ Password Manager</string>
 	<key>SoundForEsc</key>
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
-	<real>0.22799228766025642</real>
-	<key>StretchTabsToFillBar</key>
-	<false/>
+	<real>0.32782702323717949</real>
 	<key>SwitchTabModifier</key>
 	<integer>4</integer>
 	<key>SwitchWindowModifier</key>
@@ -6924,8 +6854,6 @@ Password Manager</string>
 	<integer>10</integer>
 	<key>TripleClickSelectsFullWrappedLines</key>
 	<false/>
-	<key>UKCrashReporterLastCrashReportDate</key>
-	<real>1565019776</real>
 	<key>URLHandlersByGuid</key>
 	<dict/>
 	<key>Use background pattern indicator</key>
@@ -6955,7 +6883,7 @@ Password Manager</string>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.3.6</string>
+	<string>3.3.7</string>
 	<key>kCPFavoritesUserDefaultsKey</key>
 	<array>
 		<data>

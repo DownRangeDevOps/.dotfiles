@@ -1,6 +1,6 @@
 [user]
     name = Ryan Fisher
-    email = ryan@measurabl.com
+    email = ryan@techfish.io
 [include]
     path = .gitconfig_aliases
 [core]

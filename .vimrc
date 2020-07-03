@@ -1,7 +1,6 @@
 " vim: set ft=vim:
 " Setup plugin manager
 so ~/.dotfiles/.plugins
-so ~/.dotfiles/.vim-jenkins
 so ~/.dotfiles/assets/term_color.vim
 
 """ Prefrences ---------------------------------------------------------------
@@ -19,7 +18,7 @@ set backspace=indent,eol,start           " Make backspace behave in a sane manne
 set colorcolumn=80                       " Make it obvious where 80 characters is
 set complete+=kspell                     " Autocomplete with dictionary words when spell check is on
 set diffopt+=vertical                    " Always use vertical diffs
-set dir=~/tmp                            " set where swapfile(s) are stored
+set directory=~/tmp                      " set where swapfile(s) are stored
 set fillchars+=vert:\ |
 set foldcolumn=0
 set foldnestmax=2                        " methods of classes are folded, but not internal statements
@@ -33,7 +32,7 @@ set incsearch                            " do incremental searching
 set list listchars=tab:»·,trail:·,nbsp:· " Dispay tabs, non-breaking spaces, and trailing whitespace
 set mouse=a
 set noshowmode                           " hide the mode status line
-set spell spelllang=en_us              " Turn off spellchecking by default
+set spell spelllang=en_us                " Turn off spellchecking by default
 set noswapfile                           " disable swap file
 set ruler                                " show the cursor position all the time
 set scrolloff=2                          " Always show one line above/below the cursor
@@ -100,7 +99,7 @@ inoremap jj <ESC>|                                          " Easy escape from i
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
 " nnoremap <CR> :call <SID>EnterInsertModeInTerminal()<CR>|
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
-nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                " bind \ (backward slash) to grep shortcut
+nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
 nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
 nnoremap K                                                  " Keep searching for man entries by accident
 nnoremap Q <Plug>window:quickfix:toggle
@@ -119,18 +118,18 @@ noremap <C-k> <C-w>k                                       " Move up a window
 noremap <C-l> <C-w>l                                       " Move right a window
 nnoremap <c-w><c-w> <ESC><C-w>=                            " Set windows to equal size
 if has('nvim')
-    tnoremap <C-h> <C-\><C-n><C-w>h                         " Move left a window
-    tnoremap <C-j> <C-\><C-n><C-w>j                         " Move down a window
-    tnoremap <C-k> <C-\><C-n><C-w>k                         " Move up a window
-    tnoremap <C-l> <C-\><C-n><C-w>l                         " Move right a window
+    tnoremap <C-h> <C-\><C-n><C-w>h                        " Move left a window
+    tnoremap <C-j> <C-\><C-n><C-w>j                        " Move down a window
+    tnoremap <C-k> <C-\><C-n><C-w>k                        " Move up a window
+    tnoremap <C-l> <C-\><C-n><C-w>l                        " Move right a window
     " breaks terminal ctrl+w for deleting tnoremap <c-w><c-w> <C-\><C-n><C-w>=        " Set windows to equal size
     tnoremap <s-space> <space>
 endif
 
 " Easy tab navigation
-nnoremap <silent><leader><S-w> :tabclose<CR>          " Move right a window
-nnoremap <silent><leader><S-h> :tabprevious<CR>       " Move left a window
-nnoremap <silent><leader><S-l> :tabnext<CR>           " Move right a window
+nnoremap <silent><leader><S-w> :tabclose<CR>                " Move right a window
+nnoremap <silent><leader><S-h> :tabprevious<CR>             " Move left a window
+nnoremap <silent><leader><S-l> :tabnext<CR>                 " Move right a window
 
 " Use magic in search/substitue
 nnoremap / /\v\c
@@ -166,7 +165,7 @@ nnoremap <leader>d :Dash<CR>
 
 " Find/replace
 nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
-nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|         " Bind K to grep word under cursor
+nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|       " Bind K to grep word under cursor
 nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 
 " Cut

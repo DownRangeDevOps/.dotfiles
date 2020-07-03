@@ -5,9 +5,9 @@ call plug#begin()
 " Plug 'svermeulen/ncm2-yoink'  # bugged?
 Plug 'ObserverOfTime/ncm2-jc2'
 Plug 'Shougo/neco-syntax'
-Plug 'fgrsnau/ncm2-otherbuf', { 'branch': 'ncm2' }
 Plug 'mhartington/nvim-typescript'
 Plug 'ncm2/ncm2'
+Plug 'fgrsnau/ncm2-otherbuf'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-cssomni'
 Plug 'ncm2/ncm2-go'
