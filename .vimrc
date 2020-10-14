@@ -1,4 +1,4 @@
-" vim: set encoding=utf-8 ft=vim:
+" vim: set ft=vim:
 " Setup plugin manager
 so ~/.dotfiles/.plugins
 so ~/.dotfiles/assets/term_color.vim
@@ -38,7 +38,8 @@ set ruler                                " show the cursor position all the time
 set scrolloff=2                          " Always show one line above/below the cursor
 set secure                               " Prevent shell, write, :au unless file is owned by me
 set sessionoptions+=tabpages,globals     " Allow Taboo to maintain tab names across sessions
-set showbreak=↳\ \ \>                    " Indicate wraped lines
+set showbreak=↳\                         " Indicate wraped lines
+set lbr
 set showcmd                              " display incomplete commands
 set splitbelow                           " Open new split panes to the right/bottom
 set splitright
