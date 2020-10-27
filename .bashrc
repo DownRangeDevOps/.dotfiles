@@ -1,6 +1,10 @@
 # vim: set ft=sh:
 # .bashrc
 
+# Source gcloud files first so PS1 gets overridden
+# source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc # gcloud bash completion
+# source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc       # gcloud binaries
+
 # Configure path, must be first...
 export PATH=""                                                          # Reset
 source /etc/profile                                                     # Base
@@ -137,6 +141,13 @@ alias sb="source ${HOME}/.bashrc"
 alias ebash="nvim ${HOME}/.bashrc"
 alias c="clear"
 alias vim="nvim"
+function nvim() {
+    if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
+        workon nvim
+    fi
+
+    /usr/bin/env nvim
+}
 
 # Auto on Yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
@@ -209,13 +220,13 @@ export GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for match
 alias ag='ag --hidden --ignore tags --ignore .git --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
 
 # helpers
-source ~/.dotfiles/.dockerconfig                # Docker helpers
-source ~/.dotfiles/.terraform                   # Terraform helpers
-source ~/.dotfiles/.git_helpers 2>/dev/null     # git helpers
-source ~/.dotfiles/.awsconfig                   # aws helpers
-source ~/.dotfiles/.osx                         # osx helpers
-source /usr/local/etc/profile.d/z.sh            # z cd auto completion
-source ~/.dotfiles/.ps1                         # Custom PS1
+source ~/.dotfiles/.dockerconfig            # Docker helpers
+source ~/.dotfiles/.terraform               # Terraform helpers
+source ~/.dotfiles/.git_helpers 2>/dev/null # git helpers
+source ~/.dotfiles/.awsconfig               # aws helpers
+source ~/.dotfiles/.osx                     # osx helpers
+source /usr/local/etc/profile.d/z.sh        # z cd auto completion
+source ~/.dotfiles/.ps1                     # Custom PS1
 
 # Add the direnv hook to PROMPT_COMMAND
 # source ~/.direnvrc

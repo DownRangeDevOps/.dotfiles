@@ -51,9 +51,6 @@ set diffopt=filler,context:1000000     " filler is default and inserts empty lin
 endif
 
 " Default tabbing prefrences
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
 set shiftround
 set expandtab
 
@@ -191,6 +188,11 @@ else
     nnoremap <leader>rc :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
 endif
 
+" Prevent nested neovim instances when using :term
+if has('nvim')
+  let $VISUAL = 'nvr -cc split --remote-wait'
+endif
+
 " Commands (aliases)
 " command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
 " command! -nargs=? Gd Gdiff <args>               " Alias for Gdiff
@@ -210,10 +212,6 @@ command! -nargs=0 -bar Tff silent! !terraform fmt %:p
 
 " Git aliases
 command! -nargs=0 Grbm silent! Git rebase -i origin/master
-
-if has('nvim')                                              " Prevent nested neovim instances when using :term
-  let $VISUAL = 'nvr -cc split --remote-wait'
-endif
 
 " Use The Silver Searcher if it is installed
 command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
@@ -262,7 +260,7 @@ let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 2
 let g:vim_markdown_fenced_languages = [
     \ 'viml=vim',
-    \ 'bash=sh',
+    \ 'bash=bash',
     \ 'java=java',
     \ 'ini=dosini',
     \ 'ansible=ansible',
@@ -279,7 +277,7 @@ let g:vmt_dont_insert_fence = 1
 let NERDTreeHijackNetrw=1                       " Open in current split with netrw
 let NERDTreeShowHidden=1                        " Show NERDTree
 let NERDTreeQuitOnOpen=1                        " Close NERDTree after file is opened
-let g:NERDTreeIndicatorMapCustom = {
+let g:NERDTreeGitStatusIndicatorMapCustom = {
     \ 'Modified'  : '•',
     \ 'Staged'    : '+',
     \ 'Untracked' : '*',
@@ -524,16 +522,8 @@ augroup vimrcEx
         \ commentstring=#%s
         \ formatoptions+=t
 
-    " Force indentation to four spaces
-    au FileType bats setl tabstop=4
-        \ tabstop=4
-        \ shiftwidth=4
-        \ softtabstop=4
-        \ shiftround
-        \ expandtab
-
     " Set Makefile filetype and don't expand tabs
-    au BufRead,BufNewfile Makefile* setl ft=make
+    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab
     au FileType make setl noexpandtab
 
     " Auto set nowrap on some files
