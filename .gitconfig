@@ -7,6 +7,7 @@
     excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
+    ignorecase = false
 [diff]
     tool = vim-fugitive
     algorithm = histogram

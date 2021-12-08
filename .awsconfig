@@ -1,6 +1,7 @@
 # vim: set ft=sh:
 
 # aws-vault
+AWS_SESSION_TOKEN_TTL='12h'
 alias av="aws-vault"
 alias ave="aws-vault exec"
 alias avr="aws-vault exec msr-root --"

@@ -6,6 +6,7 @@ call plug#begin()
 Plug 'ObserverOfTime/ncm2-jc2'
 Plug 'Shougo/neco-syntax'
 Plug 'fgrsnau/ncm2-otherbuf'
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 Plug 'mhartington/nvim-typescript'
 Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
@@ -18,6 +19,7 @@ Plug 'ncm2/ncm2-tern'
 Plug 'ncm2/ncm2-vim'
 Plug 'phpactor/ncm2-phpactor'
 Plug 'roxma/nvim-yarp'
+Plug 'jbmorgado/vim-pine-script'
 
 " Snippits integration
 Plug 'SirVer/ultisnips'

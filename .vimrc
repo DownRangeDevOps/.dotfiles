@@ -271,6 +271,10 @@ let g:vim_markdown_fenced_languages = [
 " Configure vim-markdown-toc (https://github.com/mzlogin/vim-markdown-toc)
 let g:vmt_dont_insert_fence = 1
 
+" Configure vim-pydocstring (https://github.com/heavenshell/vim-pydocstring)
+let g:pydocstring_doq_path = '/Users/ryanfisher/.pyenv/shims/doq'
+nmap <silent> <C-_> <Plug>(pydocstring)
+
 " Configure vim-table-mode (https://github.com/dhruvasagar/vim-table-mode)
 
 " Configure nerdtree-git-plugin (https://github.com/Xuyuanp/nerdtree-git-plugin)
@@ -502,12 +506,13 @@ augroup vimrcEx
 
     " Set syntax highlighting for specific file types
     au BufRead,BufNewFile Appraisals setl ft=ruby
-    au BufRead,BufNewFile *.md setl ft=markdown | setl nofoldenable
+    au BufRead,BufNewFile *.md setl ft=markdown nofoldenable
     au BufRead,BufNewFile *sudoers-* setl ft=sudoers
     au BufRead,BufNewFile .vimrc setl ft=vim
     au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
     au BufRead,BufNewFile Jenkinsfile setl ft=groovy
     au BufRead,BufNewFile .envrc setl ft=sh
+    au BufRead,BufNewFile dockerfile.* setl ft=Dockerfile
 
     " Enable spellchecking and textwrap for Markdown
     au FileType markdown setl spell
@@ -523,8 +528,8 @@ augroup vimrcEx
         \ formatoptions+=t
 
     " Set Makefile filetype and don't expand tabs
-    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab
-    au FileType make setl noexpandtab
+    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab tabstop=4
+    au FileType make setl noexpandtab tabstop=4
 
     " Auto set nowrap on some files
     au BufRead */environments/000_cross_env_users.yml setl nowrap

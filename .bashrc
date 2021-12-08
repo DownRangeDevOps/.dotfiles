@@ -2,22 +2,23 @@
 # .bashrc
 
 # Source gcloud files first so PS1 gets overridden
-# source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc # gcloud bash completion
-# source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc       # gcloud binaries
+source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc # gcloud bash completion
+source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc       # gcloud binaries
 
 # Configure path, must be first...
-export PATH=""                                                          # Reset
-source /etc/profile                                                     # Base
-export PATH="${HOME}/go/bin:${PATH}"                                          # Go binaries
+export PATH=""                                                  # Reset
+source /etc/profile                                             # Base
+export PATH="${HOME}/go/bin:${PATH}"                            # Go binaries
 export PATH="/opt/X11/bin:${PATH}"
-export PATH="${HOME}/.local/bin:${PATH}"                                      # pipx
-export PATH="/usr/local/opt/ruby/bin:${PATH}"                           # Homebrew Ruby
+export PATH="${HOME}/.local/bin:${PATH}"                        # pipx
+export PATH="/usr/local/opt/ruby/bin:${PATH}"                   # Homebrew Ruby
 for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils' 'make'; do
-    export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}"         # Homebrew gnu tools
-    export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}"         # Homebrew gnu manpages
+    export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
+    export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
 done
-export PATH="/usr/local/sbin:${PATH}"                                   # Homebrew bin path
-export PATH="${HOME}/bin:${PATH}"                                       # Custom installed binaries
+export PATH="/usr/local/sbin:${PATH}"                           # Homebrew bin path
+export PATH="${PATH}:${HOME}/.snowsql/1.2.12"                   # Snowflake CLI
+export PATH="${HOME}/bin:${PATH}"                               # Custom installed binaries
 
 # Always append to ~/.bash_history
 shopt -s histappend
@@ -36,6 +37,9 @@ export ANSIBLE_VAULT_PASSWORDS=${HOME}/.ansible/vault-passwords
 export BITBUCKET_SSH_KEY=${HOME}/.ssh/id_rsa
 export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
 
+# Configure aws-vault
+export AWS_VAULT_BACKEND=file
+
 # Homebrew bash completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
@@ -48,7 +52,8 @@ export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden -g ''"
 export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
 export PROJECT_HOME=$HOME/dev
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-eval "$(pyenv init -)"
+export VIRTUALENVWRAPPER_PYTHON=/Users/ryanfisher/.pyenv/shims/python
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 pyenv virtualenvwrapper_lazy
 
 # Enable rbenv shims
@@ -108,7 +113,7 @@ function aes() {
         return 1
     fi
     read -p "String to encrypt: " -sr
-    ansible-vault encrypt_string --vault-id "~/.ansible/vault-passwords/${1}" -n "${2}" "${REPLY}" \
+    ansible-vault encrypt_string --vault-id "${HOME}/.ansible/vault-passwords/${1}" -n "${2}" "${REPLY}" \
         | sed 's/^  */  /' \
         | tee /dev/tty \
         | pbcopy
@@ -122,7 +127,7 @@ function ads() {
         return 1
     fi
     yq -t read "${2}" "${3}" \
-    | ansible-vault decrypt --vault-password-file "~/.ansible/vault-passwords/${1}" \
+    | ansible-vault decrypt --vault-password-file "${HOME}/.ansible/vault-passwords/${1}" \
     | tee /dev/tty \
     | pbcopy
     printf "%s\n" "The result has been copied to your clipboard."
@@ -137,8 +142,8 @@ vagrant_up() {
 alias vu="vagrant_up"
 alias vh="vagrant halt"
 alias vs="vagrant ssh"
-alias sb="source ${HOME}/.bashrc"
-alias ebash="nvim ${HOME}/.bashrc"
+alias sb='source ${HOME}/.bashrc'
+alias ebash='nvim ${HOME}/.bashrc'
 alias c="clear"
 alias vim="nvim"
 function nvim() {
@@ -146,7 +151,7 @@ function nvim() {
         workon nvim
     fi
 
-    /usr/bin/env nvim
+    /usr/bin/env nvim "$@"
 }
 
 # Auto on Yubiswitch
@@ -213,6 +218,11 @@ alias ......='cd ../../../../..'
 alias .......='cd ../../../../../..'
 alias ..r='cd $(git rev-parse --show-toplevel 2>/dev/null)'
 alias ..~='cd ${HOME}'
+alias cdp='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|")'
+alias cds='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|")'
+alias cdd='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|")'
+alias cdt="cd /Users/ryanfisher/dev/sightly/src/ops/packages/terraform/projects/"
+alias cdv="cd /Users/ryanfisher/dev/sightly/src/ops/vendors/"
 
 # grep options
 alias grep="grep --color"
@@ -220,13 +230,23 @@ export GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for match
 alias ag='ag --hidden --ignore tags --ignore .git --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
 
 # helpers
-source ~/.dotfiles/.dockerconfig            # Docker helpers
-source ~/.dotfiles/.terraform               # Terraform helpers
-source ~/.dotfiles/.git_helpers 2>/dev/null # git helpers
-source ~/.dotfiles/.awsconfig               # aws helpers
-source ~/.dotfiles/.osx                     # osx helpers
-source /usr/local/etc/profile.d/z.sh        # z cd auto completion
-source ~/.dotfiles/.ps1                     # Custom PS1
+source ${HOME}/.dotfiles/.dockerconfig            # Docker helpers
+source ${HOME}/.dotfiles/.terraform               # Terraform helpers
+source ${HOME}/.dotfiles/.git_helpers 2>/dev/null # git helpers
+source ${HOME}/.dotfiles/.awsconfig               # aws helpers
+source ${HOME}/.dotfiles/.osx                     # osx helpers
+source /usr/local/etc/profile.d/z.sh              # z cd auto completion
+source ${HOME}/.dotfiles/.ps1                     # Custom PS1
+
+alias pipelinewise="/Users/ryanfisher/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
+alias csqls="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-staging-postgres-u16w=tcp:0.0.0.0:6543 &"
+alias csqld="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-demo-postgres-ai4l=tcp:0.0.0.0:7654 &"
+alias csqlp="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-production-postgres-7ish=tcp:0.0.0.0:8765 &"
+alias snowp="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
+alias snows="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
+
+# Setup shell to make go binary available
+eval "$(goenv init -)"
 
 # Add the direnv hook to PROMPT_COMMAND
 # source ~/.direnvrc

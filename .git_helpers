@@ -259,7 +259,7 @@ EOF
 }
 
 # [o]pen [p]ull [r]equest - open a pull request for the current branch
-# Real URL example: https://gitlab.com/sightly-engineering/sightly-ops/-/merge_requests/new?utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=21762811&merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4298--terraform-makefile&merge_request%5Btarget_project_id%5D=21762811&merge_request%5Btarget_branch%5D=master
+# Real URL example: https://gitlab.com/sightly-engineering/content-intelligence/api-cont-intell-user-account/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4597--docker-add-health-check
 opr() {
     REPO=$(basename "$(git rev-parse --show-toplevel)")
 
