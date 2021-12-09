@@ -19,6 +19,7 @@ done
 export PATH="/usr/local/sbin:${PATH}"                           # Homebrew bin path
 export PATH="${PATH}:${HOME}/.snowsql/1.2.12"                   # Snowflake CLI
 export PATH="${HOME}/bin:${PATH}"                               # Custom installed binaries
+export PATH="${PATH}:/Users/ryanfisher/.local/bin"              # Ansible:::
 
 # Always append to ~/.bash_history
 shopt -s histappend
@@ -41,8 +42,7 @@ export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
 export AWS_VAULT_BACKEND=file
 
 # Homebrew bash completion
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
-[ -f /usr/local/share/bash-completion/bash_completion ] && . /usr/local/share/bash-completion/bash_completion
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
 # Configure FZF command
 export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
@@ -53,6 +53,7 @@ export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
 export PROJECT_HOME=$HOME/dev
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 export VIRTUALENVWRAPPER_PYTHON=/Users/ryanfisher/.pyenv/shims/python
+eval "$(pyenv init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 pyenv virtualenvwrapper_lazy
 

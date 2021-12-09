@@ -65,6 +65,7 @@ if has('nvim')
                 \i-ci-ve:ver25-Cursor/lCursor,
                 \r-cr-o:hor20-Cursor/lCursor,
                 \a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor
+    let g:python3_host_prog = '/Users/ryanfisher/.virtualenvs/nvim/bin/python3'
 else
     let &t_SI = "\<ESC>]50;CursorShape=1\x7"
     let &t_SR = "\<ESC>]50;CursorShape=2\x7"

@@ -32,6 +32,7 @@ Plug 'majutsushi/tagbar'
 
 " Linting
 Plug 'neomake/neomake'
+Plug 'Vimjas/vint'
 
 " Helpers
 Plug 'itchyny/vim-gitbranch'
