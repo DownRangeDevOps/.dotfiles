@@ -1,6 +1,6 @@
 [user]
     name = Ryan Fisher
-    email = ryanfisher@sightly.com
+	email = ryanfisher@sightly.com
 [include]
     path = .gitconfig_aliases
 [core]
@@ -38,7 +38,7 @@
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [init]
     templatedir = ~/.git_templates

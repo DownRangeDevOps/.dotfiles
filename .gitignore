@@ -3,3 +3,4 @@
 .ansible/tmp
 .ansible/vault-passwords
 .vim-jenkins
+tags

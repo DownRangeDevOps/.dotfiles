@@ -8,18 +8,20 @@ source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.in
 # Configure path, must be first...
 export PATH=""                                                  # Reset
 source /etc/profile                                             # Base
-export PATH="${HOME}/go/bin:${PATH}"                            # Go binaries
 export PATH="/opt/X11/bin:${PATH}"
-export PATH="${HOME}/.local/bin:${PATH}"                        # pipx
 export PATH="/usr/local/opt/ruby/bin:${PATH}"                   # Homebrew Ruby
 for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils' 'make'; do
     export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
     export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
 done
 export PATH="/usr/local/sbin:${PATH}"                           # Homebrew bin path
+export PATH="$HOME/.pyenv/bin:$PATH"                            # pyenv
+export PATH="${HOME}/.local/bin:${PATH}"                        # pipx
+export PATH="${HOME}/go/bin:${PATH}"                            # Go binaries
 export PATH="${PATH}:${HOME}/.snowsql/1.2.12"                   # Snowflake CLI
 export PATH="${HOME}/bin:${PATH}"                               # Custom installed binaries
-export PATH="${PATH}:/Users/ryanfisher/.local/bin"              # Ansible:::
+export PATH="${PATH}:${HOME}/.local/bin"              # Ansible:::
+export PATH="${PATH}:${HOME}/.cabal/bin/git-repair"   # Haskell binaries
 
 # Always append to ~/.bash_history
 shopt -s histappend
@@ -48,14 +50,16 @@ export AWS_VAULT_BACKEND=file
 export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
 export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden -g ''"
 
-# Enable pyenv shims and pyenv-virtualenvwrapper
+# Enable/configure pyenv shims, virtualenvwrapper, pipx
 export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
 export PROJECT_HOME=$HOME/dev
-export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-export VIRTUALENVWRAPPER_PYTHON=/Users/ryanfisher/.pyenv/shims/python
-eval "$(pyenv init -)"
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-pyenv virtualenvwrapper_lazy
+export VIRTUALENVWRAPPER_PYTHON=${HOME}/.pyenv/shims/python3
+export VIRTUALENVWRAPPER_VIRTUALENV=${HOME}/.pyenv/versions/3.10.1/bin/virtualenv
+export VIRTUALENVWRAPPER_WORKON_CD=1
+export PIPX_DEFAULT_PYTHON=${HOME}/.pyenv/shims/python
+source "${HOME}/.pyenv/versions/3.10.1/bin/virtualenvwrapper.sh"
+eval "$(pyenv init --path)"
+eval "$(pyenv virtualenv-init -)"
 
 # Enable rbenv shims
 eval "$(rbenv init -)"
@@ -135,11 +139,9 @@ function ads() {
 }
 
 # My helpers
+alias rml="rm -rf report && AUTOFIX=all mega-linter-runner -f python ."
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
-vagrant_up() {
-  if [[ $1 && $1 == '-p' || $1 == '--provision' ]]; then vagrant up --provision; elif [[ $1 && $1 != '-p' ]]; then echo 'Unknown argument...'; else vagrant up; fi
-}
 alias vu="vagrant_up"
 alias vh="vagrant halt"
 alias vs="vagrant ssh"
@@ -147,12 +149,69 @@ alias sb='source ${HOME}/.bashrc'
 alias ebash='nvim ${HOME}/.bashrc'
 alias c="clear"
 alias vim="nvim"
+
+# Headers and colors
+function header() {
+    printf "\n%b\n" "\x1b[1m==> ${*}\x1b[0m"
+}
+
+function reset() {
+    "\x1b[0m"
+}
+
+function green() {
+    "\x1b[32;01m${*}\x1b[0m"
+}
+
+function yellow() {
+    "\x1b[33;01m${*}\x1b[0m"
+}
+
+function red() {
+    "\x1b[33;31m${*}\x1b[0m"
+}
+
+# Tools
 function nvim() {
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
         workon nvim
     fi
 
     /usr/bin/env nvim "$@"
+}
+
+vagrant_up() {
+  if [[ $1 && $1 == '-p' || $1 == '--provision' ]]; then vagrant up --provision; elif [[ $1 && $1 != '-p' ]]; then echo 'Unknown argument...'; else vagrant up; fi
+}
+
+function lpy() {
+    FLYNT="--transform-concats --line-length 999"
+    AUTOFLAKE="--remove-all-unused-imports --remove-duplicate-keys --in-place --recursive"
+    MDFORMAT="--number --wrap 80"
+    PRETTIER="--ignore-path .gitignore --write --print-width 88"
+    ISORT="--skip-gitignore --trailing-comma --wrap-length 88 --line-length 88 --use-parentheses --ensure-newline-before-comments"
+    BLACK="--preview"
+
+    header "Running sqlfluff fix..."
+    sqlfluff fix .
+
+    header "Running flynt with '${FLYNT}'..."
+    flynt ${FLYNT} .
+
+    header "Running autoflake with '${AUTOFLAKE}'..."
+    autoflake ${AUTOFLAKE} .
+
+    header "Running mdformat with '${MDFORMAT}'..."
+    mdformat ${MDFORMAT} .
+
+    header "Running prettier with '${PRETTIER}'..."
+    prettier ${PRETTIER} .
+
+    header "Running isort with '${ISORT}'..."
+    isort ${ISORT} .
+
+    header "Running black with '${BLACK}'..."
+    black ${BLACK} .
 }
 
 # Auto on Yubiswitch
@@ -222,8 +281,8 @@ alias ..~='cd ${HOME}'
 alias cdp='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|")'
 alias cds='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|")'
 alias cdd='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|")'
-alias cdt="cd /Users/ryanfisher/dev/sightly/src/ops/packages/terraform/projects/"
-alias cdv="cd /Users/ryanfisher/dev/sightly/src/ops/vendors/"
+alias cdt="cd ${HOME}/dev/sightly/src/ops/packages/terraform/projects/"
+alias cdv="cd ${HOME}/dev/sightly/src/ops/vendors/"
 
 # grep options
 alias grep="grep --color"
@@ -239,12 +298,13 @@ source ${HOME}/.dotfiles/.osx                     # osx helpers
 source /usr/local/etc/profile.d/z.sh              # z cd auto completion
 source ${HOME}/.dotfiles/.ps1                     # Custom PS1
 
-alias pipelinewise="/Users/ryanfisher/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
+alias pipelinewise="${HOME}/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
 alias csqls="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-staging-postgres-u16w=tcp:0.0.0.0:6543 &"
 alias csqld="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-demo-postgres-ai4l=tcp:0.0.0.0:7654 &"
 alias csqlp="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-production-postgres-7ish=tcp:0.0.0.0:8765 &"
 alias snowp="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias snows="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
+alias ctags="$(brew --prefix)/bin/ctags"
 
 # Setup shell to make go binary available
 eval "$(goenv init -)"
@@ -254,3 +314,4 @@ eval "$(goenv init -)"
 eval "$(direnv hook bash)"
 
 complete -C /usr/local/bin/terraform terraform
+. "${HOME}/.rsvm/current/cargo/env"

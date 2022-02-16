@@ -16,7 +16,8 @@ set autowrite                            " Automatically :write before running c
 set backspace=2                          " Backspace deletes like most programs in insert mode
 set backspace=indent,eol,start           " Make backspace behave in a sane manner.
 set colorcolumn=80                       " Make it obvious where 80 characters is
-set complete+=kspell                     " Autocomplete with dictionary words when spell check is on
+set complete+=kspell                     " Auto complete with dictionary words when spell check is on
+set tags=tags                            " Enable ctags
 set diffopt+=vertical                    " Always use vertical diffs
 set directory=~/tmp                      " set where swapfile(s) are stored
 set fillchars+=vert:\ |
@@ -27,39 +28,41 @@ set foldlevelstart=2
 set foldmethod=indent
 set formatoptions=croqnlj                " See :help fo-table
 set history=50                           " store command history across sessions
-set hlsearch                             " hilight search matches
+set hlsearch                             " highlight search matches
 set incsearch                            " do incremental searching
-set list listchars=tab:»·,trail:·,nbsp:· " Dispay tabs, non-breaking spaces, and trailing whitespace
+set list listchars=tab:»·,trail:·,nbsp:· " Display tabs, non-breaking spaces, and trailing whitespace
 set mouse=a
 set noshowmode                           " hide the mode status line
-set spell spelllang=en_us                " Turn off spellchecking by default
+set spell spelllang=en_us                " Turn off spell checking by default
 set noswapfile                           " disable swap file
 set ruler                                " show the cursor position all the time
 set scrolloff=2                          " Always show one line above/below the cursor
 set secure                               " Prevent shell, write, :au unless file is owned by me
 set sessionoptions+=tabpages,globals     " Allow Taboo to maintain tab names across sessions
-set showbreak=↳\                         " Indicate wraped lines
-set lbr
+set showbreak=↳\                         " Indicate wrapped lines
+set linebreak
 set showcmd                              " display incomplete commands
 set splitbelow                           " Open new split panes to the right/bottom
 set splitright
-set termguicolors                        " Use truecolor
+set termguicolors                        " Use true color
 set timeoutlen=700                       " set a short leader timeout
-set wildmode=list:longest,list:full      " Configure autocompletion see :help wildmode
+set wildmode=list:longest,list:full      " Configure auto completion see :help wildmode
 if &diff                                 " only for diff mode/vimdiff
 set diffopt=filler,context:1000000     " filler is default and inserts empty lines for sync
 endif
 
-" Default tabbing prefrences
+" Default tabbing preferences
 set shiftround
 set expandtab
+set tabstop=4
+set shiftwidth=4
 
-" Relitive line numbers
+" Relative line numbers
 set number
 set relativenumber
 set numberwidth=5
 
-" Change cursor shape in iTerm2 & tmux in iTerm
+" Change cursor shape in iTerm2 & tmux
 if has('nvim')
     set guicursor=n-c-v-sm:block-Cursor/lCursor,
                 \i-ci-ve:ver25-Cursor/lCursor,
@@ -130,7 +133,7 @@ nnoremap <silent><leader><S-w> :tabclose<CR>                " Move right a windo
 nnoremap <silent><leader><S-h> :tabprevious<CR>             " Move left a window
 nnoremap <silent><leader><S-l> :tabnext<CR>                 " Move right a window
 
-" Use magic in search/substitue
+" Use magic in search/substitute
 nnoremap / /\v\c
 vnoremap / /\v\c
 cnoremap %% %s/\v
@@ -248,6 +251,10 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Comment'],
   \ 'header':  ['fg', 'Comment'] }
 
+" Customize fzf window
+let g:fzf_layout = {'down': '30%'}
+let g:fzf_preview_window = ['right:50%']
+
 " Configure dash.vim (https://github.com/rizzatti/dash.vim)
 let g:dash_activate=0
 
@@ -329,16 +336,16 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 call neomake#configure#automake('nwr', 1000)
 " call neomake#configure#automake('w')  " use when on battery
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
-let g:neomake_yaml_enabled_makers = ['yamllint']
-let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_go_enabled_makers = ['go vet']
 let g:neomake_java_enabled_makers = ['mvn']
 let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_markdown_enabled_makers = ['markdownlint']
+let g:neomake_python_enabled_makers = ['flake8', 'python']
 let g:neomake_ruby_enabled_makers = ['rubocop', 'rubylint']
 let g:neomake_shell_enabled_makers = ['shellcheck']
 let g:neomake_text_enabled_makers = ['writegood']
 let g:neomake_vim_enabled_makers = ['vint']
+let g:neomake_yaml_enabled_makers = ['yamllint']
 
 " Seems to not be working...
 " https://github.com/jhinch/nginx-linter
@@ -467,18 +474,18 @@ let g:lightline = {
 
 " Lightline functions
 function! LightLineFilename()
-    let limit = 3
-    let project_root = projectroot#guess()
-    let path = substitute(expand('%:p'), project_root . '/', '', '')
-    let path_len = len(path)
-    let max_width = winwidth(0) - 65
-
-    if path_len > max_width
-        let max_width += 3
-        return '...' . strpart(path, path_len - max_width)
-    else
-        return path
-    endif
+    " let limit = 3
+    " let project_root = projectroot#guess()
+    " let path = substitute(expand('%:p'), project_root . '/', '', '')
+    " let path_len = len(path)
+    " let max_width = winwidth(0) - 65
+    "
+    " if path_len > max_width
+    "     let max_width += 3
+    "     return '...' . strpart(path, path_len - max_width)
+    " else
+    "     return path
+    " endif
 endfunction
 
 function! SynStack()
@@ -491,6 +498,9 @@ endfunc
 """ Startup autocommands -------------------------------------------------------
 augroup vimrcEx
     au!
+
+    " Don't change termnial size unless it is redrawn
+    "au TermOpen * au <buffer> BufEnter,WinEnter redraw!
 
     " enable ncm2 for all buffers
     au BufEnter * call ncm2#enable_for_buffer()

@@ -27,3 +27,31 @@ alias tfug="terraform 0.12upgrade"
 alias tful="terraform force-unlock"
 alias tfv="terraform validate"
 alias tfw="terraform workspace"
+
+# Helpers
+function find_all_terraform_modules() {
+    find . -path '*/.terraform' -prune -o -type f -iname "main.tf" -print0 \
+        | xargs dirname
+}
+
+function init_all_modules() {
+    ALL_MODULES=find_all_terraform_modules
+
+    for module in ${ALL_MODULES};
+        do
+            printf "%s\n" "${module}"
+            (cd "${module}" && terraform init)
+        done
+}
+
+function validate_all_modules() {
+    ALL_MODULES=find_all_terraform_modules
+
+    for module in ${ALL_MODULES};
+        do
+            printf "%s\n" "${module}"
+            (cd "${module}" && terraform validate)
+        done
+}
+ alias tfia=init_all_modules
+ alias tfva=validate_all_modules
