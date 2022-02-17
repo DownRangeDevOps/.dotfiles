@@ -16,12 +16,12 @@ for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils' 'make'; do
 done
 export PATH="/usr/local/sbin:${PATH}"                           # Homebrew bin path
 export PATH="$HOME/.pyenv/bin:$PATH"                            # pyenv
-export PATH="${HOME}/.local/bin:${PATH}"                        # pipx
-export PATH="${HOME}/go/bin:${PATH}"                            # Go binaries
-export PATH="${PATH}:${HOME}/.snowsql/1.2.12"                   # Snowflake CLI
-export PATH="${HOME}/bin:${PATH}"                               # Custom installed binaries
-export PATH="${PATH}:${HOME}/.local/bin"              # Ansible:::
-export PATH="${PATH}:${HOME}/.cabal/bin/git-repair"   # Haskell binaries
+export PATH="$HOME/.local/bin:${PATH}"                        # pipx
+export PATH="$HOME/go/bin:${PATH}"                            # Go binaries
+export PATH="${PATH}:$HOME/.snowsql/1.2.12"                   # Snowflake CLI
+export PATH="$HOME/bin:${PATH}"                               # Custom installed binaries
+export PATH="${PATH}:$HOME/.local/bin"              # Ansible:::
+export PATH="${PATH}:$HOME/.cabal/bin/git-repair"   # Haskell binaries
 
 # Always append to ~/.bash_history
 shopt -s histappend
@@ -36,9 +36,9 @@ export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
 
 # Configure measurable docker-compose mount paths
-export ANSIBLE_VAULT_PASSWORDS=${HOME}/.ansible/vault-passwords
-export BITBUCKET_SSH_KEY=${HOME}/.ssh/id_rsa
-export DEVOPS_REPO=${HOME}/dev/measurabl/src/devops
+export ANSIBLE_VAULT_PASSWORDS=$HOME/.ansible/vault-passwords
+export BITBUCKET_SSH_KEY=$HOME/.ssh/id_rsa
+export DEVOPS_REPO=$HOME/dev/measurabl/src/devops
 
 # Configure aws-vault
 export AWS_VAULT_BACKEND=file
@@ -53,11 +53,12 @@ export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden -g ''"
 # Enable/configure pyenv shims, virtualenvwrapper, pipx
 export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
 export PROJECT_HOME=$HOME/dev
-export VIRTUALENVWRAPPER_PYTHON=${HOME}/.pyenv/shims/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=${HOME}/.pyenv/versions/3.10.1/bin/virtualenv
+export VIRTUALENVWRAPPER_PYTHON=$HOME/.pyenv/shims/python3
+export VIRTUALENVWRAPPER_VIRTUALENV=$HOME/.pyenv/versions/3.10.1/bin/virtualenv
 export VIRTUALENVWRAPPER_WORKON_CD=1
 export PIPX_DEFAULT_PYTHON=${HOME}/.pyenv/shims/python
-source "${HOME}/.pyenv/versions/3.10.1/bin/virtualenvwrapper.sh"
+# shellcheck disable=SC1094
+source "$HOME/.pyenv/versions/3.10.1/bin/virtualenvwrapper.sh"
 eval "$(pyenv init --path)"
 eval "$(pyenv virtualenv-init -)"
 
@@ -106,8 +107,9 @@ function ade() {
   find "environments/${1}/" \
     -type f \
     -iname '*.vault.*' \
-    -exec sh -c "ansible-vault decrypt \
-      --vault-id ${HOME}/.ansible/vault-passwords/${1} {}" \
+    -exec sh -c 'passfile="$1"; \
+        ansible-vault decrypt \
+        --vault-id $passfile' shell "$HOME/.ansible/vault-passwords/${1}" {} \
       \;
 }
 
@@ -118,7 +120,7 @@ function aes() {
         return 1
     fi
     read -p "String to encrypt: " -sr
-    ansible-vault encrypt_string --vault-id "${HOME}/.ansible/vault-passwords/${1}" -n "${2}" "${REPLY}" \
+    ansible-vault encrypt_string --vault-id "$HOME/.ansible/vault-passwords/${1}" -n "${2}" "${REPLY}" \
         | sed 's/^  */  /' \
         | tee /dev/tty \
         | pbcopy
@@ -132,7 +134,7 @@ function ads() {
         return 1
     fi
     yq -t read "${2}" "${3}" \
-    | ansible-vault decrypt --vault-password-file "${HOME}/.ansible/vault-passwords/${1}" \
+    | ansible-vault decrypt --vault-password-file "$HOME/.ansible/vault-passwords/${1}" \
     | tee /dev/tty \
     | pbcopy
     printf "%s\n" "The result has been copied to your clipboard."
@@ -145,8 +147,8 @@ alias myip="curl icanhazip.com"
 alias vu="vagrant_up"
 alias vh="vagrant halt"
 alias vs="vagrant ssh"
-alias sb='source ${HOME}/.bashrc'
-alias ebash='nvim ${HOME}/.bashrc'
+alias sb='source $HOME/.bashrc'
+alias ebash='nvim $HOME/.bashrc'
 alias c="clear"
 alias vim="nvim"
 
@@ -185,33 +187,41 @@ vagrant_up() {
 }
 
 function lpy() {
-    FLYNT="--transform-concats --line-length 999"
-    AUTOFLAKE="--remove-all-unused-imports --remove-duplicate-keys --in-place --recursive"
-    MDFORMAT="--number --wrap 80"
-    PRETTIER="--ignore-path .gitignore --write --print-width 88"
-    ISORT="--skip-gitignore --trailing-comma --wrap-length 88 --line-length 88 --use-parentheses --ensure-newline-before-comments"
-    BLACK="--preview"
+    SQLFLUFF=("--processes=$(($(sysctl -n hw.ncpu) - 2))" "--FIX-EVEN-UNPARSABLE" "--force")
+    FLYNT=("--transform-concats" "--line-length=999")
+    AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
+    AUTOFLAKE=("--remove-all-unused-imports" "--remove-duplicate-keys" "--in-place" "--recursive")
+    MDFORMAT=("--number" "--wrap=80")
+    PRETTIER=("--ignore-path=.gitignore" "--write" "--print-width=88")
+    ISORT=("--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
+    BLACK=("--preview")
 
-    header "Running sqlfluff fix..."
-    sqlfluff fix .
+    header "Removing trailing whitespace..."
+    find . -path '*/.git/*' -prune -o -type f -print0 | xargs -0 -L 1 sed -E -i 's/\s*$//g'
 
-    header "Running flynt with '${FLYNT}'..."
-    flynt ${FLYNT} .
+    header "Running sqlfluff fix with '${SQLFLUFF[*]}'..."
+    sqlfluff fix "${SQLFLUFF[@]}" .
 
-    header "Running autoflake with '${AUTOFLAKE}'..."
-    autoflake ${AUTOFLAKE} .
+    header "Running flynt with '${FLYNT[*]}'..."
+    flynt "${FLYNT[@]}" .
 
-    header "Running mdformat with '${MDFORMAT}'..."
-    mdformat ${MDFORMAT} .
+    header "Running autopep8 with '${AUTOPEP8[*]}'..."
+    autopep8 "${AUTOPEP8[@]}" .
 
-    header "Running prettier with '${PRETTIER}'..."
-    prettier ${PRETTIER} .
+    header "Running autoflake with '${AUTOFLAKE[*]}'..."
+    autoflake "${AUTOFLAKE[@]}" .
 
-    header "Running isort with '${ISORT}'..."
-    isort ${ISORT} .
+    header "Running mdformat with '${MDFORMAT[*]}'..."
+    mdformat "${MDFORMAT[@]}" .
 
-    header "Running black with '${BLACK}'..."
-    black ${BLACK} .
+    header "Running prettier with '${PRETTIER[*]}'..."
+    prettier "${PRETTIER[@]}" .
+
+    header "Running isort with '${ISORT[*]}'..."
+    isort "${ISORT[@]}" .
+
+    header "Running black with '${BLACK[*]}'..."
+    black "${BLACK[@]}" .
 }
 
 # Auto on Yubiswitch
@@ -270,41 +280,42 @@ function ls() {
 function ll() {
   /bin/ls -GFlash "$@"
 }
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
-alias .......='cd ../../../../../..'
-alias ..r='cd $(git rev-parse --show-toplevel 2>/dev/null)'
-alias ..~='cd ${HOME}'
-alias cdp='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|")'
-alias cds='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|")'
-alias cdd='cd $(pwd | sed -e "s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|")'
-alias cdt="cd ${HOME}/dev/sightly/src/ops/packages/terraform/projects/"
-alias cdv="cd ${HOME}/dev/sightly/src/ops/vendors/"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias .......="cd ../../../../../.."
+alias ..r="cd \$(git rev-parse --show-toplevel 2>/dev/null)"
+alias ..~="cd \$HOME"
+alias cdp="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|\")"
+alias cds="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|\")"
+alias cdd="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|\")"
+alias cdt="cd \$HOME/dev/sightly/src/ops/packages/terraform/projects/"
+alias cdv="cd \$HOME/dev/sightly/src/ops/vendors/"
 
 # grep options
 alias grep="grep --color"
-export GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for matches
+GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for matches
+export GREP_COLOR
 alias ag='ag --hidden --ignore tags --ignore .git --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
 
 # helpers
-source ${HOME}/.dotfiles/.dockerconfig            # Docker helpers
-source ${HOME}/.dotfiles/.terraform               # Terraform helpers
-source ${HOME}/.dotfiles/.git_helpers 2>/dev/null # git helpers
-source ${HOME}/.dotfiles/.awsconfig               # aws helpers
-source ${HOME}/.dotfiles/.osx                     # osx helpers
-source /usr/local/etc/profile.d/z.sh              # z cd auto completion
-source ${HOME}/.dotfiles/.ps1                     # Custom PS1
+source "$HOME/.dotfiles/.dockerconfig"            # Docker helpers
+source "$HOME/.dotfiles/.terraform"               # Terraform helpers
+source "$HOME/.dotfiles/.git_helpers" 2>/dev/null # git helpers
+source "$HOME/.dotfiles/.awsconfig"               # aws helpers
+source "$HOME/.dotfiles/.osx"                     # osx helpers
+source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
+source "$HOME/.dotfiles/.ps1"                     # Custom PS1
 
-alias pipelinewise="${HOME}/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
+alias pipelinewise="\$HOME/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
 alias csqls="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-staging-postgres-u16w=tcp:0.0.0.0:6543 &"
 alias csqld="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-demo-postgres-ai4l=tcp:0.0.0.0:7654 &"
 alias csqlp="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-production-postgres-7ish=tcp:0.0.0.0:8765 &"
 alias snowp="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias snows="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
-alias ctags="$(brew --prefix)/bin/ctags"
+alias ctags="\$(brew --prefix)/bin/ctags"
 
 # Setup shell to make go binary available
 eval "$(goenv init -)"
@@ -314,4 +325,4 @@ eval "$(goenv init -)"
 eval "$(direnv hook bash)"
 
 complete -C /usr/local/bin/terraform terraform
-. "${HOME}/.rsvm/current/cargo/env"
+source "$HOME/.rsvm/current/cargo/env"
