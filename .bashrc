@@ -34,11 +34,12 @@ export GROOVY_HOME=/usr/local/opt/groovy/libexec
 export BETTER_EXCEPTIONS=1  # python better exceptions
 export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
+export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
 
 # Configure measurable docker-compose mount paths
-export ANSIBLE_VAULT_PASSWORDS=$HOME/.ansible/vault-passwords
-export BITBUCKET_SSH_KEY=$HOME/.ssh/id_rsa
-export DEVOPS_REPO=$HOME/dev/measurabl/src/devops
+export ANSIBLE_VAULT_PASSWORDS="$HOME/.ansible/vault-passwords"
+export BITBUCKET_SSH_KEY="$HOME/.ssh/id_rsa"
+export DEVOPS_REPO="$HOME/dev/measurabl/src/devops"
 
 # Configure aws-vault
 export AWS_VAULT_BACKEND=file
@@ -51,12 +52,12 @@ export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
 export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden -g ''"
 
 # Enable/configure pyenv shims, virtualenvwrapper, pipx
-export WORKON_HOME=$HOME/.virtualenvs  # python virtual env
-export PROJECT_HOME=$HOME/dev
-export VIRTUALENVWRAPPER_PYTHON=$HOME/.pyenv/shims/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=$HOME/.pyenv/versions/3.10.1/bin/virtualenv
+export WORKON_HOME="$HOME/.virtualenvs  # python virtual env"
+export PROJECT_HOME="$HOME/dev"
+export VIRTUALENVWRAPPER_PYTHON="$HOME/.pyenv/shims/python3"
+export VIRTUALENVWRAPPER_VIRTUALENV="$HOME/.pyenv/versions/3.10.1/bin/virtualenv"
 export VIRTUALENVWRAPPER_WORKON_CD=1
-export PIPX_DEFAULT_PYTHON=${HOME}/.pyenv/shims/python
+export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 # shellcheck disable=SC1094
 source "$HOME/.pyenv/versions/3.10.1/bin/virtualenvwrapper.sh"
 eval "$(pyenv init --path)"
@@ -173,7 +174,7 @@ function red() {
     "\x1b[33;31m${*}\x1b[0m"
 }
 
-# Tools
+# Utilities
 function nvim() {
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
         workon nvim
@@ -182,19 +183,19 @@ function nvim() {
     /usr/bin/env nvim "$@"
 }
 
-vagrant_up() {
+function vagrant_up() {
   if [[ $1 && $1 == '-p' || $1 == '--provision' ]]; then vagrant up --provision; elif [[ $1 && $1 != '-p' ]]; then echo 'Unknown argument...'; else vagrant up; fi
 }
 
 function lpy() {
-    SQLFLUFF=("--processes=$(($(sysctl -n hw.ncpu) - 2))" "--FIX-EVEN-UNPARSABLE" "--force")
-    FLYNT=("--transform-concats" "--line-length=999")
-    AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
     AUTOFLAKE=("--remove-all-unused-imports" "--remove-duplicate-keys" "--in-place" "--recursive")
-    MDFORMAT=("--number" "--wrap=80")
-    PRETTIER=("--ignore-path=.gitignore" "--write" "--print-width=88")
-    ISORT=("--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
+    AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
     BLACK=("--preview")
+    FLYNT=("--transform-concats" "--line-length=999")
+    ISORT=("--profile=black" "--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
+    MDFORMAT=("--number" "--wrap=80")
+    PRETTIER=("--ignore-path=$HOME/.config/prettier" "--write" "--print-width=88")
+    SQLFLUFF=("--processes=$(($(sysctl -n hw.ncpu) - 2))" "--FIX-EVEN-UNPARSABLE" "--force")
 
     header "Removing trailing whitespace..."
     find . -path '*/.git/*' -prune -o -type f -print0 | xargs -0 -L 1 sed -E -i 's/\s*$//g'
@@ -211,11 +212,11 @@ function lpy() {
     header "Running autoflake with '${AUTOFLAKE[*]}'..."
     autoflake "${AUTOFLAKE[@]}" .
 
-    header "Running mdformat with '${MDFORMAT[*]}'..."
-    mdformat "${MDFORMAT[@]}" .
-
     header "Running prettier with '${PRETTIER[*]}'..."
     prettier "${PRETTIER[@]}" .
+
+    header "Running mdformat with '${MDFORMAT[*]}'..."
+    mdformat "${MDFORMAT[@]}" .
 
     header "Running isort with '${ISORT[*]}'..."
     isort "${ISORT[@]}" .
@@ -231,7 +232,7 @@ alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 ### Helper funcitons
 
 # Prompt user to continue
-prompt_to_continue() {
+function prompt_to_continue() {
     echo ''
     read -p "${1:-Continue?} (y)[es|no] " -n 1 -r
     echo
@@ -316,6 +317,17 @@ alias csqlp="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:si
 alias snowp="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias snows="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias ctags="\$(brew --prefix)/bin/ctags"
+alias gpt=generate_python_module_ctags
+
+function generate_python_module_ctags() {
+    read -r -a PYTHON_PATH  <<< "$(python -c """import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))""")"
+
+    ctags -R \
+        --fields=+l \
+        --languages=python \
+        --python-kinds=-iv \
+        -f ./tags "${PYTHON_PATH[@]}"
+}
 
 # Setup shell to make go binary available
 eval "$(goenv init -)"

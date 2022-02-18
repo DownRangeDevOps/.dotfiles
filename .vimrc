@@ -544,6 +544,8 @@ augroup vimrcEx
 
     " Auto set nowrap on some files
     au BufRead */environments/000_cross_env_users.yml setl nowrap
+        \ | silent! !ctags -R --fields=+l --languages=python
+            \ --python-kinds=-iv -f ./tags
 
     " :set nowrap for some files
     au BufRead, BufNewFile user_list.yml setl nowrap
@@ -561,8 +563,8 @@ augroup vimrcEx
     " Autoread
     au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
 
-    " Auto lint on write
-    au BufWritePost * Neomake
+    " Auto lint on write or change
+    au BufWritePost,TextChanged * Neomake
 
     " Configure terminal settings
     au TermOpen * setl nospell

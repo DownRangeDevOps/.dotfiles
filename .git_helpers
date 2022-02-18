@@ -25,6 +25,14 @@ alias gstatd="echo '==> Log: '\
     && git log origin/develop.. \
     && echo '' && echo '==> Diff:' \
     && git diff --stat origin/develop"
+alias gfu="git_fixup"
+
+function git_fixup() {
+    hub log -n 50 --pretty=format:"%h %s" --no-merges \
+    | fzf \
+    | awk '{print $1}' \
+    | xargs -o hub commit --fixup
+}
 
 # Branching
 function gb() {
