@@ -3,12 +3,16 @@
 call plug#begin()
 " Auto-complete/LSP
 " Plug 'svermeulen/ncm2-yoink'  # bugged?
+" Better to load these first
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+
+" Then these
 Plug 'ObserverOfTime/ncm2-jc2'
 Plug 'Shougo/neco-syntax'
 Plug 'fgrsnau/ncm2-otherbuf'
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 Plug 'mhartington/nvim-typescript'
-Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-cssomni'
 Plug 'ncm2/ncm2-go'
@@ -18,7 +22,6 @@ Plug 'ncm2/ncm2-syntax'
 Plug 'ncm2/ncm2-tern'
 Plug 'ncm2/ncm2-vim'
 Plug 'phpactor/ncm2-phpactor'
-Plug 'roxma/nvim-yarp'
 Plug 'jbmorgado/vim-pine-script'
 
 " Snippits integration
@@ -28,6 +31,8 @@ Plug 'ncm2/ncm2-ultisnips'  " Requires utilisnips
 
 " Taging
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'skywind3000/gutentags_plus'
+Plug 'whatot/gtags-cscope.vim'
 Plug 'majutsushi/tagbar'
 
 " Linting
@@ -116,3 +121,4 @@ Plug 'tpope/vim-repeat'
 " Plug 'yuttie/hydrangea-vim'
 Plug 'chriskempson/vim-tomorrow-theme'
 call plug#end()
+

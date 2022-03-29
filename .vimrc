@@ -1,7 +1,14 @@
-" vim: set ft=vim:
+" vim: set ft=vim
 " Setup plugin manager
-so ~/.dotfiles/.plugins
-so ~/.dotfiles/assets/term_color.vim
+so $HOME/.dotfiles/.plugins
+so $HOME/.dotfiles/assets/term_color.vim
+
+" Use UTF8 encoding
+set encoding=utf-8
+set fileencodings=ucs-bom,utf-8,latin1
+setglobal bomb
+setglobal fileencoding=utf-8
+scriptencoding utf-8
 
 """ Prefrences ---------------------------------------------------------------
 " Use space as leader key
@@ -30,6 +37,7 @@ set formatoptions=croqnlj                " See :help fo-table
 set history=50                           " store command history across sessions
 set hlsearch                             " highlight search matches
 set incsearch                            " do incremental searching
+set lazyredraw                           " Disable redraw when executing macros
 set list listchars=tab:»·,trail:·,nbsp:· " Display tabs, non-breaking spaces, and trailing whitespace
 set mouse=a
 set noshowmode                           " hide the mode status line
@@ -99,7 +107,6 @@ endif
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
 inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
-" nnoremap <CR> :call <SID>EnterInsertModeInTerminal()<CR>|
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
 nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
 nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
@@ -107,12 +114,8 @@ nnoremap K                                                  " Keep searching for
 nnoremap Q <Plug>window:quickfix:toggle
 
 " Easy split navigation
-nnoremap <leader>\ :call <SID>OpenNewSplit('\')<CR>|        " Open vertical split
-nnoremap <leader>\| :call <SID>OpenNewSplit('\|')<CR>|      " Open horizontal split
-" noremap <C-h> <Esc>:silent SwitchWindow h<CR>
-" noremap <C-l> <Esc>:silent SwitchWindow l<CR>
-" noremap <C-j> <Esc>:silent SwitchWindow j<CR>
-" noremap <C-k> <Esc>:silent SwitchWindow k<CR>
+nnoremap <silent><leader>\ :call <SID>OpenNewSplit('\')<CR>|        " Open vertical split
+nnoremap <silent><leader>\| :call <SID>OpenNewSplit('\|')<CR>|      " Open horizontal split
 noremap <C-h> <C-w>h                                       " Move left a window
 let g:BASH_Ctrl_j = 'off'
 noremap <C-j> <C-w>j                                       " Move down a window
@@ -124,7 +127,6 @@ if has('nvim')
     tnoremap <C-j> <C-\><C-n><C-w>j                        " Move down a window
     tnoremap <C-k> <C-\><C-n><C-w>k                        " Move up a window
     tnoremap <C-l> <C-\><C-n><C-w>l                        " Move right a window
-    " breaks terminal ctrl+w for deleting tnoremap <c-w><c-w> <C-\><C-n><C-w>=        " Set windows to equal size
     tnoremap <s-space> <space>
 endif
 
@@ -183,6 +185,15 @@ nnoremap <leader>y  "+y
 nnoremap <leader>Y  "+yg_
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
+
+" Gutentags configuration (https://github.com/ludovicchabant/vim-gutentags)
+let g:gutentags_define_advanced_commands = 1
+let g:gutentags_modules = ['ctags', 'gtags_cscope']
+let s:python_lib_dirs = get(systemlist('pyenv prefix'), 0, '')
+let g:gutentags_file_list_command = 'rg ' . projectroot#get() . ' ' . s:python_lib_dirs . ' --files'
+" let g:gutentags_ctags_extra_args = ['--python-kinds=-i']
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+let g:gutentags_plus_switch = 1
 
 " NeoVim configuration
 if has('nvim') && !exists('g:gui_oni')
@@ -375,14 +386,14 @@ let g:tmux_navigator_save_on_switch = 2
 
 " Configure ansible-vim (https://github.com/pearofducks/ansible-vim)
 let g:ansible_template_syntaxes = {
-    \'*.python.j2': 'python',
-    \'*.cfg.j2': 'cfg',
-    \'*.php.j2': 'php',
-    \'*.sh.j2': 'sh',
-    \'*.groovy.j2': 'groovy',
-    \'*.conf.j2': 'nginx',
-    \'*.route.j2': 'nginx',
-    \'*.upstream.j2': 'nginx'
+        \ '*.python.j2': 'python',
+        \ '*.cfg.j2': 'cfg',
+        \ '*.php.j2': 'php',
+        \ '*.sh.j2': 'sh',
+        \ '*.groovy.j2': 'groovy',
+        \ '*.conf.j2': 'nginx',
+        \ '*.route.j2': 'nginx',
+        \ '*.upstream.j2': 'nginx'
     \}
 let g:ansible_attribute_highlight = 'ad'
 let g:ansible_name_highlight = 'd'
@@ -398,16 +409,20 @@ set viewoptions=cursor,folds,slash,unix
 " let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cursor at top when opening these files
 " let g:lastplace_ignore_buftype = "terminal,quickfix,nofile,help"
 
+" Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
+" See ncm2 setup for details
+set completeopt=noinsert,menuone,noselect
+set shortmess+=c
+inoremap <c-c> <ESC>
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "\<CR>")
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 " Configure ncm2-utilisnips (https://github.com/ncm2/ncm2-ultisnips)
 let g:UltiSnipsJumpForwardTrigger   = '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger  = '<c-k>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
-" Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
-set completeopt=noinsert,menuone,noselect
-set shortmess+=c
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Enable chriskempson/vim-tomorrow-theme
 colorscheme Tomorrow-Night-Eighties
@@ -453,39 +468,44 @@ let g:lightline = {
     \ 'colorscheme': 'Tomorrow_Night_Eighties',
     \ 'active': {
     \   'left': [['mode', 'paste'],
-    \            ['fugitive', 'readonly', 'modified', 'filename']]
+    \            ['readonly', 'modified', 'filename']]
     \ },
     \ 'component_function': {
-    \    'filename': 'LightLineFilename'
+    \   'filename': 'LightLineFilename',
     \ },
     \ 'component': {
     \   'readonly': '%{&readonly?"⭤":""}',
     \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-    \   'fugitive': '%{&filetype=="help"?"":exists("*fugitive#head")?fugitive#head():"⭠"}'
     \ },
     \ 'component_visible_condition': {
     \   'readonly': '(&filetype!="help"&& &readonly)',
     \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-    \   'fugitive': '(&filetype!="help"&&exists("*fugitive#head") && ""!=fugitive#head())'
     \ },
-    \ 'separator': { 'left': '⮀', 'right': '⮂' },
-    \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+    \ 'separator': { 'left': '⮀', 'right': '|' },
+    \ 'subseparator': { 'left': '⮁', 'right': '|' }
 \ }
+    " \   'fugitive': '(&filetype!="help"&&exists("*fugitive#head") && ""!=fugitive#head())'
+    " \   'fugitive': '%{&filetype=="help"?"":exists("*fugitive#head")?fugitive#head():"⭠"}'
 
 " Lightline functions
 function! LightLineFilename()
-    " let limit = 3
-    " let project_root = projectroot#guess()
-    " let path = substitute(expand('%:p'), project_root . '/', '', '')
-    " let path_len = len(path)
-    " let max_width = winwidth(0) - 65
-    "
-    " if path_len > max_width
-    "     let max_width += 3
-    "     return '...' . strpart(path, path_len - max_width)
-    " else
-    "     return path
-    " endif
+    if &buftype !=? 'terminal'
+        let limit = 3
+        let project_root = projectroot#guess()
+        let path = substitute(expand('%:p'), project_root . '/', '', '')
+        let trunc_path = path
+        let path_len = len(path)
+        let max_width = winwidth(0) - 65
+
+        if path_len > max_width
+            let max_width += 3
+            let trunc_path = '...' . strpart(path, path_len - max_width)
+        else
+            let trunc_path = path
+        endif
+
+        return trunc_path
+    endif
 endfunction
 
 function! SynStack()
@@ -544,8 +564,6 @@ augroup vimrcEx
 
     " Auto set nowrap on some files
     au BufRead */environments/000_cross_env_users.yml setl nowrap
-        \ | silent! !ctags -R --fields=+l --languages=python
-            \ --python-kinds=-iv -f ./tags
 
     " :set nowrap for some files
     au BufRead, BufNewFile user_list.yml setl nowrap
@@ -594,10 +612,9 @@ function! s:StripTrailingWhitespaces()
     if &readonly == 0
             \&& &buftype ==? ''
             \&& &diff == 0
-        let cur_line = line('.')
-        let cur_col = col('.')
+        let l:cur_pos = winsaveview()
         %s/\s\+$//e
-        call cursor(cur_line, cur_col)
+        call winrestview(l:cur_pos)
         retab
    endif
 endfunction

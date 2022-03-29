@@ -1,13 +1,19 @@
 # vim: set ft=sh:
 # .bashrc
 
+# Log xtrace for this script and timestamp it to find slow loading dependencies
+# exec 5> >(ts -i "%.s" >> /tmp/bash_debug.log)
+# PS4='$LINENO: '
+# export BASH_XTRACEFD="5"
+# set -xv
+
 # Source gcloud files first so PS1 gets overridden
-source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc # gcloud bash completion
-source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc       # gcloud binaries
+source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc" # gcloud bash completion
+source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"       # gcloud binaries
 
 # Configure path, must be first...
-export PATH=""                                                  # Reset
-source /etc/profile                                             # Base
+export PATH=""                                                # Reset
+source /etc/profile                                           # Base
 export PATH="/opt/X11/bin:${PATH}"
 export PATH="/usr/local/opt/ruby/bin:${PATH}"                   # Homebrew Ruby
 for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils' 'make'; do
@@ -20,13 +26,16 @@ export PATH="$HOME/.local/bin:${PATH}"                        # pipx
 export PATH="$HOME/go/bin:${PATH}"                            # Go binaries
 export PATH="${PATH}:$HOME/.snowsql/1.2.12"                   # Snowflake CLI
 export PATH="$HOME/bin:${PATH}"                               # Custom installed binaries
-export PATH="${PATH}:$HOME/.local/bin"              # Ansible:::
-export PATH="${PATH}:$HOME/.cabal/bin/git-repair"   # Haskell binaries
+export PATH="${PATH}:$HOME/.local/bin"                        # Ansible:::
+export PATH="${PATH}:$HOME/.cabal/bin/git-repair"             # Haskell binaries
 
 # Always append to ~/.bash_history
 shopt -s histappend
 
 # custom exports (e.g. paths, app configs)
+export LDFLAGS="-L/usr/local/opt/zlib/lib"
+export CPPFLAGS="-I/usr/local/opt/zlib/include"
+export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
 export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
@@ -35,6 +44,7 @@ export BETTER_EXCEPTIONS=1  # python better exceptions
 export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
 export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
+alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'  # avoid accidentally linking against a Pyenv-provided Python (see: https://github.com/pyenv/pyenv#installation)
 
 # Configure measurable docker-compose mount paths
 export ANSIBLE_VAULT_PASSWORDS="$HOME/.ansible/vault-passwords"
@@ -51,27 +61,32 @@ export AWS_VAULT_BACKEND=file
 export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
 export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden -g ''"
 
-# Enable/configure pyenv shims, virtualenvwrapper, pipx
-export WORKON_HOME="$HOME/.virtualenvs  # python virtual env"
+# Pyenv (https://github.com/pyenv/pyenv)
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"  # pyenv-virtualenv is a venv mgmt tool for pyenv (see: https://github.com/pyenv/pyenv-virtualenv)
+
+# Pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
+export WORKON_HOME="$HOME/.virtualenvs"
 export PROJECT_HOME="$HOME/dev"
-export VIRTUALENVWRAPPER_PYTHON="$HOME/.pyenv/shims/python3"
-export VIRTUALENVWRAPPER_VIRTUALENV="$HOME/.pyenv/versions/3.10.1/bin/virtualenv"
 export VIRTUALENVWRAPPER_WORKON_CD=1
+pyenv virtualenvwrapper
+
+# Pipx
 export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
-# shellcheck disable=SC1094
-source "$HOME/.pyenv/versions/3.10.1/bin/virtualenvwrapper.sh"
-eval "$(pyenv init --path)"
-eval "$(pyenv virtualenv-init -)"
 
-# Enable rbenv shims
-eval "$(rbenv init -)"
-
-# Enable `thefuck`
-eval "$(thefuck --alias)"
+## Load package shims
+eval "$(pyenv init --path)"       # Enable pyenv shims
+eval "$(pyenv virtualenv-init -)" # Enable pyenv virtualenv shims
+eval "$(goenv init -)"            # Setup shell to make go binary available
+eval "$(rbenv init -)"            # Enable rbenv shims
+# TOO SLOW # eval "$(thefuck --alias)"       # Enable `thefuck`
 
 # Use vi mode on command line
-# set -o vi
-# bind '"jj":vi-movement-mode'
+set -o vi
+bind '"jj":vi-movement-mode'
 
 # Enable an iTerm2 clock badge
 # function iterm2_print_user_vars() {
@@ -142,7 +157,7 @@ function ads() {
 }
 
 # My helpers
-alias rml="rm -rf report && AUTOFIX=all mega-linter-runner -f python ."
+alias rml=run_mega_linter_python
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
 alias vu="vagrant_up"
@@ -152,6 +167,14 @@ alias sb='source $HOME/.bashrc'
 alias ebash='nvim $HOME/.bashrc'
 alias c="clear"
 alias vim="nvim"
+
+function run_mega_linter_python() {
+    if [[ $(prompt_to_continue "Remove the existing report directory?") -eq 0 ]]; then
+        rm -rf report
+    fi
+
+    mega-linter-runner -f python "${@}" .
+}
 
 # Headers and colors
 function header() {
@@ -174,6 +197,11 @@ function red() {
     "\x1b[33;31m${*}\x1b[0m"
 }
 
+function indent_output() {
+    sed "s/^/    /"
+}
+
+
 # Utilities
 function nvim() {
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
@@ -188,41 +216,49 @@ function vagrant_up() {
 }
 
 function lpy() {
-    AUTOFLAKE=("--remove-all-unused-imports" "--remove-duplicate-keys" "--in-place" "--recursive")
-    AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
-    BLACK=("--preview")
-    FLYNT=("--transform-concats" "--line-length=999")
-    ISORT=("--profile=black" "--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
-    MDFORMAT=("--number" "--wrap=80")
-    PRETTIER=("--ignore-path=$HOME/.config/prettier" "--write" "--print-width=88")
     SQLFLUFF=("--processes=$(($(sysctl -n hw.ncpu) - 2))" "--FIX-EVEN-UNPARSABLE" "--force")
+    SQL_FORMATTER=("--language=postgresql" "--uppercase" "--lines-between-queries=1" "--indent=4")
+    FLYNT=("--transform-concats" "--line-length=999")
+    AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
+    AUTOFLAKE=("--remove-all-unused-imports" "--remove-duplicate-keys" "--in-place" "--recursive")
+    PRETTIER=("--ignore-path=$HOME/.config/prettier" "--write" "--print-width=88")
+    MDFORMAT=("--number" "--wrap=80")
+    ISORT=("--profile=black" "--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
+    BLACK=("--preview")
+
+    ALL_FILES=($(rg --files --color=never))
+    SQL_FILES=($(rg --files --color=never --glob '*.sql'))
 
     header "Removing trailing whitespace..."
-    find . -path '*/.git/*' -prune -o -type f -print0 | xargs -0 -L 1 sed -E -i 's/\s*$//g'
+    printf "${ALL_FILES[@]}" | xargs -L 1 sed -E -i 's/\s*$//g' | indent_output
+
+    header "Running sql-formatter fix with '${SQL_FORMATTER[*]}'..."
+    printf "${SQL_FILES[@]}" | xargs -I {} -L 1 \
+            sql-formatter "${SQL_FORMATTER[@]}" --output={} {} | indent_output
 
     header "Running sqlfluff fix with '${SQLFLUFF[*]}'..."
-    sqlfluff fix "${SQLFLUFF[@]}" .
+    [[ -n ${SQL_FILES} ]] && sqlfluff fix "${SQLFLUFF[@]}" . | indent_output
 
     header "Running flynt with '${FLYNT[*]}'..."
-    flynt "${FLYNT[@]}" .
+    flynt "${FLYNT[@]}" . | indent_output
 
     header "Running autopep8 with '${AUTOPEP8[*]}'..."
-    autopep8 "${AUTOPEP8[@]}" .
+    autopep8 "${AUTOPEP8[@]}" . | indent_output
 
     header "Running autoflake with '${AUTOFLAKE[*]}'..."
-    autoflake "${AUTOFLAKE[@]}" .
+    autoflake "${AUTOFLAKE[@]}" . | indent_output
 
     header "Running prettier with '${PRETTIER[*]}'..."
-    prettier "${PRETTIER[@]}" .
+    prettier "${PRETTIER[@]}" . | indent_output
 
     header "Running mdformat with '${MDFORMAT[*]}'..."
-    mdformat "${MDFORMAT[@]}" .
+    mdformat "${MDFORMAT[@]}" . | indent_output
 
     header "Running isort with '${ISORT[*]}'..."
-    isort "${ISORT[@]}" .
+    isort "${ISORT[@]}" . | indent_output
 
     header "Running black with '${BLACK[*]}'..."
-    black "${BLACK[@]}" .
+    black "${BLACK[@]}" . | indent_output
 }
 
 # Auto on Yubiswitch
@@ -233,9 +269,7 @@ alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 
 # Prompt user to continue
 function prompt_to_continue() {
-    echo ''
-    read -p "${1:-Continue?} (y)[es|no] " -n 1 -r
-    echo
+    read -p "${*:-Continue?} (y)[es|no] " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         return 0
     fi
@@ -307,7 +341,7 @@ source "$HOME/.dotfiles/.terraform"               # Terraform helpers
 source "$HOME/.dotfiles/.git_helpers" 2>/dev/null # git helpers
 source "$HOME/.dotfiles/.awsconfig"               # aws helpers
 source "$HOME/.dotfiles/.osx"                     # osx helpers
-source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
+source "/usr/local/etc/profile.d/z.sh"            # z cd auto completion
 source "$HOME/.dotfiles/.ps1"                     # Custom PS1
 
 alias pipelinewise="\$HOME/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
@@ -316,21 +350,25 @@ alias csqld="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:si
 alias csqlp="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-production-postgres-7ish=tcp:0.0.0.0:8765 &"
 alias snowp="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias snows="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
+alias snowas="snowsql -a sightly -u ryanfisher -d AYLIEN_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias ctags="\$(brew --prefix)/bin/ctags"
 alias gpt=generate_python_module_ctags
 
-function generate_python_module_ctags() {
-    read -r -a PYTHON_PATH  <<< "$(python -c """import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))""")"
-
-    ctags -R \
-        --fields=+l \
-        --languages=python \
-        --python-kinds=-iv \
-        -f ./tags "${PYTHON_PATH[@]}"
+function get_python_module_paths() {
+    python -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))"
 }
 
-# Setup shell to make go binary available
-eval "$(goenv init -)"
+function generate_python_module_ctags() {
+    read -r -a PYTHON_PATH  <<< "$(get_python_module_paths)"
+
+    rm -f ./tags
+    ctags -R \
+        --fields=+l \
+        --python-kinds=-i \
+        --exclude='*.pxd' \
+        --exclude='*.pxy' \
+        -f ./tags . "${PYTHON_PATH[@]}"
+}
 
 # Add the direnv hook to PROMPT_COMMAND
 # source ~/.direnvrc
