@@ -59,7 +59,8 @@ export AWS_VAULT_BACKEND=file
 
 # Configure FZF command
 export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
-export FZF_DEFAULT_COMMAND="/usr/local/bin/ag --hidden -g ''"
+export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Pyenv (https://github.com/pyenv/pyenv)
 export PYENV_ROOT="$HOME/.pyenv"
@@ -271,9 +272,11 @@ alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 function prompt_to_continue() {
     read -p "${*:-Continue?} (y)[es|no] " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        return 0
+        printf "%s\n" "Ok, exiting."
+        exit 1
     fi
 
+    printf "\n"
     return 1
 }
 
@@ -333,7 +336,12 @@ alias cdv="cd \$HOME/dev/sightly/src/ops/vendors/"
 alias grep="grep --color"
 GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for matches
 export GREP_COLOR
-alias ag='ag --hidden --ignore tags --ignore .git --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
+alias ag='ag \
+    --hidden \
+    --ignore tags \
+    --ignore .git \
+    --ignore .terraform \
+    --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
 
 # helpers
 source "$HOME/.dotfiles/.dockerconfig"            # Docker helpers
@@ -345,9 +353,9 @@ source "/usr/local/etc/profile.d/z.sh"            # z cd auto completion
 source "$HOME/.dotfiles/.ps1"                     # Custom PS1
 
 alias pipelinewise="\$HOME/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
-alias csqls="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-staging-postgres-u16w=tcp:0.0.0.0:6543 &"
-alias csqld="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-demo-postgres-ai4l=tcp:0.0.0.0:7654 &"
-alias csqlp="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-production-postgres-7ish=tcp:0.0.0.0:8765 &"
+alias csqldev="cloud_sql_proxy -instances=sightly-outcome-development:us-west1:sightly-development-outcome-postgres=tcp:0.0.0.0:8765"
+alias csqlstg="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-staging-postgres-u16w=tcp:0.0.0.0:7654 &"
+alias csqlprd="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-production-postgres-7ish=tcp:0.0.0.0:6543 &"
 alias snowp="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias snows="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
 alias snowas="snowsql -a sightly -u ryanfisher -d AYLIEN_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"

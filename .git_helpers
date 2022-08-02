@@ -28,10 +28,12 @@ alias gstatd="echo '==> Log: '\
 alias gfu="git_fixup"
 
 function git_fixup() {
-    hub log -n 50 --pretty=format:"%h %s" --no-merges \
-    | fzf \
-    | awk '{print $1}' \
-    | xargs -o hub commit --fixup
+    git add --update
+    git log -n 50 --pretty=format:"%h %s" --no-merges \
+        | fzf \
+        | awk '{print $1}' \
+        | xargs -o hub commit --fixup
+    git rebase --interactive HEAD~2
 }
 
 # Branching
@@ -50,8 +52,7 @@ function gco() {
             | tr -d ' ' \
             | sed -e 's,^remotes/origin/,,' \
             | sed -e 's,^HEAD.*,,' \
-            | sort \
-            | uniq \
+            | sort -u \
             | fzf \
             | xargs git checkout
     fi

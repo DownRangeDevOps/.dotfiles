@@ -231,15 +231,9 @@ command! -nargs=0 Grbm silent! Git rebase -i origin/master
 " Use The Silver Searcher if it is installed
 command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
 
-if executable('ag')
+if executable('rg')
   " Use ag over grep
-  set grepprg="ag --nogroup --nocolor --ignore .git --ignore tags"
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s --files-with-matches --nocolor --hidden --ignore .git  --ignore tags --skip-vcs-ignores --filename-pattern ""'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
+  set grepprg="rg --vimgrep --smart-case --hidden --follow"
 endif
 
 """ Plugin configuration ------------------------------------------------------------
@@ -265,6 +259,7 @@ let g:fzf_colors =
 " Customize fzf window
 let g:fzf_layout = {'down': '30%'}
 let g:fzf_preview_window = ['right:50%']
+let g:rg_derive_root='true'
 
 " Configure dash.vim (https://github.com/rizzatti/dash.vim)
 let g:dash_activate=0
@@ -291,7 +286,8 @@ let g:vim_markdown_fenced_languages = [
 let g:vmt_dont_insert_fence = 1
 
 " Configure vim-pydocstring (https://github.com/heavenshell/vim-pydocstring)
-let g:pydocstring_doq_path = '/Users/ryanfisher/.pyenv/shims/doq'
+let g:pydocstring_formatter = 'google'
+let g:pydocstring_doq_path = '/Users/ryanfisher/.local/bin/doq'
 nmap <silent> <C-_> <Plug>(pydocstring)
 
 " Configure vim-table-mode (https://github.com/dhruvasagar/vim-table-mode)
@@ -423,7 +419,6 @@ let g:UltiSnipsJumpForwardTrigger   = '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger  = '<c-k>'
 let g:UltiSnipsRemoveSelectModeMappings = 0
 
-
 " Enable chriskempson/vim-tomorrow-theme
 colorscheme Tomorrow-Night-Eighties
 
@@ -514,97 +509,6 @@ function! SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
-
-""" Startup autocommands -------------------------------------------------------
-augroup vimrcEx
-    au!
-
-    " Don't change termnial size unless it is redrawn
-    "au TermOpen * au <buffer> BufEnter,WinEnter redraw!
-
-    " enable ncm2 for all buffers
-    au BufEnter * call ncm2#enable_for_buffer()
-    au TextChangedI * call ncm2#auto_trigger()
-    au User Ncm2Plugin call ncm2#register_source({
-        \ 'on_complete': ['ncm2#on_complete#delay',
-        \                  300,
-        \                 'ncm2#on_complete#omni',
-        \                 'csscomplete#CompleteCSS'],
-        \ })
-
-    " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
-    " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
-
-    " Set syntax highlighting for specific file types
-    au BufRead,BufNewFile Appraisals setl ft=ruby
-    au BufRead,BufNewFile *.md setl ft=markdown nofoldenable
-    au BufRead,BufNewFile *sudoers-* setl ft=sudoers
-    au BufRead,BufNewFile .vimrc setl ft=vim
-    au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
-    au BufRead,BufNewFile Jenkinsfile setl ft=groovy
-    au BufRead,BufNewFile .envrc setl ft=sh
-    au BufRead,BufNewFile dockerfile.* setl ft=Dockerfile
-
-    " Enable spellchecking and textwrap for Markdown
-    au FileType markdown setl spell
-        \ formatoptions+=t
-    au BufRead,BufNewFile *.md setl textwidth=80
-
-    " Wrap at 72 characters and spell check git commit messages
-    au FileType gitcommit setl filetype=markdown
-        \ textwidth=72
-        \ colorcolumn=50,72
-        \ spell
-        \ commentstring=#%s
-        \ formatoptions+=t
-
-    " Set Makefile filetype and don't expand tabs
-    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab tabstop=4
-    au FileType make setl noexpandtab tabstop=4
-
-    " Auto set nowrap on some files
-    au BufRead */environments/000_cross_env_users.yml setl nowrap
-
-    " :set nowrap for some files
-    au BufRead, BufNewFile user_list.yml setl nowrap
-
-    " Allow style sheets to auto-complete hyphenated words
-    au FileType css,scss,sass setl iskeyword+=-
-
-    " Remove tabs and trailing whitespace on open and insert
-    au BufRead,BufLeave,TextChanged *
-        \call <SID>StripTrailingWhitespaces()
-
-    " Autosave
-    au TextChanged * call <SID>WriteIfModifiable()
-
-    " Autoread
-    au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
-
-    " Auto lint on write or change
-    au BufWritePost,TextChanged * Neomake
-
-    " Configure terminal settings
-    au TermOpen * setl nospell
-        \ nonumber
-        \ norelativenumber
-
-    " Force spell/nospell
-    au FileType terraform setl spell
-    au FileType ansible setl nospell
-    au FileType yaml setl nospell
-    au FileType Dockerfile setl nospell
-
-    " Bind q to close quickfix
-    au FileType quickfix nnoremap q :cclose
-
-    " Hide the status line for FZF buffer
-    au! FileType fzf
-        au  FileType fzf setl laststatus=0 noshowmode noruler
-        \| au BufLeave <buffer> setl laststatus=2 showmode ruler
-
-" augroup END
-
 
 """ Custom functions -----------------------------------------------------------
 " Remove trailing whitespace and return cursor to starting position
@@ -734,8 +638,94 @@ command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
 
-" Get off my lawn
-" nnoremap <Left> :echoe "Use h"<CR>
-" nnoremap <Right> :echoe "Use l"<CR>
-" nnoremap <Up> :echoe "Use k"<CR>
-" nnoremap <Down> :echoe "Use j"<CR>
+" vim: set ft=vim
+""" Startup autocommands -------------------------------------------------------
+augroup vimrcEx
+    au!
+
+    " Don't change terminal size unless it is redrawn
+    "au TermOpen * au <buffer> BufEnter,WinEnter redraw!
+
+    " enable ncm2 for all buffers
+    au BufEnter * call ncm2#enable_for_buffer()
+    au TextChangedI * call ncm2#auto_trigger()
+    au User Ncm2Plugin call ncm2#register_source({
+        \ 'on_complete': ['ncm2#on_complete#delay',
+        \                  300,
+        \                 'ncm2#on_complete#omni',
+        \                 'csscomplete#CompleteCSS'],
+        \ })
+
+    " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
+    " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
+
+    " Set syntax highlighting for specific file types
+    au BufRead,BufNewFile Appraisals setl ft=ruby
+    au BufRead,BufNewFile *.md setl ft=markdown nofoldenable
+    au BufRead,BufNewFile *sudoers-* setl ft=sudoers
+    au BufRead,BufNewFile .vimrc setl ft=vim
+    au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
+    au BufRead,BufNewFile Jenkinsfile setl ft=groovy
+    au BufRead,BufNewFile .envrc setl ft=sh
+    au BufRead,BufNewFile dockerfile.* setl ft=Dockerfile
+    au BufRead,BufNewFile */gcloud_vars/.* set ft=sh
+
+    " Enable spellchecking and textwrap for Markdown
+    au FileType markdown setl spell
+        \ formatoptions+=t
+    au BufRead,BufNewFile *.md setl textwidth=80
+
+    " Wrap at 72 characters and spell check git commit messages
+    au FileType gitcommit setl filetype=markdown
+        \ textwidth=72
+        \ colorcolumn=50,72
+        \ spell
+        \ commentstring=#%s
+        \ formatoptions+=t
+
+    " Set Makefile filetype and don't expand tabs
+    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab tabstop=4
+    au FileType make setl noexpandtab tabstop=4
+
+    " Auto set nowrap on some files
+    au BufRead */environments/000_cross_env_users.yml setl nowrap
+
+    " :set nowrap for some files
+    au BufRead, BufNewFile user_list.yml setl nowrap
+
+    " Allow style sheets to auto-complete hyphenated words
+    au FileType css,scss,sass setl iskeyword+=-
+
+    " Remove tabs and trailing whitespace on open and insert
+    au BufRead,BufLeave,TextChanged *
+        \call <SID>StripTrailingWhitespaces()
+
+    " Autosave
+    au TextChanged * call <SID>WriteIfModifiable()
+
+    " Autoread
+    au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
+
+    " Auto lint on write or change
+    au BufWritePost,TextChanged * Neomake
+
+    " Configure terminal settings
+    au TermOpen * setl nospell
+        \ nonumber
+        \ norelativenumber
+
+    " Force spell/nospell
+    au FileType terraform setl spell
+    au FileType ansible setl nospell
+    au FileType yaml setl nospell
+    au FileType Dockerfile setl nospell
+
+    " Bind q to close quickfix
+    au FileType quickfix nnoremap q :cclose
+
+    " Hide the status line for FZF buffer
+    au! FileType fzf
+        au  FileType fzf setl laststatus=0 noshowmode noruler
+        \| au BufLeave <buffer> setl laststatus=2 showmode ruler
+
+" augroup END

@@ -12,7 +12,7 @@ Plug 'ObserverOfTime/ncm2-jc2'
 Plug 'Shougo/neco-syntax'
 Plug 'fgrsnau/ncm2-otherbuf'
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
-Plug 'mhartington/nvim-typescript'
+Plug 'jbmorgado/vim-pine-script'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-cssomni'
 Plug 'ncm2/ncm2-go'
@@ -21,8 +21,10 @@ Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-syntax'
 Plug 'ncm2/ncm2-tern'
 Plug 'ncm2/ncm2-vim'
+Plug 'neovim/nvim-lspconfig'
 Plug 'phpactor/ncm2-phpactor'
-Plug 'jbmorgado/vim-pine-script'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 
 " Snippits integration
 Plug 'SirVer/ultisnips'
@@ -40,7 +42,8 @@ Plug 'neomake/neomake'
 Plug 'Vimjas/vint'
 
 " Helpers
-Plug 'itchyny/vim-gitbranch'
+" Plug 'itchyny/vim-gitbranch'
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 
 " Utilities
 " Plug 'christoomey/vim-tmux-navigator'
@@ -89,15 +92,16 @@ Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'aliou/bats.vim'
 Plug 'burnettk/vim-jenkins'
 Plug 'chr4/nginx.vim'
+Plug 'danielb2/vim-pine-script'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'hashivim/vim-terraform'
+Plug 'moderndatainc/vim-snowflakesql-syntax'
 Plug 'mpyatishev/vim-sqlformat'
 Plug 'pboettch/vim-cmake-syntax'
 Plug 'pearofducks/ansible-vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'stephpy/vim-yaml'
 Plug 'vim-scripts/bash-support.vim'
-Plug 'moderndatainc/vim-snowflakesql-syntax'
 
 " Formatting
 " Plug 'mattn/emmet-vim'
