@@ -105,6 +105,7 @@ endif
 
 
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
+inoremap <C-Space> <right>|                                 " CTRL+Space to move out of autocompleted pairs e.g. ()
 inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
@@ -156,7 +157,7 @@ nnoremap <silent><leader>s :call ToggleSpell()<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
-nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                                                 " Open NERDTree and hilight the current file
+nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                 " Open NERDTree and hilight the current file
 nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
 nnoremap <silent><leader>m :Neomake
@@ -195,10 +196,10 @@ let g:gutentags_file_list_command = 'rg ' . projectroot#get() . ' ' . s:python_l
 let g:gutentags_cache_dir = expand('~/.cache/tags')
 let g:gutentags_plus_switch = 1
 
-" NeoVim configuration
+" Reload NeoVim configuration
 if has('nvim') && !exists('g:gui_oni')
     let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
-    nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>|
+    nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>:echom "NeoVim config reloaded"<CR>|
 else
     nnoremap <leader>rc :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
 endif

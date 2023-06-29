@@ -44,6 +44,7 @@ Plug 'Vimjas/vint'
 " Helpers
 " Plug 'itchyny/vim-gitbranch'
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
+Plug 'roobert/f-string-toggle.nvim'
 
 " Utilities
 " Plug 'christoomey/vim-tmux-navigator'

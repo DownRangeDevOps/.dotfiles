@@ -362,25 +362,25 @@ alias snowas="snowsql -a sightly -u ryanfisher -d AYLIEN_STAGING -r SIGHTLY_ENGI
 alias ctags="\$(brew --prefix)/bin/ctags"
 alias gpt=generate_python_module_ctags
 
-function get_python_module_paths() {
-    python -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))"
-}
-
-function generate_python_module_ctags() {
-    read -r -a PYTHON_PATH  <<< "$(get_python_module_paths)"
-
-    rm -f ./tags
-    ctags -R \
-        --fields=+l \
-        --python-kinds=-i \
-        --exclude='*.pxd' \
-        --exclude='*.pxy' \
-        -f ./tags . "${PYTHON_PATH[@]}"
-}
+# function get_python_module_paths() {
+#     python -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))"
+# }
+#
+# function generate_python_module_ctags() {
+#     read -r -a PYTHON_PATH  <<< "$(get_python_module_paths)"
+#
+#     rm -f ./tags
+#     ctags -R \
+#         --fields=+l \
+#         --python-kinds=-i \
+#         --exclude='*.pxd' \
+#         --exclude='*.pxy' \
+#         -f ./tags . "${PYTHON_PATH[@]}"
+# }
 
 # Add the direnv hook to PROMPT_COMMAND
 # source ~/.direnvrc
-eval "$(direnv hook bash)"
+# eval "$(direnv hook bash)"
 
 complete -C /usr/local/bin/terraform terraform
 source "$HOME/.rsvm/current/cargo/env"
