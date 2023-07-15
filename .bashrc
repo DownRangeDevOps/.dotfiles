@@ -2,24 +2,50 @@
 # .bashrc
 
 # Log xtrace for this script and timestamp it to find slow loading dependencies
-# exec 5> >(ts -i "%.s" >> /tmp/bash_debug.log)
+# exec 5> >(ts -i "%.s" >| /tmp/bash_debug.log)
 # PS4='$LINENO: '
 # export BASH_XTRACEFD="5"
 # set -xv
+#
+# Slow commands:
+#  0.000040000  0.367946000 +++ command pyenv rehash
+#    0.237779000  0.605725000    +++ pyenv virtualenv-init -
+#
+#  0.000027000  0.694166000  +++ command pyenv sh-virtualenvwrapper
+#    0.142052000  0.836218000 ++ eval 'export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="3.10.1"
+#
+#  0.000032000  1.519325000 ++++ command goenv sh-rehash --only-manage-paths
+#    0.195233000  1.714558000    +++ eval 'export GOROOT="/Users/ryanfisher/.goenv/versions/1.20.0"
+#
+#  0.000019000  2.371353000 +++ command pyenv sh-virtualenvwrapper
+#    0.139559000  2.510912000    ++ eval 'export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="3.10.1"
+#
+#  0.000355000  2.649294000 ++++ /Users/ryanfisher/.pyenv/versions/3.10.1/bin/python -m virtualenvwrapper.hook_loader --script /var/folders/l0/12rtt0w95wx_892q3bkcg5tr0000gn/T/virtualenvwrapper-initialize-hook-mXAAKDb63y initialize
+#    0.144720000  2.794014000    ++++ result=0
+#
+#  0.000015000  3.049790000 +++ command goenv rehash
+#    0.123186000  3.172976000   +++ goenv rehash --only-manage-paths
+#
+#  0.000043000  3.174257000  ++++ command goenv sh-rehash --only-manage-paths
+#    0.194613000  3.368870000 +++ eval 'export GOROOT="/Users/ryanfisher/.goenv/versions/1.20.0"
+
+# Squeltch egrep warnings
+alias egrep="grep -E"
 
 # Source gcloud files first so PS1 gets overridden
-source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc" # gcloud bash completion
-source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"       # gcloud binaries
+source "${HOME}/dev/utils/google-cloud-sdk/completion.bash.inc" # gcloud bash completion
+source "${HOME}/dev/utils/google-cloud-sdk/path.bash.inc"       # gcloud binaries
 
 # Configure path, must be first...
 export PATH=""                                                # Reset
 source /etc/profile                                           # Base
 export PATH="/opt/X11/bin:${PATH}"
 export PATH="/usr/local/opt/ruby/bin:${PATH}"                   # Homebrew Ruby
-for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils' 'make'; do
+for tool in 'gnu-tar' 'gnu-which' 'gnu-sed' 'grep' 'coreutils'  'findutils' 'make'; do
     export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
     export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
 done
+# /usr/local/opt/findutils/libexec/gnubin
 export PATH="/usr/local/sbin:${PATH}"                           # Homebrew bin path
 export PATH="$HOME/.pyenv/bin:$PATH"                            # pyenv
 export PATH="$HOME/.local/bin:${PATH}"                        # pipx
@@ -66,10 +92,12 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"  # pyenv-virtualenv is a venv mgmt tool for pyenv (see: https://github.com/pyenv/pyenv-virtualenv)
+eval "$(pyenv init - --no-rehash bash)"
 
-# Pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
+# pyenv-virtualenv is a venv mgmt tool for pyenv (see: https://github.com/pyenv/pyenv-virtualenv)
+eval "$(pyenv virtualenv-init - bash)"
+
+# pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
 export WORKON_HOME="$HOME/.virtualenvs"
 export PROJECT_HOME="$HOME/dev"
 export VIRTUALENVWRAPPER_WORKON_CD=1
@@ -81,7 +109,7 @@ export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 ## Load package shims
 eval "$(pyenv init --path)"       # Enable pyenv shims
 eval "$(pyenv virtualenv-init -)" # Enable pyenv virtualenv shims
-eval "$(goenv init -)"            # Setup shell to make go binary available
+# eval "$(goenv init -)"            # Setup shell to make go binary available  # Slows loading, disabling for now
 eval "$(rbenv init -)"            # Enable rbenv shims
 # TOO SLOW # eval "$(thefuck --alias)"       # Enable `thefuck`
 
@@ -345,6 +373,7 @@ alias ag='ag \
 
 # helpers
 source "$HOME/.dotfiles/.dockerconfig"            # Docker helpers
+source "$HOME/.dotfiles/.kubernetes"              # K8s helpers
 source "$HOME/.dotfiles/.terraform"               # Terraform helpers
 source "$HOME/.dotfiles/.git_helpers" 2>/dev/null # git helpers
 source "$HOME/.dotfiles/.awsconfig"               # aws helpers
@@ -384,3 +413,9 @@ alias gpt=generate_python_module_ctags
 
 complete -C /usr/local/bin/terraform terraform
 source "$HOME/.rsvm/current/cargo/env"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/ryanfisher/dev/utils/google-cloud-sdk/path.bash.inc' ]; then . '/Users/ryanfisher/dev/utils/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/ryanfisher/dev/utils/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/ryanfisher/dev/utils/google-cloud-sdk/completion.bash.inc'; fi

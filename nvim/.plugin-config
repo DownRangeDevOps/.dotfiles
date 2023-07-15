@@ -1,0 +1,310 @@
+" vim: set ft=vim
+
+" Configure ag (https://github.com/ggreer/the_silver_searcher)
+if executable('rg')
+  " Use ag over grep
+  set grepprg="rg --vimgrep --smart-case --hidden --follow"
+endif
+
+
+" Gutentags configuration (https://github.com/ludovicchabant/vim-gutentags)
+" let g:gutentags_define_advanced_commands = 1
+" let g:Gutentags_modules = ['ctags', 'gtags_cscope']
+" let s:python_lib_dirs = get(systemlist('pyenv prefix'), 0, '')
+" let g:gutentags_file_list_command = 'rg ' . projectroot#get() . ' ' . s:python_lib_dirs . ' --files'
+" " let g:gutentags_ctags_extra_args = ['--python-kinds=-i']
+" let g:gutentags_cache_dir = expand('~/.cache/tags')
+" let g:gutentags_plus_switch = 1
+
+" Configure fzf (https://github.com/junegunn/fzf and https://github.com/junegunn/fzf.vim)
+let g:fzf_commits_log_options = "git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)"
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'String'],
+  \ 'fg+':     ['fg', 'Statement', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'String'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Type'],
+  \ 'pointer': ['fg', 'Constant'],
+  \ 'marker':  ['fg', 'Type'],
+  \ 'spinner': ['fg', 'Comment'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" Customize fzf window
+let g:fzf_layout = {'down': '30%'}
+let g:fzf_preview_window = ['right:50%']
+let g:rg_derive_root='true'
+
+" Configure dash.vim (https://github.com/rizzatti/dash.vim)
+let g:dash_activate=0
+
+" Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
+
+let g:vim_markdown_auto_insert_bullets=0
+let g:vim_markdown_new_list_item_indent=0
+let g:vim_markdown_new_list_item_indent = 0
+let g:tex_conceal = ''
+let g:vim_markdown_math = 1
+let g:vim_markdown_follow_anchor = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_fenced_languages = [
+    \ 'viml=vim',
+    \ 'bash=bash',
+    \ 'java=java',
+    \ 'ini=dosini',
+    \ 'ansible=ansible',
+    \ 'yaml=yaml',
+    \ 'md=markdown'
+    \ ]
+
+" Configure dkarter/bullets.vim (https://github.com/dkarter/bullets.vim)
+" Mappings: let g:bullets_outline_levels = ['num', 'abc', 'std-']
+let g:bullets_enabled_file_types = [
+    \ 'markdown',
+    \ 'text',
+    \ 'gitcommit',
+    \ 'scratch'
+    \]
+let g:bullets_outline_levels = ['num', 'std-']
+let g:bullets_comments = [
+    \ ['^\\s*\\d\\+\\.\\s\\+', ''],
+    \ ['^\\s*\\[\\-*\\+]\\s\\+', '']
+    \]
+" Trying to get auto-complete to work with bullets, but au not setting bind
+" right for <CR>, <Plug>(bullets-newline)
+" let g:bullets_set_mappings = 0
+" let g:bullets_custom_mappings = [
+"   \ ['inoremap', '<C-cr>', '<cr>'],
+"   \
+"   \ ['nmap', 'o', '<Plug>(bullets-newline)'],
+"   \
+"   \ ['vmap', 'gN', '<Plug>(bullets-renumber)'],
+"   \ ['nmap', 'gN', '<Plug>(bullets-renumber)'],
+"   \
+"   \ ['nmap', '<leader>x', '<Plug>(bullets-toggle-checkbox)'],
+"   \
+"   \ ['imap', '<C-t>', '<Plug>(bullets-demote)'],
+"   \ ['nmap', '>>', '<Plug>(bullets-demote)'],
+"   \ ['vmap', '>', '<Plug>(bullets-demote)'],
+"   \ ['imap', '<C-d>', '<Plug>(bullets-promote)'],
+"   \ ['nmap', '<<', '<Plug>(bullets-promote)'],
+"   \ ['vmap', '<', '<Plug>(bullets-promote)'],
+"   \ ]
+
+" Configure vim-markdown-toc (https://github.com/mzlogin/vim-markdown-toc)
+let g:vmt_dont_insert_fence = 1
+
+" Configure MarkdownPreview (https://github.com/iamcco/markdown-preview.nvim)
+" let g:mkdp_browser = '/Application/Brave Browser.app'
+let g:mkdp_echo_preview_url = 1
+
+" Configure vim-pydocstring (https://github.com/heavenshell/vim-pydocstring)
+let g:pydocstring_formatter = 'google'
+let g:pydocstring_doq_path = '/Users/ryanfisher/.local/bin/doq'
+nmap <silent> <C-_> <Plug>(pydocstring)
+
+" Configure vim-table-mode (https://github.com/dhruvasagar/vim-table-mode)
+
+" Configure nerdtree-git-plugin (https://github.com/Xuyuanp/nerdtree-git-plugin)
+let NERDTreeHijackNetrw=1                       " Open in current split with netrw
+let NERDTreeShowHidden=1                        " Show NERDTree
+let NERDTreeQuitOnOpen=1                        " Close NERDTree after file is opened
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+    \ 'Modified'  : '•',
+    \ 'Staged'    : '+',
+    \ 'Untracked' : '*',
+    \ 'Renamed'   : '⇢',
+    \ 'Unmerged'  : '═',
+    \ 'Deleted'   : 'x',
+    \ 'Dirty'     : '✗',
+    \ 'Clean'     : '✓',
+    \ 'Ignored'   : '⌀',
+    \ 'Unknown'   : '?'
+    \ }
+
+" Configure machakann/vim-sandwich
+runtime macros/sandwich/keymap/surround.vim     " Enable vim-surround keymappings
+
+" Configure (https://github.com/junegunn/vim-easy-align)
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+let g:easy_align_delimiters = {
+    \ '#': {
+        \ 'pattern': '#\+',
+        \ 'ignore_groups': ['String'],
+        \ 'delimiter_align': 'l'
+    \}
+\ }
+
+" Configure NERDCommenter scrooloose/nerdcommenter
+let g:NERDSpaceDelims = 1                                             " Add spaces after comment delimiters by default
+let g:NERDCompactSexyComs = 1                                         " Use compact syntax for prettified multi-line comments
+let g:NERDDefaultAlign = 'left'                                       " Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDAltDelims_java = 1                                          " Set a language to use its alternate delimiters by default
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } } " Add your own custom formats or override the defaults
+let g:NERDCommentEmptyLines = 1                                       " Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDTrimTrailingWhitespace = 1                                  " Enable trimming of trailing whitespace when uncommenting
+
+" Configure vim-easyclip (https://github.com/svermeulen/vim-easyclip)
+let g:EasyClipUseCutDefaults = 0
+let g:EasyClipUseSubstituteDefaults = 1
+
+" Configure editorconfig-vim (https://github.com/editorconfig/editorconfig-vim)
+let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
+
+" Configure neomake (https://github.com/neomake/neomake)
+call neomake#configure#automake('nwr', 1000)
+" call neomake#configure#automake('w')  " use when on battery
+let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
+let g:neomake_go_enabled_makers = ['go vet']
+let g:neomake_java_enabled_makers = ['mvn']
+let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_markdown_enabled_makers = ['markdownlint']
+let g:neomake_python_enabled_makers = ['flake8', 'python']
+let g:neomake_ruby_enabled_makers = ['rubocop', 'rubylint']
+let g:neomake_shell_enabled_makers = ['shellcheck']
+let g:neomake_text_enabled_makers = ['writegood']
+let g:neomake_vim_enabled_makers = ['vint']
+let g:neomake_yaml_enabled_makers = ['yamllint']
+
+" Seems to not be working...
+" https://github.com/jhinch/nginx-linter
+" let g:neomake_nginx_maker = {
+"     \ 'exe': 'nginx-linter',
+"     \ 'args': ['--include'],
+"     \ 'errorformat': '%f:%l:%c: %m',
+"     \ }
+
+" Configure auto-pairs (https://github.com/jiangmiao/auto-pairs)
+let g:AutoPairsMapCR=0
+
+" Configure FastFold (https://github.com/Konfekt/FastFold)
+let g:fastfold_savehook = 0
+
+" Note colors are in the section after the color scheme is loaded
+let g:neomake_error_sign = {'text': 'x', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {'text': '!', 'texthl': 'NeomakeWarningSign'}
+
+" Configure vim-auto-save plugin (https://github.com/vim-scripts/vim-auto-save)
+let g:auto_save = 1
+let g:auto_save_silent = 1        " Do not display the auto-save notification
+let g:auto_save_no_updatetime = 1 " do not change the 'updatetime' option
+
+" Configure vim-tmux-navigator (https://github.com/christoomey/vim-tmux-navigator)
+let g:tmux_navigator_save_on_switch = 2
+
+" Configure ansible-vim (https://github.com/pearofducks/ansible-vim)
+let g:ansible_template_syntaxes = {
+        \ '*.python.j2': 'python',
+        \ '*.cfg.j2': 'cfg',
+        \ '*.php.j2': 'php',
+        \ '*.sh.j2': 'sh',
+        \ '*.groovy.j2': 'groovy',
+        \ '*.conf.j2': 'nginx',
+        \ '*.route.j2': 'nginx',
+        \ '*.upstream.j2': 'nginx'
+    \}
+let g:ansible_attribute_highlight = 'ad'
+let g:ansible_name_highlight = 'd'
+let g:ansible_extra_keywords_highlight = 1
+let g:ansible_with_keywords_highlight = 'PreProc'
+let g:ansible_normal_keywords_highlight = 'Type'
+let g:ansible_yamlKeyName = 'yamlKey'
+
+" Configure vim-stay (https://github.com/zhimsel/vim-stay)
+set viewoptions=cursor,folds,slash,unix
+
+" Configure vim-lastplace (https://github.com/farmergreg/vim-lastplace)
+" let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"     " Always put cursor at top when opening these files
+" let g:lastplace_ignore_buftype = "terminal,quickfix,nofile,help"
+
+" Configure Neovim Completion Manager (https://github.com/ncm2/ncm2)
+" See ncm2 setup for details
+set completeopt=noinsert,menuone,noselect
+set shortmess+=c
+inoremap <c-c> <ESC>
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "\<CR>")
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Configure ncm2-utilisnips (https://github.com/ncm2/ncm2-ultisnips)
+let g:UltiSnipsJumpForwardTrigger   = '<c-j>'
+let g:UltiSnipsJumpBackwardTrigger  = '<c-k>'
+let g:UltiSnipsRemoveSelectModeMappings = 0
+
+" Enable chriskempson/vim-tomorrow-theme
+colorscheme Tomorrow-Night-Eighties
+
+" Configure nathanaelkane/vim-indent-guides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+hi IndentGuidesOdd  guibg=#313131   ctermbg=235
+hi IndentGuidesEven guibg=#2d2d2d   ctermbg=237
+" hi IndentGuidesOdd  guibg=#2d2d2d   ctermbg=232
+" hi IndentGuidesEven guibg=#313131   ctermbg=237
+
+" Configure lightline status bar
+set laststatus=2
+set noshowmode
+
+if exists('g:gui_oni')
+    set laststatus=0 noshowmode
+endif
+
+let g:lightline = {
+    \ 'colorscheme': 'Tomorrow_Night_Eighties',
+    \ 'active': {
+    \   'left': [['mode', 'paste'],
+    \            ['readonly', 'modified', 'filename']]
+    \ },
+    \ 'component_function': {
+    \   'filename': 'LightLineFilename',
+    \ },
+    \ 'component': {
+    \   'readonly': '%{&readonly?"⭤":""}',
+    \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+    \ },
+    \ 'component_visible_condition': {
+    \   'readonly': '(&filetype!="help"&& &readonly)',
+    \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+    \ },
+    \ 'separator': { 'left': '⮀', 'right': '|' },
+    \ 'subseparator': { 'left': '⮁', 'right': '|' }
+\ }
+    " \   'fugitive': '(&filetype!="help"&&exists("*fugitive#head") && ""!=fugitive#head())'
+    " \   'fugitive': '%{&filetype=="help"?"":exists("*fugitive#head")?fugitive#head():"⭠"}'
+
+" Lightline functions
+function! LightLineFilename()
+    if &buftype !=? 'terminal'
+        let limit = 3
+        let project_root = projectroot#guess()
+        let path = substitute(expand('%:p'), project_root . '/', '', '')
+        let trunc_path = path
+        let path_len = len(path)
+        let max_width = winwidth(0) - 65
+
+        if path_len > max_width
+            let max_width += 3
+            let trunc_path = '...' . strpart(path, path_len - max_width)
+        else
+            let trunc_path = path
+        endif
+
+        return trunc_path
+    endif
+endfunction
+
+function! SynStack()
+  if !exists('*synstack')
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc

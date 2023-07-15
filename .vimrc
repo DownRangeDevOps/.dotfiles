@@ -1,16 +1,135 @@
 " vim: set ft=vim
-" Setup plugin manager
-so $HOME/.dotfiles/.plugins
-so $HOME/.dotfiles/assets/term_color.vim
+so $HOME/.dotfiles/nvim/.plugins
 
-" Use UTF8 encoding
-set encoding=utf-8
+" --- Functions
+" Remove trailing whitespace and return cursor to starting position
+function! s:StripTrailingWhitespaces()
+    if &readonly == 0
+            \&& &buftype ==? ''
+            \&& &diff == 0
+        let l:cur_pos = winsaveview()
+        %s/\s\+$//e
+        call winrestview(l:cur_pos)
+        retab
+   endif
+endfunction
+
+function! s:WriteIfModifiable()
+    if buffer_name('%') !=? ''
+                \&& &readonly == 0
+                \&& &buftype !=? 'nofile'
+                \&& &buftype !=? 'terminal'
+                \&& &buftype !=? 'nowrite'
+                \&& &diff == 0
+                \&& buffer_name('%') !~? 'quickfix-'
+        silent w
+    endif
+endfunction
+
+" Open previous buffer, wipe current, quit if only one buffer
+function! s:WipeBufOrQuit()
+    let num_bufs = len(getbufinfo({'buflisted':1}))
+    let prev_buf = bufnr('#')
+    if num_bufs <= 1
+        silent execute 'qall'
+    elseif prev_buf == -1 || &buftype !=? ''
+        silent execute 'quit'
+        if &buftype ==? 'terminal'
+            silent execute 'startinsert'
+        endif
+    else
+        silent execute 'buf #'
+        if bufnr('#') != -1
+            silent execute 'bwipeout! #'
+        endif
+        if &buftype ==? 'terminal'
+            silent execute 'startinsert'
+        endif
+    endif
+endfunction
+
+" Open NERDTree using ProjectRootExe if buffer isn't a terminal
+function! s:NvimNerdTreeToggle()
+    if &buftype ==? 'terminal'
+        silent execute 'NERDTreeToggle'
+    else
+        silent execute 'ProjectRootExe NERDTreeToggle'
+    endif
+endfunction
+
+" Make the enter key go into insert mode if on a terminal window
+function! s:EnterInsertModeInTerminal()
+    echo 'ran'
+    if &buftype ==? 'terminal'
+        if mode() ==? 'n'
+            call startinsert()
+        endif
+    else
+        silent execute 'nohlsearch'
+        return '\<CR>'
+    endif
+endfunction
+
+" Get the path to the current line from the project root
+function! s:GetPathToCurrentLine()
+    let root = ProjectRootGet()
+    let full_path = expand('%:p') . ':' . line('.')
+    let basename = split(root, '/')
+    let basename = basename[-1]
+    let path_from_root = join([basename, substitute(full_path, root, '', '')], '')
+
+    return path_from_root
+endfunction
+
+" When opening a new split, create a new term if needed
+function! s:OpenNewSplit(splitType)
+    if a:splitType ==? '\'
+        silent execute 'vsp'
+    else
+        silent execute 'sp'
+    endif
+
+    if &buftype ==? 'terminal'
+        silent execute 'term'
+    endif
+endfunction
+
+" Convert mac or dos line endings to unix
+function! s:ConvertLineEndingsToUnix()
+    :update
+    :edit ++fileformat=dos
+    :edit ++fileformat=mac
+    :setlocal fileformat=unix
+    :write
+endfunction
+
+" Toggle spell check
+hi clear SpellCap
+hi clear SpellRare
+hi clear SpellLocal
+function! ToggleSpell()
+  if !exists('g:showingSpell')
+    let g:showingSpell=1
+    execute 'hi SpellBad cterm=underline gui=underline'
+  endif
+
+  if g:showingSpell==0
+    execute 'hi SpellBad cterm=underline gui=underline'
+    let g:showingSpell=1
+    echom 'Spellcheck enabled'
+  else
+    execute 'hi clear SpellBad'
+    let g:showingSpell=0
+    echom 'Spellcheck disabled'
+  endif
+endfunction
+
+" --- Vim configuration and keybindings
 set fileencodings=ucs-bom,utf-8,latin1
-setglobal bomb
+setglobal nobomb
 setglobal fileencoding=utf-8
 scriptencoding utf-8
 
-""" Prefrences ---------------------------------------------------------------
 " Use space as leader key
 let mapleader=' '
 nnoremap <space> <leader>
@@ -103,9 +222,9 @@ if has('persistent_undo')
     set undofile
 endif
 
-
 inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
-inoremap <C-Space> <right>|                                 " CTRL+Space to move out of autocompleted pairs e.g. ()
+nnoremap <Leader>o o<Esc>                                   " Quickly insert an empty new line without entering insert mode
+nnoremap <Leader>O O<Esc>
 inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
 inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
@@ -187,19 +306,13 @@ nnoremap <leader>Y  "+yg_
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
 
-" Gutentags configuration (https://github.com/ludovicchabant/vim-gutentags)
-let g:gutentags_define_advanced_commands = 1
-let g:gutentags_modules = ['ctags', 'gtags_cscope']
-let s:python_lib_dirs = get(systemlist('pyenv prefix'), 0, '')
-let g:gutentags_file_list_command = 'rg ' . projectroot#get() . ' ' . s:python_lib_dirs . ' --files'
-" let g:gutentags_ctags_extra_args = ['--python-kinds=-i']
-let g:gutentags_cache_dir = expand('~/.cache/tags')
-let g:gutentags_plus_switch = 1
+" Treat <li> and <p> tags like the block tags they are
+let g:html_indent_tags = 'li\|p'
 
-" Reload NeoVim configuration
+" NeoVim configuration
 if has('nvim') && !exists('g:gui_oni')
     let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
-    nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>:echom "NeoVim config reloaded"<CR>|
+    nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>|
 else
     nnoremap <leader>rc :so $MYVIMRC<CR>:echom $MYVIMRC " reloaded"<CR>|
 endif
@@ -209,35 +322,15 @@ if has('nvim')
   let $VISUAL = 'nvr -cc split --remote-wait'
 endif
 
-" Commands (aliases)
-" command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
-" command! -nargs=? Gd Gdiff <args>               " Alias for Gdiff
-" command! Gs Gstatus                             " Alias for Gstatus
-" command! Gc Gcommit                             " Alias for Gcommit
-" command! -nargs=* -bar G !clear;git <args>      " Alias for Git
-" command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
+" Gutentags configuration (https://github.com/ludovicchabant/vim-gutentags)
+" let g:gutentags_define_advanced_commands = 1
+" let g:Gutentags_modules = ['ctags', 'gtags_cscope']
+" let s:python_lib_dirs = get(systemlist('pyenv prefix'), 0, '')
+" let g:gutentags_file_list_command = 'rg ' . projectroot#get() . ' ' . s:python_lib_dirs . ' --files'
+" " let g:gutentags_ctags_extra_args = ['--python-kinds=-i']
+" let g:gutentags_cache_dir = expand('~/.cache/tags')
+" let g:gutentags_plus_switch = 1
 
-
-""" Custom commands ------------------------------------------------------------
-" Define a decrypt/encrypt command to decrypt the current file
-command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
-command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
-
-" Terraform
-command! -nargs=0 -bar Tff silent! !terraform fmt %:p
-
-" Git aliases
-command! -nargs=0 Grbm silent! Git rebase -i origin/master
-
-" Use The Silver Searcher if it is installed
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
-
-if executable('rg')
-  " Use ag over grep
-  set grepprg="rg --vimgrep --smart-case --hidden --follow"
-endif
-
-""" Plugin configuration ------------------------------------------------------------
 " Configure fzf (https://github.com/junegunn/fzf and https://github.com/junegunn/fzf.vim)
 let g:fzf_commits_log_options = "git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)"
 
@@ -266,13 +359,16 @@ let g:rg_derive_root='true'
 let g:dash_activate=0
 
 " Configure vim-markdown (https://github.com/plasticboy/vim-markdown)
-" let g:vim_markdown_folding_disabled = 1
-" let g:vim_markdown_conceal = 0
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
+
+let g:vim_markdown_auto_insert_bullets=0
+let g:vim_markdown_new_list_item_indent=0
+let g:vim_markdown_new_list_item_indent = 0
 let g:tex_conceal = ''
 let g:vim_markdown_math = 1
 let g:vim_markdown_follow_anchor = 1
 let g:vim_markdown_frontmatter = 1
-let g:vim_markdown_new_list_item_indent = 2
 let g:vim_markdown_fenced_languages = [
     \ 'viml=vim',
     \ 'bash=bash',
@@ -283,8 +379,47 @@ let g:vim_markdown_fenced_languages = [
     \ 'md=markdown'
     \ ]
 
+" Configure dkarter/bullets.vim (https://github.com/dkarter/bullets.vim)
+" Mappings: let g:bullets_outline_levels = ['num', 'abc', 'std-']
+let g:bullets_enabled_file_types = [
+    \ 'markdown',
+    \ 'text',
+    \ 'gitcommit',
+    \ 'scratch'
+    \]
+let g:bullets_outline_levels = ['num', 'std-']
+let g:bullets_comments = [
+    \ ['^\\s*\\d\\+\\.\\s\\+', ''],
+    \ ['^\\s*\\[\\-*\\+]\\s\\+', '']
+    \]
+" Trying to get auto-complete to work with bullets, but au not setting bind
+" right for <CR>, <Plug>(bullets-newline)
+" let g:bullets_set_mappings = 0
+" let g:bullets_custom_mappings = [
+"   \ ['inoremap', '<C-cr>', '<cr>'],
+"   \
+"   \ ['nmap', 'o', '<Plug>(bullets-newline)'],
+"   \
+"   \ ['vmap', 'gN', '<Plug>(bullets-renumber)'],
+"   \ ['nmap', 'gN', '<Plug>(bullets-renumber)'],
+"   \
+"   \ ['nmap', '<leader>x', '<Plug>(bullets-toggle-checkbox)'],
+"   \
+"   \ ['imap', '<C-t>', '<Plug>(bullets-demote)'],
+"   \ ['nmap', '>>', '<Plug>(bullets-demote)'],
+"   \ ['vmap', '>', '<Plug>(bullets-demote)'],
+"   \ ['imap', '<C-d>', '<Plug>(bullets-promote)'],
+"   \ ['nmap', '<<', '<Plug>(bullets-promote)'],
+"   \ ['vmap', '<', '<Plug>(bullets-promote)'],
+"   \ ]
+
 " Configure vim-markdown-toc (https://github.com/mzlogin/vim-markdown-toc)
 let g:vmt_dont_insert_fence = 1
+let g:vmt_list_indent = 2
+
+" Configure MarkdownPreview (https://github.com/iamcco/markdown-preview.nvim)
+" let g:mkdp_browser = '/Application/Brave Browser.app'
+let g:mkdp_echo_preview_url = 1
 
 " Configure vim-pydocstring (https://github.com/heavenshell/vim-pydocstring)
 let g:pydocstring_formatter = 'google'
@@ -423,27 +558,6 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 " Enable chriskempson/vim-tomorrow-theme
 colorscheme Tomorrow-Night-Eighties
 
-hi Cursor ctermbg=6 guibg=#76d4d6
-hi NeomakeErrorSign ctermfg=196 guifg=#d70000
-hi NeomakeWarningSign ctermfg=226 guifg=#ffff00
-hi FoldColumn guifg=#313131 ctermfg=235
-
-" Custom colors that override any theme loaded to this point
-hi Search ctermfg=2 ctermbg=29 guifg=#a8d4a9 guibg=#134f2f
-" hi Cursor ctermbg=6 guibg=#2aa198
-" hi ColorColumn ctermbg=8 guibg=#003741
-" hi Normal ctermbg=NONE guibg=NONE
-" hi Comment cterm=italic gui=italic
-" hi MatchParen ctermbg=NONE guibg=NONE
-" hi GitGutterAdd ctermbg=8 guibg=#003741
-" hi GitGutterChange ctermbg=8 guibg=#003741
-" hi GitGutterDelete ctermbg=8 guibg=#003741
-" hi GitGutterChangeDelete ctermbg=8 guibg=#003741
-hi DiffDelete ctermfg=8 ctermbg=0 gui=bold guifg=#2d2d2d guibg=#484A4A
-hi DiffAdd ctermbg=108  guibg=#366344
-hi DiffChange ctermbg=31 guibg=#385570
-hi DiffText ctermbg=208 guibg=#6E3935
-
 " Configure nathanaelkane/vim-indent-guides
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_auto_colors = 0
@@ -511,136 +625,326 @@ function! SynStack()
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
-""" Custom functions -----------------------------------------------------------
-" Remove trailing whitespace and return cursor to starting position
-function! s:StripTrailingWhitespaces()
-    if &readonly == 0
-            \&& &buftype ==? ''
-            \&& &diff == 0
-        let l:cur_pos = winsaveview()
-        %s/\s\+$//e
-        call winrestview(l:cur_pos)
-        retab
-   endif
-endfunction
+" --- Commands
+" Define a decrypt/encrypt command to decrypt the current file
+command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 
-function! s:WriteIfModifiable()
-    if buffer_name('%') !=? ''
-                \&& &readonly == 0
-                \&& &buftype !=? 'nofile'
-                \&& &buftype !=? 'terminal'
-                \&& &buftype !=? 'nowrite'
-                \&& &diff == 0
-                \&& buffer_name('%') !~? 'quickfix-'
-        silent w
-    endif
-endfunction
+" Terraform
+command! -nargs=0 -bar Tff silent! !terraform fmt %:p
 
-" Open previous buffer, wipe current, quit if only one buffer
-function! s:WipeBufOrQuit()
-    let num_bufs = len(getbufinfo({'buflisted':1}))
-    let prev_buf = bufnr('#')
-    if num_bufs <= 1
-        silent execute 'qall'
-    elseif prev_buf == -1 || &buftype !=? ''
-        silent execute 'quit'
-        if &buftype ==? 'terminal'
-            silent execute 'startinsert'
-        endif
-    else
-        silent execute 'buf #'
-        if bufnr('#') != -1
-            silent execute 'bwipeout! #'
-        endif
-        if &buftype ==? 'terminal'
-            silent execute 'startinsert'
-        endif
-    endif
-endfunction
+" Git aliases
+command! -nargs=0 Grbm silent! Git rebase -i origin/master
 
-" Open NERDTree using ProjectRootExe if buffer isn't a terminal
-function! s:NvimNerdTreeToggle()
-    if &buftype ==? 'terminal'
-        silent execute 'NERDTreeToggle'
-    else
-        silent execute 'ProjectRootExe NERDTreeToggle'
-    endif
-endfunction
+" Use The Silver Searcher if it is installed
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
 
-" Make the enter key go into insert mode if on a terminal window
-function! s:EnterInsertModeInTerminal()
-    echo 'ran'
-    if &buftype ==? 'terminal'
-        if mode() ==? 'n'
-            call startinsert()
-        endif
-    else
-        silent execute 'nohlsearch'
-        return '\<CR>'
-    endif
-endfunction
-
-" Get the path to the current line from the project root
-function! s:GetPathToCurrentLine()
-    let root = ProjectRootGet()
-    let full_path = expand('%:p') . ':' . line('.')
-    let basename = split(root, '/')
-    let basename = basename[-1]
-    let path_from_root = join([basename, substitute(full_path, root, '', '')], '')
-
-    return path_from_root
-endfunction
-
-" When opening a new split, create a new term if needed
-function! s:OpenNewSplit(splitType)
-    if a:splitType ==? '\'
-        silent execute 'vsp'
-    else
-        silent execute 'sp'
-    endif
-
-    if &buftype ==? 'terminal'
-        silent execute 'term'
-    endif
-endfunction
-
-" Convert mac or dos line endings to unix
-function! s:ConvertLineEndingsToUnix()
-    :update
-    :edit ++fileformat=dos
-    :edit ++fileformat=mac
-    :setlocal fileformat=unix
-    :write
-endfunction
-
-" Toggle spell check
-hi clear SpellCap
-hi clear SpellRare
-hi clear SpellLocal
-function! ToggleSpell()
-  if !exists('g:showingSpell')
-    let g:showingSpell=1
-    execute 'hi SpellBad cterm=underline gui=underline'
-  endif
-
-  if g:showingSpell==0
-    execute 'hi SpellBad cterm=underline gui=underline'
-    let g:showingSpell=1
-    echom 'Spellcheck enabled'
-  else
-    execute 'hi clear SpellBad'
-    let g:showingSpell=0
-    echom 'Spellcheck disabled'
-  endif
-endfunction
-
+" Set line endings to unix
 command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()
 
-" Treat <li> and <p> tags like the block tags they are
-let g:html_indent_tags = 'li\|p'
+" Commands (aliases)
+" command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
+" command! -nargs=? Gd Gdiff <args>               " Alias for Gdiff
+" command! Gs Gstatus                             " Alias for Gstatus
+" command! Gc Gcommit                             " Alias for Gcommit
+" command! -nargs=* -bar G !clear;git <args>      " Alias for Git
+" command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
-" vim: set ft=vim
-""" Startup autocommands -------------------------------------------------------
+" --- Terminal colors
+" Set neovim colors for truecolor terminal
+" https://neovim.io/doc/user/nvim_terminal_emulator.html#nvim-terminal-emulator-configuration
+
+" Tomorrow_Night_Eighties
+" ANSI
+let g:terminal_color_0 = '#aaaaaa'
+let g:terminal_color_1 = '#f78d8c'
+let g:terminal_color_2 = '#a8d4a9'
+let g:terminal_color_3 = '#ffd479'
+let g:terminal_color_4 = '#78aad6'
+let g:terminal_color_5 = '#d7acd6'
+let g:terminal_color_6 = '#76d4d6'
+let g:terminal_color_7 = '#ffffff'
+let g:terminal_color_8 = '#aaaaaa'
+let g:terminal_color_9 = '#f78d8c'
+let g:terminal_color_10 = '#a8d4a9'
+let g:terminal_color_11 = '#ffd479'
+let g:terminal_color_12 = '#78aad6'
+let g:terminal_color_13 = '#d7acd6'
+let g:terminal_color_14 = '#76d4d6'
+let g:terminal_color_15 = '#ffffff'
+
+" Truecolor
+let g:terminal_color_16 = '#aaaaaa'
+let g:terminal_color_17 = '#00005f'
+let g:terminal_color_18 = '#000087'
+let g:terminal_color_19 = '#0000af'
+let g:terminal_color_20 = '#0000d7'
+let g:terminal_color_21 = '#0000ff'
+let g:terminal_color_22 = '#005f00'
+let g:terminal_color_23 = '#005f5f'
+let g:terminal_color_24 = '#005f87'
+let g:terminal_color_25 = '#005faf'
+let g:terminal_color_26 = '#005fd7'
+let g:terminal_color_27 = '#005fff'
+let g:terminal_color_28 = '#008700'
+let g:terminal_color_29 = '#00875f'
+let g:terminal_color_30 = '#008787'
+let g:terminal_color_31 = '#0087af'
+let g:terminal_color_32 = '#0087d7'
+let g:terminal_color_33 = '#0087ff'
+let g:terminal_color_34 = '#00af00'
+let g:terminal_color_35 = '#00af5f'
+let g:terminal_color_36 = '#00af87'
+let g:terminal_color_37 = '#00afaf'
+let g:terminal_color_38 = '#00afd7'
+let g:terminal_color_39 = '#00afff'
+let g:terminal_color_40 = '#00d700'
+let g:terminal_color_41 = '#00d75f'
+let g:terminal_color_42 = '#00d787'
+let g:terminal_color_43 = '#00d7af'
+let g:terminal_color_44 = '#00d7d7'
+let g:terminal_color_45 = '#00d7ff'
+let g:terminal_color_46 = '#00ff00'
+let g:terminal_color_47 = '#00ff5f'
+let g:terminal_color_48 = '#00ff87'
+let g:terminal_color_49 = '#00ffaf'
+let g:terminal_color_50 = '#00ffd7'
+let g:terminal_color_51 = '#00ffff'
+let g:terminal_color_52 = '#5f0000'
+let g:terminal_color_53 = '#5f005f'
+let g:terminal_color_54 = '#5f0087'
+let g:terminal_color_55 = '#5f00af'
+let g:terminal_color_56 = '#5f00d7'
+let g:terminal_color_57 = '#5f00ff'
+let g:terminal_color_58 = '#5f5f00'
+let g:terminal_color_59 = '#5f5f5f'
+let g:terminal_color_60 = '#5f5f87'
+let g:terminal_color_61 = '#5f5faf'
+let g:terminal_color_62 = '#5f5fd7'
+let g:terminal_color_63 = '#5f5fff'
+let g:terminal_color_64 = '#5f8700'
+let g:terminal_color_65 = '#5f875f'
+let g:terminal_color_66 = '#5f8787'
+let g:terminal_color_67 = '#5f87af'
+let g:terminal_color_68 = '#5f87d7'
+let g:terminal_color_69 = '#5f87ff'
+let g:terminal_color_70 = '#5faf00'
+let g:terminal_color_71 = '#5faf5f'
+let g:terminal_color_72 = '#5faf87'
+let g:terminal_color_73 = '#5fafaf'
+let g:terminal_color_74 = '#5fafd7'
+let g:terminal_color_75 = '#5fafff'
+let g:terminal_color_76 = '#5fd700'
+let g:terminal_color_77 = '#5fd75f'
+let g:terminal_color_78 = '#5fd787'
+let g:terminal_color_79 = '#5fd7af'
+let g:terminal_color_80 = '#5fd7d7'
+let g:terminal_color_81 = '#5fd7ff'
+let g:terminal_color_82 = '#5fff00'
+let g:terminal_color_83 = '#5fff5f'
+let g:terminal_color_84 = '#5fff87'
+let g:terminal_color_85 = '#5fffaf'
+let g:terminal_color_86 = '#5fffd7'
+let g:terminal_color_87 = '#5fffff'
+let g:terminal_color_88 = '#870000'
+let g:terminal_color_89 = '#87005f'
+let g:terminal_color_90 = '#870087'
+let g:terminal_color_91 = '#8700af'
+let g:terminal_color_92 = '#8700d7'
+let g:terminal_color_93 = '#8700ff'
+let g:terminal_color_94 = '#875f00'
+let g:terminal_color_95 = '#875f5f'
+let g:terminal_color_96 = '#875f87'
+let g:terminal_color_97 = '#875faf'
+let g:terminal_color_98 = '#875fd7'
+let g:terminal_color_99 = '#875fff'
+let g:terminal_color_100 = '#878700'
+let g:terminal_color_101 = '#87875f'
+let g:terminal_color_102 = '#878787'
+let g:terminal_color_103 = '#8787af'
+let g:terminal_color_104 = '#8787d7'
+let g:terminal_color_105 = '#8787ff'
+let g:terminal_color_106 = '#87af00'
+let g:terminal_color_107 = '#87af5f'
+let g:terminal_color_108 = '#87af87'
+let g:terminal_color_109 = '#87afaf'
+let g:terminal_color_110 = '#87afd7'
+let g:terminal_color_111 = '#87afff'
+let g:terminal_color_112 = '#87d700'
+let g:terminal_color_113 = '#87d75f'
+let g:terminal_color_114 = '#87d787'
+let g:terminal_color_115 = '#87d7af'
+let g:terminal_color_116 = '#87d7d7'
+let g:terminal_color_117 = '#87d7ff'
+let g:terminal_color_118 = '#87ff00'
+let g:terminal_color_119 = '#87ff5f'
+let g:terminal_color_120 = '#87ff87'
+let g:terminal_color_121 = '#87ffaf'
+let g:terminal_color_122 = '#87ffd7'
+let g:terminal_color_123 = '#87ffff'
+let g:terminal_color_124 = '#af0000'
+let g:terminal_color_125 = '#af005f'
+let g:terminal_color_126 = '#af0087'
+let g:terminal_color_127 = '#af00af'
+let g:terminal_color_128 = '#af00d7'
+let g:terminal_color_129 = '#af00ff'
+let g:terminal_color_130 = '#af5f00'
+let g:terminal_color_131 = '#af5f5f'
+let g:terminal_color_132 = '#af5f87'
+let g:terminal_color_133 = '#af5faf'
+let g:terminal_color_134 = '#af5fd7'
+let g:terminal_color_135 = '#af5fff'
+let g:terminal_color_136 = '#af8700'
+let g:terminal_color_137 = '#af875f'
+let g:terminal_color_138 = '#af8787'
+let g:terminal_color_139 = '#af87af'
+let g:terminal_color_140 = '#af87d7'
+let g:terminal_color_141 = '#af87ff'
+let g:terminal_color_142 = '#afaf00'
+let g:terminal_color_143 = '#afaf5f'
+let g:terminal_color_144 = '#afaf87'
+let g:terminal_color_145 = '#afafaf'
+let g:terminal_color_146 = '#afafd7'
+let g:terminal_color_147 = '#afafff'
+let g:terminal_color_148 = '#afd700'
+let g:terminal_color_149 = '#afd75f'
+let g:terminal_color_150 = '#afd787'
+let g:terminal_color_151 = '#afd7af'
+let g:terminal_color_152 = '#afd7d7'
+let g:terminal_color_153 = '#afd7ff'
+let g:terminal_color_154 = '#afff00'
+let g:terminal_color_155 = '#afff5f'
+let g:terminal_color_156 = '#afff87'
+let g:terminal_color_157 = '#afffaf'
+let g:terminal_color_158 = '#afffd7'
+let g:terminal_color_159 = '#afffff'
+let g:terminal_color_160 = '#d70000'
+let g:terminal_color_161 = '#d7005f'
+let g:terminal_color_162 = '#d70087'
+let g:terminal_color_163 = '#d700af'
+let g:terminal_color_164 = '#d700d7'
+let g:terminal_color_165 = '#d700ff'
+let g:terminal_color_166 = '#d75f00'
+let g:terminal_color_167 = '#d75f5f'
+let g:terminal_color_168 = '#d75f87'
+let g:terminal_color_169 = '#d75faf'
+let g:terminal_color_170 = '#d75fd7'
+let g:terminal_color_171 = '#d75fff'
+let g:terminal_color_172 = '#d78700'
+let g:terminal_color_173 = '#d7875f'
+let g:terminal_color_174 = '#d78787'
+let g:terminal_color_175 = '#d787af'
+let g:terminal_color_176 = '#d787d7'
+let g:terminal_color_177 = '#d787ff'
+let g:terminal_color_178 = '#d7af00'
+let g:terminal_color_179 = '#d7af5f'
+let g:terminal_color_180 = '#d7af87'
+let g:terminal_color_181 = '#d7afaf'
+let g:terminal_color_182 = '#d7afd7'
+let g:terminal_color_183 = '#d7afff'
+let g:terminal_color_184 = '#d7d700'
+let g:terminal_color_185 = '#d7d75f'
+let g:terminal_color_186 = '#d7d787'
+let g:terminal_color_187 = '#d7d7af'
+let g:terminal_color_188 = '#d7d7d7'
+let g:terminal_color_189 = '#d7d7ff'
+let g:terminal_color_190 = '#d7ff00'
+let g:terminal_color_191 = '#d7ff5f'
+let g:terminal_color_192 = '#d7ff87'
+let g:terminal_color_193 = '#d7ffaf'
+let g:terminal_color_194 = '#d7ffd7'
+let g:terminal_color_195 = '#d7ffff'
+let g:terminal_color_196 = '#ff0000'
+let g:terminal_color_197 = '#ff005f'
+let g:terminal_color_198 = '#ff0087'
+let g:terminal_color_199 = '#ff00af'
+let g:terminal_color_200 = '#ff00d7'
+let g:terminal_color_201 = '#ff00ff'
+let g:terminal_color_202 = '#ff5f00'
+let g:terminal_color_203 = '#ff5f5f'
+let g:terminal_color_204 = '#ff5f87'
+let g:terminal_color_205 = '#ff5faf'
+let g:terminal_color_206 = '#ff5fd7'
+let g:terminal_color_207 = '#ff5fff'
+let g:terminal_color_208 = '#ff8700'
+let g:terminal_color_209 = '#ff875f'
+let g:terminal_color_210 = '#ff8787'
+let g:terminal_color_211 = '#ff87af'
+let g:terminal_color_212 = '#ff87d7'
+let g:terminal_color_213 = '#ff87ff'
+let g:terminal_color_214 = '#ffaf00'
+let g:terminal_color_215 = '#ffaf5f'
+let g:terminal_color_216 = '#ffaf87'
+let g:terminal_color_217 = '#ffafaf'
+let g:terminal_color_218 = '#ffafd7'
+let g:terminal_color_219 = '#ffafff'
+let g:terminal_color_220 = '#ffd700'
+let g:terminal_color_221 = '#ffd75f'
+let g:terminal_color_222 = '#ffd787'
+let g:terminal_color_223 = '#ffd7af'
+let g:terminal_color_224 = '#ffd7d7'
+let g:terminal_color_225 = '#ffd7ff'
+let g:terminal_color_226 = '#ffff00'
+let g:terminal_color_227 = '#ffff5f'
+let g:terminal_color_228 = '#ffff87'
+let g:terminal_color_229 = '#ffffaf'
+let g:terminal_color_230 = '#ffffd7'
+let g:terminal_color_231 = '#ffffff'
+let g:terminal_color_232 = '#080808'
+let g:terminal_color_233 = '#121212'
+let g:terminal_color_234 = '#1c1c1c'
+let g:terminal_color_235 = '#262626'
+let g:terminal_color_236 = '#303030'
+let g:terminal_color_237 = '#3a3a3a'
+let g:terminal_color_238 = '#444444'
+let g:terminal_color_239 = '#4e4e4e'
+let g:terminal_color_240 = '#585858'
+let g:terminal_color_241 = '#626262'
+let g:terminal_color_242 = '#6c6c6c'
+let g:terminal_color_243 = '#767676'
+let g:terminal_color_244 = '#808080'
+let g:terminal_color_245 = '#8a8a8a'
+let g:terminal_color_246 = '#949494'
+let g:terminal_color_247 = '#9e9e9e'
+let g:terminal_color_248 = '#a8a8a8'
+let g:terminal_color_249 = '#b2b2b2'
+let g:terminal_color_250 = '#bcbcbc'
+let g:terminal_color_251 = '#c6c6c6'
+let g:terminal_color_252 = '#d0d0d0'
+let g:terminal_color_253 = '#dadada'
+let g:terminal_color_254 = '#e4e4e4'
+let g:terminal_color_255 = '#eeeeee'
+
+" --- Highlight settings
+hi Cursor ctermbg=6 guibg=#76d4d6
+hi NeomakeErrorSign ctermfg=196 guifg=#d70000
+hi NeomakeWarningSign ctermfg=226 guifg=#ffff00
+hi FoldColumn guifg=#313131 ctermfg=235
+
+" Custom colors that override any theme loaded to this point
+hi Search ctermfg=2 ctermbg=29 guifg=#a8d4a9 guibg=#134f2f
+" hi Cursor ctermbg=6 guibg=#2aa198
+" hi ColorColumn ctermbg=8 guibg=#003741
+" hi Normal ctermbg=NONE guibg=NONE
+" hi Comment cterm=italic gui=italic
+" hi MatchParen ctermbg=NONE guibg=NONE
+" hi GitGutterAdd ctermbg=8 guibg=#003741
+" hi GitGutterChange ctermbg=8 guibg=#003741
+" hi GitGutterDelete ctermbg=8 guibg=#003741
+" hi GitGutterChangeDelete ctermbg=8 guibg=#003741
+hi DiffDelete ctermfg=8 ctermbg=0 gui=bold guifg=#2d2d2d guibg=#484A4A
+hi DiffAdd ctermbg=108  guibg=#366344
+hi DiffChange ctermbg=31 guibg=#385570
+hi DiffText ctermbg=208 guibg=#6E3935
+
+" --- Plugin configuration
+" Configure ag (https://github.com/ggreer/the_silver_searcher)
+if executable('rg')
+  " Use ag over grep
+  set grepprg="rg --vimgrep --smart-case --hidden --follow"
+endif
+
+" --- Auto-commands
 augroup vimrcEx
     au!
 
@@ -660,9 +964,8 @@ augroup vimrcEx
     " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
     " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
 
-    " Set syntax highlighting for specific file types
+    " Set syntax highlighting and configuration for specific file types
     au BufRead,BufNewFile Appraisals setl ft=ruby
-    au BufRead,BufNewFile *.md setl ft=markdown nofoldenable
     au BufRead,BufNewFile *sudoers-* setl ft=sudoers
     au BufRead,BufNewFile .vimrc setl ft=vim
     au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
@@ -672,9 +975,13 @@ augroup vimrcEx
     au BufRead,BufNewFile */gcloud_vars/.* set ft=sh
 
     " Enable spellchecking and textwrap for Markdown
-    au FileType markdown setl spell
+    au FileType markdown setl
+        \ spell
+        \ textwidth=80
         \ formatoptions+=t
-    au BufRead,BufNewFile *.md setl textwidth=80
+        \ formatoptions-=q
+    " au FileType 'markdown', 'text', 'gitcommit', 'scratch'
+    "     \ inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "<Plug>(bullets-newline)")
 
     " Wrap at 72 characters and spell check git commit messages
     au FileType gitcommit setl filetype=markdown
@@ -688,11 +995,9 @@ augroup vimrcEx
     au BufRead,BufNewfile Makefile* setl ft=make noexpandtab tabstop=4
     au FileType make setl noexpandtab tabstop=4
 
-    " Auto set nowrap on some files
-    au BufRead */environments/000_cross_env_users.yml setl nowrap
-
     " :set nowrap for some files
-    au BufRead, BufNewFile user_list.yml setl nowrap
+    au BufRead, BufNewFile user_list.yml, */environments/000_cross_env_users.yml
+        \ setl nowrap
 
     " Allow style sheets to auto-complete hyphenated words
     au FileType css,scss,sass setl iskeyword+=-

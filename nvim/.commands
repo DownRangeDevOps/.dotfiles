@@ -1,0 +1,25 @@
+" vim: set ft=vim
+
+" Define a decrypt/encrypt command to decrypt the current file
+command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+
+" Terraform
+command! -nargs=0 -bar Tff silent! !terraform fmt %:p
+
+" Git aliases
+command! -nargs=0 Grbm silent! Git rebase -i origin/master
+
+" Use The Silver Searcher if it is installed
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
+
+" Set line endings to unix
+command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()
+
+" Commands (aliases)
+" command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
+" command! -nargs=? Gd Gdiff <args>               " Alias for Gdiff
+" command! Gs Gstatus                             " Alias for Gstatus
+" command! Gc Gcommit                             " Alias for Gcommit
+" command! -nargs=* -bar G !clear;git <args>      " Alias for Git
+" command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor

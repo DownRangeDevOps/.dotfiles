@@ -1,6 +1,39 @@
 # vim: set ft=sh:
 alias g="git"
 
+# Helpers
+function __git_is_repo() {
+    return "$(git -C ${1} rev-parse 2>/dev/null)"
+}
+
+function git_master_or_main() {
+    if [[ ! "$(__git_is_repo ${PWD})" ]]; then
+        printf "%s" "${PWD} is not a git repository."
+        return 1
+    fi
+
+    INITIAL_COMMIT="$(git rev-list --abbrev-commit HEAD | tail -n 1)"
+    MASTER_EXISTS="$(git rev-parse --verify master 2>/dev/null)"
+    MAIN_EXISTS="$(git rev-parse --verify main 2>ev/null)"
+
+    if [[ ${MASTER_EXISTS} && ${MAIN_EXISTS} ]]; then
+        MASTER_LENGTH="$(git rev-list --count ${INITIAL_COMMIT}..master)"
+        MAIN_LENGTH="$(git rev-list --count ${INITIAL_COMMIT}..main)"
+
+        if [[ ${MASTER_LENGTH} > ${MAIN_LENGTH} ]]; then
+            MAIN_BRANCH="main"
+        else
+            MAIN_BRANCH="master"
+        fi
+    elif [[ ${MAIN_EXISTS} ]]; then
+        MAIN_BRANCH="main"
+    else
+        MAIN_BRANCH="master"
+    fi
+
+    return "${MAIN_BRANCH}"
+}
+
 # Logging
 function gd() {
     git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
@@ -49,19 +82,19 @@ function gco() {
         git checkout "${@}"
     else
         git branch -a \
-            | tr -d ' ' \
-            | sed -e 's,^remotes/origin/,,' \
-            | sed -e 's,^HEAD.*,,' \
+            | tr -d " " \
+            | sed -e "s,^remotes/origin/,," \
+            | sed -e "s,^HEAD.*,," \
             | sort -u \
             | fzf \
             | xargs git checkout
     fi
 }
 
-alias gcom="git checkout master"
+alias gcom="git checkout \$(git_master_or_main)"
 alias gcod="git checkout develop"
-alias gmerged="git branch --all --merged origin/master \
-    | /usr/local/opt/grep/libexec/gnubin/grep -Ev '>|master|develop|release' \
+alias gmerged="git branch --all --merged origin/\$(git_master_or_main) \
+    | /usr/local/opt/grep/libexec/gnubin/grep -Ev '>|master|main|develop|release' \
     | tr -d ' '"
 alias gdmb="git_delete_merged_branches"
 
@@ -73,19 +106,19 @@ function git_delete_merged_branches() {
 
     CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     LOCAL_BRANCHES=$(gmerged \
-        | /usr/local/opt/grep/libexec/gnubin/grep -Ev '^\s*remotes/origin/' \
+        | /usr/local/opt/grep/libexec/gnubin/grep -Ev "^\s*remotes/origin/" \
         | /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" \
         | awk '{print $1}')
     REMOTE_BRANCHES=$(gmerged \
-        | /usr/local/opt/grep/libexec/gnubin/grep -E '^\s*remotes/origin/' \
-        | sed -e 's/^\s*remotes\/origin\///g' \
+        | /usr/local/opt/grep/libexec/gnubin/grep -E "^\s*remotes/origin/" \
+        | sed -e "s/^\s*remotes\/origin\///g" \
         | awk '{print $1}')
 
     if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
-        printf "%s\n" "==> Branches that have been merged to master:"
+        printf "%s\n" "==> Branches that have been merged to $(git_master_or_main):"
         gmerged
 
-        prompt_to_continue 'Delete branches?' || return 0
+        prompt_to_continue "Delete branches?" || return 0
         echo
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
@@ -121,16 +154,16 @@ alias gqf="ga -u && gc --amend --no-edit && gfpo"
 alias grb="git rebase --interactive"
 alias grbc="git rebase --continue"
 alias grba="git rebase --abort"
-alias grbm="gf && git rebase --interactive origin/master"
+alias grbm="gf && git rebase --interactive origin/\$(git_master_or_main)"
 alias grbd="gf && git rebase --interactive origin/develop"
-alias grbs="gf && git rebase --interactive $(git merge-base HEAD origin/master)"
+alias grbs="gf && git rebase --interactive \$(git merge-base HEAD origin/\$(git_master_or_main))"
 
 # Pushing
 alias gpu="git push -u \$(git remote) HEAD"
 alias gfpo="git push --force-with-lease origin HEAD"
 
 # Misc aliases for get based but non-git actions
-alias gac="git diff origin/master \
+alias gac="git diff origin/\$(git_master_or_main) \
     --stat \
     --diff-filter=ACdMRTUxB \
     !(roles.galaxy)"
@@ -172,9 +205,9 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 gcot() {
   TICKET=$(echo "${@}" \
     | tr -t "${@}" 50 \
-    | sed 's/^[\.\/]//' \
-    | tr -s ' ' '-' \
-    | tr -cd '[:alnum:]._-/' \
+    | sed "s/^[\.\/]//" \
+    | tr -s " " "-" \
+    | tr -cd "[:alnum:]._-/" \
     | tr "[:upper:]" "[:lower:]")
 
   gco -b "${TICKET}"
@@ -182,50 +215,50 @@ gcot() {
 
 # git merge --ff-only
 gffm() {
-    if [[ $1 == 'help' || $1 == '--help' ]]; then
+    if [[ $1 == "help" || $1 == "--help" ]]; then
         echo "Usage: gffm <branch>"
         return 1
     fi
 
-    if [[ $1 == 'HEAD' || $1 == '' ]]; then
-        git log origin/master.. && \
-        git diff --stat origin/master && \
-        prompt_to_continue 'Merge to master?' && \
-        git checkout master && \
+    if [[ $1 == "HEAD" || $1 == "" ]]; then
+        git log "origin/$(git_master_or_main).." && \
+        git diff --stat "origin/$(git_master_or_main)" && \
+        prompt_to_continue "Merge to $(git_master_or_main)?" && \
+        git checkout "$(git_master_or_main)" && \
         git fetch -p && \
         git pull -r && \
-        git merge --ff-only @{-1} && \
-        prompt_to_continue 'Push to origin?' && \
+        git merge --ff-only "@{-1}" && \
+        prompt_to_continue "Push to origin?" && \
         git push origin HEAD
     else
         BRANCH=$1
-        git log @{-1}.."${BRANCH}" && \
-        git diff --stat origin/master && \
-        prompt_to_continue "Merge to ${1}?" && \
-        git merge --ff-only "$BRANCH" && \
-        prompt_to_continue 'Push to origin?' && \
-        git push origin HEAD
+        git log "@{-1}..${BRANCH}" && \
+            git diff --stat "origin/$(git_master_or_main)" && \
+            prompt_to_continue "Merge to ${1}?" && \
+            git merge --ff-only "$BRANCH" && \
+            prompt_to_continue "Push to origin?" && \
+            git push origin HEAD
     fi
 
 }
 
 # git commit and push
 gcpu() {
-    if [[ $1 == 'help' || $1 == '--help' ]]; then
+    if [[ $1 == "help" || $1 == "--help" ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
         echo "Usage: gacp [-a] [-m <message>]"
         return 1
     fi
 
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    COMMAND=''
+    COMMAND=""
 
-    if [[ $1 == '-a' ]]; then
+    if [[ $1 == "-a" ]]; then
         COMMAND="git add --all && "
         shift
     fi
 
-    if [[ $1 == '-m' && $2 ]]; then
+    if [[ $1 == "-m" && $2 ]]; then
         COMMAND+="git commit -m '$2' && "
     else
         COMMAND+="git commit && "
@@ -238,7 +271,7 @@ gcpu() {
 
 # delete local and remote branch
 gnuke() {
-    if [[ $# -eq 0 || $1 == 'help' || $1 == '--help' ]]; then
+    if [[ $# -eq 0 || $1 == "help" || $1 == "--help" ]]; then
         echo "Usage: gnuke <branch>"
         return 1
     fi
@@ -257,7 +290,8 @@ gnukethis() {
 
 # git log copy - copy the git log for this branch to the clipboard
 glc() {
-  LOG=$(git log origin/master..HEAD)
+    # shellcheck disable=SC2046
+    LOG="$(git log \"origin/$(git_master_or_main)..HEAD\")"
 
   pbcopy <<EOF
 
@@ -271,15 +305,11 @@ EOF
 # Real URL example: https://gitlab.com/sightly-engineering/content-intelligence/api-cont-intell-user-account/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4597--docker-add-health-check
 opr() {
     REPO=$(basename "$(git rev-parse --show-toplevel)")
-
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    TITLE=$(git log -n1 --pretty=format:'%s')
     BRANCH_ENCODED=$(python3 -c "from urllib.parse import quote_plus; import json;s=quote_plus(json.dumps(\"${BRANCH}\"));print(s)")
-    TITLE_ENCODED=$(python3 -c "from urllib.parse import quote_plus; import json;s=quote_plus(json.dumps(\"${TITLE}\"));print(s)")
-
     HOST="https://gitlab.com/sightly-engineering"
     ROUTE="${REPO}/-/merge_requests/new"
-    QUERY="utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=21762811&merge_request%5Bsource_branch%5D=${BRANCH_ENCODED}&merge_request%5Btarget_project_id%5D=21762811&merge_request%5Btarget_branch%5D=master"
+    QUERY="utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=21762811&merge_request%5Bsource_branch%5D=${BRANCH_ENCODED}&merge_request%5Btarget_project_id%5D=21762811&merge_request%5Btarget_branch%5D=$(git_master_or_main)"
 
     glc
     open "${HOST}/${ROUTE}?${QUERY}"

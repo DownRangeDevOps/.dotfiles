@@ -1,6 +1,6 @@
 [user]
     name = Ryan Fisher
-	email = ryanfisher@sightly.com
+	email = 1899850+RyanFisher3@users.noreply.github.com
 [include]
     path = .gitconfig_aliases
 [core]
@@ -58,3 +58,10 @@
     whitespace = red reverse
 [rebase]
 	autosquash = true
+[pack]
+	windowMemory = 100m
+	SizeLimit = 100m
+	threads = 1
+	window = 0
+[advice]
+	ignoredHook = false

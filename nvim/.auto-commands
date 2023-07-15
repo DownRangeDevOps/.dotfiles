@@ -1,0 +1,92 @@
+" vim: set ft=vim
+
+augroup vimrcEx
+    au!
+
+    " Don't change terminal size unless it is redrawn
+    "au TermOpen * au <buffer> BufEnter,WinEnter redraw!
+
+    " enable ncm2 for all buffers
+    au BufEnter * call ncm2#enable_for_buffer()
+    au TextChangedI * call ncm2#auto_trigger()
+    au User Ncm2Plugin call ncm2#register_source({
+        \ 'on_complete': ['ncm2#on_complete#delay',
+        \                  300,
+        \                 'ncm2#on_complete#omni',
+        \                 'csscomplete#CompleteCSS'],
+        \ })
+
+    " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
+    " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
+
+    " Set syntax highlighting and configuration for specific file types
+    au BufRead,BufNewFile Appraisals setl ft=ruby
+    au BufRead,BufNewFile *sudoers-* setl ft=sudoers
+    au BufRead,BufNewFile .vimrc setl ft=vim
+    au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
+    au BufRead,BufNewFile Jenkinsfile setl ft=groovy
+    au BufRead,BufNewFile .envrc setl ft=sh
+    au BufRead,BufNewFile dockerfile.* setl ft=Dockerfile
+    au BufRead,BufNewFile */gcloud_vars/.* set ft=sh
+
+    " Enable spellchecking and textwrap for Markdown
+    au FileType markdown setl
+        \ spell
+        \ textwidth=80
+        \ formatoptions+=t
+        \ formatoptions-=q
+    " au FileType 'markdown', 'text', 'gitcommit', 'scratch'
+    "     \ inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "<Plug>(bullets-newline)")
+
+    " Wrap at 72 characters and spell check git commit messages
+    au FileType gitcommit setl filetype=markdown
+        \ textwidth=72
+        \ colorcolumn=50,72
+        \ spell
+        \ commentstring=#%s
+        \ formatoptions+=t
+
+    " Set Makefile filetype and don't expand tabs
+    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab tabstop=4
+    au FileType make setl noexpandtab tabstop=4
+
+    " :set nowrap for some files
+    au BufRead, BufNewFile user_list.yml, */environments/000_cross_env_users.yml
+        \ setl nowrap
+
+    " Allow style sheets to auto-complete hyphenated words
+    au FileType css,scss,sass setl iskeyword+=-
+
+    " Remove tabs and trailing whitespace on open and insert
+    au BufRead,BufLeave,TextChanged *
+        \call <SID>StripTrailingWhitespaces()
+
+    " Autosave
+    au TextChanged * call <SID>WriteIfModifiable()
+
+    " Autoread
+    au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
+
+    " Auto lint on write or change
+    au BufWritePost,TextChanged * Neomake
+
+    " Configure terminal settings
+    au TermOpen * setl nospell
+        \ nonumber
+        \ norelativenumber
+
+    " Force spell/nospell
+    au FileType terraform setl spell
+    au FileType ansible setl nospell
+    au FileType yaml setl nospell
+    au FileType Dockerfile setl nospell
+
+    " Bind q to close quickfix
+    au FileType quickfix nnoremap q :cclose
+
+    " Hide the status line for FZF buffer
+    au! FileType fzf
+        au  FileType fzf setl laststatus=0 noshowmode noruler
+        \| au BufLeave <buffer> setl laststatus=2 showmode ruler
+
+" augroup END
