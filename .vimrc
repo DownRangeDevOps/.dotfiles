@@ -1,8 +1,58 @@
 " vim: set ft=vim
-so $HOME/.dotfiles/nvim/.plugins
+so $HOME/.dotfiles/nvim/.plugins " Load Plug manifest
 
-" --- Functions
-" Remove trailing whitespace and return cursor to starting position
+
+" ------------------------------------------------------------------------------
+" --------------------------------- Functions ----------------------------------
+" ------------------------------------------------------------------------------
+" Reusable function to prompt the user for input
+" function! s:PromptForInput(prompt, prompt_input = 'Input: ', fill_char, fill_char_input = ' ')
+function! s:PromptForInput(...)
+  " Args (optional)
+  let l:prompt = get(a:000, 0, 'Input: ')
+  let l:default_input = get(a:000, 1, ' ')
+
+  call inputsave()
+  let l:user_input = input(l:prompt)
+  call inputrestore()
+
+  if empty(l:user_input)
+    let g:user_input = l:default_input
+  else
+    let g:user_input = l:user_input
+  endif
+endfunction
+
+" Prompt for a section header and insert it as a comment
+function! Header()
+    call s:PromptForInput('Section headding: ')
+    let l:heading = ' ' . g:user_input . ' '
+
+    " Defaults not working
+    " call s:PromptForInput('Heading width? (80): ', 80)
+    " let l:header_width = ' ' . g:user_input . ' '
+    let l:header_width = 80
+
+    " Defaults not working
+    " call s:PromptForInput('Heading fill character? (-): ', '-')
+    " let l:header_fill_char = ' ' . g:user_input . ' '
+    let l:header_fill_char = '-'
+
+    let l:header_fill_char = a:0 == 2? a:2 : '-'
+    let l:heading_width = strlen(l:heading)
+    let l:prefix_fill_len = ((l:header_width / 2) - (l:heading_width / 2) - 2)
+    let l:prefix_fill = &commentstring[0] . ' ' . repeat(l:header_fill_char, l:prefix_fill_len)
+    let l:suffix_fill_len = l:header_width - (strlen(l:prefix_fill) + strlen(l:heading))
+    let l:suffix_fill = repeat(l:header_fill_char, l:suffix_fill_len)
+    let l:heading_line = &commentstring[0] . ' ' . repeat(l:header_fill_char, (l:header_width - 2))
+    let l:heading_text = l:prefix_fill . l:heading . l:suffix_fill
+
+    :put =l:heading_line
+    :put =l:heading_text
+    :put =l:heading_line
+endfunction
+
+" Strip trailing whitespace
 function! s:StripTrailingWhitespaces()
     if &readonly == 0
             \&& &buftype ==? ''
@@ -124,7 +174,9 @@ function! ToggleSpell()
   endif
 endfunction
 
-" --- Vim configuration and keybindings
+" -----------------------------------------------------------------------------
+" -------------------- Vim configuration and key bindings ---------------------
+" -----------------------------------------------------------------------------
 set fileencodings=ucs-bom,utf-8,latin1
 setglobal nobomb
 setglobal fileencoding=utf-8
@@ -309,6 +361,9 @@ nnoremap <leader>p "+p
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
 
+" -----------------------------------------------------------------------------
+" --------------------------- Plugin Configuration ----------------------------
+" -----------------------------------------------------------------------------
 " NeoVim configuration
 if has('nvim') && !exists('g:gui_oni')
     let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
@@ -476,6 +531,18 @@ let g:EasyClipUseSubstituteDefaults = 1
 let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
 " Configure neomake (https://github.com/neomake/neomake)
+" Customize makers
+let g:neomake_vim_maker = {
+    \ 'exe': 'vint',
+    \ 'args': [
+        \ '--style-problem',
+        \ '--no-color',
+        \ '--enable-neovim',
+        \ '-f', '{file_path}:{line_number}:{column_number}:{severity}:{description} ({policy_name})'
+    \ ],
+    \ 'errorformat': '%f:%l: %m',
+    \ }
+
 call neomake#configure#automake('nwr', 1000)
 " call neomake#configure#automake('w')  " use when on battery
 let g:neomake_ansible_enabled_makers = ['ansiblelint', 'yamllint']
@@ -624,8 +691,19 @@ function! SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+" Configure ag (https://github.com/ggreer/the_silver_searcher)
+if executable('rg')
+  " Use ag over grep
+  set grepprg="rg --vimgrep --smart-case --hidden --follow"
+endif
 
-" --- Commands
+
+" ------------------------------------------------------------------------------
+" --------------------------------- Commands -----------------------------------
+" ------------------------------------------------------------------------------
+" Create a section header
+command -nargs=* Header silent! call Header(<args>)
+
 " Define a decrypt/encrypt command to decrypt the current file
 command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
 command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
@@ -650,7 +728,9 @@ command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()
 " command! -nargs=* -bar G !clear;git <args>      " Alias for Git
 " command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
-" --- Terminal colors
+" -----------------------------------------------------------------------------
+" ----------------------------- Terminal Colors -------------------------------
+" -----------------------------------------------------------------------------
 " Set neovim colors for truecolor terminal
 " https://neovim.io/doc/user/nvim_terminal_emulator.html#nvim-terminal-emulator-configuration
 
@@ -915,7 +995,9 @@ let g:terminal_color_253 = '#dadada'
 let g:terminal_color_254 = '#e4e4e4'
 let g:terminal_color_255 = '#eeeeee'
 
-" --- Highlight settings
+" -----------------------------------------------------------------------------
+" ------------------------- Highlight Configuration ---------------------------
+" -----------------------------------------------------------------------------
 hi Cursor ctermbg=6 guibg=#76d4d6
 hi NeomakeErrorSign ctermfg=196 guifg=#d70000
 hi NeomakeWarningSign ctermfg=226 guifg=#ffff00
@@ -937,14 +1019,9 @@ hi DiffAdd ctermbg=108  guibg=#366344
 hi DiffChange ctermbg=31 guibg=#385570
 hi DiffText ctermbg=208 guibg=#6E3935
 
-" --- Plugin configuration
-" Configure ag (https://github.com/ggreer/the_silver_searcher)
-if executable('rg')
-  " Use ag over grep
-  set grepprg="rg --vimgrep --smart-case --hidden --follow"
-endif
-
-" --- Auto-commands
+" -----------------------------------------------------------------------------
+" ------------------------------ Auto Commands --------------------------------
+" -----------------------------------------------------------------------------
 augroup vimrcEx
     au!
 
