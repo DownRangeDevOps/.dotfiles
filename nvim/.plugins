@@ -34,8 +34,9 @@ Plug 'ncm2/ncm2-ultisnips' " Requires utilisnips - https://github.com/ncm2/ncm2-
 Plug 'majutsushi/tagbar' " https://github.com/majutsushi/tagbar
 
 " Linting
-Plug 'neomake/neomake' " https://github.com/neomake/neomake
-Plug 'Vimjas/vint'     " https://github.com/Vimjas/vint
+Plug 'neomake/neomake'                                     " https://github.com/neomake/neomake
+Plug 'Vimjas/vint'                                         " https://github.com/Vimjas/vint
+Plug 'psliwka/vim-dirtytalk', { 'do': ':DirtytalkUpdate' } " https://github.com/psliwka/vim-dirtytalk
 
 " Helpers
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' } " https://github.com/heavenshell/vim-pydocstring

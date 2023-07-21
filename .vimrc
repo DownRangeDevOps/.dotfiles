@@ -1,5 +1,5 @@
 " vim: set ft=vim
-so $HOME/.dotfiles/nvim/.plugins " Load Plug manifest
+so $HOME/.dotfiles/nvim/.plugins  " Load Plug manifest
 
 
 " ------------------------------------------------------------------------------
@@ -75,6 +75,12 @@ function! s:WriteIfModifiable()
         silent w
     endif
 endfunction
+
+" Show syntax highlighting being applied at the cursor position
+function! SynGroup()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
 
 " Open previous buffer, wipe current, quit if only one buffer
 function! s:WipeBufOrQuit()
@@ -447,10 +453,11 @@ let g:bullets_comments = [
     \ ['^\\s*\\d\\+\\.\\s\\+', ''],
     \ ['^\\s*\\[\\-*\\+]\\s\\+', '']
     \]
-" Trying to get auto-complete to work with bullets, but au not setting bind
-" right for <CR>, <Plug>(bullets-newline)
+
+" Trying to get auto-complete to work with bullets, not working yet
 " let g:bullets_set_mappings = 0
 " let g:bullets_custom_mappings = [
+"   \ ['inoremap', '<CR>', '<expr> <CR> (pumvisible() ? "\<c-y>" : "<Plug>(bullets-newline)")'],
 "   \ ['inoremap', '<C-cr>', '<cr>'],
 "   \
 "   \ ['nmap', 'o', '<Plug>(bullets-newline)'],
@@ -475,6 +482,21 @@ let g:vmt_list_indent = 2
 " Configure MarkdownPreview (https://github.com/iamcco/markdown-preview.nvim)
 " let g:mkdp_browser = '/Application/Brave Browser.app'
 let g:mkdp_echo_preview_url = 1
+let g:mkdp_theme = 'dark'
+let g:mkdp_preview_options = {
+    \ 'mkit': {},
+    \ 'katex': {},
+    \ 'uml': {},
+    \ 'maid': {},
+    \ 'disable_sync_scroll': 0,
+    \ 'sync_scroll_type': 'middle',
+    \ 'hide_yaml_meta': 1,
+    \ 'sequence_diagrams': {},
+    \ 'flowchart_diagrams': {},
+    \ 'content_editable': v:false,
+    \ 'disable_filename': 1,
+    \ 'toc': {}
+    \ }
 
 " Configure vim-pydocstring (https://github.com/heavenshell/vim-pydocstring)
 let g:pydocstring_formatter = 'google'
@@ -1057,8 +1079,6 @@ augroup vimrcEx
         \ textwidth=80
         \ formatoptions+=t
         \ formatoptions-=q
-    " au FileType 'markdown', 'text', 'gitcommit', 'scratch'
-    "     \ inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "<Plug>(bullets-newline)")
 
     " Wrap at 72 characters and spell check git commit messages
     au FileType gitcommit setl filetype=markdown
@@ -1081,7 +1101,7 @@ augroup vimrcEx
 
     " Remove tabs and trailing whitespace on open and insert
     au BufRead,BufLeave,TextChanged *
-        \call <SID>StripTrailingWhitespaces()
+        \ call <SID>StripTrailingWhitespaces()
 
     " Autosave
     au TextChanged * call <SID>WriteIfModifiable()
