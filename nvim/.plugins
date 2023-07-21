@@ -40,10 +40,16 @@ Plug 'psliwka/vim-dirtytalk', { 'do': ':DirtytalkUpdate' } " https://github.com/
 
 " Helpers
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' } " https://github.com/heavenshell/vim-pydocstring
+Plug 'github/copilot.vim'                                                     " https://docs.github.com/en/copilot/getting-started-with-github-copilot?tool=vimneovim
 
 " Utilities
-Plug '/usr/local/opt/fzf'                              " https://github.com//usr/local/opt/fzf
-Plug 'Xuyuanp/nerdtree-git-plugin'                     " https://github.com/Xuyuanp/nerdtree-git-plugin
+" Plug 'Xuyuanp/nerdtree-git-plugin'                     " https://github.com/Xuyuanp/nerdtree-git-plugin
+" Plug 'tpope/vim-vinegar'                               " https://github.com/tpope/vim-vinegar
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } " https://github.com/scrooloose/nerdtree
+Plug 'preservim/vim-lexical'                           " https://github.com/preservim/vim-lexical
+Plug 'preservim/vim-pencil'                            " https://github.com/preservim/vim-pencil
+Plug 'preservim/vim-wordy'                             " https://github.com/preservim/vim-wordy
+Plug '/usr/local/opt/fzf'                              " https://github.com//usr/local/opt/
 Plug 'airblade/vim-gitgutter'                          " https://github.com/airblade/vim-gitgutter
 Plug 'arithran/vim-delete-hidden-buffers'              " https://github.com/arithran/vim-delete-hidden-buffers
 Plug 'dbakker/vim-projectroot'                         " https://github.com/dbakker/vim-projectroot
@@ -51,8 +57,7 @@ Plug 'drmingdrmer/vim-toggle-quickfix'                 " https://github.com/drmi
 Plug 'easymotion/vim-easymotion'                       " https://github.com/easymotion/vim-easymotion
 Plug 'junegunn/fzf.vim'                                " https://github.com/junegunn/fzf.vim
 Plug 'mzlogin/vim-markdown-toc'                        " https://github.com/mzlogin/vim-markdown-toc
-Plug 'rizzatti/dash.vim'                               " https://github.com/rizzatti/dash.vim
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } " https://github.com/scrooloose/nerdtree
+Plug 'rizzatti/dash.vim'                               " https://github.com/rizzatti/dash.
 Plug 'stefandtw/quickfix-reflector.vim'                " https://github.com/stefandtw/quickfix-reflector.vim
 Plug 'svermeulen/vim-easyclip'                         " https://github.com/svermeulen/vim-easyclip
 Plug 'tpope/vim-abolish'                               " https://github.com/tpope/vim-abolish
@@ -92,6 +97,7 @@ Plug 'pearofducks/ansible-vim'               " https://github.com/pearofducks/an
 Plug 'preservim/vim-markdown'                " https://github.com/preservim/vim-markdown
 Plug 'stephpy/vim-yaml'                      " https://github.com/stephpy/vim-yaml
 Plug 'vim-scripts/bash-support.vim'          " https://github.com/vim-scripts/bash-support.vim
+Plug 'powerman/vim-plugin-AnsiEsc'           " https://github.com/powerman/vim-plugin-AnsiEsc
 
 " Formatting
 Plug 'dhruvasagar/vim-table-mode'           " https://github.com/dhruvasagar/vim-table-mode
@@ -108,4 +114,3 @@ Plug 'dkarter/bullets.vim'                  " https://github.com/dkarter/bullets
 " Thememing
 Plug 'chriskempson/vim-tomorrow-theme' " https://github.com/chriskempson/vim-tomorrow-theme
 call plug#end()
-

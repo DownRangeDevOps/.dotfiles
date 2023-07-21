@@ -6,11 +6,10 @@ so $HOME/.dotfiles/nvim/.plugins  " Load Plug manifest
 " --------------------------------- Functions ----------------------------------
 " ------------------------------------------------------------------------------
 " Reusable function to prompt the user for input
-" function! s:PromptForInput(prompt, prompt_input = 'Input: ', fill_char, fill_char_input = ' ')
 function! s:PromptForInput(...)
   " Args (optional)
   let l:prompt = get(a:000, 0, 'Input: ')
-  let l:default_input = get(a:000, 1, ' ')
+  let l:default_input = get(a:000, 1, '')
 
   call inputsave()
   let l:user_input = input(l:prompt)
@@ -26,30 +25,31 @@ endfunction
 " Prompt for a section header and insert it as a comment
 function! Header()
     call s:PromptForInput('Section headding: ')
-    let l:heading = ' ' . g:user_input . ' '
+    let l:heading = g:user_input
 
-    " Defaults not working
-    " call s:PromptForInput('Heading width? (80): ', 80)
-    " let l:header_width = ' ' . g:user_input . ' '
-    let l:header_width = 80
+    call s:PromptForInput('Heading width? (50): ', 50)
+    let l:header_width = g:user_input
 
-    " Defaults not working
-    " call s:PromptForInput('Heading fill character? (-): ', '-')
-    " let l:header_fill_char = ' ' . g:user_input . ' '
-    let l:header_fill_char = '-'
+    call s:PromptForInput('Heading fill character? (-): ', '-')
+    let l:header_fill_char = g:user_input
 
-    let l:header_fill_char = a:0 == 2? a:2 : '-'
-    let l:heading_width = strlen(l:heading)
-    let l:prefix_fill_len = ((l:header_width / 2) - (l:heading_width / 2) - 2)
-    let l:prefix_fill = &commentstring[0] . ' ' . repeat(l:header_fill_char, l:prefix_fill_len)
-    let l:suffix_fill_len = l:header_width - (strlen(l:prefix_fill) + strlen(l:heading))
-    let l:suffix_fill = repeat(l:header_fill_char, l:suffix_fill_len)
     let l:heading_line = &commentstring[0] . ' ' . repeat(l:header_fill_char, (l:header_width - 2))
-    let l:heading_text = l:prefix_fill . l:heading . l:suffix_fill
+    let l:heading_text = &commentstring[0] . '  ' . l:heading
 
-    :put =l:heading_line
-    :put =l:heading_text
-    :put =l:heading_line
+    :put = l:heading_line
+    :put = l:heading_text
+    :put = l:heading_line
+endfunction
+
+function! TFHeader()
+    call s:PromptForInput('Section heading: ')
+    let l:heading_title = '  ' . g:user_input
+    let l:heading_start = '/' . repeat('*', 41)
+    let l:heading_end = ' ' . repeat('*', 41) . '/'
+
+    :put = l:heading_start
+    :put = l:heading_title
+    :put = l:heading_end
 endfunction
 
 " Strip trailing whitespace
@@ -191,6 +191,7 @@ scriptencoding utf-8
 " Use space as leader key
 let mapleader=' '
 nnoremap <space> <leader>
+nnoremap <S-space> <leader>
 
 " Config
 filetype plugin indent on                " Enable file type detection and do language-dependent indenting.
@@ -218,7 +219,7 @@ set lazyredraw                           " Disable redraw when executing macros
 set list listchars=tab:»·,trail:·,nbsp:· " Display tabs, non-breaking spaces, and trailing whitespace
 set mouse=a
 set noshowmode                           " hide the mode status line
-set spell spelllang=en_us                " Turn off spell checking by default
+set spell spelllang=en_us                " Turn on spell checking by default
 set noswapfile                           " disable swap file
 set ruler                                " show the cursor position all the time
 set scrolloff=2                          " Always show one line above/below the cursor
@@ -334,6 +335,7 @@ nnoremap <silent><leader>s :call ToggleSpell()<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
 nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
+" nnoremap <silent><leader>1 <Plug>VinegarUp<CR>|                                             " Open/close NERDTree
 nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                 " Open NERDTree and hilight the current file
 nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
 nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
@@ -427,7 +429,7 @@ let g:vim_markdown_auto_insert_bullets=0
 let g:vim_markdown_new_list_item_indent=0
 let g:vim_markdown_new_list_item_indent = 0
 let g:tex_conceal = ''
-let g:vim_markdown_math = 1
+let g:vim_markdown_math = 0
 let g:vim_markdown_follow_anchor = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_fenced_languages = [
@@ -482,7 +484,7 @@ let g:vmt_list_indent = 2
 " Configure MarkdownPreview (https://github.com/iamcco/markdown-preview.nvim)
 " let g:mkdp_browser = '/Application/Brave Browser.app'
 let g:mkdp_echo_preview_url = 1
-let g:mkdp_theme = 'dark'
+let g:mkdp_theme = 'light'
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
@@ -725,6 +727,7 @@ endif
 " ------------------------------------------------------------------------------
 " Create a section header
 command -nargs=* Header silent! call Header(<args>)
+command -nargs=* TFHeader silent! call TFHeader(<args>)
 
 " Define a decrypt/encrypt command to decrypt the current file
 command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
@@ -1072,6 +1075,9 @@ augroup vimrcEx
     au BufRead,BufNewFile .envrc setl ft=sh
     au BufRead,BufNewFile dockerfile.* setl ft=Dockerfile
     au BufRead,BufNewFile */gcloud_vars/.* set ft=sh
+    au BufRead,BufNewFile .markdownlintrc setl ft=json
+    au BufRead,BufNewFile .tfstate setl ft=hcl
+
 
     " Enable spellchecking and textwrap for Markdown
     au FileType markdown setl
@@ -1122,6 +1128,8 @@ augroup vimrcEx
     au FileType ansible setl nospell
     au FileType yaml setl nospell
     au FileType Dockerfile setl nospell
+    au FileType markdown,mkd,gitcommit,textile,text call lexical#init()
+    au FileType text call lexical#init({ 'spell': 0 })
 
     " Bind q to close quickfix
     au FileType quickfix nnoremap q :cclose

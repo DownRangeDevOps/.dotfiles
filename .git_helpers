@@ -1,37 +1,43 @@
 # vim: set ft=sh:
-alias g="git"
 
 # Helpers
 function __git_is_repo() {
-    return "$(git -C ${1} rev-parse 2>/dev/null)"
+    git -C "${1}" rev-parse 2>/dev/null
 }
 
 function git_master_or_main() {
-    if [[ ! "$(__git_is_repo ${PWD})" ]]; then
-        printf "%s" "${PWD} is not a git repository."
+    if ! __git_is_repo "${PWD}"; then
+        printf "%s\n" "${PWD} is not a git repository."
         return 1
     fi
 
     INITIAL_COMMIT="$(git rev-list --abbrev-commit HEAD | tail -n 1)"
-    MASTER_EXISTS="$(git rev-parse --verify master 2>/dev/null)"
-    MAIN_EXISTS="$(git rev-parse --verify main 2>ev/null)"
 
-    if [[ ${MASTER_EXISTS} && ${MAIN_EXISTS} ]]; then
-        MASTER_LENGTH="$(git rev-list --count ${INITIAL_COMMIT}..master)"
-        MAIN_LENGTH="$(git rev-list --count ${INITIAL_COMMIT}..main)"
+    git show-ref --verify --quiet refs/heads/master
+    MASTER_EXISTS="${?}"
 
-        if [[ ${MASTER_LENGTH} > ${MAIN_LENGTH} ]]; then
+    git show-ref --verify --quiet refs/heads/main
+    MAIN_EXISTS="${?}"
+
+    if [[ -z ${MASTER_EXISTS} && -z ${MAIN_EXISTS} ]]; then
+        MASTER_LENGTH="$(git rev-list --count "${INITIAL_COMMIT}..master")"
+        MAIN_LENGTH="$(git rev-list --count "${INITIAL_COMMIT}..main")"
+
+        if [[ ${MASTER_LENGTH} -gt ${MAIN_LENGTH} ]]; then
             MAIN_BRANCH="main"
         else
             MAIN_BRANCH="master"
         fi
     elif [[ ${MAIN_EXISTS} ]]; then
         MAIN_BRANCH="main"
-    else
+    elif [[ ${MASTER_EXISTS} ]]; then
         MAIN_BRANCH="master"
+    else
+        printf "%s\n" "This repository does not have a 'master' or 'main' branch!"
+        exit 1
     fi
 
-    return "${MAIN_BRANCH}"
+    printf  "%s" "${MAIN_BRANCH}"
 }
 
 # Logging
@@ -39,6 +45,7 @@ function gd() {
     git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
 }
 
+alias g="git"
 alias gs="git status"
 alias gdm="gd origin/master..."
 alias gdd="gd origin/develop..."
@@ -81,7 +88,7 @@ function gco() {
     if [[ ${1} ]]; then
         git checkout "${@}"
     else
-        git branch -a \
+        git branch --all \
             | tr -d " " \
             | sed -e "s,^remotes/origin/,," \
             | sed -e "s,^HEAD.*,," \
@@ -145,7 +152,7 @@ function git_delete_merged_branches() {
 # Committing
 alias ga="git add"
 alias ga.="git add --all"
-alias gc="git commit"
+alias gc="pre-commit run --all-files && git add --update && git commit --no-verify"
 alias gst="git stash"
 alias gcp="git cherry-pick -x"
 alias gqf="ga -u && gc --amend --no-edit && gfpo"
@@ -157,6 +164,9 @@ alias grba="git rebase --abort"
 alias grbm="gf && git rebase --interactive origin/\$(git_master_or_main)"
 alias grbd="gf && git rebase --interactive origin/develop"
 alias grbs="gf && git rebase --interactive \$(git merge-base HEAD origin/\$(git_master_or_main))"
+
+# Merging
+alias gm=gmerge
 
 # Pushing
 alias gpu="git push -u \$(git remote) HEAD"
@@ -214,32 +224,51 @@ gcot() {
 }
 
 # git merge --ff-only
-gffm() {
-    if [[ $1 == "help" || $1 == "--help" ]]; then
-        echo "Usage: gffm <branch>"
-        return 1
+gmerge() {
+    MAIN_BRANCH=$(git_master_or_main)
+
+    if [[ $1 == "--ff-only" ]]; then
+        MERGE_COMMIT_OPTION="--ff-only"
+        shift
+    else
+        MERGE_COMMIT_OPTION="--no-ff"
     fi
 
-    if [[ $1 == "HEAD" || $1 == "" ]]; then
-        git log "origin/$(git_master_or_main).." && \
-        git diff --stat "origin/$(git_master_or_main)" && \
-        prompt_to_continue "Merge to $(git_master_or_main)?" && \
-        git checkout "$(git_master_or_main)" && \
-        git fetch -p && \
-        git pull -r && \
-        git merge --ff-only "@{-1}" && \
-        prompt_to_continue "Push to origin?" && \
-        git push origin HEAD
+    if [[ $1 == "help" || $1 == "--help" ]]; then
+        print  "%s\n" \
+            "Usage: gffm [OPTION] [<BRANCH>]" \
+            "Merge BRANCH to ${MAIN_BRANCH} printing the log and stat, and" \
+            "prompting before merging or pushing." \
+            "" \
+            "If no BRANCH, or BRANCH is HEAD, the current branch will be merged to ${MAIN_BRANCH}."
     else
-        BRANCH=$1
-        git log "@{-1}..${BRANCH}" && \
-            git diff --stat "origin/$(git_master_or_main)" && \
-            prompt_to_continue "Merge to ${1}?" && \
-            git merge --ff-only "$BRANCH" && \
+        if [[ $1 == "HEAD" || $1 == "" ]]; then
+            git log "origin/${MAIN_BRANCH}.." && \
+            git diff --stat "origin/${MAIN_BRANCH}" && \
+            prompt_to_continue "Merge to ${MAIN_BRANCH}?" && \
+            git rebase "origin/${MAIN_BRANCH}"
+            git checkout "${MAIN_BRANCH}" && \
+            git fetch -p && \
+            git pull -r && \
+            git merge "${MERGE_COMMIT_OPTION}" "@{-1}" && \
             prompt_to_continue "Push to origin?" && \
             git push origin HEAD
+        else
+            BRANCH=$1
+            git checkout "${BRANCH}" && \
+            git fetch -p && \
+            git pull -r && \
+            git checkout "@{-1}" && \
+            git log "${BRANCH}..@" && \
+            git diff --stat "${BRANCH}" && \
+            prompt_to_continue "Merge to ${BRANCH}?" && \
+            git rebase "${BRANCH}"
+            git checkout "${BRANCH}" && \
+            git merge "${MERGE_COMMIT_OPTION}" "@{-1}" && \
+            prompt_to_continue "Push to origin?" && \
+            git push origin HEAD
+        fi
     fi
-
 }
 
 # git commit and push

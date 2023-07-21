@@ -6,35 +6,12 @@
 # PS4='$LINENO: '
 # export BASH_XTRACEFD="5"
 # set -xv
-#
-# Slow commands:
-#  0.000040000  0.367946000 +++ command pyenv rehash
-#    0.237779000  0.605725000    +++ pyenv virtualenv-init -
-#
-#  0.000027000  0.694166000  +++ command pyenv sh-virtualenvwrapper
-#    0.142052000  0.836218000 ++ eval 'export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="3.10.1"
-#
-#  0.000032000  1.519325000 ++++ command goenv sh-rehash --only-manage-paths
-#    0.195233000  1.714558000    +++ eval 'export GOROOT="/Users/ryanfisher/.goenv/versions/1.20.0"
-#
-#  0.000019000  2.371353000 +++ command pyenv sh-virtualenvwrapper
-#    0.139559000  2.510912000    ++ eval 'export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="3.10.1"
-#
-#  0.000355000  2.649294000 ++++ /Users/ryanfisher/.pyenv/versions/3.10.1/bin/python -m virtualenvwrapper.hook_loader --script /var/folders/l0/12rtt0w95wx_892q3bkcg5tr0000gn/T/virtualenvwrapper-initialize-hook-mXAAKDb63y initialize
-#    0.144720000  2.794014000    ++++ result=0
-#
-#  0.000015000  3.049790000 +++ command goenv rehash
-#    0.123186000  3.172976000   +++ goenv rehash --only-manage-paths
-#
-#  0.000043000  3.174257000  ++++ command goenv sh-rehash --only-manage-paths
-#    0.194613000  3.368870000 +++ eval 'export GOROOT="/Users/ryanfisher/.goenv/versions/1.20.0"
 
 # Squeltch egrep warnings
 alias egrep="grep -E"
 
 # Source gcloud files first so PS1 gets overridden
-source "${HOME}/dev/utils/google-cloud-sdk/completion.bash.inc" # gcloud bash completion
-source "${HOME}/dev/utils/google-cloud-sdk/path.bash.inc"       # gcloud binaries
+source "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
 
 # Configure path, must be first...
 export PATH=""                                                # Reset
@@ -300,12 +277,11 @@ alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 function prompt_to_continue() {
     read -p "${*:-Continue?} (y)[es|no] " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
+        printf "\n\n"
+    else
         printf "%s\n" "Ok, exiting."
-        exit 1
+        return 1
     fi
-
-    printf "\n"
-    return 1
 }
 
 # Join array
@@ -409,7 +385,7 @@ alias gpt=generate_python_module_ctags
 
 # Add the direnv hook to PROMPT_COMMAND
 # source ~/.direnvrc
-# eval "$(direnv hook bash)"
+eval "$(direnv hook bash)"
 
 complete -C /usr/local/bin/terraform terraform
 source "$HOME/.rsvm/current/cargo/env"

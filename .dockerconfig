@@ -95,7 +95,7 @@ function docker-tags () {
 
 # Docker shortcuts
 function dc() {
-  docker-compose "${@}"
+  docker compose "${@}"
   # if [[ ${#} -eq 2 ]]; then
   #   if [[ -z $(docker ps --quiet --filter "name=${1}") ]]; then
   #     case ${2} in

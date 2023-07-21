@@ -1,0 +1,11 @@
+{
+  "overrides": [
+    {
+      "files": ["COMMIT_EDITMSG"],
+      "rules": {
+        "MD041": false,
+        "MD022": false
+      }
+    }
+  ]
+}
