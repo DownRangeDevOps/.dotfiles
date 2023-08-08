@@ -1,10 +1,10 @@
 [user]
-    name = Ryan Fisher
-    email = 1899850+RyanFisher3@users.noreply.github.com
+	name = Ryan Fisher
+	email = ryan@youtily.com
 [include]
     path = .gitconfig_aliases
 [core]
-    excludesfile = /Users/ryanfisher/.gitignore_global
+	excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
     ignorecase = false
@@ -31,7 +31,7 @@
 [branch]
     autosetuprebase = always
 [commit]
-    template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
+	template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
     autocorrect = 0
 [difftool "sourcetree"]

@@ -1,7 +1,7 @@
 # vim: set ft=sh:
 # .bashrc
 
-# Log xtrace for this script and timestamp it to find slow loading dependencies
+# # Log xtrace for this script and timestamp it to find slow loading dependencies
 # exec 5> >(ts -i "%.s" >| /tmp/bash_debug.log)
 # PS4='$LINENO: '
 # export BASH_XTRACEFD="5"
@@ -348,14 +348,14 @@ alias ag='ag \
     --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
 
 # helpers
-source "$HOME/.dotfiles/.dockerconfig"            # Docker helpers
-source "$HOME/.dotfiles/.kubernetes"              # K8s helpers
-source "$HOME/.dotfiles/.terraform"               # Terraform helpers
-source "$HOME/.dotfiles/.git_helpers" 2>/dev/null # git helpers
-source "$HOME/.dotfiles/.awsconfig"               # aws helpers
-source "$HOME/.dotfiles/.osx"                     # osx helpers
+source "$HOME/.dotfiles/bash-helpers/.dockerconfig"            # Docker helpers
+source "$HOME/.dotfiles/bash-helpers/.kubernetes"              # K8s helpers
+source "$HOME/.dotfiles/bash-helpers/.terraform"               # Terraform helpers
+source "$HOME/.dotfiles/bash-helpers/.git_helpers" 2>/dev/null # git helpers
+source "$HOME/.dotfiles/bash-helpers/.awsconfig"               # aws helpers
+source "$HOME/.dotfiles/bash-helpers/.osx"                     # osx helpers
 source "/usr/local/etc/profile.d/z.sh"            # z cd auto completion
-source "$HOME/.dotfiles/.ps1"                     # Custom PS1
+source "$HOME/.dotfiles/bash-helpers/.ps1"                     # Custom PS1
 
 alias pipelinewise="\$HOME/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
 alias csqldev="cloud_sql_proxy -instances=sightly-outcome-development:us-west1:sightly-development-outcome-postgres=tcp:0.0.0.0:8765"
