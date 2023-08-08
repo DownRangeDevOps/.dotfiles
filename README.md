@@ -13,4 +13,3 @@ ln -sf .dotfiles/.inputrc .
 ln -sf .dotfiles/.vimrc .
 ln -sf .dotfiles/.zshrc .
 ```
-
