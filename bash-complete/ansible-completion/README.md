@@ -10,7 +10,7 @@ Provide a bash completion on host name, module name and options for [ansible](ht
  2. Copy/move the `ansible-completion.bash` in your `bash_completion.d`
     folder (`/etc/bash_completion.d`, `/usr/local/etc/bash_completion.d`or `~/bash_completion.d`).
 
- 3. **Or** copy/move it where you want and then load the `ansible-completion.bash` file in your `~/.bashrc` or `~/.profile` like that: 
+ 3. **Or** copy/move it where you want and then load the `ansible-completion.bash` file in your `~/.bashrc` or `~/.profile` like that:
  		source ~/ansible-completion.bash
 
  4. Reload your shell with something like `source ~/.bashrc` or `source ~/.profile`
@@ -43,9 +43,8 @@ You can set the cache timeout with the environement variable `ANSIBLE_COMPLETION
 ## Contributors
 
 - [ogarcia](https://github.com/ogarcia)
-- [pheanex](https://github.com/pheanex) (ansible-* completions) 
+- [pheanex](https://github.com/pheanex) (ansible-* completions)
 - [DenKoren](https://github.com/DenKoren)
-- [hryamzik](https://github.com/hryamzik) 
+- [hryamzik](https://github.com/hryamzik)
 - [mrqwer88](https://github.com/mrqwer88)
 - [wolfgangkarall](https://github.com/wolfgangkarall)
-

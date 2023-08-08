@@ -2,4 +2,3 @@ source ~/.vimrc
 
 " Enable vim-surround plugin: https://github.com/tpope/vim-surround
 set surround
-
