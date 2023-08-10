@@ -90,10 +90,12 @@ function gb() {
         git branch "${@}"| fzf
     fi
 }
+
 alias gbn="git rev-parse --abbrev-ref HEAD"
 alias gba="git branch --all"
 alias gf="git fetch --prune"
 alias gp="gf && git pull --rebase"
+
 function gco() {
     if [[ ${1} ]]; then
         git checkout "${@}"
@@ -253,29 +255,43 @@ gmerge() {
             "If no BRANCH, or BRANCH is HEAD, the current branch will be merged to ${MAIN_BRANCH}."
     else
         if [[ $1 == "HEAD" || $1 == "" ]]; then
-            git log "origin/${MAIN_BRANCH}.." && \
-            git diff --stat "origin/${MAIN_BRANCH}" && \
-            prompt_to_continue "Merge to ${MAIN_BRANCH}?" && \
+            git log "origin/${MAIN_BRANCH}.."
+            git diff --stat "origin/${MAIN_BRANCH}"
+            prompt_to_continue "Merge to ${MAIN_BRANCH}?"
+
+            printf "%s\n" "==> Updating from origin..."
+            git fetch -p
+
+            printf "%s\n" "==> Rebasing on ${MAIN_BRANCH}..."
+            git checkout "${MAIN_BRANCH}"
+            git pull -r
             git rebase "origin/${MAIN_BRANCH}"
-            git checkout "${MAIN_BRANCH}" && \
-            git fetch -p && \
-            git pull -r && \
-            git merge "${MERGE_COMMIT_OPTION}" "@{-1}" && \
-            prompt_to_continue "Push to origin?" && \
+
+            printf "%s\n" "==> Merging to ${MAIN_BRANCH}..."
+            git merge "${MERGE_COMMIT_OPTION}" "@{-1}"
+            prompt_to_continue "Push to origin?"
+
+            printf "%s\n" "==> Pushing ${MAIN_BRANCH}..."
             git push origin HEAD
         else
             BRANCH=$1
-            git checkout "${BRANCH}" && \
-            git fetch -p && \
-            git pull -r && \
-            git checkout "@{-1}" && \
-            git log "${BRANCH}..@" && \
-            git diff --stat "${BRANCH}" && \
-            prompt_to_continue "Merge to ${BRANCH}?" && \
+            git checkout "${BRANCH}"
+
+            printf "%s\n" "==> Updating ${BRANCH}..."
+            git fetch -p
+            git pull -r
+            git checkout "@{-1}"
+            git log "${BRANCH}..@"
+            git diff --stat "${BRANCH}"
+            prompt_to_continue "Merge to ${BRANCH}?"
+
+            printf "%s\n" "==> Merging to ${BRANCH}..."
             git rebase "${BRANCH}"
-            git checkout "${BRANCH}" && \
-            git merge "${MERGE_COMMIT_OPTION}" "@{-1}" && \
-            prompt_to_continue "Push to origin?" && \
+            git checkout "${BRANCH}"
+            git merge "${MERGE_COMMIT_OPTION}" "@{-1}"
+            prompt_to_continue "Push to origin?"
+
+            printf "%s\n" "==> PUshing ${BRANCH}..."
             git push origin HEAD
         fi
     fi

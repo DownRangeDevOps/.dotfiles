@@ -6,6 +6,7 @@
 alias egrep="grep -E"
 
 # Source gcloud files first so PS1 gets overridden
+# shellcheck source=/usr/local/share/google-cloud-sdk/path.bash.inc
 source "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
 
 # Configure path, must be first...
@@ -76,8 +77,10 @@ function pyenv_alias() {
 
     for name in ${_VIRTUALENVWRAPPER_API}; do
         if [[ $1 == "alias" ]]; then
+            # shellcheck disable=SC2139
             alias ${name}=pyenv
         elif [[ $1 == "unalias" ]]; then
+            # shellcheck disable=SC2139
             unalias ${name}
         fi
     done
