@@ -187,6 +187,9 @@ setglobal nobomb
 setglobal fileencoding=utf-8
 scriptencoding utf-8
 
+" Use a login shell to load .bash_profile
+let &shell='/usr/local/bin/bash --login'
+
 " Use space as leader key
 let mapleader=' '
 nnoremap <space> <leader>
@@ -218,7 +221,7 @@ set lazyredraw                           " Disable redraw when executing macros
 set list listchars=tab:»·,trail:·,nbsp:· " Display tabs, non-breaking spaces, and trailing whitespace
 set mouse=a
 set noshowmode                           " hide the mode status line
-set spell spelllang=en_us                " Turn on spell checking by default
+set nospell spelllang=en_us                " Turn on spell checking by default
 set noswapfile                           " disable swap file
 set ruler                                " show the cursor position all the time
 set scrolloff=2                          " Always show one line above/below the cursor
@@ -332,7 +335,8 @@ nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:star
 nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>s :call ToggleSpell()<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
-nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
+nnoremap <silent><leader>1 :execute 'e ' . getcwd()<CR>|                                    " Open/close NERDTree
+" nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
 " nnoremap <silent><leader>1 <Plug>VinegarUp<CR>|                                             " Open/close NERDTree
 nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                 " Open NERDTree and hilight the current file
@@ -507,9 +511,13 @@ nmap <silent> <C-_> <Plug>(pydocstring)
 " Configure vim-table-mode (https://github.com/dhruvasagar/vim-table-mode)
 
 " Configure nerdtree-git-plugin (https://github.com/Xuyuanp/nerdtree-git-plugin)
-let NERDTreeHijackNetrw=1                       " Open in current split with netrw
-let NERDTreeShowHidden=1                        " Show NERDTree
-let NERDTreeQuitOnOpen=1                        " Close NERDTree after file is opened
+let g:netrw_banner = 0
+let NERDTreeHijackNetrw = 1                       " Open in current split with netrw
+let NERDTreeShowHidden = 1                        " Show NERDTree
+let NERDTreeQuitOnOpen = 1                        " Close NERDTree after file is opened
+let NERDTreeWinSize = 0
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeRemoveDirCmd = 'rm -rf '
 let g:NERDTreeGitStatusIndicatorMapCustom = {
     \ 'Modified'  : '•',
     \ 'Staged'    : '+',
@@ -1077,19 +1085,16 @@ augroup vimrcEx
     au BufRead,BufNewFile .markdownlintrc setl ft=json
     au BufRead,BufNewFile .tfstate setl ft=hcl
 
-
-    " Enable spellchecking and textwrap for Markdown
+    " Enable textwrap for Markdown
     au FileType markdown setl
-        \ spell
         \ textwidth=80
         \ formatoptions+=t
         \ formatoptions-=q
 
-    " Wrap at 72 characters and spell check git commit messages
+    " Wrap at 72 characters git commit messages
     au FileType gitcommit setl filetype=markdown
         \ textwidth=72
         \ colorcolumn=50,72
-        \ spell
         \ commentstring=#%s
         \ formatoptions+=t
 
@@ -1123,10 +1128,7 @@ augroup vimrcEx
         \ norelativenumber
 
     " Force spell/nospell
-    au FileType terraform setl spell
-    au FileType ansible setl nospell
-    au FileType yaml setl nospell
-    au FileType Dockerfile setl nospell
+    au FileType markdown,mkd,gitcommit,textile,text setl spell
     au FileType markdown,mkd,gitcommit,textile,text call lexical#init()
     au FileType text call lexical#init({ 'spell': 0 })
 

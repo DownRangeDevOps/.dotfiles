@@ -1,6 +1,9 @@
 # vim: set ft=sh:
 
-# Helpers
+
+# ------------------------------------------------
+#  Healpers
+# ------------------------------------------------
 function __git_is_repo() {
     git -C "${1}" rev-parse 2>/dev/null
 }
@@ -40,11 +43,14 @@ function git_master_or_main() {
     printf  "%s" "${MAIN_BRANCH}"
 }
 
-# Logging
 function gd() {
     git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
 }
 
+
+# ------------------------------------------------
+#  Alises
+# ------------------------------------------------
 alias g="git"
 alias gs="git status"
 alias gdm="gd origin/master..."
@@ -78,7 +84,11 @@ function git_fixup() {
 
 # Branching
 function gb() {
-    git branch "${@}"| fzf
+    if [[ $1 == "-D" ]]; then
+        git branch "${@}"
+    else
+        git branch "${@}"| fzf
+    fi
 }
 alias gbn="git rev-parse --abbrev-ref HEAD"
 alias gba="git branch --all"
