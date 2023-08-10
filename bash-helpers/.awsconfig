@@ -1,7 +1,9 @@
 # vim: set ft=sh:
 
 # aws-vault
-AWS_SESSION_TOKEN_TTL='12h'
+export AWS_SESSION_TOKEN_TTL="12h"
+
+# alises
 alias av="aws-vault"
 alias ave="aws-vault exec"
 alias avr="aws-vault exec msr-root --"
@@ -10,19 +12,10 @@ alias avs="aws-vault exec msr-staging --"
 alias avo="aws-vault exec msr-ops-sbx --"
 alias avsci="aws-vault exec msr-sci-sbx --"
 
-# ebcli
-function eb() {
-  if [[ $1 == 'printenv' ]]; then
-    /usr/bin/env eb printenv "${@:2}" | sed -e "s/^[ \t]*//;s/ = \(.*\)/='\1'/;/^Environment.*/d" | sort
-  else
-    /usr/bin/env eb "$@"
-  fi
-}
-
 # aws-vault
 function ave() {
-    aws-vault exec ${*}
+    aws-vault exec "${@}"
 }
 function ave-sbx() {
-    aws-vault exec ryan-msr-ops-sbx -- ${*}
+    aws-vault exec ryan-msr-ops-sbx -- "${@}"
 }

@@ -1,7 +1,7 @@
 # vim: set ft=sh:
 # Terraform helpers
 
-# Alises
+# Terraform commands
 alias tf="terraform"
 alias tfV="terraform version"
 alias tfa="terraform apply"
@@ -27,6 +27,13 @@ alias tfug="terraform 0.12upgrade"
 alias tful="terraform force-unlock"
 alias tfv="terraform validate"
 alias tfw="terraform workspace"
+
+# Project naviation
+alias cdp="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|\")"
+alias cds="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|\")"
+alias cdd="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|\")"
+alias cdt="cd \$HOME/dev/sightly/src/ops/packages/terraform/projects/"
+alias cdv="cd \$HOME/dev/sightly/src/ops/vendors/"
 
 # Helpers
 function find_all_terraform_modules() {
