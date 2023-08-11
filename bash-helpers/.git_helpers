@@ -162,7 +162,7 @@ alias gdmb="git_delete_merged_branches"
 
 function git_delete_merged_branches() {
     REMOTES="${*:-origin}"
-    print_callout "Fetching updates..."
+    printf_callout "Fetching updates..."
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
@@ -177,30 +177,30 @@ function git_delete_merged_branches() {
         | awk '{print $1}')
 
     if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
-        print_callout "Branches that have been merged to $(git_master_or_main):"
+        printf_callout "Branches that have been merged to $(git_master_or_main):"
         gmerged
 
         prompt_to_continue "Delete branches?" || return 0
         echo
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
-            print_callout "Deleting merged local branches..."
+            printf_callout "Deleting merged local branches..."
             git branch --delete --force ${LOCAL_BRANCHES}
         fi
 
         if [[ -n ${REMOTE_BRANCHES} ]]; then
             for REMOTE in ${REMOTES}; do
-                print_callout "Deleting merged remote branches from ${REMOTE}..."
+                printf_callout "Deleting merged remote branches from ${REMOTE}..."
                 git push --delete "${REMOTE}" ${REMOTE_BRANCHES}
             done
         fi
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
-        print_callout "Merged branches have been deleted..."
-        print_callout "Everyone should run \`git fetch --prune\` to sync with this remote."
+        printf_callout "Merged branches have been deleted..."
+        printf_callout "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        print_callout "No merged branches to delete."
+        printf_callout "No merged branches to delete."
     fi
 }
 
@@ -302,15 +302,15 @@ gmerge() {
             git diff --stat "origin/${MAIN_BRANCH}"
             prompt_to_continue "Merge to ${MAIN_BRANCH}?"
 
-            print_callout "Updating from origin..."
+            printf_callout "Updating from origin..."
             git fetch -p
 
-            print_callout "Rebasing on ${MAIN_BRANCH}..."
+            printf_callout "Rebasing on ${MAIN_BRANCH}..."
             git checkout "${MAIN_BRANCH}"
             git pull -r
             git rebase "origin/${MAIN_BRANCH}"
 
-            print_callout "Merging to ${MAIN_BRANCH}..."
+            printf_callout "Merging to ${MAIN_BRANCH}..."
 
             if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
                 git branch --delete "@{-1}"
@@ -318,13 +318,13 @@ gmerge() {
 
             prompt_to_continue "Push to origin?"
 
-            print_callout "Pushing ${MAIN_BRANCH}..."
+            printf_callout "Pushing ${MAIN_BRANCH}..."
             git push origin HEAD
         else
             BRANCH=$1
             git checkout "${BRANCH}"
 
-            print_callout "Updating ${BRANCH}..."
+            printf_callout "Updating ${BRANCH}..."
             git fetch -p
             git pull -r
             git checkout "@{-1}"
@@ -332,7 +332,7 @@ gmerge() {
             git diff --stat "${BRANCH}"
             prompt_to_continue "Merge to ${BRANCH}?"
 
-            print_callout "Merging to ${BRANCH}..."
+            printf_callout "Merging to ${BRANCH}..."
             git rebase "${BRANCH}"
             git checkout "${BRANCH}"
 
@@ -342,7 +342,7 @@ gmerge() {
 
             prompt_to_continue "Push to origin?"
 
-            print_callout "PUshing ${BRANCH}..."
+            printf_callout "PUshing ${BRANCH}..."
             git push origin HEAD
         fi
     fi
