@@ -36,11 +36,6 @@ alias cdt="cd \$HOME/dev/sightly/src/ops/packages/terraform/projects/"
 alias cdv="cd \$HOME/dev/sightly/src/ops/vendors/"
 
 # Helpers
-function find_all_terraform_modules() {
-    find . -path '*/.terraform' -prune -o -type f -iname "main.tf" -print0 \
-        | xargs dirname
-}
-
 function init_all_modules() {
     ALL_MODULES=find_all_terraform_modules
 

@@ -335,9 +335,11 @@ nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:star
 nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>s :call ToggleSpell()<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
-nnoremap <silent><leader>1 :execute 'e ' . getcwd()<CR>|                                    " Open/close NERDTree
+" nnoremap <silent><leader>1 :execute 'e ' . getcwd()<CR>|                                    " Open/close NERDTree
+nnoremap <silent><leader>1 :ProjectRootExe LightTree<CR>|                                    " Open/close LightTree
+nnoremap <silent><leader>2 :LightTreeFind<CR>|                                               " Open/close LightTree
 " nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
-nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
+" nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
 " nnoremap <silent><leader>1 <Plug>VinegarUp<CR>|                                             " Open/close NERDTree
 nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                 " Open NERDTree and hilight the current file
 nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split

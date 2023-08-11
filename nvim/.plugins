@@ -45,26 +45,27 @@ Plug 'github/copilot.vim'                                                     " 
 " Utilities
 " Plug 'Xuyuanp/nerdtree-git-plugin'                     " https://github.com/Xuyuanp/nerdtree-git-plugin
 " Plug 'tpope/vim-vinegar'                               " https://github.com/tpope/vim-vinegar
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } " https://github.com/scrooloose/nerdtree
-Plug 'preservim/vim-lexical'                           " https://github.com/preservim/vim-lexical
-Plug 'preservim/vim-pencil'                            " https://github.com/preservim/vim-pencil
-Plug 'preservim/vim-wordy'                             " https://github.com/preservim/vim-wordy
-Plug '/usr/local/opt/fzf'                              " https://github.com//usr/local/opt/
-Plug 'airblade/vim-gitgutter'                          " https://github.com/airblade/vim-gitgutter
-Plug 'arithran/vim-delete-hidden-buffers'              " https://github.com/arithran/vim-delete-hidden-buffers
-Plug 'dbakker/vim-projectroot'                         " https://github.com/dbakker/vim-projectroot
-Plug 'drmingdrmer/vim-toggle-quickfix'                 " https://github.com/drmingdrmer/vim-toggle-quickfix
-Plug 'easymotion/vim-easymotion'                       " https://github.com/easymotion/vim-easymotion
-Plug 'junegunn/fzf.vim'                                " https://github.com/junegunn/fzf.vim
-Plug 'mzlogin/vim-markdown-toc'                        " https://github.com/mzlogin/vim-markdown-toc
-Plug 'rizzatti/dash.vim'                               " https://github.com/rizzatti/dash.
-Plug 'stefandtw/quickfix-reflector.vim'                " https://github.com/stefandtw/quickfix-reflector.vim
-Plug 'svermeulen/vim-easyclip'                         " https://github.com/svermeulen/vim-easyclip
-Plug 'tpope/vim-abolish'                               " https://github.com/tpope/vim-abolish
-Plug 'tpope/vim-fugitive'                              " https://github.com/tpope/vim-fugitive
-Plug 'vim-scripts/vim-auto-save'                       " https://github.com/vim-scripts/vim-auto-save
-Plug 'zhimsel/vim-stay'                                " https://github.com/zhimsel/vim-stay
-Plug 'AndrewRadev/linediff.vim'                        " https://github.com/AndrewRadev/linediff.vim
+" Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } " https://github.com/scrooloose/nerdtree
+Plug 'juanibiapina/vim-lighttree'         " https://github.com/juanibiapina/vim-lighttree
+Plug 'preservim/vim-lexical'              " https://github.com/preservim/vim-lexical
+Plug 'preservim/vim-pencil'               " https://github.com/preservim/vim-pencil
+Plug 'preservim/vim-wordy'                " https://github.com/preservim/vim-wordy
+Plug '/usr/local/opt/fzf'                 " https://github.com//usr/local/opt/
+Plug 'airblade/vim-gitgutter'             " https://github.com/airblade/vim-gitgutter
+Plug 'arithran/vim-delete-hidden-buffers' " https://github.com/arithran/vim-delete-hidden-buffers
+Plug 'dbakker/vim-projectroot'            " https://github.com/dbakker/vim-projectroot
+Plug 'drmingdrmer/vim-toggle-quickfix'    " https://github.com/drmingdrmer/vim-toggle-quickfix
+Plug 'easymotion/vim-easymotion'          " https://github.com/easymotion/vim-easymotion
+Plug 'junegunn/fzf.vim'                   " https://github.com/junegunn/fzf.vim
+Plug 'mzlogin/vim-markdown-toc'           " https://github.com/mzlogin/vim-markdown-toc
+Plug 'rizzatti/dash.vim'                  " https://github.com/rizzatti/dash.
+Plug 'stefandtw/quickfix-reflector.vim'   " https://github.com/stefandtw/quickfix-reflector.vim
+Plug 'svermeulen/vim-easyclip'            " https://github.com/svermeulen/vim-easyclip
+Plug 'tpope/vim-abolish'                  " https://github.com/tpope/vim-abolish
+Plug 'tpope/vim-fugitive'                 " https://github.com/tpope/vim-fugitive
+Plug 'vim-scripts/vim-auto-save'          " https://github.com/vim-scripts/vim-auto-save
+Plug 'zhimsel/vim-stay'                   " https://github.com/zhimsel/vim-stay
+Plug 'AndrewRadev/linediff.vim'           " https://github.com/AndrewRadev/linediff.vim
 
 " Previewers
 Plug 'FuDesign2008/mermaidViewer.vim'                                   " https://github.com/FuDesign2008/mermaidViewer.vim

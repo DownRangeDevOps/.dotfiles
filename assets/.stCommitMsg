@@ -1,3 +1,3 @@
-Subject [$ISSUE_ID]
+Subject [${ISSUE_ID}]
 
-[$ISSUE_ID]: https://sightly.atlassian.net/browse/$ISSUE_ID
+[${ISSUE_ID}]: ${TICKET_URL_BASE}${ISSUE_ID}

@@ -1,5 +1,4 @@
 # vim: set ft=sh:
-#export COMPOSE_HTTP_TIMEOUT=999999
 
 # Alias
 alias d="docker"
@@ -47,119 +46,81 @@ alias dV="docker version"
 alias dv="docker volume"
 alias dw="docker wait"
 
+# compose
+alias dc="docker compose"
+
+# convience functions
 function dvrm() {
     volumes=$(docker volume ls \
         | awk '{if (NR!=1) {print $2}}' \
         | grep "${1:-.*}" --no-color)
 
     if [[ ${volumes} ]]; then
-        printf "%s\n" "Volumes to remove:"
+        printf_callout "Volumes to remove:"
         printf "%s\n" "${volumes}"
-        prompt_to_continue 'Delete volumes?' || return 0
+        prompt_to_continue "Delete volumes?" || return 0
 
         # User selected yes...
         for volume in $volumes; do
             docker volume rm "${volume}"
         done
     else
-        printf "%s\n" "No matching volumes found."
+        printf_callout "No matching volumes found."
     fi
 }
 
 function docker_ps() {
-    docker ps ${1:-}| less -RSFX
+    docker ps "${1:-}" | less -RSFX
 }
 
 # Search tags on docker hub
-function docker-tags () {
+function search_docker_tags() {
   name=$1
+
   # Initial URL
-  url=https://registry.hub.docker.com/v2/repositories/library/$name/tags/?page_size=100
+  url="https://registry.hub.docker.com/v2/repositories/library/${name}/tags/?page_size=100"
+
   (
     # Keep looping until the variable URL is empty
-    while [ ! -z $url ]; do
-      # Every iteration of the loop prints out a single dot to show progress as it got through all the pages (this is inline dot)
-      >&2 echo -n "."
-      # Curl the URL and pipe the output to Python. Python will parse the JSON and print the very first line as the next URL (it will leave it blank if there are no more pages)
-      # then continue to loop over the results extracting only the name; all will be stored in a variable called content
-      content=$(curl -s $url | python -c 'import sys, json; data = json.load(sys.stdin); print(data.get("next", "") or ""); print("\n".join([x["name"] for x in data["results"]]))')
-      # Let's get the first line of content which contains the next URL for the loop to continue
-      url=$(echo "$content" | head -n 1)
+    while [ -n "${url}" ]; do
+        # Every iteration of the loop prints out a single dot to show progress as
+        # it got through all the pages (this is inline dot)
+        >&2 printf "%s" "."
+
+        # Curl the URL and pipe the output to Python. Python will parse the JSON
+        # and print the very first line as the next URL (it will leave it blank
+        # if there are no more pages)
+        #
+        # then continue to loop over the results extracting only the name; all
+        # will be stored in a variable called content
+        content=$(curl -s "${url}" \
+            | python -c "$(sed -E "s/^ *//" <(printf "%s" '
+                    import sys, json; data = json.load(sys.stdin)
+                    print(data.get("next", "") or "")
+                    print("\n".join([x["name"] for x in data["results"]]))
+            '))"
+        )
+
+      # Let's get the first line of content which contains the next URL for the
+      # loop to continue
+      url=$(printf "%s\n" "$content" | head -n 1)
+
       # Print the content without the first line (yes +2 is counter intuitive)
-      echo "$content" | tail -n +2
+      printf "%s\n" "$content" | tail -n +2
     done;
+
     # Finally break the line of dots
     >&2 echo
   ) | cut -d '-' -f 1 | sort --version-sort | uniq;
 }
 
-# Docker shortcuts
-function dc() {
-  docker compose "${@}"
-  # if [[ ${#} -eq 2 ]]; then
-  #   if [[ -z $(docker ps --quiet --filter "name=${1}") ]]; then
-  #     case ${2} in
-  #       'bash')
-  #           docker-compose exec ${1} bash;;
-  #       'sh')
-  #           docker-compose exec ${1} sh;;
-  #       'logs')
-  #           docker-compose logs -f ${1};;
-  #         *)
-  #           docker-compose "${@}";;
-  #     esac
-  #   else
-  #     docker-compose "${@}"
-  #   fi
-  # else
-  #   case ${1} in
-  #     'up')
-  #         docker-compose up -d ${@};;
-  #     'logs')
-  #       docker-compose logs -f "${@:2}";;
-  #     'bash')
-  #       docker-compose exec "${@:2}" bash;;
-  #     *)
-  #       docker-compose "${@}";;
-  #   esac
-  # fi
-}
-
-function dm() {
-  if [[ $# -eq 1 ]]; then
-    case $1 in
-      *)
-        docker-machine "$@";;
-    esac
-  else
-    docker-machine "$@"
-  fi
-}
-
-function dme() {
-  if [[ $# -eq 0 ]]; then
-    echo 'Usage: dme <docker-machine name>'
-    return 1
-  fi
-
-  MACHINE=$1
-  AVAILABLE_MACHINES=($(docker-machine ls -q))
-
-  if [[ $(echo ${AVAILABLE_MACHINES[@]} | grep -x ${MACHINE} | wc -w) ]]; then
-    eval $(docker-machine env $MACHINE)
-    echo "==> ${MACHINE} configured for this session"
-  else
-    echo "${MACHINE} isn't available. Available docker-machine's:"
-    printf '%s\n' "${AVAILABLE_MACHINES[@]}"
-  fi
-}
-
 function docker_exec() {
-  if [[ $# -eq 0 || ${1} =~ 'help' ]]; then
-    echo 'Docker helper to connect to a running container'
-    echo 'Usage: de <container> [<command>]'
-    return 1
-  fi
-
-  docker exec -ti "$@" 2>/dev/null || docker exec -ti "$@" /bin/bash
+    if [[ $# -eq 0 || ${1} =~ 'help' ]]; then
+        printf "%s\n" \
+            "Docker helper to connect to a running container" \
+            "    Usage: de <container> [<command>]"
+        return 1
+    else
+        docker exec -ti "$@"
+    fi
 }
