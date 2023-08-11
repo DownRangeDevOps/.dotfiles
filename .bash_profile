@@ -172,13 +172,6 @@ function run_mega_linter_python() {
 # Utilities
 function nvim() {
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
-        # shellcheck disable=SC2155
-        local pyenv_type=$(type -t pyenv)
-
-        if [[ $pyenv_type == "alias" ]]; then
-            pyenv_init
-        fi
-
         workon nvim
     fi
 
