@@ -92,18 +92,17 @@ if type pyenv &>/dev/null; then
     function pyenv() {
         # shellcheck disable=SC2155
         local CMD="$(fc -ln | tail -1 | sed -E 's/^\s*//')"
+
+        unset -f "pyenv"
         pyenv_alias remove
-        pyenv_init
-        eval "${CMD}"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
+        pyenv virtualenvwrapper
+        export PYENV_INITIALIZED=true
+
+        ${CMD}
     }
 fi
-
-function pyenv_init() {
-    unset -f "pyenv"
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-    pyenv virtualenvwrapper
-}
 
 # Pipx
 export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
@@ -172,10 +171,17 @@ function run_mega_linter_python() {
 # Utilities
 function nvim() {
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
-        workon nvim
+        eval "workon nvim"
     fi
 
-    /usr/bin/env nvim "${@}"
+    unset -f nvim
+
+    # avoid running the command twice
+    if [[ -z ${NVIM_ALREADY_RUN} ]]; then
+        nvim
+    fi
+
+    export NVIM_ALREADY_RUN=true
 }
 
 function lpy() {
