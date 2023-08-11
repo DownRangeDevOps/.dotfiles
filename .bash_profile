@@ -1,4 +1,3 @@
-#! /usr/bin/env bash
 # vim: set ft=bash:
 # .bash_profile
 
@@ -39,10 +38,8 @@ export EDITOR=nvim
 export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
-export BETTER_EXCEPTIONS=1  # python better exceptions
 export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
-export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
 alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'  # avoid accidentally linking against a Pyenv-provided Python (see: https://github.com/pyenv/pyenv#installation)
 
 # Configure measurable docker-compose mount paths
@@ -132,7 +129,6 @@ _expand() { return 0; }
 # ------------------------------------------------
 #  General aliases
 # ------------------------------------------------
-alias rml=run_mega_linter_python
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
 alias sb='source $HOME/.bash_profile'
@@ -150,23 +146,7 @@ alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 alias ..r="cd \$(git rev-parse --show-toplevel 2>/dev/null)"
 alias ..~="cd \$HOME"
-alias pipelinewise="\$HOME/dev/$ORG_NAME}/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
-alias csqldev="cloud_sql_proxy -instances=$ORG_NAME}-outcome-development:us-west1:$ORG_NAME}-development-outcome-postgres=tcp:0.0.0.0:8765"
-alias csqlstg="cloud_sql_proxy -instances=$ORG_NAME}outcomeintellplatform:us-west2:$ORG_NAME}-staging-postgres-u16w=tcp:0.0.0.0:7654 &"
-alias csqlprd="cloud_sql_proxy -instances=$ORG_NAME}outcomeintellplatform:us-west2:$ORG_NAME}-production-postgres-7ish=tcp:0.0.0.0:6543 &"
-alias snowp="snowsql -a $ORG_NAME} -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h $ORG_NAME}.us-central1.gcp.snowflakecomputing.com"
-alias snows="snowsql -a $ORG_NAME} -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h $ORG_NAME}.us-central1.gcp.snowflakecomputing.com"
-alias snowas="snowsql -a $ORG_NAME} -u ryanfisher -d AYLIEN_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h $ORG_NAME}.us-central1.gcp.snowflakecomputing.com"
 alias ctags="\$(brew --prefix)/bin/ctags"
-alias gpt=generate_python_module_ctags
-
-function run_mega_linter_python() {
-    if [[ $(prompt_to_continue "Remove the existing report directory?") -eq 0 ]]; then
-        rm -rf report
-    fi
-
-    mega-linter-runner -f python "${@}" .
-}
 
 # Utilities
 function nvim() {
@@ -184,67 +164,6 @@ function nvim() {
     export NVIM_ALREADY_RUN=true
 }
 
-function lpy() {
-    SQLFLUFF=("--processes=$(($(sysctl -n hw.ncpu) - 2))" "--FIX-EVEN-UNPARSABLE" "--force")
-    SQL_FORMATTER=("--language=postgresql" "--uppercase" "--lines-between-queries=1" "--indent=4")
-    FLYNT=("--transform-concats" "--line-length=999")
-    AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
-    AUTOFLAKE=("--remove-all-unused-imports" "--remove-duplicate-keys" "--in-place" "--recursive")
-    PRETTIER=("--ignore-path=$HOME/.config/prettier" "--write" "--print-width=88")
-    MDFORMAT=("--number" "--wrap=80")
-    ISORT=("--profile=black" "--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
-    BLACK=("--preview")
-
-    mapfile -t ALL_FILES < <(rg --files --color=never)
-    mapfile -t SQL_FILES < <(rg --files --color=never --glob '*.sql')
-
-    header "Removing trailing whitespace..."
-    printf "%s" "${ALL_FILES[@]}" | xargs -L 1 sed -E -i 's/\s*$//g' | indent_output
-
-    header "Running sql-formatter fix with '${SQL_FORMATTER[*]}'..."
-    printf "%s" "${SQL_FILES[@]}" | xargs -I {} -L 1 \
-            sql-formatter "${SQL_FORMATTER[@]}" --output={} {} | indent_output
-
-    header "Running sqlfluff fix with '${SQLFLUFF[*]}'..."
-    [[ -n ${SQL_FILES} ]] && sqlfluff fix "${SQLFLUFF[@]}" . | indent_output
-
-    header "Running flynt with '${FLYNT[*]}'..."
-    flynt "${FLYNT[@]}" . | indent_output
-
-    header "Running autopep8 with '${AUTOPEP8[*]}'..."
-    autopep8 "${AUTOPEP8[@]}" . | indent_output
-
-    header "Running autoflake with '${AUTOFLAKE[*]}'..."
-    autoflake "${AUTOFLAKE[@]}" . | indent_output
-
-    header "Running prettier with '${PRETTIER[*]}'..."
-    prettier "${PRETTIER[@]}" . | indent_output
-
-    header "Running mdformat with '${MDFORMAT[*]}'..."
-    mdformat "${MDFORMAT[@]}" . | indent_output
-
-    header "Running isort with '${ISORT[*]}'..."
-    isort "${ISORT[@]}" . | indent_output
-
-    header "Running black with '${BLACK[*]}'..."
-    black "${BLACK[@]}" . | indent_output
-}
-
-# function get_python_module_paths() {
-#     python -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))"
-# }
-#
-# function generate_python_module_ctags() {
-#     read -r -a PYTHON_PATH  <<< "$(get_python_module_paths)"
-#
-#     rm -f ./tags
-#     ctags -R \
-#         --fields=+l \
-#         --python-kinds=-i \
-#         --exclude='*.pxd' \
-#         --exclude='*.pxy' \
-#         -f ./tags . "${PYTHON_PATH[@]}"
-# }
 
 
 # Auto on Yubiswitch
@@ -307,12 +226,13 @@ function ll() {
 alias grep="grep --color"
 GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for matches
 export GREP_COLOR
-alias ag='ag \
-    --hidden \
+function ag() {
+    $(brew_prefix)/bin/ag --hidden \
     --ignore tags \
     --ignore .git \
     --ignore .terraform \
-    --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
+    --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"
+}
 
 # Helpers
 source "$HOME/.dotfiles/bash-helpers/lib.sh"                   # Bash helpers
@@ -323,6 +243,7 @@ source "$HOME/.dotfiles/bash-helpers/.terraform"               # Terraform helpe
 source "$HOME/.dotfiles/bash-helpers/.git_helpers" 2>/dev/null # git helpers
 source "$HOME/.dotfiles/bash-helpers/.awsconfig"               # aws helpers
 source "$HOME/.dotfiles/bash-helpers/.osx"                     # osx helpers
+source "$HOME/.dotfiles/bash-helpers/.python"                  # python helpers
 source "/usr/local/etc/profile.d/z.sh"                         # z cd auto completion
 source "$HOME/.dotfiles/bash-helpers/.ps1"                     # set custom PS1
 
