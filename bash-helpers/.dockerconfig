@@ -1,16 +1,17 @@
 # vim: set ft=sh:
 
-# Alias
+# docker
 alias d="docker"
+alias dV="docker version"
 alias da="docker attach"
 alias db="docker build"
 alias dcm="docker commit"
 alias dcp="docker cp"
 alias dcr="docker create"
-alias ddep="docker deploy"
 alias dd="docker diff"
-alias dev="docker events"
+alias ddep="docker deploy"
 alias de="docker_exec"
+alias dev="docker events"
 alias dex="docker export"
 alias dh="docker history"
 alias di="docker image"
@@ -18,33 +19,44 @@ alias dim="docker import"
 alias din="docker info"
 alias dins="docker inspect"
 alias dk="docker kill"
+alias dl="docker logs"
 alias dld="docker load"
 alias dlin="docker login"
 alias dlout="docker logout"
-alias dl="docker logs"
 alias dn="docker network"
 alias dp="docker pause"
-alias dpt="docker port"
-alias dps="docker_ps"
 alias dpl="docker pull"
+alias dps="docker_ps"
+alias dpt="docker port"
 alias dpu="docker push"
-alias drn="docker rename"
-alias drst="docker restart"
+alias dr="docker run"
 alias drm="docker rm"
 alias drmi="docker rmi"
-alias dr="docker run"
+alias drn="docker rename"
+alias drst="docker restart"
 alias ds="docker save"
 alias dsr="docker search"
 alias dst="docker start"
-alias dsts="docker stats"
 alias dstp="docker stop"
-alias dtg="docker tag"
+alias dsts="docker stats"
 alias dt="docker top"
+alias dtg="docker tag"
 alias dunp="docker unpause"
 alias dup="docker update"
-alias dV="docker version"
 alias dv="docker volume"
 alias dw="docker wait"
+
+# docker kill
+alias dka='docker kill $(docker ps -q)'
+
+# docker volume
+alias dvls="docker volume ls"
+
+# docker system
+alias dsdf="docker system df"
+alias dse="docker system envents"
+alias dsi="docker system info"
+alias dsp="docker system prune"
 
 # compose
 alias dc="docker compose"
@@ -70,7 +82,7 @@ function dvrm() {
 }
 
 function docker_ps() {
-    docker ps "${1:-}" | less -RSFX
+    docker ps "${@}" | less -RSFX
 }
 
 # Search tags on docker hub
@@ -114,12 +126,42 @@ function search_docker_tags() {
   ) | cut -d '-' -f 1 | sort --version-sort | uniq;
 }
 
+function docker_select_image() {
+
+  # Get list of running containers
+  containers=$(docker ps --format="{{.ID}}")
+
+  if [[ -z "$containers" ]]; then
+    printf "%s\n" "No running containers found"
+  else
+    docker ps
+    printf "\n" # flush stdout buffer
+    printf "%s\n" "Select a container to exec into (sh):"
+
+    # Display in select menu
+    select container in $containers; do
+
+    # Extract fields
+    name=$(printf "%s\n" "$container" | cut -f1)
+    id=$(printf "%s\n" "$container" | cut -f2)
+
+    # Exec bash in selected container
+    docker exec -it $id sh
+    break
+    done
+  fi
+}
+
 function docker_exec() {
-    if [[ $# -eq 0 || ${1} =~ 'help' ]]; then
+    if [[ ${1} =~ 'help' ]]; then
         printf "%s\n" \
             "Docker helper to connect to a running container" \
+            "" \
             "    Usage: de <container> [<command>]"
         return 1
+    elif [[ $# -eq 0 ]]; then
+        printf "%s\n" "Select a container"
+        docker_select_image
     else
         docker exec -ti "$@"
     fi
