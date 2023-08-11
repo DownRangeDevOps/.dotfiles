@@ -73,26 +73,28 @@ export VIRTUALENVWRAPPER_WORKON_CD=1
 
 # Alias virtualenvwrapper commands to pyenv until it's loaded
 function pyenv_alias() {
-    _VIRTUALENVWRAPPER_API="mkvirtualenv rmvirtualenv lsvirtualenv showvirtualenv workon add2virtualenv cdsitepackages cdvirtualenv lssitepackages toggleglobalsitepackages cpvirtualenv setvirtualenvproject mkproject cdproject mktmpenv wipeenv allvirtualenv"
+    local virtualenv_cmds="mkvirtualenv rmvirtualenv lsvirtualenv showvirtualenv workon add2virtualenv cdsitepackages cdvirtualenv lssitepackages toggleglobalsitepackages cpvirtualenv setvirtualenvproject mkproject cdproject mktmpenv wipeenv allvirtualenv"
 
-    for name in ${_VIRTUALENVWRAPPER_API}; do
-        if [[ $1 == "alias" ]]; then
+    for name in ${virtualenv_cmds}; do
+        if [[ $1 == "create" ]]; then
             # shellcheck disable=SC2139
-            alias ${name}=pyenv
-        elif [[ $1 == "unalias" ]]; then
+            alias "${name}=pyenv"
+        elif [[ $1 == "remove" ]]; then
             # shellcheck disable=SC2139
-            unalias ${name}
+            unalias "${name}"
         fi
     done
 }
 
 # Lazy pyenv loader
-pyenv_alias alias
+pyenv_alias create
 if type pyenv &>/dev/null; then
     function pyenv() {
-        pyenv_alias unalias
+        # shellcheck disable=SC2155
+        local CMD="$(fc -ln | tail -1 | sed -E 's/^\s*//')"
+        pyenv_alias remove
         pyenv_init
-        fc -s
+        eval "${CMD}"
     }
 fi
 
@@ -138,7 +140,7 @@ alias sb='source $HOME/.bash_profile'
 alias ebash='nvim $HOME/.bash_profile'
 alias c="clear"
 alias vim="nvim"
-alias r="fc -s"
+# alias r='fc -s'
 
 # Navigation
 alias ..="cd .."
@@ -149,13 +151,13 @@ alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 alias ..r="cd \$(git rev-parse --show-toplevel 2>/dev/null)"
 alias ..~="cd \$HOME"
-alias pipelinewise="\$HOME/dev/sightly/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
-alias csqldev="cloud_sql_proxy -instances=sightly-outcome-development:us-west1:sightly-development-outcome-postgres=tcp:0.0.0.0:8765"
-alias csqlstg="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-staging-postgres-u16w=tcp:0.0.0.0:7654 &"
-alias csqlprd="cloud_sql_proxy -instances=sightlyoutcomeintellplatform:us-west2:sightly-production-postgres-7ish=tcp:0.0.0.0:6543 &"
-alias snowp="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
-alias snows="snowsql -a sightly -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
-alias snowas="snowsql -a sightly -u ryanfisher -d AYLIEN_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h sightly.us-central1.gcp.snowflakecomputing.com"
+alias pipelinewise="\$HOME/dev/$ORG_NAME}/src/ops/vendors/pipelinewise/bin/pipelinewise-docker"
+alias csqldev="cloud_sql_proxy -instances=$ORG_NAME}-outcome-development:us-west1:$ORG_NAME}-development-outcome-postgres=tcp:0.0.0.0:8765"
+alias csqlstg="cloud_sql_proxy -instances=$ORG_NAME}outcomeintellplatform:us-west2:$ORG_NAME}-staging-postgres-u16w=tcp:0.0.0.0:7654 &"
+alias csqlprd="cloud_sql_proxy -instances=$ORG_NAME}outcomeintellplatform:us-west2:$ORG_NAME}-production-postgres-7ish=tcp:0.0.0.0:6543 &"
+alias snowp="snowsql -a $ORG_NAME} -u ryanfisher -d CONTENT_INTELLIGENCE_PROD -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h $ORG_NAME}.us-central1.gcp.snowflakecomputing.com"
+alias snows="snowsql -a $ORG_NAME} -u ryanfisher -d CONTENT_INTELLIGENCE_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h $ORG_NAME}.us-central1.gcp.snowflakecomputing.com"
+alias snowas="snowsql -a $ORG_NAME} -u ryanfisher -d AYLIEN_STAGING -r SIGHTLY_ENGINEERING -w SIGHTLY_ENGINEERING_WEB_WH -h $ORG_NAME}.us-central1.gcp.snowflakecomputing.com"
 alias ctags="\$(brew --prefix)/bin/ctags"
 alias gpt=generate_python_module_ctags
 
@@ -170,11 +172,13 @@ function run_mega_linter_python() {
 # Utilities
 function nvim() {
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
+        # shellcheck disable=SC2155
         local pyenv_type=$(type -t pyenv)
 
         if [[ $pyenv_type == "alias" ]]; then
             pyenv_init
         fi
+
         workon nvim
     fi
 
@@ -312,7 +316,7 @@ alias ag='ag \
     --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"'
 
 # Helpers
-source "$HOME/.dotfiles/bash-helpers/.bash"                    # Bash helpers
+source "$HOME/.dotfiles/bash-helpers/lib.sh"                   # Bash helpers
 source "$HOME/.dotfiles/bash-helpers/.ansible"                 # Ansible helpers
 source "$HOME/.dotfiles/bash-helpers/.dockerconfig"            # Docker helpers
 source "$HOME/.dotfiles/bash-helpers/.kubernetes"              # K8s helpers

@@ -32,31 +32,31 @@ function parse_git_branch () {
 function parse_git_dirty () {
     case $(git status 2>/dev/null) in
         *"Changes not staged for commit"*)
-            echo " ${RED}✗";;
+            printf "%s\n" " ${RED}✗";;
         *"Changes to be committed"*)
-            echo " ${YELLOW}✗";;
+            printf "%s\n" " ${YELLOW}✗";;
         *"nothing to commit"*)
-            echo "";;
+            printf "%s\n" "";;
     esac
 }
 
 function get_virtualenv () {
     if [[ $VIRTUAL_ENV ]]; then
-        echo " ($(basename $VIRTUAL_ENV))"
+        printf "%s\n" " ($(basename "$VIRTUAL_ENV"))"
     else
-        echo ""
+        printf "%s\n" ""
     fi
 }
 
 function git_project_parent() {
-    echo -n "$(git rev-parse --show-toplevel 2>/dev/null)/.."
+    printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)/.."
 }
 
 function git_project_root () {
     if [[ -n $(git branch 2>/dev/null) ]]; then
-        echo "git@$(realpath --relative-to=$(git_project_parent) .)"
+        printf "%s\n" "git@$(realpath --relative-to="$(git_project_parent)" .)"
     else
-        echo "${PWD/~/\~}"
+        printf "%s\n" "${PWD/~/\~}"
     fi
 }
 
@@ -67,23 +67,23 @@ function git_branch () {
 function get_shell_lvl () {
     LEVEL=1
     [[ -n $NVIM_LISTEN_ADDRESS ]] && LEVEL=2
-    [[ $SHLVL > $LEVEL ]] && echo "($SHLVL)"
+    [[ $SHLVL -gt $LEVEL ]] && printf "%s\n" "($SHLVL)"
 }
 
 function get_aws_vault () {
-    [[ -n $AWS_VAULT ]] && echo "($AWS_VAULT)"
+    [[ -n $AWS_VAULT ]] && printf "%s\n" "($AWS_VAULT)"
 }
 
 function get_terraform_workspace () {
-    ls .terraform &>/dev/null && echo -n "($(terraform workspace show 2>/dev/null))"
+    ls .terraform &>/dev/null && printf "%s\n" -n "($(terraform workspace show 2>/dev/null))"
 }
 
 function __ps1_prompt () {
     PS1="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv)$(get_terraform_workspace) \[${CYAN}\]→ \[${RESET}\]"
-    echo -e "\
+    printf "%s\n" "\
 $(date +%R) \
 ${YELLOW}$(git_project_root)${RESET}\
-$([[ -n $(git_branch) ]] && echo " on ")\
+$([[ -n $(git_branch) ]] && printf "%s\n" " on ")\
 ${MAGENTA}$(parse_git_branch)${RESET}"
 }
 

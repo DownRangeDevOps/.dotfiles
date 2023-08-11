@@ -1,8 +1,6 @@
 # vim: set ft=sh:
-
-
 # ------------------------------------------------
-#  Healpers
+#  Helpers
 # ------------------------------------------------
 function __git_is_repo() {
     git -C "${1}" rev-parse 2>/dev/null
@@ -63,14 +61,20 @@ alias gL="git log --branches --remotes --graph --color --decorate=short --format
 alias gL-="git log --branches --remotes --graph --color --decorate=short --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' | LESS -SFX -R"
 # alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
 # alias lg3="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'"
-alias gstat="echo '==> Log: '\
-    && git log origin/master.. \
-    && echo '' && echo '==> Diff:' \
-    && git diff --stat origin/master"
-alias gstatd="echo '==> Log: '\
-    && git log origin/develop.. \
-    && echo '' && echo '==> Diff:' \
-    && git diff --stat origin/develop"
+alias gstat='printf  "%s\n" \
+    "==> Log: " \
+    "$(git log origin/master..)" \
+    "" \
+    "==> Diff:" \
+    "$(git diff --stat origin/master)" \
+'
+alias gstatd='printf  "%s\n" \
+    "==> Log: " \
+    "$(git log origin/develop..)" \
+    "" \
+    "==> Diff:" \
+    "$(git diff --stat origin/develop)" \
+'
 alias gfu="git_fixup"
 
 function git_fixup() {
@@ -119,7 +123,7 @@ alias gdmb="git_delete_merged_branches"
 
 function git_delete_merged_branches() {
     REMOTES="${*:-origin}"
-    printf "%s\n" "==> Fetching updates..."
+    print_callout "Fetching updates..."
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
@@ -134,30 +138,30 @@ function git_delete_merged_branches() {
         | awk '{print $1}')
 
     if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
-        printf "%s\n" "==> Branches that have been merged to $(git_master_or_main):"
+        print_callout "Branches that have been merged to $(git_master_or_main):"
         gmerged
 
         prompt_to_continue "Delete branches?" || return 0
         echo
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
-            printf "%s\n" "==> Deleting merged local branches..."
+            print_callout "Deleting merged local branches..."
             git branch --delete --force ${LOCAL_BRANCHES}
         fi
 
         if [[ -n ${REMOTE_BRANCHES} ]]; then
             for REMOTE in ${REMOTES}; do
-                printf  "%s\n" "==> Deleting merged remote branches from ${REMOTE}..."
+                print_callout "Deleting merged remote branches from ${REMOTE}..."
                 git push --delete "${REMOTE}" ${REMOTE_BRANCHES}
             done
         fi
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
-        printf "%s\n" "==> Merged branches have been deleted..."
-        printf "%s\n" "==> Everyone should run \`git fetch --prune\` to sync with this remote."
+        print_callout "Merged branches have been deleted..."
+        print_callout "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        printf "%s\n" "==> No merged branches to delete."
+        print_callout "No merged branches to delete."
     fi
 }
 
@@ -259,25 +263,29 @@ gmerge() {
             git diff --stat "origin/${MAIN_BRANCH}"
             prompt_to_continue "Merge to ${MAIN_BRANCH}?"
 
-            printf "%s\n" "==> Updating from origin..."
+            print_callout "Updating from origin..."
             git fetch -p
 
-            printf "%s\n" "==> Rebasing on ${MAIN_BRANCH}..."
+            print_callout "Rebasing on ${MAIN_BRANCH}..."
             git checkout "${MAIN_BRANCH}"
             git pull -r
             git rebase "origin/${MAIN_BRANCH}"
 
-            printf "%s\n" "==> Merging to ${MAIN_BRANCH}..."
-            git merge "${MERGE_COMMIT_OPTION}" "@{-1}"
+            print_callout "Merging to ${MAIN_BRANCH}..."
+
+            if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
+                git branch --delete "@{-1}"
+            fi
+
             prompt_to_continue "Push to origin?"
 
-            printf "%s\n" "==> Pushing ${MAIN_BRANCH}..."
+            print_callout "Pushing ${MAIN_BRANCH}..."
             git push origin HEAD
         else
             BRANCH=$1
             git checkout "${BRANCH}"
 
-            printf "%s\n" "==> Updating ${BRANCH}..."
+            print_callout "Updating ${BRANCH}..."
             git fetch -p
             git pull -r
             git checkout "@{-1}"
@@ -285,13 +293,17 @@ gmerge() {
             git diff --stat "${BRANCH}"
             prompt_to_continue "Merge to ${BRANCH}?"
 
-            printf "%s\n" "==> Merging to ${BRANCH}..."
+            print_callout "Merging to ${BRANCH}..."
             git rebase "${BRANCH}"
             git checkout "${BRANCH}"
-            git merge "${MERGE_COMMIT_OPTION}" "@{-1}"
+
+            if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
+                git branch --delete "@{-1}"
+            fi
+
             prompt_to_continue "Push to origin?"
 
-            printf "%s\n" "==> PUshing ${BRANCH}..."
+            print_callout "PUshing ${BRANCH}..."
             git push origin HEAD
         fi
     fi
@@ -357,12 +369,12 @@ EOF
 }
 
 # [o]pen [p]ull [r]equest - open a pull request for the current branch
-# Real URL example: https://gitlab.com/sightly-engineering/content-intelligence/api-cont-intell-user-account/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4597--docker-add-health-check
+# Real URL example: https://gitlab.com/${ORG_NAME}/${PROJECT_NAME}/${REPO_NAME}/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4597--docker-add-health-check
 opr() {
     REPO=$(basename "$(git rev-parse --show-toplevel)")
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
     BRANCH_ENCODED=$(python3 -c "from urllib.parse import quote_plus; import json;s=quote_plus(json.dumps(\"${BRANCH}\"));print(s)")
-    HOST="https://gitlab.com/sightly-engineering"
+    HOST="https://gitlab.com/${ORG_NAME}"
     ROUTE="${REPO}/-/merge_requests/new"
     QUERY="utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=21762811&merge_request%5Bsource_branch%5D=${BRANCH_ENCODED}&merge_request%5Btarget_project_id%5D=21762811&merge_request%5Btarget_branch%5D=$(git_master_or_main)"
 
