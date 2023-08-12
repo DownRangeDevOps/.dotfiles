@@ -5,6 +5,11 @@
 export BETTER_EXCEPTIONS=1  # python better exceptions
 export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
 
+# function ptpython() {
+#     local virtual_env
+#     export VIRTUAL_ENV=${PWD}/ VIRTUALENV=$(pwd)/myenv pipx run ptpython
+# }
+
 # alias rmlp=run_mega_linter_python
 # alias gpt=generate_python_module_ctags
 #

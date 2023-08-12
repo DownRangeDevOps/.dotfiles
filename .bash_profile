@@ -227,21 +227,22 @@ alias grep="grep --color"
 GREP_COLOR="$(tput setaf 2 && tput setab 29 | tr -d m)" # green for matches
 export GREP_COLOR
 function ag() {
-    $(brew_prefix)/bin/ag --hidden \
+    $(brew --prefix)/bin/ag --hidden \
     --ignore tags \
     --ignore .git \
     --ignore .terraform \
-    --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)"
+    --color --color-match="$(tput setaf 2 && tput setab 29 | tr -d m)" \
+    "$@"
 }
 
 # Helpers
 source "$HOME/.dotfiles/bash-helpers/lib.sh"                   # Bash helpers
 source "$HOME/.dotfiles/bash-helpers/.ansible"                 # Ansible helpers
-source "$HOME/.dotfiles/bash-helpers/.dockerconfig"            # Docker helpers
+source "$HOME/.dotfiles/bash-helpers/.docker"                  # Docker helpers
 source "$HOME/.dotfiles/bash-helpers/.kubernetes"              # K8s helpers
 source "$HOME/.dotfiles/bash-helpers/.terraform"               # Terraform helpers
 source "$HOME/.dotfiles/bash-helpers/.git_helpers" 2>/dev/null # git helpers
-source "$HOME/.dotfiles/bash-helpers/.awsconfig"               # aws helpers
+source "$HOME/.dotfiles/bash-helpers/.aws"                     # aws helpers
 source "$HOME/.dotfiles/bash-helpers/.osx"                     # osx helpers
 source "$HOME/.dotfiles/bash-helpers/.python"                  # python helpers
 source "/usr/local/etc/profile.d/z.sh"                         # z cd auto completion
