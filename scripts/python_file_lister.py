@@ -37,7 +37,7 @@ def print_all_files(dirs):
         f = files_in_tree(dirpath)
         files.extend(f)
 
-    print('\n'.join('{}'.format(f) for f in files))
+    print('\n'.join(f'{f}' for f in files))
 
 
 if in_virtualenv():

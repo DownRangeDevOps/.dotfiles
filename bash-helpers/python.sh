@@ -5,14 +5,24 @@
 export BETTER_EXCEPTIONS=1  # python better exceptions
 export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
 
+# aliases
+# alias rmlp=run_mega_linter_python
+# alias gpt=generate_python_module_ctags
+
+# helpers
+function get_virtualenv () {
+    if [[ $VIRTUAL_ENV ]]; then
+        printf "%s\n" " $(basename "$VIRTUAL_ENV")"
+    else
+        printf "%s\n" ""
+    fi
+}
+
 # function ptpython() {
 #     local virtual_env
 #     export VIRTUAL_ENV=${PWD}/ VIRTUALENV=$(pwd)/myenv pipx run ptpython
 # }
 
-# alias rmlp=run_mega_linter_python
-# alias gpt=generate_python_module_ctags
-#
 # function run_mega_linter_python() {
 #     if [[ $(prompt_to_continue "Remove the existing report directory?") -eq 0 ]]; then
 #         rm -rf report
@@ -70,7 +80,7 @@ export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
 # function get_python_module_paths() {
 #     python -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))"
 # }
-#
+
 # function generate_python_module_ctags() {
 #     read -r -a PYTHON_PATH  <<< "$(get_python_module_paths)"
 #
