@@ -12,10 +12,15 @@ alias avs="aws-vault exec msr-staging --"
 alias avo="aws-vault exec msr-ops-sbx --"
 alias avsci="aws-vault exec msr-sci-sbx --"
 
-# aws-vault
+# helpers
+function get_aws_vault () {
+    [[ -n ${AWS_VAULT} ]] && printf "%s" " aws:${AWS_VAULT} "
+}
+
 function ave() {
     aws-vault exec "${@}"
 }
+
 function ave-sbx() {
     aws-vault exec ryan-msr-ops-sbx -- "${@}"
 }

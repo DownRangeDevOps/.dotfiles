@@ -27,33 +27,34 @@ export RESET
 
 function get_shell_lvl () {
     LEVEL=1
-    [[ -n $NVIM_LISTEN_ADDRESS ]] && LEVEL=2
-    [[ $SHLVL -gt $LEVEL ]] && printf "%s" "($SHLVL)"
-}
-
-function get_aws_vault () {
-    [[ -n $AWS_VAULT ]] && printf "%s" "($AWS_VAULT)"
-}
-
-function get_terraform_workspace () {
-    ls .terraform &>/dev/null && printf "%s" "($(terraform workspace show 2>/dev/null))"
+    [[ -n ${NVIM_LISTEN_ADDRESS} ]] && LEVEL=2
+    [[ ${SHLVL} -gt ${LEVEL} ]] && printf "%s" "${SHLVL}"
 }
 
 function __ps1_prompt () {
-    local time="$(date +%R)"
-    local git_root="${YELLOW}$(git_project_root)${RESET}"
-    local git_branch="${MAGENTA}$(parse_git_branch)${RESET}"
+    local info
+    local time
+    local git_root
+    local git_branch
 
-    if [[ -n "${git_branch}" ]]; then
-        local git_prompt=" ${git_root} on ${git_branch}"
+    info="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv)$(get_terraform_workspace)"
+    time="$(date +%R) "
+    git_root="${YELLOW}$(git_project_root)${RESET}"
+    git_branch="${MAGENTA}$(parse_git_branch)${RESET}"
+
+    if __git_is_repo; then
+        printf "%s\n" "${git_root} on ${git_branch}"
     else
-        local git_prmopt=" "
+        printf "%s\n" "${YELLOW}${PWD/~/\~}${RESET}"
     fi
 
-    local info_line="${time}${git_prompt}"
+    if [[ -n ${info} ]]; then
+        info="(${info}) "
+    fi
 
-    PS1="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv)$(get_terraform_workspace) \[${CYAN}\]→ \[${RESET}\]"
-    printf "%s\n" "${info_line}"
+    local ps1
+    ps1="${time}${info}\[${CYAN}\]→ \[${RESET}\]"
+    PS1="${ps1}"
 }
 
 PROMPT_COMMAND='history -a ~/.bash_history; history -n ~/.bash_history; __ps1_prompt'

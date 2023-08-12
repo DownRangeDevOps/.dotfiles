@@ -36,6 +36,10 @@ alias cdt="cd \$HOME/dev/sightly/src/ops/packages/terraform/projects/"
 alias cdv="cd \$HOME/dev/sightly/src/ops/vendors/"
 
 # Helpers
+function get_terraform_workspace () {
+    [[ -d .terraform ]] && printf "%s" " $(terraform workspace show 2>/dev/null)"
+}
+
 function init_all_modules() {
     ALL_MODULES=find_all_terraform_modules
 

@@ -3,7 +3,11 @@
 #  Helpers
 # ------------------------------------------------
 function __git_is_repo() {
-    git -C "${1}" rev-parse 2>/dev/null
+    if [[ -n $1 ]]; then
+        git -C "$1" rev-parse 2>/dev/null
+    else
+        git rev-parse 2>/dev/null
+    fi
 }
 
 function git_master_or_main() {
@@ -58,14 +62,6 @@ function parse_git_dirty () {
         *"nothing to commit"*)
             printf "%s\n" "";;
     esac
-}
-
-function get_virtualenv () {
-    if [[ $VIRTUAL_ENV ]]; then
-        printf "%s\n" " ($(basename "$VIRTUAL_ENV"))"
-    else
-        printf "%s\n" ""
-    fi
 }
 
 function git_project_parent() {

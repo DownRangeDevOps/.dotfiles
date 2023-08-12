@@ -70,7 +70,26 @@ export VIRTUALENVWRAPPER_WORKON_CD=1
 
 # Alias virtualenvwrapper commands to pyenv until it's loaded
 function pyenv_alias() {
-    local virtualenv_cmds="mkvirtualenv rmvirtualenv lsvirtualenv showvirtualenv workon add2virtualenv cdsitepackages cdvirtualenv lssitepackages toggleglobalsitepackages cpvirtualenv setvirtualenvproject mkproject cdproject mktmpenv wipeenv allvirtualenv"
+    local virtualenv_cmds
+    mapfile -t virtualenv_cmds <<-EOF
+        mkvirtualenv
+        rmvirtualenv
+        lsvirtualenv
+        showvirtualenv
+        workon
+        add2virtualenv
+        cdsitepackages
+        cdvirtualenv
+        lssitepackages
+        toggleglobalsitepackages
+        cpvirtualenv
+        setvirtualenvproject
+        mkproject
+        cdproject
+        mktmpenv
+        wipeenv
+        allvirtualenv
+EOF
 
     for name in ${virtualenv_cmds}; do
         if [[ $1 == "create" ]]; then
@@ -131,8 +150,9 @@ _expand() { return 0; }
 # ------------------------------------------------
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
-alias sb='source $HOME/.bash_profile'
-alias ebash='nvim $HOME/.bash_profile'
+alias sb='source ${HOME}/.bash_profile'
+alias ebash='nvim ${HOME}/.bash_profile'
+alias ec=ebash
 alias c="clear"
 alias vim="nvim"
 # alias r='fc -s'
@@ -236,17 +256,20 @@ function ag() {
 }
 
 # Helpers
-source "$HOME/.dotfiles/bash-helpers/lib.sh"                   # Bash helpers
-source "$HOME/.dotfiles/bash-helpers/.ansible"                 # Ansible helpers
-source "$HOME/.dotfiles/bash-helpers/.docker"                  # Docker helpers
-source "$HOME/.dotfiles/bash-helpers/.kubernetes"              # K8s helpers
-source "$HOME/.dotfiles/bash-helpers/.terraform"               # Terraform helpers
-source "$HOME/.dotfiles/bash-helpers/.git_helpers" 2>/dev/null # git helpers
-source "$HOME/.dotfiles/bash-helpers/.aws"                     # aws helpers
-source "$HOME/.dotfiles/bash-helpers/.osx"                     # osx helpers
-source "$HOME/.dotfiles/bash-helpers/.python"                  # python helpers
-source "/usr/local/etc/profile.d/z.sh"                         # z cd auto completion
-source "$HOME/.dotfiles/bash-helpers/.ps1"                     # set custom PS1
+# shellcheck disable=SC1091
+{
+    source "$HOME/.dotfiles/bash-helpers/ansible.sh"                 # Ansible helpers
+    source "$HOME/.dotfiles/bash-helpers/aws.sh"                     # aws helpers
+    source "$HOME/.dotfiles/bash-helpers/docker.sh"                  # Docker helpers
+    source "$HOME/.dotfiles/bash-helpers/git_helpers.sh" 2>/dev/null # git helpers
+    source "$HOME/.dotfiles/bash-helpers/kubernetes.sh"              # K8s helpers
+    source "$HOME/.dotfiles/bash-helpers/lib.sh"                     # Bash helpers
+    source "$HOME/.dotfiles/bash-helpers/osx.sh"                     # osx helpers
+    source "$HOME/.dotfiles/bash-helpers/ps1.sh"                     # set custom PS1
+    source "$HOME/.dotfiles/bash-helpers/python.sh"                  # python helpers
+    source "$HOME/.dotfiles/bash-helpers/terraform.sh"               # Terraform helpers
+    source "/usr/local/etc/profile.d/z.sh"                           # z cd auto completion
+}
 
 # Add the direnv hook to PROMPT_COMMAND
 # source ~/.direnvrc
