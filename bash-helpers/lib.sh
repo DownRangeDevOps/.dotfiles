@@ -1,8 +1,12 @@
-# My BASH standard library
+# vim: set ft=sh:
+# lib.sh
+logger "" "[${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  User interface
 # ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
 function printf_callout() {
     printf "%s\n" "==> $1"
 }

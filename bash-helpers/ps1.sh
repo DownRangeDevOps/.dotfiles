@@ -1,8 +1,12 @@
 # vim: set ft=sh:
+# ps1.sh
+logger "" "[${BASH_SOURCE[0]}]"
 
 # Sexy Bash Prompt, inspired by "Extravagant Zsh Prompt"
-# if [[ $COLORTERM = gnome-* && $TERM = xterm ]]  && infocmp gnome-256color >/dev/null 2>&1; then export TERM=gnome-256color
-# elif [[ $TERM != dumb ]] && infocmp xterm-256color >/dev/null 2>&1; then export TERM=xterm-256color
+# if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+#     export TERM=gnome-256color
+# elif [[ $TERM != dumb ]] && infocmp xterm-256color >/dev/null 2>&1; then
+#     export TERM=xterm-256color
 # fi
 
 RED=$(tput setaf 1)
@@ -25,6 +29,11 @@ export WHITE
 export BOLD
 export RESET
 
+# ------------------------------------------------
+#  helpers
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
 function get_shell_lvl () {
     LEVEL=1
     [[ -n ${NVIM_LISTEN_ADDRESS} ]] && LEVEL=2
@@ -37,7 +46,7 @@ function __ps1_prompt () {
     local git_root
     local git_branch
 
-    info="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv)$(get_terraform_workspace)"
+    info="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv_name)$(get_terraform_workspace)"
     time="$(date +%R) "
     git_root="${YELLOW}$(git_project_root)${RESET}"
     git_branch="${MAGENTA}$(parse_git_branch)${RESET}"

@@ -1,6 +1,12 @@
 # vim: set ft=sh:
+# docker.sh
+logger "" "[${BASH_SOURCE[0]}]"
 
-# docker
+# ------------------------------------------------
+#  aliases
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
+
 alias d="docker"
 alias dV="docker version"
 alias da="docker attach"
@@ -61,7 +67,11 @@ alias dsp="docker system prune"
 # compose
 alias dc="docker compose"
 
-# convience functions
+# ------------------------------------------------
+#  helpers
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
 function dvrm() {
     volumes=$(docker volume ls \
         | awk '{if (NR!=1) {print $2}}' \

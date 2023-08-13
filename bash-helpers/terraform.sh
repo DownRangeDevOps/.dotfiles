@@ -1,7 +1,19 @@
 # vim: set ft=sh:
-# Terraform helpers
+# terraform.sh
+logger "" "[${BASH_SOURCE[0]}]"
 
-# Terraform commands
+# ------------------------------------------------
+#  config
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+
+complete -C /usr/local/bin/terraform terraform
+
+# ------------------------------------------------
+#  aliases
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
+
 alias tf="terraform"
 alias tfV="terraform version"
 alias tfa="terraform apply"
@@ -35,7 +47,14 @@ alias cdd="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|\")"
 alias cdt="cd \$HOME/dev/sightly/src/ops/packages/terraform/projects/"
 alias cdv="cd \$HOME/dev/sightly/src/ops/vendors/"
 
-# Helpers
+alias tfia=init_all_modules
+alias tfva=validate_all_modules
+
+# ------------------------------------------------
+#  helpers
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
 function get_terraform_workspace () {
     [[ -d .terraform ]] && printf "%s" " $(terraform workspace show 2>/dev/null)"
 }
@@ -59,5 +78,3 @@ function validate_all_modules() {
             (cd "${module}" && terraform validate)
         done
 }
- alias tfia=init_all_modules
- alias tfva=validate_all_modules

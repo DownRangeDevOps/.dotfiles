@@ -1,8 +1,8 @@
 # .bash_profile
 
 # load .bashrc
-if [ -f ~/.bashrc ]; then
-	. ~/.bashrc
+if [ -f ~/.bash_profile ]; then
+    . ~/.bash_profile
 fi
 
 autoload -U +X bashcompinit && bashcompinit

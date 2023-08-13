@@ -1,9 +1,24 @@
 # vim: set ft=sh:
+# aws.sh
+logger "" "[${BASH_SOURCE[0]}]"
 
-# aws-vault
-export AWS_SESSION_TOKEN_TTL="12h"
+# ------------------------------------------------
+#  config
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
-# alises
+export AWS_ASSUME_ROLE_TTL=1h
+export AWS_SESSION_TTL=12h
+
+# aws vault
+export AWS_VAULT_BACKEND=file
+export AWS_SESSION_TOKEN_TTL=12h
+
+# ------------------------------------------------
+#  alises
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
+
 alias av="aws-vault"
 alias ave="aws-vault exec"
 alias avr="aws-vault exec msr-root --"
@@ -12,7 +27,11 @@ alias avs="aws-vault exec msr-staging --"
 alias avo="aws-vault exec msr-ops-sbx --"
 alias avsci="aws-vault exec msr-sci-sbx --"
 
-# helpers
+# ------------------------------------------------
+#  helpers
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
 function get_aws_vault () {
     [[ -n ${AWS_VAULT} ]] && printf "%s" " aws:${AWS_VAULT} "
 }

@@ -1,5 +1,8 @@
 # vim: set ft=sh:
-# .kubernetes
-#
-# Kubernetes helpers
+# kubernetes.sh
+logger "" "[${BASH_SOURCE[0]}]"
+
+# ------------------------------------------------
+#  aliases
+# ------------------------------------------------
 alias kc="kubectl"
