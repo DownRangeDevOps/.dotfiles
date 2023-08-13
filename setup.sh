@@ -7,7 +7,7 @@
 #     --debug        Output debug information
 #     -v, --version  Show version
 #     -h, --help     Show this help message and exit
-
+set -e
 
 # setup docopts
 PATH="${PATH}:./bin"
@@ -23,16 +23,38 @@ dry_run=false
 # set docopts options
 eval "${OPTIONS}"
 
+function print_error_msg() {
+    MSG_TYPE="$1"
+    NOT_REPO_MSG="${HOME}/.dotfiles exists and is not a git repo"
+    CHANGES_MSG="${HOME}/.dotfiles has uncommitted changes, stash or commit them then re-run setup."
+
+    if [[ -n ${MSG_TYPE} ]]; then
+        case ${MSG_TYPE} in
+            not_repo)
+                printf "%s\n" "${NOT_REPO_MSG}"
+                ;;
+            changes)
+                printf "%s\n" "${CHANGES_MSG}"
+                ;;
+            *)
+                printf "%s\n" "ERROR: ${*}"
+                ;;
+        esac
+    else
+        printf "%s\n" "ERROR: unknown error"
+    fi
+}
+
 function create_symlinks() {
     if ${dry_run}; then
-        printf "\n%s\n" "Symlink that would be created:"
+        printf "\n%s\n" "Symlinks that would be created:"
 
-        find "${HOME}/.dotfiles/config" -type f -iname ".*" -exec bash -c \
+        find "${HOME}/.dotfiles/config" -type f -exec bash -c \
             'file="$1";printf "%s\n" "\"${HOME}/$(basename ${file})\" -> \"${PWD}/${file}\""' \
             shell {} \;
     else
         find "${HOME}/.dotfiles/config" -type f -iname ".*" -exec bash -c \
-            'file="$1"; ln -sfv "${PWD}/${file}" "${HOME}/$(basename ${file})"' \
+            'file="$1"; ln -sfv "${file}" "${HOME}/$(basename ${file})"' \
             shell {} \;
     fi
 }
@@ -54,56 +76,46 @@ function setup() {
 
         is_git_repo="$(git -C "${HOME}/.dotfiles" rev-parse --is-inside-work-tree 2>/dev/null)"
 
-        if [[ -n "${is_git_repo}" ]]; then
+        if ${is_git_repo}; then
             if [[ -z "$(git diff --name-only)" ]]; then
                 printf "%s\n" "git -C ${HOME}/.dotfiles checkout main"
                 printf "%s\n" "git -C ${HOME}/.dotfiles pull"
+                printf "%s\n" "git -C ${HOME}/.dotfiles checkout -"
 
                 init
                 create_symlinks
             else
-                local lines
-                lines=(\
-                    "ERROR: ${HOME}/.dotfiles has uncommitted"
-                    "changes, stash or commit them then re-run setup."
-                )
-
-                printf  "%s\n" "${lines[*]}"
+                print_error_msg changes
                 return 1
             fi
         else
-            echo "ERROR: ${HOME}/.dotfiles exists and is not a git repo"
+            print_error_msg not_repo
             return 1
         fi
     else
         is_git_repo="$(git -C "${HOME}/.dotfiles" rev-parse --is-inside-work-tree 2>/dev/null)"
 
-        if [[ -n "${is_git_repo}" ]]; then
-            if ! parse_git_dirty; then
+        if ${is_git_repo}; then
+            if [[ -z "$(git diff --name-only)" ]]; then
                 git -C "${HOME}/.dotfiles" checkout main
                 git -C "${HOME}/.dotfiles" pull
+                git -C "${HOME}/.dotfiles" checkout -
 
                 create_symlinks
                 init
             else
-                local lines
-                lines=(\
-                    "ERROR: ${HOME}/.dotfiles has uncommitted"
-                    "changes, stash or commit them then re-run setup."
-                )
-
-                printf  "%s\n" "${lines[*]}"
+                print_error_msg changes
                 return 1
             fi
         else
-            printf  "%s\n" "ERROR: ${HOME}/.dotfiles exists and is not a git repo"
+            print_error_msg not_repo
             return 1
         fi
     fi
 }
 
 if ${debug}; then
-    echo "$OPTIONS"
+    printf  "%s\n" "$OPTIONS"
 else
     setup
 fi
