@@ -1,35 +1,42 @@
-# vim: set ft=bash:
 # go.sh
 logger "" "[${BASH_SOURCE[0]}]"
 
 # add go bins to path
 export PATH="${PATH}:${GOPATH}/bin"
 
-# lazy init
-function goenv_lazy() {
+# lazy init goenv
+function goenv_alias() {
+    for cmd in "${go_cmds[@]}"; do
+        cmd=$(printf "%s" "${cmd}" | trim)
+
+        if [[ "$1" == "create" ]]; then
+            # shellcheck disable=SC2139
+            alias "${cmd}"=goenv_lazy_init
+        elif [[ "$1" == "remove" ]]; then
+            unalias "${cmd}" 2>/dev/null
+        fi
+    done
+}
+
+if [[ -z "${GOENV_ROOT}" ]]; then
+    goenv_alias create
+fi
+
+function goenv_lazy_init() {
     # shellcheck disable=SC2155
     local CMD
     CMD="$(fc -ln | tail -1 | trim)"
+    unset -f goenv_lazy_init
 
     printf "%s\n" "goenv has not been initialized, initializing now..."
-
-    for cmd in ${go_cmds[@]}; do
-        if [[ $(type -t ${cmd}) == "alias" ]]; then
-            unalias ${cmd}
-        fi
-    done
-
+    goenv_alias remove
     eval "$(goenv init -)"
 
     printf "%s\n" "Done. Running \`${CMD}\`..."
-    $CMD
+    ${CMD}
 }
 
 mapfile -t go_cmds <<-EOF
     go
     goenv
 EOF
-
-for cmd in ${go_cmds[@]}; do
-    alias $cmd=goenv_lazy
-done

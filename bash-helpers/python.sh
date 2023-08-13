@@ -1,4 +1,3 @@
-# vim: set ft=sh:
 # python.sh
 logger "" "[${BASH_SOURCE[0]}]"
 
@@ -68,34 +67,42 @@ function pyenv_alias() {
         allvirtualenv
 EOF
 
-    for name in ${virtualenv_cmds}; do
+    for name in "${virtualenv_cmds[@]}"; do
+        name=$(printf "%s\n" "${name}" | trim)
+
         if [[ $1 == "create" ]]; then
             # shellcheck disable=SC2139
             alias "${name}=pyenv"
         elif [[ $1 == "remove" ]]; then
             # shellcheck disable=SC2139
-            unalias "${name}"
+            unalias "${name}" 2>/dev/null
         fi
     done
 }
 
 # Lazy pyenv loader
-pyenv_alias create
-if type pyenv &>/dev/null; then
-    function pyenv() {
-        local CMD
-        CMD="$(fc -ln | tail -1 | sed -E 's/^\s*//')"
 
-        unset -f "pyenv"
-        pyenv_alias remove
-        eval "$(pyenv init -)"
-        eval "$(pyenv virtualenv-init -)"
-        pyenv virtualenvwrapper
-        export PYENV_INITIALIZED=true
-
-        ${CMD}
-    }
+if "${PYENV_INITIALIZED}"; then
+    pyenv_alias create
+else
+    pyenv_alias remove
 fi
+
+function pyenv_lazy_init() {
+    local CMD
+    CMD="$(fc -ln | tail -1 | trim)"
+    unset -f pyenv_lazy_init
+
+    unalias "pyenv"
+    pyenv_alias remove
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    pyenv virtualenvwrapper
+    export PYENV_INITIALIZED=true
+
+    ${CMD}
+}
+
 
 # function ptpython() {
 #     local virtual_env

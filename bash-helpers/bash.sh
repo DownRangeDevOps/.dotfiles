@@ -1,4 +1,3 @@
-# vim: set ft=bash:
 # bash.sh
 
 # create the logger before anything else
@@ -10,8 +9,13 @@ function logger() {
 
 logger "" "[${BASH_SOURCE[0]}]"
 
-# Source gcloud files first so PS1 gets overridden
-source "/usr/local/share/google-cloud-sdk/path.bash.inc"
+# overwrites PS1 so do it first
+source /usr/local/share/google-cloud-sdk/path.bash.inc
+
+# bash completions
+if [[ -r /usr/local/etc/bash_completion ]]; then
+    source /usr/local/etc/bash_completion
+fi
 
 # ------------------------------------------------
 #  helpers
@@ -44,14 +48,14 @@ function ll() {
   /bin/ls -GFlash "$@"
 }
 
-function add_homebrew_tools_and_docs_to_path() {
+function add_homebrew_tools() {
     logger "[$(basename "${BASH_SOURCE[0]}")]: Adding homebrew paths..."
 
-    local tools
-    local default_tools
+    local tool_paths
+    local gnu_tools
+    local compilers
 
-    mapfile -t tools <<< "${@}"
-    mapfile -t default_tools <<-EOF
+    mapfile -t gnu_tools <<-EOT
         gnu-tar
         gnu-which
         gnu-sed
@@ -59,16 +63,33 @@ function add_homebrew_tools_and_docs_to_path() {
         coreutils
         findutils
         make
-EOF
+EOT
 
-    if [[ -n "${tools[*]}" ]]; then
-        tools="${default_tools[*]}"
+    mapfile -t compilers <<-EOT
+        /usr/local/opt/llvm/bin
+EOT
+
+    if [[ $# -gt 0 ]]; then
+        tool_paths=("$@")
     fi
 
-    for tool in ${tools}; do
-        export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
-        export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
-    done
+    if [[ "${#tool_paths[@]}" -gt 0 ]]; then
+        for path in "${tool_paths[@]}"; do
+            path=$(printf "%s" "${path}" | trim)
+            export PATH="${path}:${PATH}"
+        done
+    else
+        for tool in "${gnu_tools[@]}"; do
+            tool=$(printf "%s" "${tool}" | trim)
+            export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
+            export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
+        done
+
+        for path in "${compilers[@]}"; do
+            tool=$(printf "%s" "${path}" | trim)
+            export PATH="${path}:${PATH}"
+        done
+    fi
 }
 
 function set_path() {
@@ -82,13 +103,12 @@ function set_path() {
     export PATH="/usr/local/sbin:${PATH}"               # Homebrew bin path
     export PATH="/usr/local/opt/ruby/bin:${PATH}"       # Homebrew Ruby
     export PATH="${HOME}/.pyenv/bin:${PATH}"            # pyenv
-    export PATH="${HOME}/.local/bin:${PATH}"            # pipx
-    export PATH="${HOME}/go/bin:${PATH}"                # Go binaries
+    export PATH="${HOME}/.local/bin:${PATH}"            # pipx export PATH="${HOME}/go/bin:${PATH}"                # Go binaries
     export PATH="${PATH}:${HOME}/.snowsql/1.2.12"       # Snowflake CLI
     export PATH="${HOME}/bin:${PATH}"                   # Custom installed binaries
     export PATH="${PATH}:${HOME}/.local/bin"            # Ansible:::
     export PATH="${PATH}:${HOME}/.cabal/bin/git-repair" # Haskell binaries
 
     # add homebrew bins and manpages to path
-    add_homebrew_tools_and_docs_to_path
+    add_homebrew_tools
 }

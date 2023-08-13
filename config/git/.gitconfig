@@ -1,10 +1,16 @@
 [user]
-	name = Ryan Fisher
-	email = ryan@youtily.com
+    name = Ryan Fisher
+    email = ryan@downrangedevops.com
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyfjN2C677gfJWdPPkmP9jMYaZMIRyB2qpJ4ykrHx46
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+	allowedSignersFile = config/git/allowed_ssh_signers
 [include]
     path = .gitconfig_aliases
 [core]
-	excludesfile = /Users/ryanfisher/.gitignore_global
+    excludesfile = /Users/ryanfisher/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
     ignorecase = false
@@ -13,7 +19,6 @@
     algorithm = histogram
 [difftool "vim-fugitive"]
     cmd = 'vim -f -c "Gvdiff" "$MERGED"'
-    path =
 [merge]
     ; conflictstyle = diff3
     tool = pycharm
@@ -31,18 +36,19 @@
 [branch]
     autosetuprebase = always
 [commit]
-	template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
+    gpgsign = true
+    template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
 [help]
     autocorrect = 0
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
 [mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [init]
     templatedir = ~/.git_templates
-	defaultBranch = main
+    defaultBranch = main
 [color]
     ui = true
 [color "diff-highlight"]

@@ -1,4 +1,3 @@
-# vim: set ft=bash:
 # ansible.sh
 logger "" "[${BASH_SOURCE[0]}]"
 

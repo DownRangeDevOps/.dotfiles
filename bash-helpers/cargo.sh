@@ -1,4 +1,3 @@
-# vim: set ft=sh:
 # cargo.sh
 logger "" "[${BASH_SOURCE[0]}]"
 

@@ -1,4 +1,3 @@
-# vim: set ft=sh:
 # lib.sh
 logger "" "[${BASH_SOURCE[0]}]"
 

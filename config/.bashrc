@@ -1,2 +1,2 @@
-# vim: set ft=bash:
+# vim: set ft=sh:
 # .bashrc
