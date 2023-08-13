@@ -1,0 +1,7 @@
+*.swp
+.ansible/ansible.log
+.ansible/tmp
+.ansible/vault-passwords
+.vim-jenkins
+tags
+.docker/machine

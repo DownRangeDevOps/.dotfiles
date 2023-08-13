@@ -187,7 +187,7 @@ setglobal nobomb
 setglobal fileencoding=utf-8
 scriptencoding utf-8
 
-" Use a login shell to load .bash_profile
+" Use a login shell so that .bash_profile is loaded
 let &shell='/usr/local/bin/bash --login'
 
 " Use space as leader key
@@ -335,9 +335,9 @@ nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:star
 nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
 nnoremap <silent><leader>s :call ToggleSpell()<CR>
 nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
-" nnoremap <silent><leader>1 :execute 'e ' . getcwd()<CR>|                                    " Open/close NERDTree
-nnoremap <silent><leader>1 :ProjectRootExe LightTree<CR>|                                    " Open/close LightTree
-nnoremap <silent><leader>2 :LightTreeFind<CR>|                                               " Open/close LightTree
+" nnorema <osilent><leader>1 :execute 'e ' . getcwd()<CR>|                                    " Open/close NERDTree
+nnoremap <silent><leader>1 :ProjectRootExe keepalt noswapfile LightTree<CR>|                                    " Open/close LightTree
+nnoremap <silent><leader>2 :keepalt noswapfile LightTreeFind<CR>|                                               " Open/close LightTree
 " nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
 " nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
 " nnoremap <silent><leader>1 <Plug>VinegarUp<CR>|                                             " Open/close NERDTree
@@ -1059,9 +1059,6 @@ hi DiffText ctermbg=208 guibg=#6E3935
 augroup vimrcEx
     au!
 
-    " Don't change terminal size unless it is redrawn
-    "au TermOpen * au <buffer> BufEnter,WinEnter redraw!
-
     " enable ncm2 for all buffers
     au BufEnter * call ncm2#enable_for_buffer()
     au TextChangedI * call ncm2#auto_trigger()
@@ -1108,7 +1105,7 @@ augroup vimrcEx
     au BufRead, BufNewFile user_list.yml, */environments/000_cross_env_users.yml
         \ setl nowrap
 
-    " Allow style sheets to auto-complete hyphenated words
+    " Allow style sheets to auto-complete hyphenated words
     au FileType css,scss,sass setl iskeyword+=-
 
     " Remove tabs and trailing whitespace on open and insert
@@ -1125,9 +1122,11 @@ augroup vimrcEx
     au BufWritePost,TextChanged * Neomake
 
     " Configure terminal settings
-    au TermOpen * setl nospell
+    au TermOpen * setl
+        \ nospell
         \ nonumber
         \ norelativenumber
+        \ ft=term
 
     " Force spell/nospell
     au FileType markdown,mkd,gitcommit,textile,text setl spell
@@ -1141,5 +1140,8 @@ augroup vimrcEx
     au! FileType fzf
         au  FileType fzf setl laststatus=0 noshowmode noruler
         \| au BufLeave <buffer> setl laststatus=2 showmode ruler
+
+    " Exclude buffer types from the buffer list
+    au BufNewFile,BufRead term,lighttree,quickfix,help,netrw setl buftype=nofile
 
 " augroup END

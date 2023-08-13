@@ -1,8 +1,25 @@
-#! /usr/bin/env bash
 # vim: set ft=bash:
+# ansible.sh
+logger "" "[${BASH_SOURCE[0]}]"
 
+# ------------------------------------------------
+#  config
+# ------------------------------------------------
+export ANSIBLE_VAULT_PASSWORDS="$HOME/.ansible/vault-passwords"
+export BITBUCKET_SSH_KEY="$HOME/.ssh/id_rsa"
+export DEVOPS_REPO="$HOME/dev/measurabl/src/devops"
+
+# ------------------------------------------------
+#  alises
+# ------------------------------------------------
 # Ansible vault shortcuts
 alias aav='ansible-vault view'
+
+# ------------------------------------------------
+#  helpers
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
 function ade() {
     if [[ -z $1 ]]; then
         printf "%s\n" "Usage:"

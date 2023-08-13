@@ -1,22 +1,101 @@
-# vim: set ft=bash:
-# .python
+# vim: set ft=sh:
+# python.sh
+logger "" "[${BASH_SOURCE[0]}]"
 
-# settings
+# ------------------------------------------------
+#  config
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+
 export BETTER_EXCEPTIONS=1  # python better exceptions
 export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
 
-# aliases
+# Pyenv (https://github.com/pyenv/pyenv)
+# pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
+# pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+export WORKON_HOME="$HOME/.virtualenvs"
+export PROJECT_HOME="$HOME/dev"
+export VIRTUALENVWRAPPER_WORKON_CD=1
+
+# Pipx
+export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
+
+
+# ------------------------------------------------
+#  aliases
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
+
 # alias rmlp=run_mega_linter_python
 # alias gpt=generate_python_module_ctags
 
-# helpers
-function get_virtualenv () {
+# ------------------------------------------------
+#  helpers
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
+function get_virtualenv_name () {
     if [[ $VIRTUAL_ENV ]]; then
         printf "%s\n" " $(basename "$VIRTUAL_ENV")"
     else
         printf "%s\n" ""
     fi
 }
+
+# Alias virtualenvwrapper commands to pyenv until it's loaded
+function pyenv_alias() {
+    local virtualenv_cmds
+    mapfile -t virtualenv_cmds <<-EOF
+        mkvirtualenv
+        rmvirtualenv
+        lsvirtualenv
+        showvirtualenv
+        workon
+        add2virtualenv
+        cdsitepackages
+        cdvirtualenv
+        lssitepackages
+        toggleglobalsitepackages
+        cpvirtualenv
+        setvirtualenvproject
+        mkproject
+        cdproject
+        mktmpenv
+        wipeenv
+        allvirtualenv
+EOF
+
+    for name in ${virtualenv_cmds}; do
+        if [[ $1 == "create" ]]; then
+            # shellcheck disable=SC2139
+            alias "${name}=pyenv"
+        elif [[ $1 == "remove" ]]; then
+            # shellcheck disable=SC2139
+            unalias "${name}"
+        fi
+    done
+}
+
+# Lazy pyenv loader
+pyenv_alias create
+if type pyenv &>/dev/null; then
+    function pyenv() {
+        local CMD
+        CMD="$(fc -ln | tail -1 | sed -E 's/^\s*//')"
+
+        unset -f "pyenv"
+        pyenv_alias remove
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
+        pyenv virtualenvwrapper
+        export PYENV_INITIALIZED=true
+
+        ${CMD}
+    }
+fi
 
 # function ptpython() {
 #     local virtual_env
