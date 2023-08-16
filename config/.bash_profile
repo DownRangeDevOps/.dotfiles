@@ -112,8 +112,8 @@ function nvim() {
 
     # avoid running the command twice
     if [[ -z ${NVIM_INITIALIZED} ]]; then
-        nvim
         export NVIM_INITIALIZED=true
+        nvim
     fi
 
 }
@@ -136,14 +136,16 @@ function rg() {
 # eval "$(pyenv virtualenv-init -)" # Enable pyenv virtualenv shims
 # eval "$(goenv init -)"            # Setup shell to make go binary available  # Slows loading, disabling for now
 # eval "$(rbenv init -)"            # Enable rbenv shims
+
 # lazy load thefuck
 if [[ -n "${TF_ALIAS}" ]]; then
-    unalias fuck=fuck_lazy_init
+    unalias fuck=tf_init
 else
-    alias fuck=fuck_lazy_init
+    alias fuck=tf_init
 fi
-function fuck_lazy_init() {
-    unalias fuck=fuck_lazy_init
+
+function tf_init() {
+    unalias fuck=tf_init
     eval "$(thefuck --alias)"
     fuck "$@"
 }
@@ -160,7 +162,7 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
     source "$HOME/.dotfiles/bash-helpers/aws.sh"        # aws helpers
     source "$HOME/.dotfiles/bash-helpers/osx.sh"        # osx helpers
     source "$HOME/.dotfiles/bash-helpers/python.sh"     # python helpers
-    source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
+    # source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
     source "$HOME/.dotfiles/bash-helpers/ps1.sh"        # set custom PS1
 }
 

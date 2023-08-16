@@ -51,7 +51,6 @@ function ll() {
 function add_homebrew_tools() {
     logger "[$(basename "${BASH_SOURCE[0]}")]: Adding homebrew paths..."
 
-    local tool_paths
     local gnu_tools
     local compilers
 
@@ -69,27 +68,16 @@ EOT
         /usr/local/opt/llvm/bin
 EOT
 
-    if [[ $# -gt 0 ]]; then
-        tool_paths=("$@")
-    fi
+    for tool in "${gnu_tools[@]}"; do
+        tool=$(printf "%s" "${tool}" | trim)
+        export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
+        export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
+    done
 
-    if [[ "${#tool_paths[@]}" -gt 0 ]]; then
-        for path in "${tool_paths[@]}"; do
-            path=$(printf "%s" "${path}" | trim)
-            export PATH="${path}:${PATH}"
-        done
-    else
-        for tool in "${gnu_tools[@]}"; do
-            tool=$(printf "%s" "${tool}" | trim)
-            export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
-            export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
-        done
-
-        for path in "${compilers[@]}"; do
-            tool=$(printf "%s" "${path}" | trim)
-            export PATH="${path}:${PATH}"
-        done
-    fi
+    for path in "${compilers[@]}"; do
+        tool=$(printf "%s" "${path}" | trim)
+        export PATH="${path}:${PATH}"
+    done
 }
 
 function set_path() {

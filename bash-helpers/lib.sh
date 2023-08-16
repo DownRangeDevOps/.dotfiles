@@ -2,14 +2,11 @@
 logger "" "[${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
-#  User interface
+# Printing
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
 
-function printf_callout() {
-    printf "%s\n" "==> $1"
-}
-
+# Formatting
 function indent_output() {
     local indent
 
@@ -22,24 +19,44 @@ function indent_output() {
     sed "s/^/${indent}/"
 }
 
-# Headers
-function print_header() {
-    printf "\n%b\n" "\x1b[1m==> ${*}\x1b[0m"
+function printf_callout() {
+    printf "%s\n" "==> $1"
 }
 
-function reset() {
-    "\x1b[0m"
+function printf_header() {
+    printf "\n%b\n" "\033[1m==> ${*}\033[0m"
 }
 
 # Colors
-function green() {
-    "\x1b[32;01m${*}\x1b[0m"
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+WHITE=$(tput setaf 7)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+export RED
+export GREEN
+export YELLOW
+export BLUE
+export MAGENTA
+export CYAN
+export WHITE
+export BOLD
+export RESET
+
+function printf_green() {
+    printf "%b\n" "${GREEN}${*}${RESET}"
 }
 
-function yellow() {
-    "\x1b[33;01m${*}\x1b[0m"
+function printf_yellow() {
+    printf "%b\n" "${YELLOW}${*}${RESET}"
 }
 
-function red() {
-    "\x1b[33;31m${*}\x1b[0m"
+function printf_red() {
+    printf "%b\n" "${RED}${*}${RESET}"
+
 }

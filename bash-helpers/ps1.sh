@@ -8,26 +8,6 @@ logger "" "[${BASH_SOURCE[0]}]"
 #     export TERM=xterm-256color
 # fi
 
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-WHITE=$(tput setaf 7)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
-
-export RED
-export GREEN
-export YELLOW
-export BLUE
-export MAGENTA
-export CYAN
-export WHITE
-export BOLD
-export RESET
-
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
