@@ -8,8 +8,8 @@ function prompt_to_continue() {
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         printf "\n\n"
     else
-        printf "%s\n" "Ok, exiting."
-        return 1
+        printf "\n%s\n" "Ok, exiting."
+        [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 }
 

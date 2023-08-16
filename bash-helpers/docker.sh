@@ -79,12 +79,14 @@ function dvrm() {
     if [[ ${volumes} ]]; then
         printf_callout "Volumes to remove:"
         printf "%s\n" "${volumes}"
-        prompt_to_continue "Delete volumes?" || return 0
 
-        # User selected yes...
-        for volume in $volumes; do
-            docker volume rm "${volume}"
-        done
+        if [[ $(prompt_to_continue "Delete volumes?") -eq 0 ]]; then
+            for volume in $volumes; do
+                docker volume rm "${volume}"
+            done
+        else
+            return 0
+        fi
     else
         printf_callout "No matching volumes found."
     fi
