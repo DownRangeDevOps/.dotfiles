@@ -73,7 +73,7 @@ function validate_all_modules() {
 
     for module in ${ALL_MODULES};
         do
-            printf "%s\n" "${module}"
+            printf_callout "%s\n" "${module}"
             (cd "${module}" && terraform validate)
         done
 }

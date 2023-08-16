@@ -141,7 +141,7 @@ function docker_select_image() {
   containers=$(docker ps --format="{{.ID}}")
 
   if [[ -z "$containers" ]]; then
-    printf "%s\n" "No running containers found"
+    printf_error "No running containers found"
   else
     docker ps
     printf "\n" # flush stdout buffer
@@ -155,7 +155,7 @@ function docker_select_image() {
     id=$(printf "%s\n" "$container" | cut -f2)
 
     # Exec bash in selected container
-    docker exec -it $id sh
+    docker exec -it "$id" sh
     break
     done
   fi

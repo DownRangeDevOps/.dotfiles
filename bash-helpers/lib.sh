@@ -1,10 +1,22 @@
 # lib.sh
 logger "" "[${BASH_SOURCE[0]}]"
 
-# ------------------------------------------------
-# Printing
-# ------------------------------------------------
 logger "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
+
+function prompt_to_continue() {
+    read -p "${BOLD}${*:-Continue?} (y)[es|no] ${RESET}" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        printf "\n\n"
+    else
+        printf "%s\n" "Ok, exiting."
+        return 1
+    fi
+}
+
+function join() {
+    local IFS=$1
+    __="${*:2}"
+}
 
 # Formatting
 function indent_output() {
@@ -20,11 +32,7 @@ function indent_output() {
 }
 
 function printf_callout() {
-    printf "%s\n" "==> $1"
-}
-
-function printf_header() {
-    printf "\n%b\n" "\033[1m==> ${*}\033[0m"
+    printf "%s\n" "${BOLD}==> ${1}${RESET}"
 }
 
 # Colors
@@ -48,6 +56,7 @@ export WHITE
 export BOLD
 export RESET
 
+# Color printf
 function printf_green() {
     printf "%b\n" "${GREEN}${*}${RESET}"
 }
@@ -58,5 +67,17 @@ function printf_yellow() {
 
 function printf_red() {
     printf "%b\n" "${RED}${*}${RESET}"
+}
 
+# Bold color printf
+function printf_success() {
+    printf "%b\n" "${BOLD}${GREEN}${*}${RESET}"
+}
+
+function printf_warning() {
+    printf "%b\n" "${BOLD}${YELLOW}${*}${RESET}"
+}
+
+function printf_error() {
+    printf "%b\n" "${BOLD}${RED}${*}${RESET}"
 }
