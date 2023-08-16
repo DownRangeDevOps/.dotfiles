@@ -1,8 +1,8 @@
 name: ops
-root: ~/dev/measurabl/src
+root: ~/dev/${ORG_ROOT)/src
 windows:
   - orchestration:
-      root: ~/dev/measurabl/src/orchestration
+      root: ~/dev/${ORG_ROOT)/src/orchestration
       layout: 0ab1,318x54,0,0[318x39,0,0,0,318x14,0,40,2]
       panes:
         - vim -p -O3
