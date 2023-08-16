@@ -48,23 +48,23 @@ function get_virtualenv_name () {
 function pyenv_alias() {
     local virtualenv_cmds
     mapfile -t virtualenv_cmds <<-EOF
-        mkvirtualenv
-        rmvirtualenv
-        lsvirtualenv
-        showvirtualenv
-        workon
         add2virtualenv
+        allvirtualenv
+        cdproject
         cdsitepackages
         cdvirtualenv
-        lssitepackages
-        toggleglobalsitepackages
         cpvirtualenv
-        setvirtualenvproject
+        lssitepackages
+        lsvirtualenv
         mkproject
-        cdproject
         mktmpenv
+        mkvirtualenv
+        rmvirtualenv
+        setvirtualenvproject
+        showvirtualenv
+        toggleglobalsitepackages
         wipeenv
-        allvirtualenv
+        workon
 EOF
 
     for name in "${virtualenv_cmds[@]}"; do
@@ -82,7 +82,7 @@ EOF
 
 # Lazy pyenv loader
 
-if "${PYENV_INITIALIZED}"; then
+if ${PYENV_INITIALIZED}; then
     pyenv_alias create
 else
     pyenv_alias remove
@@ -91,9 +91,9 @@ fi
 function pyenv_lazy_init() {
     local CMD
     CMD="$(fc -ln | tail -1 | trim)"
-    unset -f pyenv_lazy_init
 
-    unalias "pyenv"
+    unset -f pyenv_lazy_init
+    unalias "pyenv" 2>/dev/null
     pyenv_alias remove
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"

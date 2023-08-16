@@ -1,5 +1,6 @@
+---
 name: ssh_msr_dev
-root: ~/dev/measurabl/src
+root: ~/dev/${ORG_ROOT)/src
 windows:
     - dev:
         layout: tiled

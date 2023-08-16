@@ -1,5 +1,7 @@
-name: ssh_msr_prod
-root: ~/dev/measurabl/src
+---
+
+name: ssh_prod
+root: ~/dev/${ORG_ROOT)/src
 windows:
     - prod:
         layout: tiled

@@ -6,7 +6,7 @@ logger "" "[${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 export ANSIBLE_VAULT_PASSWORDS="$HOME/.ansible/vault-passwords"
 export BITBUCKET_SSH_KEY="$HOME/.ssh/id_rsa"
-export DEVOPS_REPO="$HOME/dev/measurabl/src/devops"
+export DEVOPS_REPO="$HOME/dev/${ORG_NAME}/src/devops"
 
 # ------------------------------------------------
 #  alises

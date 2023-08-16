@@ -1,12 +1,15 @@
+---
+
 name: devbox
-root: ~/dev/measurabl/
+root: ~/dev/${ORG_ROOT}/
 pre:
-  - umount -f ~/dev/measurabl/msr/ 2>/dev/null
+  - umount -f ~/dev/${ORG_ROOT}/${ORG_NAME}/ 2>/dev/null
   - devbox up
-  - devbox mount --to ~/dev/measurabl/msr
+  - devbox mount --to ~/dev/${ORG_ROOT}/${ORG_NAME}
+
   windows:
     - terminal:
-      root: ~/dev/measurabl/msr/src
+      root: ~/dev/${ORG_ROOT}/${ORG_NAME}/src
       layout: main-horizontal
       panes:
         - vim
