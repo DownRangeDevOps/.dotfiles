@@ -44,7 +44,25 @@ function get_virtualenv_name () {
     fi
 }
 
-# Alias virtualenvwrapper commands to pyenv until it's loaded
+# Initalize pyenv
+function pyenv_init() {
+    local CMD
+    CMD=$1
+    echo "$@"
+    shift
+
+    unset -f pyenv_init
+    unalias "pyenv" 2>/dev/null
+    pyenv_alias remove
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    pyenv virtualenvwrapper
+    export PYENV_INITIALIZED=true
+
+    "${CMD}" "$@"
+}
+
+
 function pyenv_alias() {
     local virtualenv_cmds
     mapfile -t virtualenv_cmds <<-EOF
@@ -65,6 +83,7 @@ function pyenv_alias() {
         toggleglobalsitepackages
         wipeenv
         workon
+        pyenv
 EOF
 
     for name in "${virtualenv_cmds[@]}"; do
@@ -72,7 +91,7 @@ EOF
 
         if [[ $1 == "create" ]]; then
             # shellcheck disable=SC2139
-            alias "${name}=pyenv"
+            alias "${name}=pyenv_init"
         elif [[ $1 == "remove" ]]; then
             # shellcheck disable=SC2139
             unalias "${name}" 2>/dev/null
@@ -83,26 +102,10 @@ EOF
 # Lazy pyenv loader
 
 if ${PYENV_INITIALIZED}; then
-    pyenv_alias create
+    pyenv_alias remove
 else
-    pyenv_alias remove
+    pyenv_alias create
 fi
-
-function pyenv_lazy_init() {
-    local CMD
-    CMD="$(fc -ln | tail -1 | trim)"
-
-    unset -f pyenv_lazy_init
-    unalias "pyenv" 2>/dev/null
-    pyenv_alias remove
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-    pyenv virtualenvwrapper
-    export PYENV_INITIALIZED=true
-
-    ${CMD}
-}
-
 
 # function ptpython() {
 #     local virtual_env

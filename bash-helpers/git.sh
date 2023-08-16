@@ -70,6 +70,9 @@ alias gmerged="git branch --all --merged origin/\$(git_master_or_main) \
 alias gpu="git push -u \$(git remote) HEAD"
 alias gfpo="git push --force-with-lease origin HEAD"
 
+# Repository info
+alias git-contributors="git shortlog -sne"
+
 # Misc aliases for git based but non-git actions
 alias gac="git diff origin/\$(git_master_or_main) \
     --stat \
@@ -287,11 +290,11 @@ gmerge() {
 
     if [[ $1 == "help" || $1 == "--help" ]]; then
         print  "%s\n" \
-            "Usage: gffm [OPTION] [<BRANCH>]" \
-            "Merge BRANCH to ${MAIN_BRANCH} printing the log and stat, and" \
+            "Usage: gffm [OPTION] [<TARGET_BRANCH>]" \
+            "Merge TARGET_BRANCH to ${MAIN_BRANCH} printing the log and stat, and" \
             "prompting before merging or pushing." \
             "" \
-            "If no BRANCH, or BRANCH is HEAD, the current branch will be merged to ${MAIN_BRANCH}."
+            "If no TARGET_BRANCH, or TARGET_BRANCH is HEAD, the current branch will be merged to ${MAIN_BRANCH}."
     else
         if [[ $1 == "HEAD" || $1 == "" ]]; then
             git log "origin/${MAIN_BRANCH}.."
@@ -301,7 +304,7 @@ gmerge() {
             printf_callout "Updating from origin..."
             git fetch -p
 
-            printf_callout "Rebasing on ${MAIN_BRANCH}..."
+            printf_callout "Rebasing onto ${MAIN_BRANCH}..."
             git checkout "${MAIN_BRANCH}"
             git pull -r
             git rebase "origin/${MAIN_BRANCH}"
@@ -311,6 +314,9 @@ gmerge() {
             if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
                 git branch --delete "@{-1}"
                 git push origin --delete "@{-1}"
+            else
+                printf_red "ERROR: merge failed, exiting."
+                return 1
             fi
 
             prompt_to_continue "Push to origin?"
@@ -318,20 +324,20 @@ gmerge() {
             printf_callout "Pushing ${MAIN_BRANCH}..."
             git push origin HEAD
         else
-            BRANCH=$1
-            git checkout "${BRANCH}"
+            TARGET_BRANCH=$1
+            git checkout "${TARGET_BRANCH}"
 
-            printf_callout "Updating ${BRANCH}..."
+            printf_callout "Updating ${TARGET_BRANCH}..."
             git fetch -p
             git pull -r
             git checkout "@{-1}"
-            git log "${BRANCH}..@"
-            git diff --stat "${BRANCH}"
-            prompt_to_continue "Merge to ${BRANCH}?"
+            git log "${TARGET_BRANCH}..@"
+            git diff --stat "${TARGET_BRANCH}"
+            prompt_to_continue "Merge to ${TARGET_BRANCH}?"
 
-            printf_callout "Merging to ${BRANCH}..."
-            git rebase "${BRANCH}"
-            git checkout "${BRANCH}"
+            printf_callout "Merging to ${TARGET_BRANCH}..."
+            git rebase "${TARGET_BRANCH}"
+            git checkout "${TARGET_BRANCH}"
 
             if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
                 git branch --delete "@{-1}"
@@ -340,7 +346,7 @@ gmerge() {
 
             prompt_to_continue "Push to origin?"
 
-            printf_callout "PUshing ${BRANCH}..."
+            printf_callout "PUshing ${TARGET_BRANCH}..."
             git push origin HEAD
         fi
     fi
