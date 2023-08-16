@@ -25,21 +25,6 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 # Don't expand paths
 _expand() { return 0; }
 
-function prompt_to_continue() {
-    read -p "${*:-Continue?} (y)[es|no] " -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        printf "\n\n"
-    else
-        printf "%s\n" "Ok, exiting."
-        return 1
-    fi
-}
-
-function join() {
-    local IFS=$1
-    __="${*:2}"
-}
-
 function ls() {
   /bin/ls -GhA "$@"
 }

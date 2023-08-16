@@ -45,7 +45,8 @@ function aes() {
         | sed 's/^  */  /' \
         | tee /dev/tty \
         | pbcopy
-    printf "%s\n" "The result has been copied to your clipboard."
+
+    printf_callout "%s\n" "The result has been copied to your clipboard."
 }
 
 function ads() {
@@ -58,5 +59,6 @@ function ads() {
     | ansible-vault decrypt --vault-password-file "$HOME/.ansible/vault-passwords/${1}" \
     | tee /dev/tty \
     | pbcopy
-    printf "%s\n" "The result has been copied to your clipboard."
+
+    printf_callout "%s\n" "The result has been copied to your clipboard."
 }

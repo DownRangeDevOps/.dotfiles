@@ -153,10 +153,10 @@ function git_delete_merged_branches() {
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
-        printf_callout "Merged branches have been deleted..."
+        printf_success "Merged branches have been deleted..."
         printf_callout "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        printf_callout "No merged branches to delete."
+        printf_warning "No merged branches to delete."
     fi
 }
 
@@ -170,7 +170,7 @@ function __git_is_repo() {
 
 function git_master_or_main() {
     if ! __git_is_repo "${PWD}"; then
-        printf "%s\n" "${PWD} is not a git repository."
+        printf_error "${PWD} is not a git repository."
         return 1
     fi
 
@@ -196,8 +196,8 @@ function git_master_or_main() {
     elif [[ ${MASTER_EXISTS} ]]; then
         MAIN_BRANCH="master"
     else
-        printf "%s\n" "This repository does not have a 'master' or 'main' branch!"
-        exit 1
+        printf_error "This repository does not have a 'master' or 'main' branch!"
+        return 1
     fi
 
     printf  "%s" "${MAIN_BRANCH}"
@@ -214,9 +214,9 @@ function parse_git_branch () {
 function parse_git_dirty () {
     case $(git status 2>/dev/null) in
         *"Changes not staged for commit"*)
-            printf "%s\n" " ${RED}✗";;
+            printf "%s\n" " ${RED}✗${RESET}";;
         *"Changes to be committed"*)
-            printf "%s\n" " ${YELLOW}✗";;
+            printf "%s\n" " ${YELLOW}✗${RESET}";;
         *"nothing to commit"*)
             printf "%s\n" "";;
     esac
@@ -315,7 +315,7 @@ gmerge() {
                 git branch --delete "@{-1}"
                 git push origin --delete "@{-1}"
             else
-                printf_red "ERROR: merge failed, exiting."
+                printf_error "ERROR: merge failed, exiting."
                 return 1
             fi
 
@@ -340,8 +340,8 @@ gmerge() {
             git checkout "${TARGET_BRANCH}"
 
             if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
+                git push origin --delete "@{-1}" 2>/dev/null
                 git branch --delete "@{-1}"
-                git push origin --delete "@{-1}"
             fi
 
             prompt_to_continue "Push to origin?"

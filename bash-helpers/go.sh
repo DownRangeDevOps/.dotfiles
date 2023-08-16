@@ -28,11 +28,11 @@ function goenv_lazy_init() {
     CMD="$(fc -ln | tail -1 | trim)"
     unset -f goenv_lazy_init
 
-    printf "%s\n" "goenv has not been initialized, initializing now..."
+    printf_callout "%s\n" "goenv has not been initialized, initializing now..."
     goenv_alias remove
     eval "$(goenv init -)"
 
-    printf "%s\n" "Done. Running \`${CMD}\`..."
+    printf_callout "%s\n" "Done. Running \`${CMD}\`..."
     ${CMD}
 }
 
