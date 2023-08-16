@@ -1,6 +1,7 @@
-# set show-mode-in-prompt
-# set vi-ins-mode-string (+)
-# set vi-cmd-mode-string (:)
+# configure vim mode in terminal
+set show-mode-in-prompt
+set vi-ins-mode-string "(+) "
+set vi-cmd-mode-string "(:) "
 
 # Search history with arrows
 "\e[A": history-search-backward

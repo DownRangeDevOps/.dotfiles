@@ -1,187 +1,9 @@
 " vim: set ft=vim
 so $HOME/.dotfiles/nvim/.plugins  " Load Plug manifest
 
-" ------------------------------------------------------------------------------
-" --------------------------------- Functions ----------------------------------
-" ------------------------------------------------------------------------------
-" Reusable function to prompt the user for input
-function! s:PromptForInput(...)
-  " Args (optional)
-  let l:prompt = get(a:000, 0, 'Input: ')
-  let l:default_input = get(a:000, 1, '')
-
-  call inputsave()
-  let l:user_input = input(l:prompt)
-  call inputrestore()
-
-  if empty(l:user_input)
-    let g:user_input = l:default_input
-  else
-    let g:user_input = l:user_input
-  endif
-endfunction
-
-" Prompt for a section header and insert it as a comment
-function! Header()
-    call s:PromptForInput('Section headding: ')
-    let l:heading = g:user_input
-
-    call s:PromptForInput('Heading width? (50): ', 50)
-    let l:header_width = g:user_input
-
-    call s:PromptForInput('Heading fill character? (-): ', '-')
-    let l:header_fill_char = g:user_input
-
-    let l:heading_line = &commentstring[0] . ' ' . repeat(l:header_fill_char, (l:header_width - 2))
-    let l:heading_text = &commentstring[0] . '  ' . l:heading
-
-    :put = l:heading_line
-    :put = l:heading_text
-    :put = l:heading_line
-endfunction
-
-function! TFHeader()
-    call s:PromptForInput('Section heading: ')
-    let l:heading_title = '  ' . g:user_input
-    let l:heading_start = '/' . repeat('*', 41)
-    let l:heading_end = ' ' . repeat('*', 41) . '/'
-
-    :put = l:heading_start
-    :put = l:heading_title
-    :put = l:heading_end
-endfunction
-
-" Strip trailing whitespace
-function! s:StripTrailingWhitespaces()
-    if &readonly == 0
-            \&& &buftype ==? ''
-            \&& &diff == 0
-        let l:cur_pos = winsaveview()
-        %s/\s\+$//e
-        call winrestview(l:cur_pos)
-        retab
-   endif
-endfunction
-
-function! s:WriteIfModifiable()
-    if buffer_name('%') !=? ''
-                \&& &readonly == 0
-                \&& &buftype !=? 'nofile'
-                \&& &buftype !=? 'terminal'
-                \&& &buftype !=? 'nowrite'
-                \&& &diff == 0
-                \&& buffer_name('%') !~? 'quickfix-'
-        silent w
-    endif
-endfunction
-
-" Show syntax highlighting being applied at the cursor position
-function! SynGroup()
-    let l:s = synID(line('.'), col('.'), 1)
-    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-endfun
-
-" Open previous buffer, wipe current, quit if only one buffer
-function! s:WipeBufOrQuit()
-    let num_bufs = len(getbufinfo({'buflisted':1}))
-    let prev_buf = bufnr('#')
-    if num_bufs <= 1
-        silent execute 'qall'
-    elseif prev_buf == -1 || &buftype !=? ''
-        silent execute 'quit'
-        if &buftype ==? 'terminal'
-            silent execute 'startinsert'
-        endif
-    else
-        silent execute 'buf #'
-        if bufnr('#') != -1
-            silent execute 'bwipeout! #'
-        endif
-        if &buftype ==? 'terminal'
-            silent execute 'startinsert'
-        endif
-    endif
-endfunction
-
-" Open NERDTree using ProjectRootExe if buffer isn't a terminal
-function! s:NvimNerdTreeToggle()
-    if &buftype ==? 'terminal'
-        silent execute 'NERDTreeToggle'
-    else
-        silent execute 'ProjectRootExe NERDTreeToggle'
-    endif
-endfunction
-
-" Make the enter key go into insert mode if on a terminal window
-function! s:EnterInsertModeInTerminal()
-    echo 'ran'
-    if &buftype ==? 'terminal'
-        if mode() ==? 'n'
-            call startinsert()
-        endif
-    else
-        silent execute 'nohlsearch'
-        return '\<CR>'
-    endif
-endfunction
-
-" Get the path to the current line from the project root
-function! s:GetPathToCurrentLine()
-    let root = ProjectRootGet()
-    let full_path = expand('%:p') . ':' . line('.')
-    let basename = split(root, '/')
-    let basename = basename[-1]
-    let path_from_root = join([basename, substitute(full_path, root, '', '')], '')
-
-    return path_from_root
-endfunction
-
-" When opening a new split, create a new term if needed
-function! s:OpenNewSplit(splitType)
-    if a:splitType ==? '\'
-        silent execute 'vsp'
-    else
-        silent execute 'sp'
-    endif
-
-    if &buftype ==? 'terminal'
-        silent execute 'term'
-    endif
-endfunction
-
-" Convert mac or dos line endings to unix
-function! s:ConvertLineEndingsToUnix()
-    :update
-    :edit ++fileformat=dos
-    :edit ++fileformat=mac
-    :setlocal fileformat=unix
-    :write
-endfunction
-
-" Toggle spell check
-hi clear SpellCap
-hi clear SpellRare
-hi clear SpellLocal
-function! ToggleSpell()
-  if !exists('g:showingSpell')
-    let g:showingSpell=1
-    execute 'hi SpellBad cterm=underline gui=underline'
-  endif
-
-  if g:showingSpell==0
-    execute 'hi SpellBad cterm=underline gui=underline'
-    let g:showingSpell=1
-    echom 'Spellcheck enabled'
-  else
-    execute 'hi clear SpellBad'
-    let g:showingSpell=0
-    echom 'Spellcheck disabled'
-  endif
-endfunction
-
-" -----------------------------------------------------------------------------
-" -------------------- Vim configuration and key bindings ---------------------
-" -----------------------------------------------------------------------------
+" ---------------------------------------------------------------------
+" General Settings
+" ---------------------------------------------------------------------
 set fileencodings=ucs-bom,utf-8,latin1
 setglobal nobomb
 setglobal fileencoding=utf-8
@@ -192,11 +14,11 @@ let &shell='/usr/local/bin/bash --login'
 
 " Use space as leader key
 let mapleader=' '
-nnoremap <space> <leader>
-nnoremap <S-space> <leader>
+nnoremap <Space> <leader>
+nnoremap <S-Space> <leader>
 
 " Config
-filetype plugin indent on                " Enable file type detection and do language-dependent indenting.
+" filetype plugin indent on                " Enable file type detection and do language-dependent indenting.
 set autochdir                            " Auto change working directory to that of the current file
 set autoread                             " Automatically read files when they have changed
 set autowrite                            " Automatically :write before running commands
@@ -273,6 +95,9 @@ if (&t_Co > 2 || has('gui_running')) && !exists('syntax_on')
     set synmaxcol=200
 endif
 
+" Set all sh/bash files to bash syntax
+let g:is_bash = 1
+
 " Keep undo history across sessions by storing it in a file
 if has('persistent_undo')
     let undo_dir = expand('$HOME/.vim/undo_dir')
@@ -283,101 +108,13 @@ if has('persistent_undo')
     set undofile
 endif
 
-inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
-nnoremap <Leader>o o<Esc>                                   " Quickly insert an empty new line without entering insert mode
-nnoremap <Leader>O O<Esc>
-inoremap jj <ESC>|                                          " Easy escape from insert/visual mode
-inoremap jk <ESC>|                                          " Easy escape from insert/visual mode
-vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
-nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
-nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
-nnoremap K                                                  " Keep searching for man entries by accident
-nnoremap Q <Plug>window:quickfix:toggle
-
-" Easy split navigation
-nnoremap <silent><leader>\ :call <SID>OpenNewSplit('\')<CR>|        " Open vertical split
-nnoremap <silent><leader>\| :call <SID>OpenNewSplit('\|')<CR>|      " Open horizontal split
-noremap <C-h> <C-w>h                                       " Move left a window
-let g:BASH_Ctrl_j = 'off'
-noremap <C-j> <C-w>j                                       " Move down a window
-noremap <C-k> <C-w>k                                       " Move up a window
-noremap <C-l> <C-w>l                                       " Move right a window
-nnoremap <c-w><c-w> <ESC><C-w>=                            " Set windows to equal size
-if has('nvim')
-    tnoremap <C-h> <C-\><C-n><C-w>h                        " Move left a window
-    tnoremap <C-j> <C-\><C-n><C-w>j                        " Move down a window
-    tnoremap <C-k> <C-\><C-n><C-w>k                        " Move up a window
-    tnoremap <C-l> <C-\><C-n><C-w>l                        " Move right a window
-    tnoremap <s-space> <space>
-endif
-
-" Easy tab navigation
-nnoremap <silent><leader><S-w> :tabclose<CR>                " Move right a window
-nnoremap <silent><leader><S-h> :tabprevious<CR>             " Move left a window
-nnoremap <silent><leader><S-l> :tabnext<CR>                 " Move right a window
-
-" Use magic in search/substitute
-nnoremap / /\v\c
-vnoremap / /\v\c
-cnoremap %% %s/\v
-cnoremap %%% s/\v
-" cnoremap \>s/ \>smagic/
-" nnoremap :g/ :g/\v
-" nnoremap :g// :g//
-
-" Utility
-nnoremap ` za
-nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|                " Close buffer(s)
-nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
-nnoremap <silent><leader>qq :q<CR>|
-nnoremap <silent><leader>Q :q<CR>|
-nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
-nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
-nnoremap <silent><leader>s :call ToggleSpell()<CR>
-nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
-" nnorema <osilent><leader>1 :execute 'e ' . getcwd()<CR>|                                    " Open/close NERDTree
-nnoremap <silent><leader>1 :ProjectRootExe keepalt noswapfile LightTree<CR>|                                    " Open/close LightTree
-nnoremap <silent><leader>2 :keepalt noswapfile LightTreeFind<CR>|                                               " Open/close LightTree
-" nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
-" nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
-" nnoremap <silent><leader>1 <Plug>VinegarUp<CR>|                                             " Open/close NERDTree
-nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                 " Open NERDTree and hilight the current file
-nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
-nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
-nnoremap <silent><leader>m :Neomake
-nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
-nnoremap <leader>ha <Plug>GitGutterStageHunk
-nnoremap <leader>hr <Plug>GitGutter
-nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|                         " Copy curgent line path/number
-nnoremap Y y$                                                                               " Make Y act like C and D
-nnoremap <leader>d :Dash<CR>
-
-" Find/replace
-nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
-nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|       " Bind K to grep word under cursor
-nnoremap <leader>r :%s/\<<C-r><C-w>\>/
-
-" Cut
-nmap <leader>x <Plug>MoveMotionPlug
-xmap <leader>x <Plug>MoveMotionXPlug
-nmap <leader>xx <Plug>MoveMotionLinePlug
-nmap <leader>X <Plug>MoveMotionEndOfLinePlug
-
-" Copy/paste to/from system clipboard
-vnoremap <leader>y  "+y
-vnoremap <LeftRelease> "+y<LeftRelease>
-nnoremap <leader>y  "+y
-nnoremap <leader>Y  "+yg_
-nnoremap <leader>yy  "+yy
-nnoremap <leader>p "+p
-
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
 
-" -----------------------------------------------------------------------------
-" --------------------------- Plugin Configuration ----------------------------
-" -----------------------------------------------------------------------------
-" NeoVim configuration
+" ---------------------------------------------------------------------
+" Plugin Configuration
+" ---------------------------------------------------------------------
+" NeoVim
 if has('nvim') && !exists('g:gui_oni')
     let $VISUAL = 'nvr -cc split --remote-wait'  " Prevent nested neovim instances when using :term
     nnoremap <leader>rc :so ~/.config/nvim/init.vim<CR>|
@@ -390,7 +127,7 @@ if has('nvim')
   let $VISUAL = 'nvr -cc split --remote-wait'
 endif
 
-" Gutentags configuration (https://github.com/ludovicchabant/vim-gutentags)
+" Gutentags (https://github.com/ludovicchabant/vim-gutentags)
 " let g:gutentags_define_advanced_commands = 1
 " let g:Gutentags_modules = ['ctags', 'gtags_cscope']
 " let s:python_lib_dirs = get(systemlist('pyenv prefix'), 0, '')
@@ -730,41 +467,191 @@ if executable('rg')
   set grepprg="rg --vimgrep --smart-case --hidden --follow"
 endif
 
+" ---------------------------------------------------------------------
+" Mappings
+" ---------------------------------------------------------------------
+inoremap <C-@> <C-Space>|                                   " Get to next editing point after autocomplete
+nnoremap <Leader>o o<Esc>                                   " Quickly insert an empty new line without entering insert mode
+nnoremap <Leader>O O<Esc>
+inoremap jj <ESC>|                                          " Escape from insert/visual mode
+inoremap jk <ESC>|                                          " Escape from insert/visual mode
+vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>|         " Replace selected text
+nnoremap \ :ProjectRootCD<CR>:Ag -i<SPACE>|                 " bind \ (backward slash) to grep shortcut
+nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>:lclose\|cclose\|noh\<CR>" : ":noh\<CR>\<CR>"
+nnoremap K                                                  " Keep searching for man entries by accident
+nnoremap Q <Plug>window:quickfix:toggle
 
-" ------------------------------------------------------------------------------
-" --------------------------------- Commands -----------------------------------
-" ------------------------------------------------------------------------------
-" Create a section header
-command -nargs=* Header silent! call Header(<args>)
-command -nargs=* TFHeader silent! call TFHeader(<args>)
+" Split navigation
+nnoremap <silent><leader>\ :call <SID>OpenNewSplit('\')<CR>|   " Open vertical split
+nnoremap <silent><leader>\| :call <SID>OpenNewSplit('\|')<CR>| " Open horizontal split
+noremap <C-h> <C-w>h                                           " Move left a window
+noremap <C-j> <C-w>j                                           " Move down a window
+noremap <C-k> <C-w>k                                           " Move up a window
+noremap <C-l> <C-w>l                                           " Move right a window
+nnoremap <c-w><c-w> <ESC><C-w>=                                " Set windows to equal size
+if has('nvim')
+    tnoremap <C-h> <C-\><C-n><C-w>h                            " Move left a window
+    tnoremap <C-j> <C-\><C-n><C-w>j                            " Move down a window
+    tnoremap <C-k> <C-\><C-n><C-w>k                            " Move up a window
+    tnoremap <C-l> <C-\><C-n><C-w>l                            " Move right a window
+    tnoremap <s-space> <space>
+endif
 
-" Define a decrypt/encrypt command to decrypt the current file
-command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
-command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+" Tab navigation
+nnoremap <silent><leader><S-w> :tabclose<CR>                    " Move right a window
+nnoremap <silent><leader><S-h> :tabprevious<CR>                 " Move left a window
+nnoremap <silent><leader><S-l> :tabnext<CR>                     " Move right a window
 
-" Terraform
-command! -nargs=0 -bar Tff silent! !terraform fmt %:p
+" Use magic in search/substitute
+nnoremap / /\v\c
+vnoremap / /\v\c
+cnoremap %% %s/\v
+cnoremap %%% s/\v
+" cnoremap \>s/ \>smagic/
+" nnoremap :g/ :g/\v
+" nnoremap :g// :g//
 
-" Git aliases
-command! -nargs=0 Grbm silent! Git rebase -i origin/master
+" Utility
+nnoremap ` za
+nnoremap <leader>qa :call <SID>StripTrailingWhitespaces()<CR>:wa<CR>:qa<CR>|                " Close buffer(s)
+nnoremap <silent><leader>q :call <SID>WipeBufOrQuit()<CR>
+nnoremap <silent><leader>Q :q!<CR>|
+nnoremap <silent><leader>~ :sp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>` :vsp<CR>:ProjectRootExe term<CR>:setl nospell<CR>:startinsert<CR>
+nnoremap <silent><leader>s :call ToggleSpell()<CR>
+nnoremap <silent><leader>w :call <SID>StripTrailingWhitespaces()<CR>:w<CR>|                 " wtf workaround bc broken from autowrite or...???? Write buffer
+" nnorema <osilent><leader>1 :execute 'e ' . getcwd()<CR>|                                    " Open/close NERDTree
+nnoremap <silent><leader>1 :ProjectRootExe keepalt noswapfile LightTree<CR>|                                    " Open/close LightTree
+nnoremap <silent><leader>2 :keepalt noswapfile LightTreeFind<CR>|                                               " Open/close LightTree
+" nnoremap <silent><leader>1 :call <SID>NvimNerdTreeToggle()<CR>|                             " Open/close NERDTree
+" nnoremap <silent><leader>2 :ProjectRootExe NERDTreeFind<CR>|                                " Open NERDTree and hilight the current file
+" nnoremap <silent><leader>1 <Plug>VinegarUp<CR>|                                             " Open/close NERDTree
+nnoremap <silent><leader>3 :TagbarOpenAutoClose<CR>:set relativenumber<CR>|                 " Open NERDTree and hilight the current file
+nnoremap <leader>n :enew<CR>|                                                               " Open new buffer in current split
+nnoremap <leader>/ :noh<CR>|                                                                " Clear search pattern matches with return
+nnoremap <silent><leader>m :Neomake
+nnoremap <silent><C-p> :ProjectRootExe Files<CR>|                                           " Open FZF
+nnoremap <leader>ha <Plug>GitGutterStageHunk
+nnoremap <leader>hr <Plug>GitGutter
+nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|                         " Copy curgent line path/number
+nnoremap Y y$                                                                               " Make Y act like C and D
+nnoremap <leader>d :Dash<CR>
 
-" Use The Silver Searcher if it is installed
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
+" Find/replace
+nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>
+nnoremap <silent><leader>F :ProjectRootExe grep! "\b<C-R><C-W>\b"<CR>:bo copen 5<CR>|       " Bind K to grep word under cursor
+nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 
-" Set line endings to unix
-command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()
+" Cut
+nmap <leader>x <Plug>MoveMotionPlug
+xmap <leader>x <Plug>MoveMotionXPlug
+nmap <leader>xx <Plug>MoveMotionLinePlug
+nmap <leader>X <Plug>MoveMotionEndOfLinePlug
 
-" Commands (aliases)
-" command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
-" command! -nargs=? Gd Gdiff <args>               " Alias for Gdiff
-" command! Gs Gstatus                             " Alias for Gstatus
-" command! Gc Gcommit                             " Alias for Gcommit
-" command! -nargs=* -bar G !clear;git <args>      " Alias for Git
-" command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
+" Copy/paste to/from system clipboard
+vnoremap <leader>y  "+y
+vnoremap <LeftRelease> "+y<LeftRelease>
+nnoremap <leader>y  "+y
+nnoremap <leader>Y  "+yg_
+nnoremap <leader>yy  "+yy
+nnoremap <leader>p "+p
 
-" -----------------------------------------------------------------------------
-" ----------------------------- Terminal Colors -------------------------------
-" -----------------------------------------------------------------------------
+" ---------------------------------------------------------------------
+" Autocommands
+" ---------------------------------------------------------------------
+augroup vimrcEx
+    au!
+
+    " enable ncm2 for all buffers
+    au BufEnter * call ncm2#enable_for_buffer()
+    au TextChangedI * call ncm2#auto_trigger()
+    au User Ncm2Plugin call ncm2#register_source({
+        \ 'on_complete': ['ncm2#on_complete#delay',
+        \                  300,
+        \                 'ncm2#on_complete#omni',
+        \                 'csscomplete#CompleteCSS'],
+        \ })
+
+    " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
+    " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
+
+    " Set syntax highlighting and configuration for specific file types
+    au BufRead,BufNewFile Appraisals setl ft=ruby
+    au BufRead,BufNewFile *sudoers-* setl ft=sudoers
+    au BufRead,BufNewFile .vimrc setl ft=vim
+    au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
+    au BufRead,BufNewFile Jenkinsfile setl ft=groovy
+    au BufRead,BufNewFile .envrc setl ft=sh
+    au BufRead,BufNewFile dockerfile.* setl ft=Dockerfile
+    au BufRead,BufNewFile */gcloud_vars/.* set ft=sh
+    au BufRead,BufNewFile .markdownlintrc setl ft=json
+    au BufRead,BufNewFile .tfstate setl ft=hcl
+
+    " Enable textwrap for Markdown
+    au FileType markdown setl
+        \ textwidth=80
+        \ formatoptions+=t
+        \ formatoptions-=q
+
+    " Wrap at 72 characters git commit messages
+    au FileType gitcommit setl filetype=markdown
+        \ textwidth=72
+        \ colorcolumn=50,72
+        \ commentstring=#%s
+        \ formatoptions+=t
+
+    " Set Makefile filetype and don't expand tabs
+    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab tabstop=4
+    au FileType make setl noexpandtab tabstop=4
+
+    " :set nowrap for some files
+    au BufRead, BufNewFile user_list.yml, */environments/000_cross_env_users.yml
+        \ setl nowrap
+
+    " Allow style sheets to auto-complete hyphenated words
+    au FileType css,scss,sass setl iskeyword+=-
+
+    " Remove tabs and trailing whitespace on open and insert
+    au BufRead,BufLeave,TextChanged *
+        \ call <SID>StripTrailingWhitespaces()
+
+    " Autosave
+    au TextChanged * call <SID>WriteIfModifiable()
+
+    " Autoread
+    au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
+
+    " Auto lint on write or change
+    au BufWritePost,TextChanged * Neomake
+
+    " Configure terminal settings
+    au TermOpen * setl
+        \ nospell
+        \ nonumber
+        \ norelativenumber
+        \ ft=term
+
+    " Force spell/nospell
+    au FileType markdown,mkd,gitcommit,textile,text setl spell
+    au FileType markdown,mkd,gitcommit,textile,text call lexical#init()
+    au FileType text call lexical#init({ 'spell': 0 })
+
+    " Bind q to close quickfix
+    au FileType quickfix nnoremap q :cclose
+
+    " Hide the status line for FZF buffer
+    au! FileType fzf
+        au  FileType fzf setl laststatus=0 noshowmode noruler
+        \| au BufLeave <buffer> setl laststatus=2 showmode ruler
+
+    " Exclude buffer types from the buffer list
+    au BufNewFile,BufRead term,lighttree,quickfix,help,netrw setl buftype=nofile
+
+" augroup END
+
+" ---------------------------------------------------------------------
+" Syntax/Highlighting
+" ---------------------------------------------------------------------
 " Set neovim colors for truecolor terminal
 " https://neovim.io/doc/user/nvim_terminal_emulator.html#nvim-terminal-emulator-configuration
 
@@ -1029,9 +916,7 @@ let g:terminal_color_253 = '#dadada'
 let g:terminal_color_254 = '#e4e4e4'
 let g:terminal_color_255 = '#eeeeee'
 
-" -----------------------------------------------------------------------------
-" ------------------------- Highlight Configuration ---------------------------
-" -----------------------------------------------------------------------------
+" hilights
 hi Cursor ctermbg=6 guibg=#76d4d6
 hi NeomakeErrorSign ctermfg=196 guifg=#d70000
 hi NeomakeWarningSign ctermfg=226 guifg=#ffff00
@@ -1053,95 +938,211 @@ hi DiffAdd ctermbg=108  guibg=#366344
 hi DiffChange ctermbg=31 guibg=#385570
 hi DiffText ctermbg=208 guibg=#6E3935
 
-" -----------------------------------------------------------------------------
-" ------------------------------ Auto Commands --------------------------------
-" -----------------------------------------------------------------------------
-augroup vimrcEx
-    au!
+" ---------------------------------------------------------------------
+" Functions
+" ---------------------------------------------------------------------
+" Reusable function to prompt the user for input
+function! s:PromptForInput(...)
+  " Args (optional)
+  let l:prompt = get(a:000, 0, 'Input: ')
+  let l:default_input = get(a:000, 1, '')
 
-    " enable ncm2 for all buffers
-    au BufEnter * call ncm2#enable_for_buffer()
-    au TextChangedI * call ncm2#auto_trigger()
-    au User Ncm2Plugin call ncm2#register_source({
-        \ 'on_complete': ['ncm2#on_complete#delay',
-        \                  300,
-        \                 'ncm2#on_complete#omni',
-        \                 'csscomplete#CompleteCSS'],
-        \ })
+  call inputsave()
+  let l:user_input = input(l:prompt)
+  call inputrestore()
 
-    " Configure vim-javacomplete2 (https://github.com/artur-shaik/vim-javacomplete2)
-    " autocmd FileType java,groovy setlocal omnifunc=javacomplete#Complete
+  if empty(l:user_input)
+    let g:user_input = l:default_input
+  else
+    let g:user_input = l:user_input
+  endif
+endfunction
 
-    " Set syntax highlighting and configuration for specific file types
-    au BufRead,BufNewFile Appraisals setl ft=ruby
-    au BufRead,BufNewFile *sudoers-* setl ft=sudoers
-    au BufRead,BufNewFile .vimrc setl ft=vim
-    au BufRead,BufNewFile */orchestration/*.yml setl ft=yaml.ansible
-    au BufRead,BufNewFile Jenkinsfile setl ft=groovy
-    au BufRead,BufNewFile .envrc setl ft=sh
-    au BufRead,BufNewFile dockerfile.* setl ft=Dockerfile
-    au BufRead,BufNewFile */gcloud_vars/.* set ft=sh
-    au BufRead,BufNewFile .markdownlintrc setl ft=json
-    au BufRead,BufNewFile .tfstate setl ft=hcl
+" Prompt for a section header and insert it as a comment
+function! Header()
+    call s:PromptForInput('Section headding: ')
+    let l:heading = g:user_input
 
-    " Enable textwrap for Markdown
-    au FileType markdown setl
-        \ textwidth=80
-        \ formatoptions+=t
-        \ formatoptions-=q
+    call s:PromptForInput('Heading width? (50): ', 50)
+    let l:header_width = g:user_input
 
-    " Wrap at 72 characters git commit messages
-    au FileType gitcommit setl filetype=markdown
-        \ textwidth=72
-        \ colorcolumn=50,72
-        \ commentstring=#%s
-        \ formatoptions+=t
+    call s:PromptForInput('Heading fill character? (-): ', '-')
+    let l:header_fill_char = g:user_input
 
-    " Set Makefile filetype and don't expand tabs
-    au BufRead,BufNewfile Makefile* setl ft=make noexpandtab tabstop=4
-    au FileType make setl noexpandtab tabstop=4
+    let l:heading_line = &commentstring[0] . ' ' . repeat(l:header_fill_char, (l:header_width - 2))
+    let l:heading_text = &commentstring[0] . '  ' . l:heading
 
-    " :set nowrap for some files
-    au BufRead, BufNewFile user_list.yml, */environments/000_cross_env_users.yml
-        \ setl nowrap
+    :put = l:heading_line
+    :put = l:heading_text
+    :put = l:heading_line
+endfunction
 
-    " Allow style sheets to auto-complete hyphenated words
-    au FileType css,scss,sass setl iskeyword+=-
+function! TFHeader()
+    call s:PromptForInput('Section heading: ')
+    let l:heading_title = '  ' . g:user_input
+    let l:heading_start = '/' . repeat('*', 41)
+    let l:heading_end = ' ' . repeat('*', 41) . '/'
 
-    " Remove tabs and trailing whitespace on open and insert
-    au BufRead,BufLeave,TextChanged *
-        \ call <SID>StripTrailingWhitespaces()
+    :put = l:heading_start
+    :put = l:heading_title
+    :put = l:heading_end
+endfunction
 
-    " Autosave
-    au TextChanged * call <SID>WriteIfModifiable()
+" Strip trailing whitespace
+function! s:StripTrailingWhitespaces()
+    if &readonly == 0
+            \&& &buftype ==? ''
+            \&& &diff == 0
+        let l:cur_pos = winsaveview()
+        %s/\s\+$//e
+        call winrestview(l:cur_pos)
+        retab
+   endif
+endfunction
 
-    " Autoread
-    au CursorHold,CursorHoldI,FocusGained,BufEnter * checktime
+function! s:WriteIfModifiable()
+    if buffer_name('%') !=? ''
+                \&& &readonly == 0
+                \&& &buftype !=? 'nofile'
+                \&& &buftype !=? 'terminal'
+                \&& &buftype !=? 'nowrite'
+                \&& &diff == 0
+                \&& buffer_name('%') !~? 'quickfix-'
+        silent w
+    endif
+endfunction
 
-    " Auto lint on write or change
-    au BufWritePost,TextChanged * Neomake
+" Show syntax highlighting being applied at the cursor position
+function! SynGroup()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
 
-    " Configure terminal settings
-    au TermOpen * setl
-        \ nospell
-        \ nonumber
-        \ norelativenumber
-        \ ft=term
+" Open previous buffer, wipe current, quit if only one buffer
+function! s:WipeBufOrQuit()
+    let num_bufs = len(getbufinfo({'buflisted':1}))
+    let prev_buf = bufnr('#')
+    if num_bufs <= 1
+        silent execute 'qall'
+    elseif prev_buf == -1 || &buftype !=? ''
+        silent execute 'quit'
+        if &buftype ==? 'terminal'
+            silent execute 'startinsert'
+        endif
+    else
+        silent execute 'buf #'
+        if bufnr('#') != -1
+            silent execute 'bwipeout! #'
+        endif
+        if &buftype ==? 'terminal'
+            silent execute 'startinsert'
+        endif
+    endif
+endfunction
 
-    " Force spell/nospell
-    au FileType markdown,mkd,gitcommit,textile,text setl spell
-    au FileType markdown,mkd,gitcommit,textile,text call lexical#init()
-    au FileType text call lexical#init({ 'spell': 0 })
+" Open NERDTree using ProjectRootExe if buffer isn't a terminal
+function! s:NvimNerdTreeToggle()
+    if &buftype ==? 'terminal'
+        silent execute 'NERDTreeToggle'
+    else
+        silent execute 'ProjectRootExe NERDTreeToggle'
+    endif
+endfunction
 
-    " Bind q to close quickfix
-    au FileType quickfix nnoremap q :cclose
+" Make the enter key go into insert mode if on a terminal window
+function! s:EnterInsertModeInTerminal()
+    echo 'ran'
+    if &buftype ==? 'terminal'
+        if mode() ==? 'n'
+            call startinsert()
+        endif
+    else
+        silent execute 'nohlsearch'
+        return '\<CR>'
+    endif
+endfunction
 
-    " Hide the status line for FZF buffer
-    au! FileType fzf
-        au  FileType fzf setl laststatus=0 noshowmode noruler
-        \| au BufLeave <buffer> setl laststatus=2 showmode ruler
+" Get the path to the current line from the project root
+function! s:GetPathToCurrentLine()
+    let root = ProjectRootGet()
+    let full_path = expand('%:p') . ':' . line('.')
+    let basename = split(root, '/')
+    let basename = basename[-1]
+    let path_from_root = join([basename, substitute(full_path, root, '', '')], '')
 
-    " Exclude buffer types from the buffer list
-    au BufNewFile,BufRead term,lighttree,quickfix,help,netrw setl buftype=nofile
+    return path_from_root
+endfunction
 
-" augroup END
+" When opening a new split, create a new term if needed
+function! s:OpenNewSplit(splitType)
+    if a:splitType ==? '\'
+        silent execute 'vsp'
+    else
+        silent execute 'sp'
+    endif
+
+    if &buftype ==? 'terminal'
+        silent execute 'term'
+    endif
+endfunction
+
+" Convert mac or dos line endings to unix
+function! s:ConvertLineEndingsToUnix()
+    :update
+    :edit ++fileformat=dos
+    :edit ++fileformat=mac
+    :setlocal fileformat=unix
+    :write
+endfunction
+
+" Toggle spell check
+hi clear SpellCap
+hi clear SpellRare
+hi clear SpellLocal
+function! ToggleSpell()
+  if !exists('g:showingSpell')
+    let g:showingSpell=1
+    execute 'hi SpellBad cterm=underline gui=underline'
+  endif
+
+  if g:showingSpell==0
+    execute 'hi SpellBad cterm=underline gui=underline'
+    let g:showingSpell=1
+    echom 'Spellcheck enabled'
+  else
+    execute 'hi clear SpellBad'
+    let g:showingSpell=0
+    echom 'Spellcheck disabled'
+  endif
+endfunction
+
+" ---------------------------------------------------------------------
+" Commands
+" ---------------------------------------------------------------------
+" Create a section header
+command -nargs=* Header silent! call Header(<args>)
+command -nargs=* TFHeader silent! call TFHeader(<args>)
+
+" Define a decrypt/encrypt command to decrypt the current file
+command! -nargs=+ -bar DecryptThis silent! !ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+command! -nargs=+ -bar EncryptThis silent! !ansible-vault encrypt --vault-password-file ~/.ansible/vault-passwords/<args> %
+
+" Terraform
+command! -nargs=0 -bar Tff silent! !terraform fmt %:p
+
+" Git aliases
+command! -nargs=0 Grbm silent! Git rebase -i origin/master
+
+" Use The Silver Searcher if it is installed
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|:bo copen 10|redraw!
+
+" Set line endings to unix
+command! ConvertEndings silent! call <SID>ConvertLineEndingsToUnix()
+
+" Commands (aliases)
+" command! Grc Gsdiff :1 | Gvdiff                 " Open vimdiff/fugitive in 4 splits with base shown
+" command! -nargs=? Gd Gdiff <args>               " Alias for Gdiff
+" command! Gs Gstatus                             " Alias for Gstatus
+" command! Gc Gcommit                             " Alias for Gcommit
+" command! -nargs=* -bar G !clear;git <args>      " Alias for Git
+" command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor

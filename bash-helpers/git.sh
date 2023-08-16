@@ -1,4 +1,3 @@
-# vim: set ft=sh:
 # git.sh
 logger "" "[${BASH_SOURCE[0]}]"
 
@@ -48,7 +47,7 @@ alias gstatd='printf  "%s\n" \
 # committing
 alias ga.="git add --all"
 alias ga="git add"
-alias gc="pre-commit run --all-files && git add --update && git commit --no-verify"
+alias gc="pre-commit run --all-files && git add --update && git commit --no-verify --gpg-sign"
 alias gcp="git cherry-pick -x"
 alias gqf="ga -u && gc --amend --no-edit && gfpo"
 alias gst="git stash"
@@ -311,6 +310,7 @@ gmerge() {
 
             if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
                 git branch --delete "@{-1}"
+                git push origin --delete "@{-1}"
             fi
 
             prompt_to_continue "Push to origin?"
@@ -335,6 +335,7 @@ gmerge() {
 
             if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
                 git branch --delete "@{-1}"
+                git push origin --delete "@{-1}"
             fi
 
             prompt_to_continue "Push to origin?"

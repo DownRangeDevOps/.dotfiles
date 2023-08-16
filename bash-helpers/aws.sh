@@ -1,4 +1,3 @@
-# vim: set ft=sh:
 # aws.sh
 logger "" "[${BASH_SOURCE[0]}]"
 

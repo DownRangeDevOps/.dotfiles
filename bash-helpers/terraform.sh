@@ -1,4 +1,3 @@
-# vim: set ft=sh:
 # terraform.sh
 logger "" "[${BASH_SOURCE[0]}]"
 
