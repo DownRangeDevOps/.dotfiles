@@ -136,7 +136,7 @@ function git_delete_merged_branches() {
         printf_callout "Branches that have been merged to $(git_master_or_main):"
         gmerged
 
-        if [[ $(prompt_to_continue "Delete branches?") -eq 0 ]]; then
+        if prompt_to_continue "Delete branches?"; then
             printf "\n"
 
             if [[ -n ${LOCAL_BRANCHES} ]]; then
@@ -303,7 +303,7 @@ gmerge() {
             git log "origin/${MAIN_BRANCH}.."
             git diff --stat "origin/${MAIN_BRANCH}"
 
-            if [[ $(prompt_to_continue "Merge to ${MAIN_BRANCH}?") -eq 1 ]]; then
+            if prompt_to_continue "Merge to ${MAIN_BRANCH}?"; then
                 printf_callout "Updating from origin..."
                 git fetch -p
 
@@ -322,7 +322,7 @@ gmerge() {
                     return 1
                 fi
 
-                if [[ $(prompt_to_continue "Push to origin?") -eq 1 ]]; then
+                if prompt_to_continue "Push to origin?"; then
                     printf_callout "Pushing ${MAIN_BRANCH}..."
                     git push origin HEAD
                 fi
@@ -338,7 +338,7 @@ gmerge() {
             git log "${TARGET_BRANCH}..@"
             git diff --stat "${TARGET_BRANCH}"
 
-            if [[ $(prompt_to_continue "Merge to ${TARGET_BRANCH}?") -eq 1 ]]; then
+            if prompt_to_continue "Merge to ${TARGET_BRANCH}?"; then
                 printf_callout "Merging to ${TARGET_BRANCH}..."
                 git rebase "${TARGET_BRANCH}"
                 git checkout "${TARGET_BRANCH}"
@@ -348,7 +348,7 @@ gmerge() {
                     git branch --delete "@{-1}"
                 fi
 
-                if [[ $(prompt_to_continue "Push to origin?") -eq 1 ]]; then
+                if prompt_to_continue "Push to origin?"; then
                     printf_callout "PUshing ${TARGET_BRANCH}..."
                     git push origin HEAD
                 fi

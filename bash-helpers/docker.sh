@@ -80,7 +80,7 @@ function dvrm() {
         printf_callout "Volumes to remove:"
         printf "%s\n" "${volumes}"
 
-        if [[ $(prompt_to_continue "Delete volumes?") -eq 0 ]]; then
+        if prompt_to_continue "Delete volumes?"; then
             for volume in $volumes; do
                 docker volume rm "${volume}"
             done
