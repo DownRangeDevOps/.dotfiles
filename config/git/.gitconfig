@@ -6,7 +6,7 @@
   format = ssh
 [gpg "ssh"]
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-	allowedSignersFile = config/git/allowed_ssh_signers
+    allowedSignersFile = config/git/allowed_ssh_signers
 [include]
     path = .gitconfig_aliases
 [core]
@@ -41,13 +41,13 @@
 [help]
     autocorrect = 0
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
 [mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [init]
-    templatedir = ~/.git_templates
+    templateDir = /Users/ryanfisher/.git-template
     defaultBranch = main
 [color]
     ui = true

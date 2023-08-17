@@ -29,7 +29,7 @@ function indent_output() {
         indent="    "
     fi
 
-    sed "s/^/${indent}/"
+    printf "%s\n" "$1" | sed "s/^/${indent}/"
 }
 
 function printf_callout() {
@@ -45,6 +45,7 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 WHITE=$(tput setaf 7)
 BOLD=$(tput bold)
+REVERSE=$(tput rev)
 RESET=$(tput sgr0)
 
 export RED

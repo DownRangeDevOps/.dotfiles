@@ -72,7 +72,7 @@ alias gpu="git push -u \$(git remote) HEAD"
 alias gfpo="git push --force-with-lease origin HEAD"
 
 # Repository info
-alias git-contributors="git shortlog -sne"
+alias git-committers="git shortlog -sne"
 
 # Misc aliases for git based but non-git actions
 alias gac="git diff origin/\$(git_master_or_main) \
