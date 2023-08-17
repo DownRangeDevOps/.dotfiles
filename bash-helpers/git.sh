@@ -8,6 +8,7 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
 
 # main
 alias g="git"
+alias gab="git_absorb"
 alias gba="git branch --all"
 alias gbn="git rev-parse --abbrev-ref HEAD"
 alias gcod="git checkout develop"
@@ -84,13 +85,23 @@ alias gac="git diff origin/\$(git_master_or_main) \
 # ------------------------------------------------
 logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
+function git_absorb() {
+    git add --update
+    git absorb --dry-run
+
+    # Prompt user
+    prompt_to_continue "Apply fixups?" || return 3
+    git absorb --and-rebase
+}
+
 function git_fixup() {
     git add --update
-    git log -n 50 --pretty=format:"%h %s" --no-merges \
+    git log -n 20 --pretty=format:"%h %s" --no-merges \
         | fzf \
         | awk '{print $1}' \
-        | xargs -o hub commit --fixup
-    git rebase --interactive HEAD~2
+        | xargs -o git commit --fixup
+
+    git rebase --interactive --autosquash HEAD
 }
 
 # Branching
@@ -133,33 +144,30 @@ function git_delete_merged_branches() {
         | awk '{print $1}')
 
     if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
-        printf_callout "Branches that have been merged to $(git_master_or_main):"
+        printf_callout "Branches that have been merged to $(green "$(git_master_or_main)")${BOLD}:"
         gmerged
 
-        if prompt_to_continue "Delete branches?"; then
-            printf "\n"
+        # Prompt user
+        prompt_to_continue "Delete branches?" || return 3
 
-            if [[ -n ${LOCAL_BRANCHES} ]]; then
-                printf_callout "Deleting merged local branches..."
-                git branch --delete --force ${LOCAL_BRANCHES}
-            fi
-
-            if [[ -n ${REMOTE_BRANCHES} ]]; then
-                for REMOTE in ${REMOTES}; do
-                    printf_callout "Deleting merged remote branches from ${REMOTE}..."
-                    git push --delete "${REMOTE}" ${REMOTE_BRANCHES}
-                done
-            fi
-
-            git fetch --prune &>/dev/null
-            git remote prune origin &>/dev/null
-            printf_success "Merged branches have been deleted..."
-            printf_callout "Everyone should run \`git fetch --prune\` to sync with this remote."
-        else
-            printf_warning "No merged branches to delete."
+        if [[ -n ${LOCAL_BRANCHES} ]]; then
+            printf_callout "Deleting merged local branches..."
+            git branch --delete --force "${LOCAL_BRANCHES}"
         fi
+
+        if [[ -n ${REMOTE_BRANCHES} ]]; then
+            for REMOTE in ${REMOTES}; do
+                printf_callout "Deleting merged remote branches from $(green "${REMOTE}")${BOLD}..."
+                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
+            done
+        fi
+
+        git fetch --prune &>/dev/null
+        git remote prune origin &>/dev/null
+        printf_success "Merged branches have been deleted..."
+        printf_callout "Everyone should run $(green \`git fetch --prune\`)${BOLD} to sync with this remote."
     else
-        return 0
+        printf_warning "No merged branches to delete."
     fi
 }
 
@@ -174,7 +182,7 @@ function __git_is_repo() {
 function git_master_or_main() {
     if ! __git_is_repo "${PWD}"; then
         printf_error "${PWD} is not a git repository."
-        return 1
+        return 3
     fi
 
     INITIAL_COMMIT="$(git rev-list --abbrev-commit HEAD | tail -n 1)"
@@ -200,7 +208,7 @@ function git_master_or_main() {
         MAIN_BRANCH="master"
     else
         printf_error "This repository does not have a 'master' or 'main' branch!"
-        return 1
+        return 3
     fi
 
     printf  "%s" "${MAIN_BRANCH}"
@@ -282,7 +290,18 @@ gcot() {
 
 gmerge() {
     # git merge --ff-only
+    SOURCE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     MAIN_BRANCH=$(git_master_or_main)
+
+    if [[ $1 == "help" || $1 == "--help" ]]; then
+        print  "%s\n" \
+            "Usage: gffm [OPTION] [<TARGET_BRANCH>]" \
+            "Merge ${BOLD}TARGET_BRANCH${RESET} to ${BOLD}${MAIN_BRANCH}${RESET} printing the log and stat, and" \
+            "prompting before merging or pushing." \
+            "" \
+            "If no ${BOLD}TARGET_BRANCH${RESET}, or ${BOLD}TARGET_BRANCH${RESET} is HEAD, the current branch will be merged to ${BOLD}${MAIN_BRANCH}${RESET}."
+        return 0
+    fi
 
     if [[ $1 == "--ff-only" ]]; then
         MERGE_COMMIT_OPTION="--ff-only"
@@ -291,70 +310,47 @@ gmerge() {
         MERGE_COMMIT_OPTION="--no-ff"
     fi
 
-    if [[ $1 == "help" || $1 == "--help" ]]; then
-        print  "%s\n" \
-            "Usage: gffm [OPTION] [<TARGET_BRANCH>]" \
-            "Merge TARGET_BRANCH to ${MAIN_BRANCH} printing the log and stat, and" \
-            "prompting before merging or pushing." \
-            "" \
-            "If no TARGET_BRANCH, or TARGET_BRANCH is HEAD, the current branch will be merged to ${MAIN_BRANCH}."
+    if [[ $1 == "HEAD" || $1 == "" ]]; then
+        TARGET_BRANCH=${MAIN_BRANCH}
     else
-        if [[ $1 == "HEAD" || $1 == "" ]]; then
-            git log "origin/${MAIN_BRANCH}.."
-            git diff --stat "origin/${MAIN_BRANCH}"
-
-            if prompt_to_continue "Merge to ${MAIN_BRANCH}?"; then
-                printf_callout "Updating from origin..."
-                git fetch -p
-
-                printf_callout "Rebasing onto ${MAIN_BRANCH}..."
-                git checkout "${MAIN_BRANCH}"
-                git pull -r
-                git rebase "origin/${MAIN_BRANCH}"
-
-                printf_callout "Merging to ${MAIN_BRANCH}..."
-
-                if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
-                    git push origin --delete "@{-1}"
-                    git branch --delete "@{-1}"
-                else
-                    printf_error "ERROR: merge failed, exiting."
-                    return 1
-                fi
-
-                if prompt_to_continue "Push to origin?"; then
-                    printf_callout "Pushing ${MAIN_BRANCH}..."
-                    git push origin HEAD
-                fi
-            fi
-        else
-            TARGET_BRANCH=$1
-            git checkout "${TARGET_BRANCH}"
-
-            printf_callout "Updating ${TARGET_BRANCH}..."
-            git fetch -p
-            git pull -r
-            git checkout "@{-1}"
-            git log "${TARGET_BRANCH}..@"
-            git diff --stat "${TARGET_BRANCH}"
-
-            if prompt_to_continue "Merge to ${TARGET_BRANCH}?"; then
-                printf_callout "Merging to ${TARGET_BRANCH}..."
-                git rebase "${TARGET_BRANCH}"
-                git checkout "${TARGET_BRANCH}"
-
-                if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
-                    git push origin --delete "@{-1}" 2>/dev/null
-                    git branch --delete "@{-1}"
-                fi
-
-                if prompt_to_continue "Push to origin?"; then
-                    printf_callout "PUshing ${TARGET_BRANCH}..."
-                    git push origin HEAD
-                fi
-            fi
-        fi
+        TARGET_BRANCH=$1
     fi
+
+    # Prompt user
+    prompt_to_continue "Merge $(green "${SOURCE_BRANCH}")${BOLD} to $(green "${TARGET_BRANCH}")${BOLD}?" || return 3
+
+    git log "origin/${TARGET_BRANCH}.."
+    git diff --stat "origin/${TARGET_BRANCH}"
+
+    # Prompt user
+    prompt_to_continue "Merge to $(green "${TARGET_BRANCH}")${BOLD}?" || return 3
+
+    printf_callout "Updating from origin..."
+    git fetch -p
+
+    printf_callout "Rebasing onto $(green "${TARGET_BRANCH}")${BOLD}..."
+    git checkout "${TARGET_BRANCH}"
+    git pull -r
+    git rebase "origin/${TARGET_BRANCH}"
+
+    printf_callout "Merging to $(green "${TARGET_BRANCH}")${BOLD}..."
+
+        if [[ $(git merge "${MERGE_COMMIT_OPTION}" "${SOURCE_BRANCH}") ]]; then
+            printf_callout "Deleting $(green "${SOURCE_BRANCH}")${BOLD} from remote..."
+            git push origin --delete "${SOURCE_BRANCH}" 2>/dev/null
+
+            printf_callout "Deleting $(green "${SOURCE_BRANCH}")${BOLD} from local..."
+            git branch --delete "${SOURCE_BRANCH}"
+        else
+            printf_error "ERROR: merge failed, exiting."
+            return 1
+        fi
+
+    # Prompt user
+    prompt_to_continue "Push to origin?" || return 3
+
+    printf_callout "Pushing $(green "${TARGET_BRANCH}")${BOLD}..."
+    git push origin HEAD
 }
 
 gcpu() {
@@ -362,7 +358,7 @@ gcpu() {
     if [[ $1 == "help" || $1 == "--help" ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
         echo "Usage: gacp [-a] [-m <message>]"
-        return 1
+        return 0
     fi
 
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -388,7 +384,7 @@ gnuke() {
     # delete local and remote branch
     if [[ $# -eq 0 || $1 == "help" || $1 == "--help" ]]; then
         echo "Usage: gnuke <branch>"
-        return 1
+        return 0
     fi
 
     git remote | xargs -L1 -I remote git push --delete remote "$@" 2>/dev/null
