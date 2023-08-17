@@ -32,7 +32,7 @@ function goenv_lazy_init() {
     goenv_alias remove
     eval "$(goenv init -)"
 
-    printf_callout "%s\n" "Done. Running \`${CMD}\`..."
+    printf_callout "%s\n" "Done. Running $(green \`${CMD}\`)${BOLD}..."
     ${CMD}
 }
 

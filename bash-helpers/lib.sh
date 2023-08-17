@@ -7,9 +7,10 @@ function prompt_to_continue() {
     read -p "${BOLD}${*:-Continue?} (y)[es|no] ${RESET}" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         printf "\n\n"
+        return 0
     else
         printf "\n%s\n" "Ok, exiting."
-        [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 1 || return 3
     fi
 }
 
@@ -57,14 +58,22 @@ export BOLD
 export RESET
 
 # Color printf
+alias bold=printf_bold
+function printf_bold() {
+    printf "%b\n" "${BOLD}${*}${RESET}"
+}
+
+alias green=printf_green
 function printf_green() {
     printf "%b\n" "${GREEN}${*}${RESET}"
 }
 
+alias yellow=printf_yellow
 function printf_yellow() {
     printf "%b\n" "${YELLOW}${*}${RESET}"
 }
 
+alias red=printf_red
 function printf_red() {
     printf "%b\n" "${RED}${*}${RESET}"
 }

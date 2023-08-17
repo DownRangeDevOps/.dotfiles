@@ -113,9 +113,10 @@ fi
 # }
 
 # function run_mega_linter_python() {
-#     if prompt_to_continue "Remove the existing report directory?"; then
-#         rm -rf report
-#     fi
+#     # Prompt user
+#     prompt_to_continue "Remove the existing report directory?" || return 3
+#
+#     rm -rf report
 #
 #     mega-linter-runner -f python "${@}" .
 # }

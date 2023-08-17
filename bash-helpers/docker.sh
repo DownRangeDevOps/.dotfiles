@@ -80,13 +80,12 @@ function dvrm() {
         printf_callout "Volumes to remove:"
         printf "%s\n" "${volumes}"
 
-        if prompt_to_continue "Delete volumes?"; then
-            for volume in $volumes; do
-                docker volume rm "${volume}"
-            done
-        else
-            return 0
-        fi
+        # Prompt user
+        prompt_to_continue "Delete volumes?" || return 3
+
+        for volume in $volumes; do
+            docker volume rm "${volume}"
+        done
     else
         printf_callout "No matching volumes found."
     fi
@@ -169,7 +168,7 @@ function docker_exec() {
             "Docker helper to connect to a running container" \
             "" \
             "    Usage: de <container> [<command>]"
-        return 1
+        return 3
     elif [[ $# -eq 0 ]]; then
         printf "%s\n" "Select a container"
         docker_select_image
