@@ -122,12 +122,14 @@ alias grep=rg
 alias ag=rg
 function rg() {
     "$(brew --prefix)/bin/rg"\
-        --hidden \
         --follow \
-        --glob '!.git' \
+        --hidden \
+        --no-config \
+        --smart-case \
         --colors 'match:style:bold' \
         --colors 'match:fg:156,201,159' \
         --colors 'match:bg:24,64,43' \
+        --glob '!.git' \
         "$@"
 }
 
