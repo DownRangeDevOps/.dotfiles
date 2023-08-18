@@ -1,4 +1,6 @@
 # lib.sh
+# shellcheck disable=SC2034 # ignore globals that are set for use elsewhere
+
 logger "" "[${BASH_SOURCE[0]}]"
 
 logger "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
@@ -10,7 +12,7 @@ function prompt_to_continue() {
         return 0
     else
         printf "\n%s\n\n" "${BLUE}${2:-Ok, exiting.}${RESET}"
-        [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 1 || return 3
+        [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 3 || return 3
     fi
 }
 
@@ -30,7 +32,7 @@ function indent_output() {
     }
 
     if [[ $1 =~ ^[1-9]+ ]]; then
-        indent="$(get_indent $1)"
+        indent="$(get_indent "$1")"
         shift
     else
         indent="    "

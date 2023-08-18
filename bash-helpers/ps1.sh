@@ -27,7 +27,7 @@ function __ps1_prompt () {
 
     info="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv_name)$(get_terraform_workspace)"
     time="$(date +%R) "
-    git_root="${YELLOW}$(git_project_root)${RESET}"
+    git_root="${YELLOW}$(__git_project_root)${RESET}"
     git_branch="${MAGENTA}$(__git_show_branch_state)${RESET}"
 
     if __git_is_repo; then

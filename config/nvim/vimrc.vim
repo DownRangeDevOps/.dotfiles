@@ -12,11 +12,6 @@ scriptencoding utf-8
 " Use a login shell so that .bash_profile is loaded
 let &shell='/usr/local/bin/bash --login'
 
-" Use space as leader key
-let mapleader=' '
-nnoremap <Space> <leader>
-nnoremap <S-Space> <leader>
-
 " Config
 " filetype plugin indent on                " Enable file type detection and do language-dependent indenting.
 set autochdir                            " Auto change working directory to that of the current file
@@ -555,6 +550,12 @@ nnoremap <leader>y  "+y
 nnoremap <leader>Y  "+yg_
 nnoremap <leader>yy  "+yy
 nnoremap <leader>p "+p
+
+" Use space and shift+space as leader keys
+let mapleader=' '
+let maplocalleader = '<Space>'
+nnoremap <Space> <Nop>
+nmap <Space> <Leader>
 
 " ---------------------------------------------------------------------
 " Autocommands

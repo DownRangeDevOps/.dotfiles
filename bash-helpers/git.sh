@@ -23,75 +23,13 @@ alias gp="gf && git pull --rebase"
 alias gs="git status"
 
 # logging
-alias gl=git_log_branch
-alias gl-=git_log_branch_no_trunc_msg
-alias gl--=git_log_branch_only_msg
-alias gL=git_log_all_branches
-alias gL-=git_log_all_branches_no_trunc_msg
-alias gstat=git_status_bs_master
-alias gstatd=git_status_vs_develop
-
-function git_status_vs_master() {
-    printf  "%s\n" \
-        "==> Log: " \
-        "$(git log origin/master..)" \
-        "" \
-        "==> Diff:" \
-        "$(git diff --stat origin/master)"
-}
-
-function git_status_vs_develop() {
-    printf  "%s\n" \
-        "==> Log: " \
-        "$(git log origin/develop..)" \
-        "" \
-        "==> Diff:" \
-        "$(git diff --stat origin/develop)"
-}
-
-function git_log_branch() {
-    git log \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
-        | LESS -SFX -R
-}
-
-function git_log_branch_no_trunc_msg() {
-    git log \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
-        | LESS -SFX -R
-}
-
-function git_log_branch_only_msg() {
-    git log --color --format=format:'• %C(white)%s%C(reset)' | LESS -SFX -R
-}
-
-function git_log_all_branches() {
-git log \
-    --branches \
-    --remotes \
-    --graph \
-    --color \
-    --decorate=short \
-    --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
-    | LESS -SFX -R
-}
-
-function git_log_all_branches_no_trunc_msg() {
-git log \
-    --branches \
-    --remotes \
-    --graph \
-    --color \
-    --decorate=short \
-    --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
-    | LESS -SFX -R
-}
+alias gl="__git_log_branch"
+alias gl-="__git_log_branch_no_trunc_msg"
+alias gl--="__git_log_branch_only_msg"
+alias gL="__git_log_all_branches"
+alias gL-="__git_log_all_branches_no_trunc_msg"
+alias gstat="__git_status_vs_master"
+alias gstatd="__git_status_vs_develop"
 
 # committing
 alias ga.="git add --all"
@@ -110,10 +48,8 @@ alias grbm="gf && git rebase --interactive origin/\$(__git_master_or_main)"
 alias grbs="gf && git rebase --interactive \$(git merge-base HEAD origin/\$(__git_master_or_main))"
 
 # Merging
-alias gm=gmerge
-alias gmerged="git branch --all --merged origin/\$(__git_master_or_main) \
-    | /usr/local/opt/grep/libexec/gnubin/grep -Ev '>|master|main|develop|release' \
-    | tr -d ' '"
+alias gm="git_rebase_merge_and_push"
+alias gmerged="__git_get_merged_branches"
 
 # Pushing
 alias gpu="git push -u \$(git remote) HEAD"
@@ -164,39 +100,36 @@ function __git_is_repo() {
 }
 
 function __git_master_or_main() {
-    local master_exists=""
-    local main_exists=""
+    local master_exists
+    local main_exists
     local master_length
     local main_length
-    local initial_commit
     local main_branch
 
     if ! __git_is_repo "${PWD}"; then
-        printf "%s\n" "${PWD} is not a git repository."
-        return 1
+        printf_error "${PWD} is not a git repository!" >&2
+        return 6
     fi
 
-    initial_commit="$(git rev-list --abbrev-commit HEAD | tail -n 1)"
+    if git show-ref --verify --quiet refs/heads/master; then master_exists=true; fi
+    if git show-ref --verify --quiet refs/heads/main; then main_exists=true; fi
 
-    [[ $(git show-ref --verify --quiet refs/heads/master) ]] && master_exists=true
-    [[ $(git show-ref --verify --quiet refs/heads/main) ]] && main_exists=true
-
-    if [[ -z ${master_exists} && -z ${main_exists} ]]; then
-        master_length="$(git rev-list --count "${initial_commit}..master")"
-        main_length="$(git rev-list --count "${initial_commit}..main")"
+    if [[ -n ${master_exists:-} && -n ${main_exists:-} ]]; then
+        master_length="$(git rev-list --count master)"
+        main_length="$(git rev-list --count main)"
 
         if [[ ${master_length} -gt ${main_length} ]]; then
             main_branch="main"
         else
             main_branch="master"
         fi
-    elif [[ ${main_exists} ]]; then
+    elif [[ -n ${main_exists:-} ]]; then
         main_branch="main"
-    elif [[ ${master_exists} ]]; then
+    elif [[ -n ${master_exists:-} ]]; then
         main_branch="master"
     else
-        printf "%s\n" "This repository does not have a 'master' or 'main' branch!"
-        exit 1
+        printf_error "This repository does not have a 'master' or 'main' branch!" >&2
+        return 6
     fi
 
     printf  "%s" "${main_branch}"
@@ -227,12 +160,91 @@ function __git_project_parent() {
     printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)/.."
 }
 
-function git_project_root () {
+function __git_project_root () {
     if [[ -n $(git branch 2>/dev/null) ]]; then
         printf "%s\n" "git@$(realpath --relative-to="$(__git_project_parent)" .)"
     else
         printf "%s\n" "${PWD/~/\~}"
     fi
+}
+
+function __git_status_vs_master() {
+    printf  "%s\n" \
+        "==> Log: " \
+        "$(indent_output "$(git log "$(__git_master_or_main)..")")" \
+        "" \
+        "==> Diff:" \
+        "$(indent_output "$(git diff --stat "$(__git_master_or_main)")")"
+}
+
+function __git_status_vs_develop() {
+    if git show-ref --verify --quiet refs/heads/master; then
+        printf  "%s\n" \
+            "==> Log: " \
+            "$(indent_output "$(git log origin/develop..)")" \
+            "" \
+            "==> Diff:" \
+            "$(indent_output "$(git diff --stat origin/develop)")"
+    else
+        printf_error "The 'develop' branch does not exist!" >&2
+        return 6
+    fi
+}
+
+# diffing
+function __git_diff_so_fancy_with_less() {
+    git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
+}
+
+# logging
+function __git_log_branch() {
+    git log \
+        --graph \
+        --color \
+        --decorate=short \
+        --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        | LESS -SFX -R
+}
+
+function __git_log_branch_no_trunc_msg() {
+    git log \
+        --graph \
+        --color \
+        --decorate=short \
+        --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        | LESS -SFX -R
+}
+
+function __git_log_branch_only_msg() {
+    git log --color --format=format:'• %C(white)%s%C(reset)' | LESS -SFX -R
+}
+
+function __git_log_all_branches() {
+git log \
+    --branches \
+    --remotes \
+    --graph \
+    --color \
+    --decorate=short \
+    --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+    | LESS -SFX -R
+}
+
+function __git_log_all_branches_no_trunc_msg() {
+git log \
+    --branches \
+    --remotes \
+    --graph \
+    --color \
+    --decorate=short \
+    --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+    | LESS -SFX -R
+}
+
+function __git_get_merged_branches() {
+    git branch --all --merged "origin/$(__git_master_or_main)" \
+        | rg --invert-match '>|master|main|develop|release' \
+        | tr -d ' '
 }
 
 # ------------------------------------------------
@@ -285,18 +297,18 @@ function git_delete_merged_branches() {
     git remote prune origin &>/dev/null
 
     CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    LOCAL_BRANCHES=$(gmerged \
+    LOCAL_BRANCHES=$(__git_get_merged_branches \
         | /usr/local/opt/grep/libexec/gnubin/grep -Ev "^\s*remotes/origin/" \
         | /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" \
         | awk '{print $1}')
-    REMOTE_BRANCHES=$(gmerged \
+    REMOTE_BRANCHES=$(__git_get_merged_branches \
         | /usr/local/opt/grep/libexec/gnubin/grep -E "^\s*remotes/origin/" \
         | sed -e "s/^\s*remotes\/origin\///g" \
         | awk '{print $1}')
 
     if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
-        gmerged
+        __git_get_merged_branches
 
         prompt_to_continue "Delete branches?" || return 0
         echo
