@@ -1,74 +1,106 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091
-# Usage: git-parse-repos.sh [-corhv] [--gc]
-#        git-parse-repos.sh --help
-#        git-parse-repos.sh --debug
+#
+# Name:
+#        git-parse-repos.sh - Parse and optionally act on all git repositories
+#        in [DIR] and subdirectories of it.
+#
+# Usage: git-parse-repos.sh [DIR]
+#        git-parse-repos.sh [-comd] [--gc] [--dry-run] [DIR]
+#        git-parse-repos.sh [--committer <ARG> --output <FILE> --mailmap <FILE>] [--gc | --debug --dry-run] [DIR]
+#        git-parse-repos.sh (--help | --debug | --version)
+#
+# Description:
+#        Parse and optionally act on all git repositories in [DIR] and
+#        subdirectories of it. Output information about each repository.
+#        Management options allow actions to be taken against each repository.
 #
 # Options:
-#     -c, --committer  Comitter to filter by
-#     -o, --output     Output file
-#     -r, --root       Directory to start searching from
-#     --gc             Run `git gc --aggressive --prune=now` on each repository
-#
-#     --debug          Output debug information
-#     -h, --help       Show this help message and exit
-#     -v, --version    Show version
+#        -c, --committer ARG  Comitter to filter by, uses ripgrep with --smart-case
+#        -o, --output FILE    Output file
+#        -m, --mailmap FILE   Path to .mailmap file to add to each repository
+#        --dry-run            Run without making any changes or creating any files
+#        --gc                 Run `git gc --aggressive --prune=now` on each
+#                             repository
+#        -d, --debug          Output debug information
+#        -h, --help           Show this help message and exit
+#        -v, --version        Show version
 
-PATH="${PATH}:./bin"
+# libs
+SCRIPT_PATH="$(dirname "$0")"
+PATH="${PATH}:${SCRIPT_PATH}/../bin"
 
-source ../bin/docopts.sh
-source ../bash-helpers/lib.sh
+source "${SCRIPT_PATH}/../bash-helpers/lib.sh"
 
-# setup docopts
-DEPENDENCIES=(fd git rg)
-HELP=$(docopt_get_help_string "$0")
-VERSION="0.1.0"
+# globals
+DEPENDENCIES=(fd git rg gh trim)
+VERSION=0.1.0
 
-
-# init options to please linters
-committer=
-debug=
-gc=
-output_file=
-root=
-
-# parse arguments
-OPTIONS=$(../bin/docopts -h "${HELP}" -V "${VERSION}" : "$@")
+# init
+source "${SCRIPT_PATH}/../bin/docopts.sh" --auto "$@"
 
 function check_dependencies() {
-    printf "%s\n" "Checking dependencies:"
+    MISSING_DEPS=()
+    printf_callout "Checking dependencies:"
 
     for dep in "${DEPENDENCIES[@]}"; do
-        if ! command -v "${dep}" &>/dev/null; then
-            printf_error "${dep}... MISSING"
-            MISSING_DEPS=true
+        if ! command -v "${dep}" > /dev/null; then
+            indent_output "$(printf_error "${dep}... MISSING")"
+            MISSING_DEPS+=("${dep}")
         else
-            printf_success "${dep}... AVAILABLE"
+            indent_output "$(printf_success "${dep}... AVAILABLE")"
         fi
     done
+
+    printf_success "    DONE"
+    printf "\n"
+}
+
+function parse_args() {
+    if [[ -n "${ARGS[--mailmap]}" ]]; then
+        ARGS[--mailmap]=$(realpath "${ARGS[--mailmap]}")
+    fi
+
+    if [[ "${ARGS[--output]}" ]]; then
+        ARGS[--output]=$(realpath "${ARGS[--output]}")
+    fi
 }
 
 function find_repos() {
-    mapfile -t PATHS "$(fd --type d --hidden --full-path --glob '**/.git' "${root:.}")"
+    REPOS_ABS_PATHS=()
+
+    printf_callout "Finding repositories..."
+
+    mapfile -t FOUND_REPOS < <(fd --type d --hidden --full-path --glob "**/.git" "${ARGS[DIR]}")
+
+    for path in "${FOUND_REPOS[@]}"; do
+        REPOS_ABS_PATHS+=("$(realpath "${path/\/.git/}")")
+    done
+
+
+    printf_success "    DONE"
+    printf "\n"
 }
 
 function output() {
-    local committers="${1[committers]}"
-    local remote="${1[remote]}"
-    local branch="${1[branch]}"
-    local status="${1[status]}"
-    local status_print="${1[status_print]}"
-    local repo_path="${1[repo_path]}"
+    local committers="${query_results[committers]}"
+    local remote="${query_results[remote]}"
+    local branch="${query_results[branch]}"
+    local status="${query_results[status]}"
+    local printf_status="${query_results[printf_status]}"
+    local repo_path="${query_results[repo_path]}"
 
-    printf "%s\n" \
+    printf_callout "Repoistory details:"
+    indent_output "$(printf "%s\n" \
         "Remote: ${remote}" \
         "Branch: ${branch/origin\//}" \
-        "Status: ${status_print}" \
+        "Status: ${printf_status}" \
         "Path: ${repo_path}" \
         "Comitters:" \
-        "${committers}"
+        "${committers}")"
 
-    if [[ -n "${output_file}" ]]; then
+    if [[ -n ${ARGS[--output]} ]] && ! ${ARGS[--dry-run]}; then
+        printf_callout "Saving output to $(printf_green "${ARGS[--output]}")${BOLD}..."
         printf "%s\n" \
             "Remote: ${remote}" \
             "Branch: ${branch/origin\//}" \
@@ -76,72 +108,121 @@ function output() {
             "Path: ${repo_path}" \
             "Comitters:" \
             "${committers}" \
-            "" >> "${output_file}"
+            "" >> "${ARGS[--output]}"
     fi
 
     printf "\n"
 }
 
 function parse_repos() {
-    local args
-    declare -A args
+    declare -A query_results
 
-    for repo in "${PATHS[@]}"; do
-        args[repo_path]="${repo/\/.git/}"
-
-        printf_callout "Quering $(printf_green "${args[repo_path]}")${BOLD} ..."
+    for path in "${REPOS_ABS_PATHS[@]}"; do
+        printf_callout "Quering $(printf_green "${path}")${BOLD} ..."
+        query_results[repo_path]="${path}"
 
         (
-            cd "${PWD}/${args[repo_path]}" || exit 1
+            cd "${path}" || exit 1
 
-            if ${gc}; then
-                git gc --aggressive --prune=now
-            fi
+            query_results[committers]="$(git shortlog -sne HEAD 2>/dev/null | trim)"
+            query_results[status]=$(git status --short)
+            query_results[remote]=$(git remote -v | head -1 | cut -f 2 | cut -f 1 -d ' ')
+            query_results[branch]=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)
 
-            args[committers]="$(git shortlog -sne HEAD 2>/dev/null | ../utils/trim.sh)"
-            args[status]=$(git status --short)
-            args[remote]=$(git remote -v | head -1 | cut -f 2 | cut -f 1 -d ' ')
-            args[branch]=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)
+            if [[ -z "${query_results[remote]}" ]]; then query_results[remote]="none"; fi
+            if [[ -z "${query_results[branch]}" ]]; then query_results[branch]="none"; fi
 
-            if [[ -z "${args[remote]}" ]]; then args[remote]="none"; fi
-            if [[ -z "${args[branch]}" ]]; then args[branch]="none"; fi
-
-            if [[ -n "${args[status]}" ]]; then
-                args[status]="dirty"
-                args[status_print]="$(printf_red dirty)"
+            if [[ -n "${query_results[status]}" ]]; then
+                query_results[status]="dirty"
+                query_results[printf_status]="$(printf_red dirty)"
             else
-                args[status]="clean"
-                args[status_print]="clean"
+                query_results[status]="clean"
+                query_results[printf_status]="clean"
             fi
 
-            if printf "%s" "${args[committers]}" | rg --no-config --smart-case --quiet "${args[committer]}"; then
-                output args
+            if [[ -n ${ARGS[--committer]} ]]; then
+                if printf "%s" "${query_results[committers]}" \
+                    | rg --no-config --smart-case --quiet "${ARGS[--committer]}"; then
+
+                    exec_repo_git_actions
+                    output query_results
+                fi
+            else
+                    exec_repo_git_actions
+                    output query_results
             fi
         )
     done
 }
 
-function main() {
-    if ${debug}; then
-        printf "%s\n" "Options:"
-        indent_output "${OPTIONS}"
+function exec_repo_git_actions() {
+    if ! ${ARGS[--dry-run]}; then
+        if ${ARGS[--gc]}; then
+            printf_callout "Running git gc --aggressive --prune=now..."
+            git gc --aggressive --prune=now
+        fi
 
-        printf "\n"
-        check_dependencies
-        exit 0
+        if [[ -n ${ARGS[--mailmap]} ]]; then
+            printf_callout "Adding .mailmap..."
+            cp -f "${ARGS[--mailmap]}" ./.mailmap
+        fi
     fi
-
-    if "${MISSING_DEPS}"; then
-        exit 1
-    fi
-
-    if [[ -n ${output_file} ]]; then
-        true > "${output_file}"
-    fi
-
-    find_repos
-    parse_repos
 }
 
+function main() {
+    if ${ARGS[--debug]}; then
+        printf_callout "Debugging mode enabled..."
+        printf "\n"
+
+        printf_callout "ARGS:"
+
+        for arg in "${!ARGS[@]}" ; do
+            if ${ARGS[$arg]}; then
+                echo "    $arg = ${ARGS[$arg]}"
+            else
+                echo "    $arg = ${ARGS[$arg]}"
+            fi
+        done
+
+        printf "\n"
+
+        check_dependencies
+    elif ${ARGS[--version]}; then
+        printf "%s\n" "${VERSION}"
+    else
+        if [[ -n ${ARGS[DIR]} ]]; then
+            printf_callout "Using directory: $(printf_green "${ARGS[DIR]} w")..."
+        else
+            printf_callout "No directory specified, using current directory..."
+            ARGS[DIR]="./"
+        fi
+
+        local dep_check_msg
+        dep_check_msg=$(check_dependencies)
+
+        if [[ ${#MISSING_DEPS[@]} -gt 0 ]]; then
+            printf_error "Missing dependencies..."
+            printf "%s\n" "${dep_check_msg}"
+            printf_callout "Please install $(printf_red "${MISSING_DEPS[*]}") and try again..."
+            printf_callout "Exiting..."
+            exit 1
+        fi
+
+        parse_args
+
+        if [[ -n ${ARGS[--output]} ]]; then
+            printf_callout "Truncating $(printf_green "${ARGS[--output]}")${BOLD} ..."
+            true > "${ARGS[--output]}"
+        fi
+
+        find_repos
+        parse_repos
+        printf_success "    DONE"
+    fi
+}
+
+# for arg in "${!ARGS[@]}" ; do
+#     echo "    $arg = ${ARGS[$arg]}"
+# done
 
 main

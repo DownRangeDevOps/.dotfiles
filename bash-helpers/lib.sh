@@ -4,12 +4,12 @@ logger "" "[${BASH_SOURCE[0]}]"
 logger "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
 
 function prompt_to_continue() {
-    read -p "${BOLD}${*:-Continue?} (y)[es|no] ${RESET}" -n 1 -r
+    read -p "${BLUE}${1:-Continue?} (y)[es|no] ${RESET}" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         printf "\n\n"
         return 0
     else
-        printf "\n%s\n" "Ok, exiting."
+        printf "\n%s\n\n" "${BLUE}${2:-Ok, exiting.}${RESET}"
         [[ "$0" == "${BASH_SOURCE[0]}" ]] && exit 1 || return 3
     fi
 }
@@ -23,8 +23,15 @@ function join() {
 function indent_output() {
     local indent
 
-    if [[ $1 =~ ^[0-9]+ ]]; then
-        indent="$(seq "$1" | sed -E 's/.+/    /')"
+    function get_indent() {
+        for _ in seq $1; do
+            printf "%s" "    "
+        done
+    }
+
+    if [[ $1 =~ ^[1-9]+ ]]; then
+        indent="$(get_indent $1)"
+        shift
     else
         indent="    "
     fi
