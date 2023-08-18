@@ -15,7 +15,7 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function get_shell_lvl () {
     LEVEL=1
-    [[ -n ${NVIM_LISTEN_ADDRESS} ]] && LEVEL=2
+    [[ -n ${NVIM_LISTEN_ADDRESS:-} ]] && LEVEL=2
     [[ ${SHLVL} -gt ${LEVEL} ]] && printf "%s" "${SHLVL}"
 }
 

@@ -92,7 +92,7 @@ function __git_wrap_gnuke() {
 complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 
 function __git_is_repo() {
-    if [[ -n $1 ]]; then
+    if [[ -n ${1:-} ]]; then
         git -C "$1" rev-parse 2>/dev/null
     else
         git rev-parse 2>/dev/null
@@ -152,7 +152,7 @@ function __git_parse_dirty () {
         *"Changes to be committed"*)
             printf "%s\n" " ${YELLOW}✗";;
         *"nothing to commit"*)
-            printf "%s\n" "${GREEN}✔︎";;
+            printf "%s\n" " ${GREEN}✔︎";;
     esac
 }
 

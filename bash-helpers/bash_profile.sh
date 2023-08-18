@@ -143,7 +143,7 @@ function rg() {
 # eval "$(rbenv init -)"            # Enable rbenv shims
 
 # lazy load thefuck
-if [[ -n "${TF_ALIAS}" ]]; then
+if [[ -n "${TF_ALIAS:-}" ]]; then
     unalias fuck=tf_init
 else
     alias fuck=tf_init
