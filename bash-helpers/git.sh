@@ -36,8 +36,8 @@ alias ga.="git add --all"
 alias ga="git add"
 alias gab="__git_absorb"
 alias gc="pre-commit run --all-files && git add --update && git commit --no-verify --gpg-sign"
-alias gcp="git cherry-pick -x"
-alias gqf="ga -u && gc --amend --no-edit && gfpo"
+alias gcp="git cherry-pick -x"  # -x: add "cherry-picked from..." message
+alias gqf="ga --update && gc --amend --no-edit && gfpo"
 alias gst="git stash"
 
 # rebasing
@@ -53,7 +53,7 @@ alias gm="git_rebase_merge_and_push"
 alias gmerged="__git_get_merged_branches"
 
 # Pushing
-alias gpu="git push -u \$(git remote) HEAD"
+alias gpu="git push --set-upstream \$(git remote) HEAD"
 alias gfpo="git push --force-with-lease origin HEAD"
 
 # Repository info
@@ -352,7 +352,7 @@ gcot() {
   gco -b "${TICKET}"
 }
 
-gmerge() {
+git_rebase_merge_and_push() {
     # git merge --ff-only
     local main_branch
     main_branch=$(__git_master_or_main)
