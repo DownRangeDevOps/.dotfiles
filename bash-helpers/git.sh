@@ -10,6 +10,7 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
 alias g="git"
 alias gba="git branch --all"
 alias gbn="git rev-parse --abbrev-ref HEAD"
+alias gco="__git_checkout"
 alias gcod="git checkout develop"
 alias gcom="git checkout \$(__git_master_or_main)"
 alias gd="__git_diff_so_fancy_with_less"
@@ -18,7 +19,7 @@ alias gdd="__git_diff_so_fancy_with_less origin/develop..."
 alias gdm="__git_diff_so_fancy_with_less origin/master..."
 alias gdmb="git_delete_merged_branches"
 alias gf="git fetch --prune"
-alias gfu="__git_fixup"
+alias gfu="git_fixup"
 alias gp="gf && git pull --rebase"
 alias gs="git status"
 
@@ -34,19 +35,19 @@ alias gstatd="__git_status_vs_develop"
 # committing
 alias ga.="git add --all"
 alias ga="git add"
-alias gab="__git_absorb"
+alias gab="git_absorb"
 alias gc="pre-commit run --all-files && git add --update && git commit --no-verify --gpg-sign"
 alias gcp="git cherry-pick -x"  # -x: add "cherry-picked from..." message
 alias gqf="ga --update && gc --amend --no-edit && gfpo"
 alias gst="git stash"
 
 # rebasing
-alias grb="git rebase --interactive"
+alias grb="git rebase --interactive --autosquash"
 alias grba="git rebase --abort"
 alias grbc="git rebase --continue"
-alias grbd="gf && git rebase --interactive origin/develop"
-alias grbm="gf && git rebase --interactive origin/\$(__git_master_or_main)"
-alias grbs="gf && git rebase --interactive \$(git merge-base HEAD origin/\$(__git_master_or_main))"
+alias grbd="gf && git rebase --interactive --autosquash origin/develop"
+alias grbm="gf && git rebase --interactive --autosquash origin/\$(__git_master_or_main)"
+alias grbs="gf && git rebase --interactive --autosquash \$(git merge-base HEAD origin/\$(__git_master_or_main))"
 
 # Merging
 alias gm="git_rebase_merge_and_push"
@@ -60,15 +61,26 @@ alias gfpo="git push --force-with-lease origin HEAD"
 alias git-contributors="git shortlog --summary --email --numbered"
 
 # ------------------------------------------------
-#  Private
+#  Completion
 # ------------------------------------------------
 function __git_add_completion_to_aliases() {
     # Add git completion to aliases
     if declare -f -F __git_complete > /dev/null; then
-        __git_complete gco _git_checkout
+        # checkout
+        __git_complete __git_checkout _git_checkout
+        __git_complete gcod _git_checkout
+        __git_complete gcom _git_checkout
+
+        # add
         __git_complete ga _git_add
+
+        # branch
         __git_complete gb _git_branch
+
+        # stash
         __git_complete gst _git_stash
+
+        #rebase
         __git_complete grb _git_rebase
     fi
 }
@@ -91,6 +103,12 @@ function __git_wrap_gnuke() {
     fi
 }
 complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
+
+
+# ------------------------------------------------
+#  Private
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
 
 function __git_is_repo() {
     if [[ -n ${1:-} ]]; then
@@ -254,12 +272,12 @@ function __git_get_merged_branches() {
 logger "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
 
 # Committing
-function __git_absorb() {
+function git_absorb() {
     git add -u
-    git absorb --and-rebase
+    git absorb --and-rebase "$@"
 }
 
-function __git_fixup() {
+function git_fixup() {
     git add --update
     git log -n 50 --pretty=format:"%h %s" --no-merges \
         | fzf \
@@ -270,15 +288,15 @@ function __git_fixup() {
 
 # Branching
 function gb() {
-    if [[ $1 == "-D" ]]; then
+    if [[ ${1:-} == "-D" ]]; then
         git branch "${@}"
     else
         git branch "${@}"| fzf
     fi
 }
 
-function gco() {
-    if [[ ${1} ]]; then
+function __git_checkout() {
+    if [[ ${1:-} ]]; then
         git checkout "${@}"
     else
         git branch --all \
@@ -349,7 +367,7 @@ gcot() {
     | tr -cd "[:alnum:]._-/" \
     | tr "[:upper:]" "[:lower:]")
 
-  gco -b "${TICKET}"
+  __git_checkout -b "${TICKET}"
 }
 
 git_rebase_merge_and_push() {
@@ -357,14 +375,14 @@ git_rebase_merge_and_push() {
     local main_branch
     main_branch=$(__git_master_or_main)
 
-    if [[ $1 == "--ff-only" ]]; then
+    if [[ ${1:-} == "--ff-only" ]]; then
         MERGE_COMMIT_OPTION="--ff-only"
         shift
     else
         MERGE_COMMIT_OPTION="--no-ff"
     fi
 
-    if [[ $1 == "help" || $1 == "--help" ]]; then
+    if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
         print  "%s\n" \
             "Usage: gffm [OPTION] [<TARGET_BRANCH>]" \
             "Merge TARGET_BRANCH to ${main_branch} printing the log and stat, and" \
@@ -430,7 +448,7 @@ git_rebase_merge_and_push() {
 
 gcpu() {
     # git commit and push
-    if [[ $1 == "help" || $1 == "--help" ]]; then
+    if [[ ${1:-} == "help" || $1 == "--help" ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
         echo "Usage: gacp [-a] [-m <message>]"
         return 1
@@ -439,12 +457,12 @@ gcpu() {
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
     COMMAND=""
 
-    if [[ $1 == "-a" ]]; then
+    if [[ ${1:-} == "-a" ]]; then
         COMMAND="git add --all && "
         shift
     fi
 
-    if [[ $1 == "-m" && $2 ]]; then
+    if [[ ${1:-} == "-m" && $2 ]]; then
         COMMAND+="git commit -m '$2' && "
     else
         COMMAND+="git commit && "
@@ -457,7 +475,7 @@ gcpu() {
 
 gnuke() {
     # delete local and remote branch
-    if [[ $# -eq 0 || $1 == "help" || $1 == "--help" ]]; then
+    if [[ $# -eq 0 || ${1:-} == "help" || ${1:-} == "--help" ]]; then
         echo "Usage: gnuke <branch>"
         return 1
     fi
