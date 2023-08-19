@@ -1,15 +1,16 @@
 # shellcheck disable=SC1090,SC1091
-# load these first, they get used by other scripts
-source "${HOME}/.dotfiles/bash-helpers/bash.sh"
-source "${HOME}/.dotfiles/bash-helpers/lib.sh"
+# load these first, in this order, they get used by other scripts
 source "$HOME/.dotfiles/lib/log.sh"
+source "${HOME}/.dotfiles/bash-helpers/lib.sh"
+source "${HOME}/.dotfiles/bash-helpers/bash.sh"
 
 # log.sh sets -u which is too strict for many dependencies
 set +u
 
 set_path
 
-log debug "\n[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  aliases
@@ -172,7 +173,8 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 }
 
 # Add the direnv hook to PROMPT_COMMAND
-log debug  "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout "[${BASH_SOURCE[0]}]")"
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading direnv hook..."
 eval "$(direnv hook bash)"
 

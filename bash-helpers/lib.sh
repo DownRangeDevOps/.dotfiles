@@ -1,7 +1,7 @@
 # lib.sh
 # shellcheck disable=SC2034 # ignore globals that are set for use elsewhere
-
-log debug "\n[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
 

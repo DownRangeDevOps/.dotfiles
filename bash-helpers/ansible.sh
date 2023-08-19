@@ -1,5 +1,6 @@
 # ansible.sh
-log debug "\n[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  config

@@ -1,5 +1,6 @@
 # bash.sh
-log debug "\n[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # overwrites PS1 so do it first
 source /usr/local/share/google-cloud-sdk/path.bash.inc

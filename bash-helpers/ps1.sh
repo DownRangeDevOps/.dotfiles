@@ -1,5 +1,6 @@
 # ps1.sh
-log debug "\n[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # Sexy Bash Prompt, inspired by "Extravagant Zsh Prompt"
 # if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
