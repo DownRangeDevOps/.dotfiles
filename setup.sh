@@ -47,13 +47,23 @@ function create_symlinks() {
     printf_callout "Creating symlinks..."
 
     if ${dry_run}; then
-        find "${HOME}/.dotfiles/config" -type f -exec bash -c \
+        find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -exec bash -c \
             'file="$1"; printf "%s\n" "\"${HOME}/$(basename ${file})\" -> \"${PWD}/${file}\""' \
             shell {} \; | indent_output
+
+        printf "%s\n" \
+            "\"${HOME}/.gitignore\" -> \"${HOME}/.dotfiles/config/git/.gitignore\"" \
+            "\"${HOME}/.vimrc\" -> \"${HOME}/.dotfiles/config/nvim/vimrc.vim\"" \
+            | indent_output
     else
-        find "${HOME}/.dotfiles/config" -type f -iname ".*" -exec bash -c \
+        find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -iname ".*" -exec bash -c \
             'file="$1"; ln -sfv "${file}" "${HOME}/$(basename ${file})"' \
             shell {} \; | indent_output
+
+            (cd "${HOME}" || exit 1
+                ln -svf .dotfiles/config/git/.gitignore .gitignore
+                ln -svf .dotfiles/config/nvim/vimrc.vim .vimrc
+            )
     fi
 
     printf "\n"
