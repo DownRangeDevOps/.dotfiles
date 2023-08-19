@@ -1,5 +1,11 @@
 # lib.sh
 # shellcheck disable=SC2034 # ignore globals that are set for use elsewhere
+
+# Declare this before usage
+function printf_callout() {
+    printf "%s\n" "${BOLD}==> ${1}${RESET}"
+}
+
 log debug ""
 log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
