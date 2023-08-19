@@ -1,5 +1,12 @@
 # lib.sh
-# shellcheck disable=SC2034 # ignore globals that are set for use elsewhere
+# shellcheck disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
+source "$HOME/.dotfiles/lib/log.sh"
+
+# Declare this before usage
+function printf_callout() {
+    printf "%s\n" "${BOLD}==> ${1}${RESET}"
+}
+
 log debug ""
 log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
@@ -26,7 +33,7 @@ function indent_output() {
     local indent_size=4
     local indent_levels=1
 
-    if [[ $1 =~ ^[1-9]+ ]]; then
+    if [[ ${1:-} =~ ^[1-9]+ ]]; then
         indent_levels=$1
     fi
 

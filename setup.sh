@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090,SC1091
+# shellcheck disable=SC1090,SC1091,SC2119  # SC2119: Ignore passing "$@" to `indent_output`
 # Usage: setup.sh [options]
 #
 # Options:
@@ -7,7 +7,9 @@
 #     --debug        Output debug information
 #     -v, --version  Show version
 #     -h, --help     Show this help message and exit
-set -e
+set -uo pipefail;
+
+source bash-helpers/lib.sh
 
 # setup docopts
 PATH="${PATH}:./bin"
@@ -24,93 +26,124 @@ dry_run=false
 eval "${OPTIONS}"
 
 function print_error_msg() {
-    MSG_TYPE="$1"
-    NOT_REPO_MSG="${HOME}/.dotfiles exists and is not a git repo"
-    CHANGES_MSG="${HOME}/.dotfiles has uncommitted changes, stash or commit them then re-run setup."
-
-    if [[ -n ${MSG_TYPE} ]]; then
-        case ${MSG_TYPE} in
+    if [[ -n ${1:-} ]]; then
+        case $1 in
             not_repo)
-                printf "%s\n" "${NOT_REPO_MSG}"
+                printf_error "${HOME}/.dotfiles exists and is not a git repo"
                 ;;
             changes)
-                printf "%s\n" "${CHANGES_MSG}"
+                printf_error "${HOME}/.dotfiles has uncommitted changes, stash or commit them then re-run setup."
                 ;;
             *)
-                printf "%s\n" "ERROR: ${*}"
+                printf_error "ERROR: ${*}"
                 ;;
         esac
     else
-        printf "%s\n" "ERROR: unknown error"
+        printf_error "ERROR: unknown error"
     fi
 }
 
 function create_symlinks() {
-    if ${dry_run}; then
-        printf "\n%s\n" "Symlinks that would be created:"
+    printf_callout "Creating symlinks..."
 
-        find "${HOME}/.dotfiles/config" -type f -exec bash -c \
-            'file="$1";printf "%s\n" "\"${HOME}/$(basename ${file})\" -> \"${PWD}/${file}\""' \
-            shell {} \;
+    if ${dry_run}; then
+        find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -exec bash -c \
+            'file="$1"; printf "%s\n" "\"${HOME}/$(basename ${file})\" -> \"${PWD}/${file}\""' \
+            shell {} \; | indent_output
+
+        printf "%s\n" \
+            "\"${HOME}/.gitignore\" -> \"${HOME}/.dotfiles/config/git/.gitignore\"" \
+            "\"${HOME}/.vimrc\" -> \"${HOME}/.dotfiles/config/nvim/vimrc.vim\"" \
+            | indent_output
     else
-        find "${HOME}/.dotfiles/config" -type f -iname ".*" -exec bash -c \
+        find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -iname ".*" -exec bash -c \
             'file="$1"; ln -sfv "${file}" "${HOME}/$(basename ${file})"' \
-            shell {} \;
+            shell {} \; | indent_output
+
+            (cd "${HOME}" || exit 1
+                ln -svf .dotfiles/config/git/.gitignore .gitignore
+                ln -svf .dotfiles/config/nvim/vimrc.vim .vimrc
+            )
+    fi
+
+    printf "\n"
+}
+
+function install_docopts() {
+    local docopts_install_cmd="cd external/docopts get_docopts.sh"
+    local docopts_sh_install_cmd="cd bin && ln -sfv ../external/docopts/docopts.sh"
+
+    if [[ ! -f bin/docopts ]]; then
+        printf_callout "Installing docopts..."
+
+        if $dry_run; then
+            printf "%s\n" "${docopts_install_cmd}" | indent_output
+        else
+            (eval "${docopts_install_cmd}" | indent_output)
+        fi
+
+        printf "\n"
+    fi
+
+    if [[ ! -f bin/docopts.sh ]]; then
+        printf_callout "Installing docopts.sh..."
+
+        if $dry_run; then
+            printf "%s\n" "${docopts_sh_install_cmd}" | indent_output
+        else
+            (eval "${docopts_sh_install_cmd}" | indent_output)
+        fi
+
+        printf "\n"
     fi
 }
 
 function init() {
-    if $dry_run; then
-        printf "%s\n" "source ${HOME}/.bash_profile"
-    else
-        create_symlinks
+    local init_cmd="source ${HOME}/.bash_profile"
 
-        # shellcheck disable=SC1090,SC1091
-        source "${HOME}/.bash_profile"
+    printf_callout "Initalizing shell..."
+
+    if $dry_run; then
+        printf "%s\n" "${init_cmd}" | indent_output
+    else
+        source "${init_cmd}"
     fi
+
+    printf "\n"
 }
 
 function setup() {
     if $dry_run; then
-        printf "%s\n" "Commands that would be run:"
+        printf_callout "Running in 'dry-run' mode..."
+        printf "\n"
+    fi
 
-        is_git_repo="$(git -C "${HOME}/.dotfiles" rev-parse --is-inside-work-tree 2>/dev/null)"
+    if ! git -C "${HOME}/.dotfiles" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        print_error_msg not_repo
+        return 1
+    fi
 
-        if ${is_git_repo}; then
-            if [[ -z "$(git diff --name-only)" ]]; then
-                printf "%s\n" "git -C ${HOME}/.dotfiles checkout main"
-                printf "%s\n" "git -C ${HOME}/.dotfiles pull"
-                printf "%s\n" "git -C ${HOME}/.dotfiles checkout -"
+    printf_callout "Installing dotfiles..."
 
-                init
-                create_symlinks
-            else
-                print_error_msg changes
-                return 1
-            fi
+    if [[ -z "$(git diff --name-only)" ]]; then
+        if $dry_run; then
+            printf "%s\n" "git -C ${HOME}/.dotfiles checkout main" | indent_output
+            printf "%s\n" "git -C ${HOME}/.dotfiles pull" | indent_output
+            printf "%s\n" "git -C ${HOME}/.dotfiles checkout -" | indent_output
+            printf "\n"
         else
-            print_error_msg not_repo
-            return 1
+            git -C "${HOME}/.dotfiles" checkout main | indent_output
+            git -C "${HOME}/.dotfiles" pull | indent_output
+            git -C "${HOME}/.dotfiles" checkout - | indent_output
+            printf "\n"
         fi
+
+        create_symlinks
+        install_docopts
+        init
     else
-        is_git_repo="$(git -C "${HOME}/.dotfiles" rev-parse --is-inside-work-tree 2>/dev/null)"
-
-        if ${is_git_repo}; then
-            if [[ -z "$(git diff --name-only)" ]]; then
-                git -C "${HOME}/.dotfiles" checkout main
-                git -C "${HOME}/.dotfiles" pull
-                git -C "${HOME}/.dotfiles" checkout -
-
-                create_symlinks
-                init
-            else
-                print_error_msg changes
-                return 1
-            fi
-        else
-            print_error_msg not_repo
-            return 1
-        fi
+        print_error_msg changes
+        return 1
     fi
 }
 

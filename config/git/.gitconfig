@@ -6,11 +6,11 @@
   format = ssh
 [gpg "ssh"]
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-    allowedSignersFile = config/git/allowed_ssh_signers
+    allowedSignersFile = ~/.dotfiles/config/git/allowed_ssh_signers
 [include]
-    path = .gitconfig_aliases
+    path = ~/.dotfiles/config/git/.gitconfig_aliases
 [core]
-    excludesfile = /Users/ryanfisher/.gitignore_global
+    excludesfile = ~/.dotfiles/config/git/.gitignore_global
     autocrlf = input
     editor = nvr --remote-wait-silent
     ignorecase = false
@@ -37,7 +37,7 @@
     autosetuprebase = always
 [commit]
     gpgsign = true
-    template = /Users/ryanfisher/.dotfiles/assets/.stCommitMsg
+    template = ~/.dotfiles/config/git/.stCommitMsg
 [help]
     autocorrect = 0
 [difftool "sourcetree"]
@@ -47,7 +47,7 @@
     cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
     trustExitCode = true
 [init]
-    templateDir = /Users/ryanfisher/.git-template
+    templateDir = ~/.dotfiles/config/git/.git-template
     defaultBranch = main
 [color]
     ui = true
