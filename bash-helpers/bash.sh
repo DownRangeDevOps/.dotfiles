@@ -2,7 +2,7 @@
 
 # create the logger before anything else
 function logger() {
-    if [[ ${DEBUG} == "true" ]]; then
+    if [[ ${DEBUG:-} == "true" ]]; then
         printf  "%s\n" "$@"
     fi
 }
@@ -14,6 +14,7 @@ source /usr/local/share/google-cloud-sdk/path.bash.inc
 
 # bash completions
 if [[ -r /usr/local/etc/bash_completion ]]; then
+    set +u
     source /usr/local/etc/bash_completion
 fi
 

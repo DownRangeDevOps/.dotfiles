@@ -1,9 +1,6 @@
 # go.sh
 logger "" "[${BASH_SOURCE[0]}]"
 
-# add go bins to path
-export PATH="${PATH}:${GOPATH}/bin"
-
 # lazy init goenv
 function goenv_alias() {
     for cmd in "${go_cmds[@]}"; do
@@ -18,7 +15,7 @@ function goenv_alias() {
     done
 }
 
-if [[ -z "${GOENV_ROOT}" ]]; then
+if [[ -z "${GOENV_ROOT:-}" ]]; then
     goenv_alias create
 fi
 
@@ -31,6 +28,9 @@ function goenv_lazy_init() {
     printf_callout "%s\n" "goenv has not been initialized, initializing now..."
     goenv_alias remove
     eval "$(goenv init -)"
+
+    # add go bins to path
+    export PATH="${PATH}:${GOPATH}/bin"
 
     printf_callout "%s\n" "Done. Running $(green \`${CMD}\`)${BOLD}..."
     ${CMD}

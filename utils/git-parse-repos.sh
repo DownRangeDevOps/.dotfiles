@@ -45,10 +45,10 @@ function check_dependencies() {
 
     for dep in "${DEPENDENCIES[@]}"; do
         if ! command -v "${dep}" > /dev/null; then
-            indent_output "$(printf_error "${dep}... MISSING")"
+            printf_error "${dep}... MISSING" | indent_output
             MISSING_DEPS+=("${dep}")
         else
-            indent_output "$(printf_success "${dep}... AVAILABLE")"
+            printf_success "${dep}... AVAILABLE" | indent_output
         fi
     done
 
@@ -91,13 +91,13 @@ function output() {
     local repo_path="${query_results[repo_path]}"
 
     printf_callout "Repoistory details:"
-    indent_output "$(printf "%s\n" \
+    printf "%s\n" \
         "Remote: ${remote}" \
         "Branch: ${branch/origin\//}" \
         "Status: ${printf_status}" \
         "Path: ${repo_path}" \
         "Comitters:" \
-        "${committers}")"
+        "${committers}" | indent_output "$@"
 
     if [[ -n ${ARGS[--output]} ]] && ! ${ARGS[--dry-run]}; then
         printf_callout "Saving output to $(printf_green "${ARGS[--output]}")${BOLD}..."

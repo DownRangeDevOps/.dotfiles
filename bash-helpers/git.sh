@@ -9,12 +9,14 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
 # main
 alias g="git"
 alias gba="git branch --all"
-alias gbn="git rev-parse --abbrev-ref HEAD"
+alias gbn="__git_get_cur_branch_name"
+alias gco="__git_checkout"
 alias gcod="git checkout develop"
-alias gcom="git checkout \$(git_master_or_main)"
-alias gd1="gd HEAD~"
-alias gdd="gd origin/develop..."
-alias gdm="gd origin/master..."
+alias gcom="git checkout \$(__git_master_or_main)"
+alias gd="__git_diff_so_fancy_with_less"
+alias gd1="__git_diff_so_fancy_with_less HEAD~"
+alias gdd="__git_diff_so_fancy_with_less origin/develop..."
+alias gdm="__git_diff_so_fancy_with_less origin/master..."
 alias gdmb="git_delete_merged_branches"
 alias gf="git fetch --prune"
 alias gfu="git_fixup"
@@ -22,33 +24,203 @@ alias gp="gf && git pull --rebase"
 alias gs="git status"
 
 # logging
-alias gl=git_log_branch
-alias gl-=git_log_branch_no_trunc_msg
-alias gl--=git_log_branch_only_msg
-alias gL=git_log_all_branches
-alias gL-=git_log_all_branches_no_trunc_msg
-alias gstat=git_status_bs_master
-alias gstatd=git_status_vs_develop
+alias gl="__git_log_branch"
+alias gl-="__git_log_branch_no_trunc_msg"
+alias gl--="__git_log_branch_only_msg"
+alias gL="__git_log_all_branches"
+alias gL-="__git_log_all_branches_no_trunc_msg"
+alias gstat="__git_status_vs_master"
+alias gstatd="__git_status_vs_develop"
 
-function git_status_vs_master() {
-    printf  "%s\n" \
-        "==> Log: " \
-        "$(git log origin/master..)" \
-        "" \
-        "==> Diff:" \
-        "$(git diff --stat origin/master)"
+# committing
+alias ga.="git add --all"
+alias ga="git add"
+alias gab="git_absorb"
+alias gc="pre-commit run --all-files && git add --update && git commit --no-verify --gpg-sign"
+alias gcp="git cherry-pick -x"  # -x: add "cherry-picked from..." message
+alias gqf="ga --update && gc --amend --no-edit && gfpo"
+alias gst="git stash"
+
+# rebasing
+alias grb="git rebase --interactive --autosquash"
+alias grba="git rebase --abort"
+alias grbc="git rebase --continue"
+alias grbd="gf && git rebase --interactive --autosquash origin/develop"
+alias grbm="gf && git rebase --interactive --autosquash origin/\$(__git_master_or_main)"
+alias grbs="gf && git rebase --interactive --autosquash \$(git merge-base HEAD origin/\$(__git_master_or_main))"
+
+# Merging
+alias gm="git_rebase_merge_and_push"
+alias gmerged="__git_get_merged_branches"
+
+# Pushing
+alias gpu="git push --set-upstream \$(git remote) HEAD"
+alias gfpo="git push --force-with-lease origin HEAD"
+
+# Repository info
+alias git-contributors="git shortlog --summary --email --numbered"
+
+# ------------------------------------------------
+#  Completion
+# ------------------------------------------------
+function __git_add_completion_to_aliases() {
+    # Add git completion to aliases
+    if declare -f -F __git_complete > /dev/null; then
+        # checkout
+        __git_complete __git_checkout _git_checkout
+        __git_complete gcod _git_checkout
+        __git_complete gcom _git_checkout
+
+        # add
+        __git_complete ga _git_add
+
+        # branch
+        __git_complete gb _git_branch
+
+        # stash
+        __git_complete gst _git_stash
+
+        #rebase
+        __git_complete grb _git_rebase
+    fi
+}
+__git_add_completion_to_aliases
+
+function __git_wrap_gffm() {
+    # add git merge completion
+    declare -f -F __git_func_wrap > /dev/null
+    if [[ -n $? ]]; then
+        __git_func_wrap _git_merge
+    fi
+}
+complete -o bashdefault -o default -o nospace -F __git_wrap_gffm gffm
+
+function __git_wrap_gnuke() {
+    # add git checkout completion
+    declare -f -F __git_func_wrap > /dev/null
+    if [[ -n $? ]]; then
+        __git_func_wrap _git_checkout
+    fi
+}
+complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
+
+
+# ------------------------------------------------
+#  Private
+# ------------------------------------------------
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
+
+function __git_is_repo() {
+    if [[ -n ${1:-} ]]; then
+        git -C "$1" rev-parse 2>/dev/null
+    else
+        git rev-parse 2>/dev/null
+    fi
 }
 
-function git_status_vs_develop() {
-    printf  "%s\n" \
-        "==> Log: " \
-        "$(git log origin/develop..)" \
-        "" \
-        "==> Diff:" \
-        "$(git diff --stat origin/develop)"
+function __git_master_or_main() {
+    local master_exists
+    local main_exists
+    local master_length
+    local main_length
+    local main_branch
+
+    if ! __git_is_repo "${PWD}"; then
+        printf_error "${PWD} is not a git repository!" >&2
+        return 6
+    fi
+
+    if git show-ref --verify --quiet refs/heads/master; then master_exists=true; fi
+    if git show-ref --verify --quiet refs/heads/main; then main_exists=true; fi
+
+    if [[ -n ${master_exists:-} && -n ${main_exists:-} ]]; then
+        master_length="$(git rev-list --count master)"
+        main_length="$(git rev-list --count main)"
+
+        if [[ ${master_length} -gt ${main_length} ]]; then
+            main_branch="main"
+        else
+            main_branch="master"
+        fi
+    elif [[ -n ${main_exists:-} ]]; then
+        main_branch="main"
+    elif [[ -n ${master_exists:-} ]]; then
+        main_branch="master"
+    else
+        printf_error "This repository does not have a 'master' or 'main' branch!" >&2
+        return 6
+    fi
+
+    printf  "%s" "${main_branch}"
 }
 
-function git_log_branch() {
+function __git_get_cur_branch_name() {
+    git rev-parse --abbrev-ref HEAD
+}
+
+function __git_show_branch_state () {
+    local branch
+    local icon
+
+    branch="$(git rev-parse --abbrev-ref HEAD)"
+    icon="$(__git_parse_dirty)"
+
+    printf "%s" "${branch}${icon}"
+}
+
+function __git_parse_dirty () {
+    case $(git status 2>/dev/null) in
+        *"Changes not staged for commit"*)
+            printf "%s\n" " ${RED}✗";;
+        *"Changes to be committed"*)
+            printf "%s\n" " ${YELLOW}✗";;
+        *"nothing to commit"*)
+            printf "%s\n" " ${GREEN}✔︎";;
+    esac
+}
+
+function __git_project_parent() {
+    printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)/.."
+}
+
+function __git_project_root () {
+    if [[ -n $(git branch 2>/dev/null) ]]; then
+        printf "%s\n" "git@$(realpath --relative-to="$(__git_project_parent)" .)"
+    else
+        printf "%s\n" "${PWD/~/\~}"
+    fi
+}
+
+function __git_status_vs_master() {
+    printf  "%s\n" \
+        "==> Log: " \
+        "$(indent_output "$(git log "$(__git_master_or_main)..")")" \
+        "" \
+        "==> Diff:" \
+        "$(indent_output "$(git diff --stat "$(__git_master_or_main)")")"
+}
+
+function __git_status_vs_develop() {
+    if git show-ref --verify --quiet refs/heads/master; then
+        printf  "%s\n" \
+            "==> Log: " \
+            "$(indent_output "$(git log origin/develop..)")" \
+            "" \
+            "==> Diff:" \
+            "$(indent_output "$(git diff --stat origin/develop)")"
+    else
+        printf_error "The 'develop' branch does not exist!" >&2
+        return 6
+    fi
+}
+
+# diffing
+function __git_diff_so_fancy_with_less() {
+    git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
+}
+
+# logging
+function __git_log_branch() {
     git log \
         --graph \
         --color \
@@ -57,7 +229,7 @@ function git_log_branch() {
         | LESS -SFX -R
 }
 
-function git_log_branch_no_trunc_msg() {
+function __git_log_branch_no_trunc_msg() {
     git log \
         --graph \
         --color \
@@ -66,11 +238,11 @@ function git_log_branch_no_trunc_msg() {
         | LESS -SFX -R
 }
 
-function git_log_branch_only_msg() {
+function __git_log_branch_only_msg() {
     git log --color --format=format:'• %C(white)%s%C(reset)' | LESS -SFX -R
 }
 
-function git_log_all_branches() {
+function __git_log_all_branches() {
 git log \
     --branches \
     --remotes \
@@ -81,7 +253,7 @@ git log \
     | LESS -SFX -R
 }
 
-function git_log_all_branches_no_trunc_msg() {
+function __git_log_all_branches_no_trunc_msg() {
 git log \
     --branches \
     --remotes \
@@ -92,66 +264,46 @@ git log \
     | LESS -SFX -R
 }
 
-# committing
-alias ga.="git add --all"
-alias ga="git add"
-alias gc="pre-commit run --all-files && git add --update && git commit --no-verify --gpg-sign"
-alias gcp="git cherry-pick -x"
-alias gqf="ga -u && gc --amend --no-edit && gfpo"
-alias gst="git stash"
-
-# rebasing
-alias grb="git rebase --interactive"
-alias grba="git rebase --abort"
-alias grbc="git rebase --continue"
-alias grbd="gf && git rebase --interactive origin/develop"
-alias grbm="gf && git rebase --interactive origin/\$(git_master_or_main)"
-alias grbs="gf && git rebase --interactive \$(git merge-base HEAD origin/\$(git_master_or_main))"
-
-# Merging
-alias gm=gmerge
-alias gmerged="git branch --all --merged origin/\$(git_master_or_main) \
-    | /usr/local/opt/grep/libexec/gnubin/grep -Ev '>|master|main|develop|release' \
-    | tr -d ' '"
-
-# Pushing
-alias gpu="git push -u \$(git remote) HEAD"
-alias gfpo="git push --force-with-lease origin HEAD"
-
-# Repository info
-alias git-contributors="git shortlog -sne"
-
-# Misc aliases for git based but non-git actions
-alias gac="git diff origin/\$(git_master_or_main) \
-    --stat \
-    --diff-filter=ACdMRTUxB \
-    !(roles.galaxy)"
+function __git_get_merged_branches() {
+    git branch --all --merged "origin/$(__git_master_or_main)" \
+        | rg --invert-match '>|master|main|develop|release' \
+        | tr -d ' '
+}
 
 # ------------------------------------------------
-#  Helpers
+#  Public
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+logger "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
+
+# Committing
+function git_absorb() {
+    git add -u
+    git absorb --and-rebase "$@"
+}
 
 function git_fixup() {
+    local merge_base
+    merge_base="$(git merge-base "$(__git_master_or_main)" HEAD)"
+
     git add --update
     git log -n 50 --pretty=format:"%h %s" --no-merges \
         | fzf \
         | awk '{print $1}' \
         | xargs -o hub commit --fixup
-    git rebase --interactive HEAD~2
+    git rebase --interactive "${merge_base}"
 }
 
 # Branching
 function gb() {
-    if [[ $1 == "-D" ]]; then
+    if [[ ${1:-} == "-D" ]]; then
         git branch "${@}"
     else
         git branch "${@}"| fzf
     fi
 }
 
-function gco() {
-    if [[ ${1} ]]; then
+function __git_checkout() {
+    if [[ ${1:-} ]]; then
         git checkout "${@}"
     else
         git branch --all \
@@ -171,20 +323,20 @@ function git_delete_merged_branches() {
     git remote prune origin &>/dev/null
 
     CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    LOCAL_BRANCHES=$(gmerged \
+    LOCAL_BRANCHES=$(__git_get_merged_branches \
         | /usr/local/opt/grep/libexec/gnubin/grep -Ev "^\s*remotes/origin/" \
         | /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" \
         | awk '{print $1}')
-    REMOTE_BRANCHES=$(gmerged \
+    REMOTE_BRANCHES=$(__git_get_merged_branches \
         | /usr/local/opt/grep/libexec/gnubin/grep -E "^\s*remotes/origin/" \
         | sed -e "s/^\s*remotes\/origin\///g" \
         | awk '{print $1}')
 
     if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
-        printf_callout "Branches that have been merged to $(git_master_or_main):"
-        gmerged
+        printf_callout "Branches that have been merged to $(__git_master_or_main):"
+        __git_get_merged_branches
 
-        prompt_to_continue "Delete branches?" || return 0
+        prompt_to_continue "Delete branches?" || return 6
         echo
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
@@ -208,201 +360,89 @@ function git_delete_merged_branches() {
     fi
 }
 
-function __git_is_repo() {
-    if [[ -n $1 ]]; then
-        git -C "$1" rev-parse 2>/dev/null
-    else
-        git rev-parse 2>/dev/null
-    fi
-}
+git_rebase_merge_and_push() {
+    local main_branch
+    local source_branch
+    local target_branch
+    local merge_commit_option
 
-function git_master_or_main() {
-    if ! __git_is_repo "${PWD}"; then
-        printf "%s\n" "${PWD} is not a git repository."
-        return 1
-    fi
+    source_branch="$(__git_get_cur_branch_name)"
+    main_branch="$(__git_master_or_main)"
+    merge_commit_option="--no-ff"
 
-    INITIAL_COMMIT="$(git rev-list --abbrev-commit HEAD | tail -n 1)"
-
-    git show-ref --verify --quiet refs/heads/master
-    MASTER_EXISTS="${?}"
-
-    git show-ref --verify --quiet refs/heads/main
-    MAIN_EXISTS="${?}"
-
-    if [[ -z ${MASTER_EXISTS} && -z ${MAIN_EXISTS} ]]; then
-        MASTER_LENGTH="$(git rev-list --count "${INITIAL_COMMIT}..master")"
-        MAIN_LENGTH="$(git rev-list --count "${INITIAL_COMMIT}..main")"
-
-        if [[ ${MASTER_LENGTH} -gt ${MAIN_LENGTH} ]]; then
-            MAIN_BRANCH="main"
-        else
-            MAIN_BRANCH="master"
-        fi
-    elif [[ ${MAIN_EXISTS} ]]; then
-        MAIN_BRANCH="main"
-    elif [[ ${MASTER_EXISTS} ]]; then
-        MAIN_BRANCH="master"
-    else
-        printf "%s\n" "This repository does not have a 'master' or 'main' branch!"
-        exit 1
-    fi
-
-    printf  "%s" "${MAIN_BRANCH}"
-}
-
-function gd() {
-    git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
-}
-
-function parse_git_branch () {
-    git_branch | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
-}
-
-function parse_git_dirty () {
-    case $(git status 2>/dev/null) in
-        *"Changes not staged for commit"*)
-            printf "%s\n" " ${RED}✗";;
-        *"Changes to be committed"*)
-            printf "%s\n" " ${YELLOW}✗";;
-        *"nothing to commit"*)
-            printf "%s\n" "";;
-    esac
-}
-
-function git_project_parent() {
-    printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)/.."
-}
-
-function git_project_root () {
-    if [[ -n $(git branch 2>/dev/null) ]]; then
-        printf "%s\n" "git@$(realpath --relative-to="$(git_project_parent)" .)"
-    else
-        printf "%s\n" "${PWD/~/\~}"
-    fi
-}
-
-function git_branch () {
-    git branch --no-color 2>/dev/null
-}
-
-# Add git completion
-add_git_completion_to_aliases() {
-    if declare -f -F __git_complete > /dev/null; then
-        __git_complete gco _git_checkout
-        __git_complete ga _git_add
-        __git_complete gb _git_branch
-        __git_complete gst _git_stash
-        __git_complete grb _git_rebase
-    fi
-}
-add_git_completion_to_aliases
-
-__git_wrap_gffm() {
-    declare -f -F __git_func_wrap > /dev/null
-    if [[ -n $? ]]; then
-        __git_func_wrap _git_merge
-    fi
-}
-complete -o bashdefault -o default -o nospace -F __git_wrap_gffm gffm
-
-__git_wrap_gnuke() {
-    declare -f -F __git_func_wrap > /dev/null
-    if [[ -n $? ]]; then
-        __git_func_wrap _git_checkout
-    fi
-}
-complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
-
-gcot() {
-  TICKET=$(echo "${@}" \
-    | tr -t "${@}" 50 \
-    | sed "s/^[\.\/]//" \
-    | tr -s " " "-" \
-    | tr -cd "[:alnum:]._-/" \
-    | tr "[:upper:]" "[:lower:]")
-
-  gco -b "${TICKET}"
-}
-
-gmerge() {
-    # git merge --ff-only
-    MAIN_BRANCH=$(git_master_or_main)
-
-    if [[ $1 == "--ff-only" ]]; then
-        MERGE_COMMIT_OPTION="--ff-only"
+    if [[ ${1:-} == "--ff-only" ]]; then
+        merge_commit_option="--ff-only"
         shift
-    else
-        MERGE_COMMIT_OPTION="--no-ff"
     fi
 
-    if [[ $1 == "help" || $1 == "--help" ]]; then
+    if [[ -z ${1:-} ]]; then
+        target_branch="${main_branch}"
+    fi
+
+    if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
         print  "%s\n" \
-            "Usage: gffm [OPTION] [<TARGET_BRANCH>]" \
-            "Merge TARGET_BRANCH to ${MAIN_BRANCH} printing the log and stat, and" \
-            "prompting before merging or pushing." \
+            "Usage: gm [--ff-only] [<TARGET_BRANCH>]" \
             "" \
-            "If no TARGET_BRANCH, or TARGET_BRANCH is HEAD, the current branch will be merged to ${MAIN_BRANCH}."
+            "DESCRIPTION" \
+            "    Rebase current branch on to TARGET_BRANCH then merge and push. Prints the" \
+            "    log and stat of the current branch vs TARGET_BRANCH. Prompts for" \
+            "    confirmation before merging or pushing." \
+            "" \
+            "    If no TARGET_BRANCH, the current branch will be merged to ${main_branch}."
     else
-        if [[ $1 == "HEAD" || $1 == "" ]]; then
-            git log "origin/${MAIN_BRANCH}.."
-            git diff --stat "origin/${MAIN_BRANCH}"
-            prompt_to_continue "Merge to ${MAIN_BRANCH}?"
+        printf_callout "Updating ${target_branch}..."
+        git checkout "${target_branch}" >/dev/null 2>&1
+        git fetch --prune >/dev/null 2>&1
+        git pull --rebase >/dev/null 2>&1
+        git checkout "${source_branch}" >/dev/null 2>&1
 
-            printf_callout "Updating from origin..."
-            git fetch -p
+        printf_callout "Changes to be merged into ${target_branch}:"
+        git log --color --oneline "origin/${target_branch}..HEAD" | indent_output
+        printf "\n"
+        git diff --color --stat "origin/${target_branch}" | indent_output
+        printf "\n"
 
-            printf_callout "Rebasing onto ${MAIN_BRANCH}..."
-            git checkout "${MAIN_BRANCH}"
-            git pull -r
-            git rebase "origin/${MAIN_BRANCH}"
-
-            printf_callout "Merging to ${MAIN_BRANCH}..."
-
-            if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
-                git branch --delete "@{-1}"
-                git push origin --delete "@{-1}"
-            else
-                printf "%b\n" "$(redERROR: merge failed, exiting.$(reset)"
-                return 1
-            fi
-
-            prompt_to_continue "Push to origin?"
-
-            printf_callout "Pushing ${MAIN_BRANCH}..."
-            git push origin HEAD
-        else
-            TARGET_BRANCH=$1
-            git checkout "${TARGET_BRANCH}"
-
-            printf_callout "Updating ${TARGET_BRANCH}..."
-            git fetch -p
-            git pull -r
-            git checkout "@{-1}"
-            git log "${TARGET_BRANCH}..@"
-            git diff --stat "${TARGET_BRANCH}"
-            prompt_to_continue "Merge to ${TARGET_BRANCH}?"
-
-            printf_callout "Merging to ${TARGET_BRANCH}..."
-            git rebase "${TARGET_BRANCH}"
-            git checkout "${TARGET_BRANCH}"
-
-            if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
-                git branch --delete "@{-1}"
-                git push origin --delete "@{-1}"
-            fi
-
-            prompt_to_continue "Push to origin?"
-
-            printf_callout "PUshing ${TARGET_BRANCH}..."
-            git push origin HEAD
+        # prompt user
+        if ! prompt_to_continue "Merge to ${target_branch} using ${merge_commit_option}?"; then
+            git checkout "${source_branch}" >/dev/null 2>&1
+            return 6
         fi
+
+        printf_callout "Updating from origin..."
+        git fetch -p >/dev/null 2>&1
+
+        printf_callout "Rebasing onto ${target_branch}..."
+        git checkout "${target_branch}" >/dev/null 2>&1
+        git pull -r >/dev/null 2>&1
+        git rebase "origin/${target_branch}" >/dev/null 2>&1
+
+        printf_callout "Merging to ${target_branch} and deleting ${source_branch}..."
+        printf "    "
+        if git merge --no-stat "${merge_commit_option}" "${source_branch}" 2>&1 | indent_output; then
+            git push origin --delete "${source_branch}" 2>/dev/null | indent_output
+            git branch --delete "${source_branch}" 2>&1 | indent_output
+        else
+            printf_error "ERROR: merge failed, exiting."
+            git checkout "${source_branch}" 2>&1 | indent_output
+            return 6
+        fi
+        printf "\n"
+
+        # prompt user
+        if ! prompt_to_continue "Push to origin?"; then
+            git checkout "${source_branch}" 2>&1 | indent_output
+            return 6
+        fi
+
+        printf_callout "Pushing ${target_branch}..."
+        git push --progress origin HEAD 2>&1 | indent_output
+        printf "\n"
     fi
 }
 
 gcpu() {
     # git commit and push
-    if [[ $1 == "help" || $1 == "--help" ]]; then
+    if [[ ${1:-} == "help" || $1 == "--help" ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
         echo "Usage: gacp [-a] [-m <message>]"
         return 1
@@ -411,12 +451,12 @@ gcpu() {
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
     COMMAND=""
 
-    if [[ $1 == "-a" ]]; then
+    if [[ ${1:-} == "-a" ]]; then
         COMMAND="git add --all && "
         shift
     fi
 
-    if [[ $1 == "-m" && $2 ]]; then
+    if [[ ${1:-} == "-m" && $2 ]]; then
         COMMAND+="git commit -m '$2' && "
     else
         COMMAND+="git commit && "
@@ -429,7 +469,7 @@ gcpu() {
 
 gnuke() {
     # delete local and remote branch
-    if [[ $# -eq 0 || $1 == "help" || $1 == "--help" ]]; then
+    if [[ $# -eq 0 || ${1:-} == "help" || ${1:-} == "--help" ]]; then
         echo "Usage: gnuke <branch>"
         return 1
     fi
@@ -449,7 +489,7 @@ gnukethis() {
 glc() {
     # git log copy - copy the git log for this branch to the clipboard
     # shellcheck disable=SC2046
-    LOG="$(git log \"origin/$(git_master_or_main)..HEAD\")"
+    LOG="$(git log \"origin/$(__git_master_or_main)..HEAD\")"
 
   pbcopy <<EOF
 
@@ -457,6 +497,17 @@ glc() {
 ${LOG}
 \`\`\`
 EOF
+}
+
+gcot() {
+  TICKET=$(echo "${@}" \
+    | tr -t "${@}" 50 \
+    | sed "s/^[\.\/]//" \
+    | tr -s " " "-" \
+    | tr -cd "[:alnum:]._-/" \
+    | tr "[:upper:]" "[:lower:]")
+
+  __git_checkout -b "${TICKET}"
 }
 
 opr() {
@@ -468,7 +519,7 @@ opr() {
     BRANCH_ENCODED=$(python3 -c "from urllib.parse import quote_plus; import json;s=quote_plus(json.dumps(\"${BRANCH}\"));print(s)")
     HOST="https://gitlab.com/${ORG_NAME}"
     ROUTE="${REPO}/-/merge_requests/new"
-    QUERY="utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=21762811&merge_request%5Bsource_branch%5D=${BRANCH_ENCODED}&merge_request%5Btarget_project_id%5D=21762811&merge_request%5Btarget_branch%5D=$(git_master_or_main)"
+    QUERY="utf8=%E2%9C%93&merge_request%5Bsource_project_id%5D=21762811&merge_request%5Bsource_branch%5D=${BRANCH_ENCODED}&merge_request%5Btarget_project_id%5D=21762811&merge_request%5Btarget_branch%5D=$(__git_master_or_main)"
 
     glc
     open "${HOST}/${ROUTE}?${QUERY}"

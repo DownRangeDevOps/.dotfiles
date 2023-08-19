@@ -49,20 +49,20 @@ for path in "${REPOS[@]}"; do
                     git checkout main
                 fi
 
-                indent_output "$(git branch -D mailmap 2>/dev/null)"
-                indent_output "$(git checkout -b mailmap)"
+                git branch -D mailmap 2>/dev/null | indent_output 2
+                git checkout -b mailmap | indent_output 2
                 cp -f ~/.dotfiles/config/git/.git-template/.mailmap "${path}/.mailmap"
-                indent_output "$(git add ".mailmap")"
-                indent_output "$(git commit -m "Add mailmap")"
-                indent_output "$(git checkout - )"
-                indent_output "$(git merge --no-ff mailmap)"
+                git add ".mailmap" | indent_output 2
+                git commit -m "Add mailmap" | indent_output 2
+                git checkout -  | indent_output 2
+                git merge --no-ff mailmap | indent_output 2
             )
             printf "\n"
             ;;
         filter-repo-mailmap )
             printf_callout "Editing repo to apply mailmap (${REPO_FINAL_NAME})"
             (cd "${path}" || exit 1
-                indent_output "$(git filter-repo --force --use-mailmap)"
+                git filter-repo --force --use-mailmap | indent_output 2
             )
             printf "\n"
             ;;
@@ -70,8 +70,8 @@ for path in "${REPOS[@]}"; do
             printf_callout "Force pushing all to GitHub (${REPO_FINAL_NAME})"
             (cd "${path}" || exit 1
                 git remote remove origin 2>/dev/null
-                indent_output 2 "$(git remote add origin "git@github.com:${REPO_FINAL_NAME}.git")"
-                indent_output "$(git push --all --force)"
+                git remote add origin "git@github.com:${REPO_FINAL_NAME}.git" | indent_output 2
+                git push --all --force | indent_output 2
             )
             printf "\n"
             ;;
@@ -80,24 +80,24 @@ for path in "${REPOS[@]}"; do
             # if prompt_to_continue "No to skip, CTRL+C to abort" "Skipping..."; then
                 (cd "${path}" || exit 1
                     if [[ ! -f ${path}/.mailmap ]]; then
-                        indent_output "$(printf_callout "Adding mailmap (${REPO_FINAL_NAME})")"
+                        printf_callout "Adding mailmap (${REPO_FINAL_NAME})" | indent_output
                         cp ~/.dotfiles/config/git/.git-template/.mailmap .
-                        indent_output 2 "$(git checkout -b mailmap)"
-                        indent_output 2 "$(git add --all)"
-                        indent_output 2 "$(git commit -m "Add mailmap")"
+                        git checkout -b mailmap | indent_output 2
+                        git add --all | indent_output 2
+                        git commit -m "Add mailmap" | indent_output 2
                     fi
 
-                    indent_output "$(printf_callout "Adding remote origin (${REPO_FINAL_NAME})")"
+                    printf_callout "Adding remote origin (${REPO_FINAL_NAME})" | indent_output
                     git remote remove origin 2>/dev/null
-                    indent_output 2 "$(git remote add origin "git@github.com:${REPO_FINAL_NAME}.git")"
+                    git remote add origin "git@github.com:${REPO_FINAL_NAME}.git" | indent_output 2
 
                     # if ! gh repos view "${REPO_FINAL_NAME}" &>/dev/null; then
-                        indent_output "$(printf_callout "Creating GitHub repository (${REPO_FINAL_NAME}))")"
-                        indent_output 2 "$(gh repo create "${REPO_FINAL_NAME}" "${GH_ARGS[@]}" --source "${path}")"
+                        printf_callout "Creating GitHub repository (${REPO_FINAL_NAME})" | indent_output
+                        gh repo create "${REPO_FINAL_NAME}" "${GH_ARGS[@]}" --source "${path}" | indent_output 2
                     # fi
 
-                    indent_output "$(printf_callout "Pushing to GitHub (${REPO_FINAL_NAME}))")"
-                    indent_output 2 "$(git push --all --force origin)"
+                    printf_callout "Pushing to GitHub (${REPO_FINAL_NAME})" | indent_output
+                    git push --all --force origin | indent_output 2
                 )
             # fi
             printf "\n"

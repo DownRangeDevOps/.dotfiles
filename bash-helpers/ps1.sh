@@ -15,7 +15,7 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function get_shell_lvl () {
     LEVEL=1
-    [[ -n ${NVIM_LISTEN_ADDRESS} ]] && LEVEL=2
+    [[ -n ${NVIM_LISTEN_ADDRESS:-} ]] && LEVEL=2
     [[ ${SHLVL} -gt ${LEVEL} ]] && printf "%s" "${SHLVL}"
 }
 
@@ -27,8 +27,8 @@ function __ps1_prompt () {
 
     info="$(get_shell_lvl)$(get_aws_vault)$(get_virtualenv_name)$(get_terraform_workspace)"
     time="$(date +%R) "
-    git_root="${YELLOW}$(git_project_root)${RESET}"
-    git_branch="${MAGENTA}$(parse_git_branch)${RESET}"
+    git_root="${YELLOW}$(__git_project_root)${RESET}"
+    git_branch="${MAGENTA}$(__git_show_branch_state)${RESET}"
 
     if __git_is_repo; then
         printf "%s\n" "${git_root} on ${git_branch}"
