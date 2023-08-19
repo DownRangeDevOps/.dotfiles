@@ -23,22 +23,14 @@ function join() {
 
 # Formatting
 function indent_output() {
-    local indent
-
-    function get_indent() {
-        for _ in seq $1; do
-            printf "%b" "    "
-        done
-    }
+    local indent_size=4
+    local indent_levels=1
 
     if [[ $1 =~ ^[1-9]+ ]]; then
-        indent="$(get_indent "$1")"
-        shift
-    else
-        indent="    "
+        indent_levels=$1
     fi
 
-    printf "%b\n" "$1" | sed "s/^/${indent}/"
+    pr --omit-header --indent $(( indent_levels * indent_size ))
 }
 
 function printf_callout() {

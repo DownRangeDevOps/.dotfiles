@@ -397,9 +397,9 @@ git_rebase_merge_and_push() {
         git checkout "${source_branch}" >/dev/null 2>&1
 
         printf_callout "Changes to be merged into ${target_branch}:"
-        indent_output "$(git log --oneline "origin/${target_branch}..HEAD")"
+        git log --color --oneline "origin/${target_branch}..HEAD" | indent_output
         printf "\n"
-        indent_output "$(git diff --stat "origin/${target_branch}")"
+        git diff --color --stat "origin/${target_branch}" | indent_output
         printf "\n"
 
         # prompt user
@@ -418,9 +418,9 @@ git_rebase_merge_and_push() {
 
         printf_callout "Merging to ${target_branch} and deleting ${source_branch}..."
         printf "    "
-        if git merge "${merge_commit_option}" "${source_branch}"; then
-            indent_output "$(git branch --delete "${source_branch}" 2>&1)"
-            indent_output "$(git push origin --delete "${source_branch}" 2>&1)"
+        if git merge --no-stat "${merge_commit_option}" "${source_branch}" 2>&1 | indent_output; then
+            git push origin --delete "${source_branch}" 2>/dev/null | indent_output
+            git branch --delete "${source_branch}" 2>&1 | indent_output
         else
             printf_error "ERROR: merge failed, exiting."
             git checkout "${source_branch}" 2>&1 | indent_output
@@ -435,7 +435,7 @@ git_rebase_merge_and_push() {
         fi
 
         printf_callout "Pushing ${target_branch}..."
-        indent_output "$(git push origin HEAD 2>&1)"
+        git push --progress origin HEAD 2>&1 | indent_output
         printf "\n"
     fi
 }
