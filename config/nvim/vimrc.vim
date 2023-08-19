@@ -531,6 +531,7 @@ nnoremap <leader>hr <Plug>GitGutter
 nnoremap <silent><leader>l :let @+=<SID>GetPathToCurrentLine()<CR>|                         " Copy curgent line path/number
 nnoremap Y y$                                                                               " Make Y act like C and D
 nnoremap <leader>d :Dash<CR>
+nnoremap <leader>io ^ysg_(^i$^ysg_"^iindent_output |                                    " Send line to indent_output
 
 " Find/replace
 nnoremap <leader>f :lvim /<C-R>=expand("<cword>")<CR>/ %<CR>:lopen<CR>

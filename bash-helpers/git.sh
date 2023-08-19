@@ -9,7 +9,7 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
 # main
 alias g="git"
 alias gba="git branch --all"
-alias gbn="git rev-parse --abbrev-ref HEAD"
+alias gbn="__git_get_cur_branch_name"
 alias gco="__git_checkout"
 alias gcod="git checkout develop"
 alias gcom="git checkout \$(__git_master_or_main)"
@@ -154,6 +154,10 @@ function __git_master_or_main() {
     printf  "%s" "${main_branch}"
 }
 
+function __git_get_cur_branch_name() {
+    git rev-parse --abbrev-ref HEAD
+}
+
 function __git_show_branch_state () {
     local branch
     local icon
@@ -278,12 +282,15 @@ function git_absorb() {
 }
 
 function git_fixup() {
+    local merge_base
+    merge_base="$(git merge-base "$(__git_master_or_main)" HEAD)"
+
     git add --update
     git log -n 50 --pretty=format:"%h %s" --no-merges \
         | fzf \
         | awk '{print $1}' \
         | xargs -o hub commit --fixup
-    git rebase --interactive HEAD~2
+    git rebase --interactive "${merge_base}"
 }
 
 # Branching
@@ -329,7 +336,7 @@ function git_delete_merged_branches() {
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
         __git_get_merged_branches
 
-        prompt_to_continue "Delete branches?" || return 0
+        prompt_to_continue "Delete branches?" || return 6
         echo
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
@@ -353,96 +360,83 @@ function git_delete_merged_branches() {
     fi
 }
 
-# Diff
-function __git_diff_so_fancy_with_less() {
-    git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
-}
-
-# QOL
-gcot() {
-  TICKET=$(echo "${@}" \
-    | tr -t "${@}" 50 \
-    | sed "s/^[\.\/]//" \
-    | tr -s " " "-" \
-    | tr -cd "[:alnum:]._-/" \
-    | tr "[:upper:]" "[:lower:]")
-
-  __git_checkout -b "${TICKET}"
-}
-
 git_rebase_merge_and_push() {
-    # git merge --ff-only
     local main_branch
-    main_branch=$(__git_master_or_main)
+    local source_branch
+    local target_branch
+    local merge_commit_option
+
+    source_branch="$(__git_get_cur_branch_name)"
+    main_branch="$(__git_master_or_main)"
+    merge_commit_option="--no-ff"
 
     if [[ ${1:-} == "--ff-only" ]]; then
-        MERGE_COMMIT_OPTION="--ff-only"
+        merge_commit_option="--ff-only"
         shift
-    else
-        MERGE_COMMIT_OPTION="--no-ff"
+    fi
+
+    if [[ -z ${1:-} ]]; then
+        target_branch="${main_branch}"
     fi
 
     if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
         print  "%s\n" \
-            "Usage: gffm [OPTION] [<TARGET_BRANCH>]" \
-            "Merge TARGET_BRANCH to ${main_branch} printing the log and stat, and" \
-            "prompting before merging or pushing." \
+            "Usage: gm [--ff-only] [<TARGET_BRANCH>]" \
             "" \
-            "If no TARGET_BRANCH, or TARGET_BRANCH is HEAD, the current branch will be merged to ${main_branch}."
+            "DESCRIPTION" \
+            "    Rebase current branch on to TARGET_BRANCH then merge and push. Prints the" \
+            "    log and stat of the current branch vs TARGET_BRANCH. Prompts for" \
+            "    confirmation before merging or pushing." \
+            "" \
+            "    If no TARGET_BRANCH, the current branch will be merged to ${main_branch}."
     else
-        if [[ ${1:-} == "HEAD" || $1 == "" ]]; then
-            git log "origin/${main_branch}.."
-            git diff --stat "origin/${main_branch}"
-            prompt_to_continue "Merge to ${main_branch}?"
+        printf_callout "Updating ${target_branch}..."
+        git checkout "${target_branch}" >/dev/null 2>&1
+        git fetch --prune >/dev/null 2>&1
+        git pull --rebase >/dev/null 2>&1
+        git checkout "${source_branch}" >/dev/null 2>&1
 
-            printf_callout "Updating from origin..."
-            git fetch -p
+        printf_callout "Changes to be merged into ${target_branch}:"
+        indent_output "$(git log --oneline "origin/${target_branch}..HEAD")"
+        printf "\n"
+        indent_output "$(git diff --stat "origin/${target_branch}")"
+        printf "\n"
 
-            printf_callout "Rebasing onto ${main_branch}..."
-            git checkout "${main_branch}"
-            git pull -r
-            git rebase "origin/${main_branch}"
-
-            printf_callout "Merging to ${main_branch}..."
-
-            if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
-                git branch --delete "@{-1}"
-                git push origin --delete "@{-1}"
-            else
-                printf "%b\n" "$(red ERROR: merge failed, exiting.)"
-                return 1
-            fi
-
-            prompt_to_continue "Push to origin?"
-
-            printf_callout "Pushing ${main_branch}..."
-            git push origin HEAD
-        else
-            TARGET_BRANCH=$1
-            git checkout "${TARGET_BRANCH}"
-
-            printf_callout "Updating ${TARGET_BRANCH}..."
-            git fetch -p
-            git pull -r
-            git checkout "@{-1}"
-            git log "${TARGET_BRANCH}..@"
-            git diff --stat "${TARGET_BRANCH}"
-            prompt_to_continue "Merge to ${TARGET_BRANCH}?"
-
-            printf_callout "Merging to ${TARGET_BRANCH}..."
-            git rebase "${TARGET_BRANCH}"
-            git checkout "${TARGET_BRANCH}"
-
-            if [[ $(git merge "${MERGE_COMMIT_OPTION}" "@{-1}") ]]; then
-                git branch --delete "@{-1}"
-                git push origin --delete "@{-1}"
-            fi
-
-            prompt_to_continue "Push to origin?"
-
-            printf_callout "PUshing ${TARGET_BRANCH}..."
-            git push origin HEAD
+        # prompt user
+        if ! prompt_to_continue "Merge to ${target_branch} using ${merge_commit_option}?"; then
+            git checkout "${source_branch}" >/dev/null 2>&1
+            return 6
         fi
+
+        printf_callout "Updating from origin..."
+        git fetch -p >/dev/null 2>&1
+
+        printf_callout "Rebasing onto ${target_branch}..."
+        git checkout "${target_branch}" >/dev/null 2>&1
+        git pull -r >/dev/null 2>&1
+        git rebase "origin/${target_branch}" >/dev/null 2>&1
+
+        printf_callout "Merging to ${target_branch} and deleting ${source_branch}..."
+        printf "    "
+        if git merge "${merge_commit_option}" "${source_branch}"; then
+            indent_output "$(git branch --delete "${source_branch}" 2>&1)"
+            indent_output "$(git push origin --delete "${source_branch}" 2>&1)"
+        else
+            printf_error "ERROR: merge failed, exiting."
+            git checkout "${source_branch}" 2>&1 | indent_output
+            return 6
+        fi
+        printf "\n"
+
+        # prompt user
+        if ! prompt_to_continue "Push to origin?"; then
+            git checkout "${source_branch}" 2>&1 | indent_output
+            return 6
+        fi
+
+        printf_callout "Pushing ${target_branch}..."
+        indent_output "$(git push origin HEAD 2>&1)"
+        printf "\n"
     fi
 }
 
@@ -503,6 +497,17 @@ glc() {
 ${LOG}
 \`\`\`
 EOF
+}
+
+gcot() {
+  TICKET=$(echo "${@}" \
+    | tr -t "${@}" 50 \
+    | sed "s/^[\.\/]//" \
+    | tr -s " " "-" \
+    | tr -cd "[:alnum:]._-/" \
+    | tr "[:upper:]" "[:lower:]")
+
+  __git_checkout -b "${TICKET}"
 }
 
 opr() {

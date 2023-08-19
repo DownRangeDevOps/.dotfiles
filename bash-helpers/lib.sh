@@ -27,7 +27,7 @@ function indent_output() {
 
     function get_indent() {
         for _ in seq $1; do
-            printf "%s" "    "
+            printf "%b" "    "
         done
     }
 
@@ -38,7 +38,7 @@ function indent_output() {
         indent="    "
     fi
 
-    printf "%s\n" "$1" | sed "s/^/${indent}/"
+    printf "%b\n" "$1" | sed "s/^/${indent}/"
 }
 
 function printf_callout() {
