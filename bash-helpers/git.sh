@@ -1,13 +1,15 @@
 # git.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  Alises
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
 
 # main
 alias g="git"
+alias gb="git_branch"
 alias gba="git branch --all"
 alias gbn="__git_get_cur_branch_name"
 alias gco="__git_checkout"
@@ -76,6 +78,7 @@ function __git_add_completion_to_aliases() {
 
         # branch
         __git_complete gb _git_branch
+        __git_complete git_branch _git_branch
 
         # stash
         __git_complete gst _git_stash
@@ -108,7 +111,7 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 # ------------------------------------------------
 #  Private
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
 
 function __git_is_repo() {
     if [[ -n ${1:-} ]]; then
@@ -273,7 +276,7 @@ function __git_get_merged_branches() {
 # ------------------------------------------------
 #  Public
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
 
 # Committing
 function git_absorb() {
@@ -294,12 +297,15 @@ function git_fixup() {
 }
 
 # Branching
-function gb() {
-    if [[ ${1:-} == "-D" ]]; then
-        git branch "${@}"
-    else
-        git branch "${@}"| fzf
-    fi
+function git_branch() {
+    case $1 in
+        -D|-m )
+            git branch "${@}"
+            ;;
+        * )
+            git branch "${@}"| fzf
+            ;;
+    esac
 }
 
 function __git_checkout() {

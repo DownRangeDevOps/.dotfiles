@@ -1,20 +1,21 @@
 # shellcheck disable=SC1090,SC1091
-# load these first, they get used by other scripts
-source "${HOME}/.dotfiles/bash-helpers/bash.sh"
-source "${HOME}/.dotfiles/bash-helpers/lib.sh"
+# load these first, in this order, they get used by other scripts
 source "$HOME/.dotfiles/lib/log.sh"
+source "${HOME}/.dotfiles/bash-helpers/lib.sh"
+source "${HOME}/.dotfiles/bash-helpers/bash.sh"
 
 # log.sh sets -u which is too strict for many dependencies
 set +u
 
 set_path
 
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  aliases
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Creating aliases..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating aliases..."
 
 # don't link to pyenv provided python (see: https://github.com/pyenv/pyenv#installation)
 alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
@@ -63,7 +64,7 @@ alias egrep="grep -E"
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Configuring enviornment..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring enviornment..."
 
 # Use vi mode on command line
 set -o vi
@@ -103,7 +104,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # ------------------------------------------------
 #  utils
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
 function nvim() {
     # load pyenv and the nvim venv if not already
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
@@ -155,7 +156,7 @@ function tf_init() {
     fuck "$@"
 }
 
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 # shellcheck disable=SC1091
 {
     source "$HOME/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
@@ -172,16 +173,17 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 }
 
 # Add the direnv hook to PROMPT_COMMAND
-logger  "" "[${BASH_SOURCE[0]}]"
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading direnv hook..."
+log debug ""
+log debug "$(printf_callout "[${BASH_SOURCE[0]}]")"
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading direnv hook..."
 eval "$(direnv hook bash)"
 
 # load .bashrc
 if [[ -f ~/.bashrc ]]; then
-    logger "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
 
     # shellcheck source=/Users/ryanfisher/.bashrc
     source ~/.bashrc
 fi
 
-logger "[$(basename "${BASH_SOURCE[0]}")]: Done." ""
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Done." ""

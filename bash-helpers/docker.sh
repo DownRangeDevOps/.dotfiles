@@ -1,10 +1,11 @@
 # docker.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  aliases
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
 
 alias d="docker"
 alias dV="docker version"
@@ -69,7 +70,7 @@ alias dc="docker compose"
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function dvrm() {
     volumes=$(docker volume ls \

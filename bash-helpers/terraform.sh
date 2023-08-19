@@ -1,17 +1,18 @@
 # terraform.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
 complete -C /usr/local/bin/terraform terraform
 
 # ------------------------------------------------
 #  aliases
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
 
 alias tf="terraform"
 alias tfV="terraform version"
@@ -52,7 +53,7 @@ alias tfva=validate_all_modules
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function get_terraform_workspace () {
     [[ -d .terraform ]] && printf "%s" " $(terraform workspace show 2>/dev/null)"

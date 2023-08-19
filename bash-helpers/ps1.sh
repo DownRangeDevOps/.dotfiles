@@ -1,5 +1,6 @@
 # ps1.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # Sexy Bash Prompt, inspired by "Extravagant Zsh Prompt"
 # if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
@@ -11,7 +12,7 @@ logger "" "[${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function get_shell_lvl () {
     LEVEL=1

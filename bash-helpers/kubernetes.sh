@@ -1,5 +1,6 @@
 # kubernetes.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  aliases

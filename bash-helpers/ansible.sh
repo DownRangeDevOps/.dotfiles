@@ -1,5 +1,6 @@
 # ansible.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  config
@@ -17,7 +18,7 @@ alias aav='ansible-vault view'
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function ade() {
     if [[ -z $1 ]]; then

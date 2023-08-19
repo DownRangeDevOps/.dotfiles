@@ -1,13 +1,6 @@
 # bash.sh
-
-# create the logger before anything else
-function logger() {
-    if [[ ${DEBUG:-} == "true" ]]; then
-        printf  "%s\n" "$@"
-    fi
-}
-
-logger "" "[${BASH_SOURCE[0]}]"
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # overwrites PS1 so do it first
 source /usr/local/share/google-cloud-sdk/path.bash.inc
@@ -21,7 +14,7 @@ fi
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 # Don't expand paths
 _expand() { return 0; }
@@ -35,7 +28,7 @@ function ll() {
 }
 
 function add_homebrew_tools() {
-    logger "[$(basename "${BASH_SOURCE[0]}")]: Adding homebrew paths..."
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Adding homebrew paths..."
 
     local gnu_tools
     local compilers
@@ -67,7 +60,7 @@ EOT
 }
 
 function set_path() {
-    logger "[$(basename "${BASH_SOURCE[0]}")]: Setting path..."
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Setting path..."
 
     export PATH=""                      # Reset
     source /etc/profile                 # Base
