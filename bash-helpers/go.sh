@@ -1,5 +1,5 @@
 # go.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug "\n[${BASH_SOURCE[0]}]"
 
 # lazy init goenv
 function goenv_alias() {

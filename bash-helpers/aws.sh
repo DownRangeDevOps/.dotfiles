@@ -1,10 +1,10 @@
 # aws.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug "\n[${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
 export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
@@ -16,7 +16,7 @@ export AWS_SESSION_TOKEN_TTL=12h
 # ------------------------------------------------
 #  alises
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
 
 alias av="aws-vault"
 alias ave="aws-vault exec"
@@ -29,7 +29,7 @@ alias avsci="aws-vault exec msr-sci-sbx --"
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function get_aws_vault () {
     [[ -n ${AWS_VAULT:-} ]] && printf "%s" " aws:${AWS_VAULT} "

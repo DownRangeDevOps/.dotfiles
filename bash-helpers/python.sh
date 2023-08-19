@@ -1,10 +1,10 @@
 # python.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug "\n[${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
 export BETTER_EXCEPTIONS=1  # python better exceptions
 export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
@@ -26,7 +26,7 @@ export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 # ------------------------------------------------
 #  aliases
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
 
 # alias rmlp=run_mega_linter_python
 # alias gpt=generate_python_module_ctags
@@ -34,7 +34,7 @@ logger "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function get_virtualenv_name () {
     if [[ $VIRTUAL_ENV ]]; then

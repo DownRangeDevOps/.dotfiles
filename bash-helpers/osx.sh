@@ -1,10 +1,10 @@
 # osx.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug "\n[${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  aliases
 # ------------------------------------------------
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
 
 alias flushdns='sudo killall -HUP mDNSResponder'
 alias showfiles='defaults write com.apple.finder AppleShowAllFiles true; killall Finder'

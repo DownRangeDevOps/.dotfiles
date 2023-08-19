@@ -1,9 +1,9 @@
 # lib.sh
 # shellcheck disable=SC2034 # ignore globals that are set for use elsewhere
 
-logger "" "[${BASH_SOURCE[0]}]"
+log debug "\n[${BASH_SOURCE[0]}]"
 
-logger "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
 
 function prompt_to_continue() {
     read -p "${BLUE}${1:-Continue?} (y)[es|no] ${RESET}" -n 1 -r

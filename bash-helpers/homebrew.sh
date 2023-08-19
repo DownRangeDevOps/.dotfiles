@@ -1,5 +1,5 @@
 # homebrew.sh
-logger "" "[${BASH_SOURCE[0]}]"
+log debug "\n[${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  aliases
