@@ -32,8 +32,8 @@ alias avsci="aws-vault exec msr-sci-sbx --"
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
-function get_aws_vault () {
-    [[ -n ${AWS_VAULT:-} ]] && printf "%s" " aws:${AWS_VAULT} "
+function __get_aws_vault () {
+    [[ -n ${AWS_VAULT:-} ]] && printf "%s" "aws:${AWS_VAULT}"
 }
 
 function ave() {

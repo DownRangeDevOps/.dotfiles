@@ -44,8 +44,8 @@ alias tfw="terraform workspace"
 # alias cdp="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|\")"
 # alias cds="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|\")"
 # alias cdd="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|\")"
-# alias cdt="cd \$HOME/dev/${ORG_ROOT)/src/ops/packages/terraform/projects/"
-# alias cdv="cd \$HOME/dev/${ORG_ROOT)/src/ops/vendors/"
+# alias cdt="cd \~/dev/${ORG_ROOT)/src/ops/packages/terraform/projects/"
+# alias cdv="cd \~/dev/${ORG_ROOT)/src/ops/vendors/"
 
 alias tfia=init_all_modules
 alias tfva=validate_all_modules
@@ -55,7 +55,7 @@ alias tfva=validate_all_modules
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
-function get_terraform_workspace () {
+function __get_terraform_workspace () {
     [[ -d .terraform ]] && printf "%s" " $(terraform workspace show 2>/dev/null)"
 }
 
