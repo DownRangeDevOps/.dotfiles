@@ -27,9 +27,6 @@ set_path
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating aliases..."
 
-# don't link to pyenv provided python (see: https://github.com/pyenv/pyenv#installation)
-alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
-
 # auto on yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
 alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
@@ -151,8 +148,6 @@ function rg() {
 }
 
 # Load package shims
-# eval "$(pyenv init --path)"       # Enable pyenv shims
-# eval "$(pyenv virtualenv-init -)" # Enable pyenv virtualenv shims
 # eval "$(goenv init -)"            # Setup shell to make go binary available  # Slows loading, disabling for now
 # eval "$(rbenv init -)"            # Enable rbenv shims
 

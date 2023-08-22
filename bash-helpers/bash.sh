@@ -16,10 +16,6 @@ fi
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
-# Don't expand paths
-_expand() { return 0; }
-
-
 function list_dir_cont() {
     local gnu_ls=/usr/local/opt/coreutils/libexec/gnubin/ls
     local lsopts="--color=auto --almost-all"
@@ -43,29 +39,27 @@ function add_homebrew_tools() {
     local gnu_tools
     local compilers
 
-    mapfile -t gnu_tools <<-EOT
-        gnu-tar
-        gnu-which
-        gnu-sed
-        grep
-        coreutils
-        findutils
-        make
-EOT
-
-    mapfile -t compilers <<-EOT
-        /usr/local/opt/llvm/bin
-EOT
+    mapfile -t gnu_tools <<EOF
+gnu-tar
+gnu-which
+gnu-sed
+grep
+coreutils
+findutils
+make
+EOF
 
     for tool in "${gnu_tools[@]}"; do
-        tool=$(printf "%s" "${tool}" | trim)
-        export PATH="/usr/local/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
-        export PATH="/usr/local/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
+      export PATH="$(brew --prefix)/opt/${tool}/libexec/gnubin:${PATH}" # Homebrew gnu tools
+      export PATH="$(brew --prefix)/opt/${tool}/libexec/gnuman:${PATH}" # Homebrew gnu manpages
     done
 
+    mapfile -t compilers <<EOF
+llvm/bin
+EOF
+
     for path in "${compilers[@]}"; do
-        tool=$(printf "%s" "${path}" | trim)
-        export PATH="${path}:${PATH}"
+        export PATH="$(brew --prefix)/opt/${path}:${PATH}"
     done
 }
 
@@ -80,7 +74,8 @@ function set_path() {
     export PATH="/usr/local/sbin:${PATH}"               # Homebrew bin path
     export PATH="/usr/local/opt/ruby/bin:${PATH}"       # Homebrew Ruby
     export PATH="~/.pyenv/bin:${PATH}"            # pyenv
-    export PATH="~/.local/bin:${PATH}"            # pipx export PATH="~/go/bin:${PATH}"                # Go binaries
+    export PATH="~/.local/bin:${PATH}"            # pipx
+    export PATH="~/go/bin:${PATH}"                # Go binaries
     export PATH="${PATH}:~/.snowsql/1.2.12"       # Snowflake CLI
     export PATH="~/bin:${PATH}"                   # Custom installed binaries
     export PATH="${PATH}:~/.local/bin"            # Ansible:::
