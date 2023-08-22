@@ -44,6 +44,10 @@ function print_error_msg() {
 }
 
 function create_symlinks() {
+    local gitignore_path="~/.dotfiles/config/git/.gitignore"
+    local init_vim_path="~/.config/nvim/init.vim"
+    local terminfo_path="~/.config/.terminfo"
+
     printf_callout "Creating symlinks..."
 
     if ${dry_run}; then
@@ -52,17 +56,18 @@ function create_symlinks() {
             shell {} \; | indent_output
 
         printf "%s\n" \
-            "\"${HOME}/.gitignore\" -> \"${HOME}/.dotfiles/config/git/.gitignore\"" \
-            "\"${HOME}/.vimrc\" -> \"${HOME}/.dotfiles/config/nvim/vimrc.vim\"" \
+            "\"${HOME}/.gitignore\" -> \"${gitignore_path}\"" \
+            "\"${HOME}/.vimrc\" -> \"${init_vim_path}\"" \
             | indent_output
     else
         find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -iname ".*" -exec bash -c \
-            'file="$1"; ln -sfv "${file}" "${HOME}/$(basename ${file})"' \
+            'file="$1"; ln -sfvr "${file}" "${HOME}/$(basename ${file})"' \
             shell {} \; | indent_output
 
             (cd "${HOME}" || exit 1
-                ln -svf .dotfiles/config/git/.gitignore .gitignore
-                ln -svf .dotfiles/config/nvim/vimrc.vim .vimrc
+                ln -sfvr ${gitignore_path} .gitignore
+                ln -sfvr ${init_vim_path} init.vim
+                ln -sfvr ${terminfo_path} .terminfo
             )
     fi
 
@@ -83,6 +88,9 @@ function install_docopts() {
         fi
 
         printf "\n"
+    else
+        printf_callout "docopts already installed, skipping."
+        printf "\n"
     fi
 
     if [[ ! -f bin/docopts.sh ]]; then
@@ -94,6 +102,28 @@ function install_docopts() {
             (eval "${docopts_sh_install_cmd}" | indent_output)
         fi
 
+        printf "\n"
+    else
+        printf_callout "docopts.sh already installed, skipping."
+        printf "\n"
+    fi
+}
+
+function install_lazy_vim() {
+    local lazy_vim_install_cmd="git clone git@github.com:DownRangeDevOps/LazyVim.git ~/.config/nvim"
+
+    if [[ ! -d ~/.config/nvim ]]; then
+        printf_callout "Installing LazyVim..."
+
+        if $dry_run; then
+            printf "%s\n" "${lazy_vim_install_cmd}" | indent_output
+        else
+            (eval "${lazy_vim_install_cmd}" | indent_output)
+        fi
+
+        printf "\n"
+    else
+        printf_callout "LazyVim already installed, skipping."
         printf "\n"
     fi
 }
