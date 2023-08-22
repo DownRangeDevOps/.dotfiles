@@ -5,3 +5,4 @@
 .docker/machine
 .vim-jenkins
 tags
+lazy-lock.json

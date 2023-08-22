@@ -1,5 +1,5 @@
 " vim: set ft=vim
-so $HOME/.dotfiles/nvim/.plugins  " Load Plug manifest
+so $HOME/.dotfiles/config/nvim/plugins.vim  " Load Plug manifest
 
 " ---------------------------------------------------------------------
 " General Settings
@@ -52,6 +52,7 @@ set splitright
 set termguicolors                        " Use true color
 set timeoutlen=700                       " set a short leader timeout
 set wildmode=list:longest,list:full      " Configure auto completion see :help wildmode
+
 if &diff                                 " only for diff mode/vimdiff
 set diffopt=filler,context:1000000     " filler is default and inserts empty lines for sync
 endif

@@ -19,12 +19,22 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 # Don't expand paths
 _expand() { return 0; }
 
-function ls() {
-  /bin/ls -GhA "$@"
-}
 
-function ll() {
-  /bin/ls -GFlash "$@"
+function list_dir_cont() {
+    local gnu_ls=/usr/local/opt/coreutils/libexec/gnubin/ls
+    local lsopts="--color=auto --almost-all"
+
+    if [[ "$1" == "--long" ]]; then
+        shift
+        lsopts+=" -l --classify --no-group --size --human-readable"
+    fi
+
+    if [[ -f ${gnu_ls} ]]; then
+        ${gnu_ls} ${lsopts} $@
+    else
+        printf_error "GNU ls not found at ${gnu_ls}, falling back to /bin/ls"
+        /bin/ls ${lsopts} $@
+    fi
 }
 
 function add_homebrew_tools() {
@@ -69,12 +79,12 @@ function set_path() {
     export PATH="/opt/X11/bin:${PATH}"
     export PATH="/usr/local/sbin:${PATH}"               # Homebrew bin path
     export PATH="/usr/local/opt/ruby/bin:${PATH}"       # Homebrew Ruby
-    export PATH="${HOME}/.pyenv/bin:${PATH}"            # pyenv
-    export PATH="${HOME}/.local/bin:${PATH}"            # pipx export PATH="${HOME}/go/bin:${PATH}"                # Go binaries
-    export PATH="${PATH}:${HOME}/.snowsql/1.2.12"       # Snowflake CLI
-    export PATH="${HOME}/bin:${PATH}"                   # Custom installed binaries
-    export PATH="${PATH}:${HOME}/.local/bin"            # Ansible:::
-    export PATH="${PATH}:${HOME}/.cabal/bin/git-repair" # Haskell binaries
+    export PATH="~/.pyenv/bin:${PATH}"            # pyenv
+    export PATH="~/.local/bin:${PATH}"            # pipx export PATH="~/go/bin:${PATH}"                # Go binaries
+    export PATH="${PATH}:~/.snowsql/1.2.12"       # Snowflake CLI
+    export PATH="~/bin:${PATH}"                   # Custom installed binaries
+    export PATH="${PATH}:~/.local/bin"            # Ansible:::
+    export PATH="${PATH}:~/.cabal/bin/git-repair" # Haskell binaries
 
     # add homebrew bins and manpages to path
     add_homebrew_tools

@@ -1,16 +1,26 @@
 # shellcheck disable=SC1090,SC1091
-# load these first, in this order, they get used by other scripts
-source "$HOME/.dotfiles/lib/log.sh"
-source "${HOME}/.dotfiles/bash-helpers/lib.sh"
-source "${HOME}/.dotfiles/bash-helpers/bash.sh"
 
-# log.sh sets -u which is too strict for many dependencies
-set +u
+# logger is slow, avoid sourcing it unless we need it for now
+if [[ ${DEBUG:-} -eq 1 ]]; then
+    source ~/.dotfiles/lib/log.sh
 
+    # log.sh sets -u which is too strict for many dependencies
+    set +u
+
+    log debug ""
+    log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+else
+    function log() {
+        true
+    }
+fi
+
+# Source these first as they're dependencies atm
+source ~/.dotfiles/bash-helpers/lib.sh
+source ~/.dotfiles/bash-helpers/bash.sh
+
+# Add custom paths
 set_path
-
-log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
 #  aliases
@@ -25,11 +35,11 @@ alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
 alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 
 alias c="clear"
-alias ebash='nvim ${HOME}/.bash_profile'
+alias ebash='nvim ~/.bash_profile'
 alias ec=ebash
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
-alias sb='source ${HOME}/.bash_profile'
+alias sb='source ~/.bash_profile'
 alias vim="nvim"
 
 # safety
@@ -46,6 +56,9 @@ alias rc='reattach-to-user-namespace pbcopy'
 # Generate password hash for MySQL
 alias mysqlpw="/usr/bin/python -c 'from hashlib import sha1; import getpass; print \"*\" + sha1(sha1(getpass.getpass(\"New MySQL Password:\")).digest()).hexdigest()'"
 
+# Info
+alias ls="list_dir_cont"
+alias ll="list_dir_cont --long"
 
 # Navigation
 alias ..="cd .."
@@ -55,7 +68,7 @@ alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 alias ..r="cd \$(git rev-parse --show-toplevel 2>/dev/null)"
-alias ..~="cd \${HOME}"
+alias ..~="cd \~"
 alias ctags="\$(brew --prefix)/bin/ctags"
 
 # Squeltch egrep warnings
@@ -88,16 +101,16 @@ export LS_COLORS='rs=0:di=1;35:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;3
 LDFLAGS="-L$(brew --prefix)/llvm/lib" && export LDFLAGS
 CPPFLAGS="-I$(brew --prefix)/llvm/include" && export CPPFLAGS
 LLVM_INCLUDE_FLAGS="-L$(brew --prefix)/" && export LLVM_INCLUDE_FLAGS
-export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
-export EDITOR=nvim
-export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
-export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
-export GROOVY_HOME=/usr/local/opt/groovy/libexec
 export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
+export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
+export EDITOR=nvim
+export GROOVY_HOME=/usr/local/opt/groovy/libexec
+export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
+export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
 
 # fzf (https://github.com/junegunn/fzf)
-export FZF_DEFAULT_OPTS="--history=$HOME/.fzf_history"
+export FZF_DEFAULT_OPTS="--history=~/.fzf_history"
 export FZF_DEFAULT_COMMAND="rg --files"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
@@ -159,17 +172,21 @@ function tf_init() {
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 # shellcheck disable=SC1091
 {
-    source "$HOME/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
-    source "$HOME/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
-    source "$HOME/.dotfiles/bash-helpers/go.sh"         # Golang helpers
-    source "$HOME/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
-    source "$HOME/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
-    source "$HOME/.dotfiles/bash-helpers/git.sh"        # git helpers
-    source "$HOME/.dotfiles/bash-helpers/aws.sh"        # aws helpers
-    source "$HOME/.dotfiles/bash-helpers/osx.sh"        # osx helpers
-    source "$HOME/.dotfiles/bash-helpers/python.sh"     # python helpers
+    # NOTE: These are sourced at the top of the file, here as a reminder
+    # source ~/.dotfiles/bash-helpers/lib.sh
+    # source ~/.dotfiles/bash-helpers/bash.sh
+
+    source ~/.dotfiles/bash-helpers/ansible.sh    # Ansible helpers
+    source ~/.dotfiles/bash-helpers/docker.sh     # Docker helpers
+    source ~/.dotfiles/bash-helpers/go.sh         # Golang helpers
+    source ~/.dotfiles/bash-helpers/kubernetes.sh # K8s helpers
+    source ~/.dotfiles/bash-helpers/terraform.sh  # Terraform helpers
+    source ~/.dotfiles/bash-helpers/git.sh        # git helpers
+    source ~/.dotfiles/bash-helpers/aws.sh        # aws helpers
+    source ~/.dotfiles/bash-helpers/osx.sh        # osx helpers
+    source ~/.dotfiles/bash-helpers/python.sh     # python helpers
     # source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
-    source "$HOME/.dotfiles/bash-helpers/ps1.sh"        # set custom PS1
+    source ~/.dotfiles/bash-helpers/ps1.sh        # set custom PS1
 }
 
 # Add the direnv hook to PROMPT_COMMAND

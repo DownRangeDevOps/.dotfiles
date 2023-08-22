@@ -8,21 +8,10 @@ log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
 export BETTER_EXCEPTIONS=1  # python better exceptions
-export PTPYTHON_CONFIG_HOME="$HOME/.config/ptpython/"
-
-# Pyenv (https://github.com/pyenv/pyenv)
-# pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
-# pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-export WORKON_HOME="$HOME/.virtualenvs"
-export PROJECT_HOME="$HOME/dev"
-export VIRTUALENVWRAPPER_WORKON_CD=1
+export PTPYTHON_CONFIG_HOME="~/.config/ptpython/"
 
 # Pipx
-export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
-
+export PIPX_DEFAULT_PYTHON="~/.pyenv/shims/python"
 
 # ------------------------------------------------
 #  aliases
@@ -37,7 +26,7 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
-function get_virtualenv_name () {
+function __get_virtualenv_name () {
     if [[ $VIRTUAL_ENV ]]; then
         printf "%s\n" " $(basename "$VIRTUAL_ENV")"
     else
@@ -47,9 +36,18 @@ function get_virtualenv_name () {
 
 # Initalize pyenv
 function pyenv_init() {
+    # Pyenv (https://github.com/pyenv/pyenv)
+    # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
+    # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
+    export PYENV_ROOT="~/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+    export WORKON_HOME="~/.virtualenvs"
+    export PROJECT_HOME="~/dev"
+    export VIRTUALENVWRAPPER_WORKON_CD=1
+
     local CMD
     CMD=$1
-    echo "$@"
     shift
 
     unset -f pyenv_init
@@ -57,12 +55,9 @@ function pyenv_init() {
     pyenv_alias remove
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
-    pyenv virtualenvwrapper
+    pyenv virtualenvwrapper_lazy
     export PYENV_INITIALIZED=true
-
-    "${CMD}" "$@"
 }
-
 
 function pyenv_alias() {
     local virtualenv_cmds
@@ -102,7 +97,7 @@ EOF
 
 # Lazy pyenv loader
 
-if ${PYENV_INITIALIZED}; then
+if [[ ${PYENV_INITIALIZED} == "true" ]]; then
     pyenv_alias remove
 else
     pyenv_alias create
@@ -128,7 +123,7 @@ fi
 #     FLYNT=("--transform-concats" "--line-length=999")
 #     AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
 #     AUTOFLAKE=("--remove-all-unused-imports" "--remove-duplicate-keys" "--in-place" "--recursive")
-#     PRETTIER=("--ignore-path=$HOME/.config/prettier" "--write" "--print-width=88")
+#     PRETTIER=("--ignore-path=~/.config/prettier" "--write" "--print-width=88")
 #     MDFORMAT=("--number" "--wrap=80")
 #     ISORT=("--profile=black" "--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
 #     BLACK=("--preview")

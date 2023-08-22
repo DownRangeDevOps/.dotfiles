@@ -4,5 +4,10 @@
 # - We should ensure pipelines fail if commands within them fail
 set -uo pipefail
 
+# Use my term
+export PATH="$(brew --prefix)/opt/ncurses/bin:$PATH"
+export TERMINFO=~/.local/share/terminfo
+export TERMINFO_DIRS=~/.local/share/terminfo
+
 # Setup shell
-source "${HOME}/.dotfiles/bash-helpers/bash_profile.sh"
+source ~/.dotfiles/bash-helpers/bash_profile.sh

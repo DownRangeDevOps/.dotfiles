@@ -1,6 +1,36 @@
 # lib.sh
 # shellcheck disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
-source "$HOME/.dotfiles/lib/log.sh"
+if [[ "${DEBUG:-}" -eq 1 ]]; then
+    source ~/.dotfiles/lib/log.sh
+else
+    function log() {
+        true
+    }
+fi
+
+# Colors
+BLACK=$(tput setaf 0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+WHITE=$(tput setaf 7)
+BOLD=$(tput bold)
+REVERSE=$(tput rev)
+RESET=$(tput sgr0)
+
+export BLACK
+export RED
+export GREEN
+export YELLOW
+export BLUE
+export MAGENTA
+export CYAN
+export WHITE
+export BOLD
+export RESET
 
 # Declare this before usage
 function printf_callout() {
@@ -43,28 +73,6 @@ function indent_output() {
 function printf_callout() {
     printf "%s\n" "${BOLD}==> ${1}${RESET}"
 }
-
-# Colors
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-WHITE=$(tput setaf 7)
-BOLD=$(tput bold)
-REVERSE=$(tput rev)
-RESET=$(tput sgr0)
-
-export RED
-export GREEN
-export YELLOW
-export BLUE
-export MAGENTA
-export CYAN
-export WHITE
-export BOLD
-export RESET
 
 # Color printf
 alias bold=printf_bold
