@@ -20,6 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Install and configure plugins (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-plugin-spec
 -- ----------------------------------------------
+-- require('plugins')
 require('lazy').setup({
   -- Git managers
   'tpope/vim-fugitive', -- (git) https://github.com/tpope/vim-fugitive
@@ -27,14 +28,17 @@ require('lazy').setup({
   'tpope/fugitive-gitlab.vim', -- (gitlab) https://github.com/tpope/fugitive-gitlab.vim
 
   -- Vim user sovereign rights
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
-  'tpope/vim-repeat', -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
-  'tpope/vim-surround', -- Surround text (https://github.com/tpope/vim-surround)
   'tpope/vim-obsession', -- Session mgmt (https://github.com/tpope/vim-obsession)
-  { 'numToStr/Comment.nvim', opts = {} }, -- Comment/uncomment with vim motions (https://github.com/numToStr/Comment.nvim)
-  { 'echasnovski/mini.nvim', version = '*' }, -- mini-align (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
-  { 'windwp/nvim-autopairs', event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
+  'tpope/vim-repeat', -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
+  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
+  'tpope/vim-surround', -- Surround text (https://github.com/tpope/vim-surround)
+  'tpope/vim-unimpaired', -- Surround text (https://github.com/tpope/vim-unimpaired)
   { "tenxsoydev/karen-yank.nvim", config = true }, -- Make delete/change behave (https://github.com/tenxsoydev/karen-yank.nvim)
+  { 'echasnovski/mini.nvim', version = '*' }, -- mini-align (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
+  { 'numToStr/Comment.nvim', opts = {} }, -- Comment/un-comment with vim motions (https://github.com/numToStr/Comment.nvim)
+  { 'windwp/nvim-autopairs', event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
+  'mbbill/undotree', -- Browse undo-tree (https://github.com/mbbill/undotree.git)
+  'ThePrimeagen/harpoon', -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
 
   -- Auto complete rule: Underscores last (/) and command (:) (https://github.com/lukas-reineke/cmp-under-comparator)
   -- 'lukas-reineke/cmp-under-comparator',
@@ -42,6 +46,9 @@ require('lazy').setup({
   -- ----------------------------------------------
   -- UI
   -- ----------------------------------------------
+
+  -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
+  { 'NvChad/nvim-colorizer.lua' },
 
   -- neo-tree: tree/file browser (https://github.com/nvim-neo-tree/neo-tree.nvim)
   -- :help neo-tree.txt
@@ -165,10 +172,11 @@ require('lazy').setup({
   -- Trim whitespace and trailing empty lines (https://github.com/mcauley-penney/tidy.nvim)
   -- :help tidy.nvim.txt
   {
-     'mcauley-penney/tidy.nvim',
-     opts = {
-       filetype_exclude = { 'diff' }
-     }
+    'mcauley-penney/tidy.nvim',
+    config = true,
+    opts = {
+      filetype_exclude = { 'diff' }
+    }
   },
 
   -- Auto-save (https://github.com/pocco81/auto-save.nvim)
@@ -286,8 +294,9 @@ require('telescope').setup {
 }
 
 
--- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
+-- extensions
+pcall(require('telescope').load_extension, 'fzf') -- Enable telescope fzf native, if installed
+require('telescope').load_extension('harpoon')
 
 -- ----------------------------------------------
 -- [[ Treesitter ]]
@@ -339,7 +348,7 @@ require('nvim-treesitter.configs').setup {
   ignore_install = { 'cpp' },
   modules = {}, -- make LSP happy
 
-  auto_install = false, -- Autoinstall languages that are not installed
+  auto_install = true, -- Autoinstall languages that are not installed
 
   highlight = {
     enable = true,

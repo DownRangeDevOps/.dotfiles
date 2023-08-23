@@ -8,6 +8,16 @@ else
     }
 fi
 
+# Declare this before usage
+function printf_callout() {
+  printf "%s\n" "$(tput bold)==> ${1}$(tput sgr0)"
+}
+
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
+
 # Colors
 BLACK=$(tput setaf 0)
 RED=$(tput setaf 1)
@@ -32,16 +42,7 @@ export WHITE
 export BOLD
 export RESET
 
-# Declare this before usage
-function printf_callout() {
-    printf "%s\n" "${BOLD}==> ${1}${RESET}"
-}
-
-log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
-
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
-
+# UI
 function prompt_to_continue() {
     read -p "${BLUE}${1:-Continue?} (y)[es|no] ${RESET}" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -53,12 +54,22 @@ function prompt_to_continue() {
     fi
 }
 
+# Utils
 function join() {
     local IFS=$1
     __="${*:2}"
 }
 
-# Formatting
+function fix_missing_newline() {
+  # Add newline to EOF if missing
+  for file in "$@"; do
+    if [[ -s "${file}" ]] && [[  "$(tail -c1 ${file}; echo x)" != $'\nx' ]]; then
+        printf "\n" >> "${file}"
+    fi
+  done
+}
+
+# Output formatting
 function indent_output() {
     local indent_size=4
     local indent_levels=1
