@@ -65,7 +65,7 @@ function pyenv_init() {
 
     log debug "pyenv_init will re-run: ${rerun_this}"
 
-    if [[ "$1" != "pyenv_init" ]] && $cmd
+    # [[ "$1" != "pyenv_init" ]] && $cmd
 }
 
 function pyenv_alias() {
