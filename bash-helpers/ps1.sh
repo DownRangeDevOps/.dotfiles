@@ -17,7 +17,7 @@ function __ps1_prompt () {
     local info
     local time
     local git_root
-    local git_branch
+    local git_branch_with_state
     local ps1
     local shell_lvl
     local aws_vault
@@ -36,12 +36,14 @@ function __ps1_prompt () {
     fi
 
     if __git_is_repo; then
-        git_root="${YELLOW}$(__git_project_root)${RESET}"
-        git_branch="${MAGENTA}$(__git_show_branch_state)${RESET}"
+      git_parent_path="$(dirname "$(echo $(__git_project_root))")"
+      git_root="${YELLOW}git@${PWD/${git_parent_path}\//}${RESET}"
+      git_branch_with_state="${MAGENTA}$(__git_show_branch_state)${RESET}"
 
-        printf "%s\n" "${git_root} on ${git_branch}"
+      printf "%s\n" "${git_root} on ${git_branch_with_state}"
     else
-        printf "%s\n" "${YELLOW}${PWD/~/\~}${RESET}"
+      # `~` prints the path to $HOME
+      printf "%s\n" "${YELLOW}${PWD/~/\~}${RESET}"
     fi
 
     time="$(date +%R) "

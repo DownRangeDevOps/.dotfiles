@@ -64,7 +64,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
-alias ..r="cd \$(git rev-parse --show-toplevel 2>/dev/null)"
+alias ..r="cd \$(__git_project_root)"
 alias ..~="cd \~"
 alias ctags="\$(brew --prefix)/bin/ctags"
 

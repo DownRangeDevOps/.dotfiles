@@ -35,10 +35,10 @@ alias gstat="__git_status_vs_master"
 alias gstatd="__git_status_vs_develop"
 
 # committing
-alias ga.="git add --all"
-alias ga="git add"
+alias ga.="__git_add --all"
+alias ga="__git_add"
 alias gab="git_absorb"
-alias gac="pre-commit run --all-files && git add --update && git commit --no-verify --gpg-sign"
+alias gac="pre-commit run --all-files && __git_add --update && git commit --no-verify --gpg-sign"
 alias gc="git commit --gpg-sign"
 alias gcp="git cherry-pick -x"  # -x: add "cherry-picked from..." message
 alias gqf="ga --update && gc --amend --no-edit && gfpo"
@@ -114,6 +114,23 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
 
+# Extend git cmds
+function __git_add() {
+  git_root="$(__git_project_root)"
+
+  (cd "${__git_project_root}"
+    git add "$@"
+
+    local changed_files
+    changed_files="$(git status --short --no-renames | cut -d ' ' -f 3-)"
+
+    fix_missing_newline "${changed_files}"
+
+    git add "$@"
+  )
+}
+
+# Repository information
 function __git_is_repo() {
     if [[ -n ${1:-} ]]; then
         git -C "$1" rev-parse 2>/dev/null
@@ -183,16 +200,8 @@ function __git_parse_dirty () {
     esac
 }
 
-function __git_project_parent() {
-    printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)/.."
-}
-
-function __git_project_root () {
-    if [[ -n $(git branch 2>/dev/null) ]]; then
-        printf "%s\n" "git@$(realpath --relative-to="$(__git_project_parent)" .)"
-    else
-        printf "%s\n" "${PWD/~/\~}"
-    fi
+function __git_project_root() {
+  printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)"
 }
 
 function __git_status_vs_master() {
@@ -269,9 +278,9 @@ git log \
 }
 
 function __git_get_merged_branches() {
-    git branch --all --merged "origin/$(__git_master_or_main)" \
-        | rg --invert-match '>|master|main|develop|release' \
-        | tr -d ' '
+  git branch --all --merged "origin/$(__git_master_or_main)" \
+    | "$(brew --prefix)/bin/rg" --invert-match '>|master|main|develop|release' \
+    | tr -d ' '
 }
 
 # ------------------------------------------------
@@ -281,7 +290,7 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
 
 # Committing
 function git_absorb() {
-    git add -u
+    __git_add -u
     git absorb --and-rebase "$@"
 }
 
@@ -289,7 +298,7 @@ function git_fixup() {
     local merge_base
     merge_base="$(git merge-base "$(__git_master_or_main)" HEAD)"
 
-    git add --update
+    __git_add --update
     git log -n 50 --pretty=format:"%h %s" --no-merges \
         | fzf \
         | awk '{print $1}' \
@@ -459,7 +468,7 @@ gcpu() {
     COMMAND=""
 
     if [[ ${1:-} == "-a" ]]; then
-        COMMAND="git add --all && "
+        COMMAND="__git_add --all && "
         shift
     fi
 

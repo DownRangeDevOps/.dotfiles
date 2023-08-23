@@ -51,6 +51,7 @@ local cmap = function(keys, func, opts)
   -- @param func:string|func
   -- @param opts:table|nil
 
+  opts = opts or nil
   map('c', keys, func, opts)
 end
 
@@ -61,6 +62,7 @@ local imap = function(keys, func, opts)
   -- @param func:string|func
   -- @param opts:table|nil
 
+  opts = opts or nil
   map('i', keys, func, opts)
 end
 
@@ -71,6 +73,7 @@ local nmap = function(keys, func, opts)
   -- @param func:string|func
   -- @param opts:table|nil
 
+  opts = opts or nil
   map('n', keys, func, opts)
 end
 
@@ -81,6 +84,7 @@ local tmap = function(keys, func, opts)
   -- @param func:string|func
   -- @param opts:table|nil
 
+  opts = opts or nil
   map('t', keys, func, opts)
 end
 
@@ -91,6 +95,7 @@ local vmap = function(keys, func, opts)
   -- @param func:string|func
   -- @param opts:table|nil
 
+  opts = opts or nil
   map('v', keys, func, opts)
 end
 
@@ -149,15 +154,22 @@ end
 -- Keymaps
 -- ----------------------------------------------
 
--- Clear search highlight on any key
-vim.on_key(function(char)
+-- Clear search highlight
+vim.on_key(
+  function(char)
   if vim.fn.mode() == "n" then
-    local new_hlsearch = vim.tbl_contains({ "<CR>", "n", "N", "*", "#", "?", "/" }, vim.fn.keytrans(char))
-    if vim.opt.hlsearch:get() ~= new_hlsearch then
-      vim.opt.hlsearch = new_hlsearch
+    local new_hlsearch = vim.tbl_contains(
+      { "<CR>", "n", "N", "*", "#", "?", "/" },
+      vim.fn.keytrans(char)
+    )
+
+      if vim.opt.hlsearch:get() ~= new_hlsearch then
+        vim.opt.hlsearch = new_hlsearch
+      end
     end
-  end
-end, vim.api.nvim_create_namespace "auto_hlsearch")
+  end,
+  vim.api.nvim_create_namespace "auto_hlsearch"
+)
 
 -- QOL
 imap('jj', fk.escape, { desc = desc('gen', 'Escape') })
@@ -231,12 +243,11 @@ tmap('<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
 -- Plugin Keymaps
 -- ----------------------------------------------
 
--- [[ Telescope ]]
--- see `:help telescope.builtin`
-nmap('<C-p>', require('telescope.builtin').git_files, { desc = desc('ts', 'find git project files') })
-nmap('<leader>pf', require('telescope.builtin').find_files, { desc = desc('ts', 'find project files') })
-nmap('<leader>rg', require('telescope.builtin').live_grep, { desc = desc('ts', 'ripgrep') })
-
+-- Telescope
+-- :help telescope.builtin
+nmap('<C-p>', require('telescope.builtin').find_files, { desc = desc('ts', 'find files') })
+nmap('<leader>fg', require('telescope.builtin').git_files, { desc = desc('ts', 'find git files') })
+nmap('<leader>rg', require('telescope.builtin').live_grep, { desc = desc('ts', 'rg current dir') })
 nmap('<leader>?', require('telescope.builtin').oldfiles, { desc = desc('ts', 'find recent files') })
 nmap('<leader><space>', require('telescope.builtin').buffers, { desc = desc('ts', 'find buffers') })
 nmap('<leader>/', function()
