@@ -42,73 +42,99 @@ function __get_virtualenv_name () {
     fi
 }
 
-# Initalize pyenv
-function pyenv_init() {
-    local cmd
-    cmd=$(fc -l | cut -d ' ' -f 2-)
+# # Initalize pyenv
+# function pyenv_init() {
+#     # local last_cmd
+#     # last_cmd=$(fc -l | tail -1 | cut -d ' ' -f 2-)
+#
+#     # Pyenv (https://github.com/pyenv/pyenv)
+#     # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
+#     # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
+#     export PATH="$PYENV_ROOT/bin:$PATH"
+#     export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+#     export WORKON_HOME="~/.virtualenvs"
+#     export PROJECT_HOME="~/dev"
+#     export VIRTUALENVWRAPPER_WORKON_CD=1
+#
+#     log debug "Unalising pyenv_init"
+#     pyenv_alias remove
+#
+#     # init pyenv + tools
+#     log debug "Initializing pyenv"
+#     eval "$(pyenv init -)"
+#
+#     log debug "Initializing virtualenv"
+#     eval "$(pyenv virtualenv-init -)"
+#
+#     log debug "Initializing virtualenvwrapper"
+#     command pyenv virtualenvwrapper_lazy
+# }
 
-    # Pyenv (https://github.com/pyenv/pyenv)
-    # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
-    # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-    export WORKON_HOME="~/.virtualenvs"
-    export PROJECT_HOME="~/dev"
-    export VIRTUALENVWRAPPER_WORKON_CD=1
-
-    unset -f pyenv_init
-    unalias "pyenv" 2>/dev/null
-    pyenv_alias remove
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-    pyenv virtualenvwrapper_lazy
-
-    log debug "pyenv_init will re-run: ${rerun_this}"
-
-    # [[ "$1" != "pyenv_init" ]] && $cmd
-}
-
-function pyenv_alias() {
-    local virtualenv_cmds
-    mapfile -t virtualenv_cmds <<EOF
-add2virtualenv
-allvirtualenv
-cdproject
-cdsitepackages
-cdvirtualenv
-cpvirtualenv
-lssitepackages
-lsvirtualenv
-mkproject
-mktmpenv
-mkvirtualenv
-rmvirtualenv
-setvirtualenvproject
-showvirtualenv
-toggleglobalsitepackages
-wipeenv
-workon
-pyenv
-EOF
-
-    for name in "${virtualenv_cmds[@]}"; do
-        if [[ $1 == "create" ]]; then
-            # shellcheck disable=SC2139
-            alias "${name}=pyenv_init"
-          else
-            # shellcheck disable=SC2139
-            unalias "${name}" 2>/dev/null
-        fi
-    done
-}
+# function pyenv_alias() {
+#     local virtualenv_cmds
+#     mapfile -t virtualenv_cmds <<EOF
+# add2virtualenv
+# allvirtualenv
+# cdproject
+# cdsitepackages
+# cdvirtualenv
+# cpvirtualenv
+# lssitepackages
+# lsvirtualenv
+# mkproject
+# mktmpenv
+# mkvirtualenv
+# rmvirtualenv
+# setvirtualenvproject
+# showvirtualenv
+# toggleglobalsitepackages
+# wipeenv
+# workon
+# pyenv
+# EOF
+#
+#     if [[ $1 == "create" ]]; then
+#         for cmd in "${virtualenv_cmds[@]}"; do
+#             log debug "Aliasing ${cmd} to pyenv_init"
+#
+#             # shellcheck disable=SC2139
+#             alias "${cmd}=pyenv_init"
+#         done
+#         else
+#             log debug "Unaliasing ${virtualenv_cmds[*]}"
+#
+#             # shellcheck disable=SC2139
+#             unalias "${virtualenv_cmds[@]}"
+#     fi
+# }
 
 # Alias pyenv/virtualenvwrapper cmds to pyenv lazy loader
-if [[ ${PYENV_ROOT} == "true" ]]; then
-    pyenv_alias remove
-else
-    pyenv_alias create
-fi
+# if [[ -z ${PYENV_ROOT} ]]; then
+#     pyenv_alias create
+# else
+#     pyenv_alias remove
+# fi
 
+# init pyenv + tools
+# Pyenv (https://github.com/pyenv/pyenv)
+# pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
+# pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+export WORKON_HOME="~/.virtualenvs"
+export PROJECT_HOME="~/dev"
+export VIRTUALENVWRAPPER_WORKON_CD=1
+
+log debug "Initializing pyenv"
+eval "$(pyenv init -)"
+
+log debug "Initializing virtualenv"
+eval "$(pyenv virtualenv-init -)"
+
+log debug "Initializing virtualenvwrapper"
+pyenv virtualenvwrapper_lazy
+
+# Megalinter helper
 function run_mega_linter_python() {
     # Prompt user
     prompt_to_continue "Remove the existing report directory?" || return 3

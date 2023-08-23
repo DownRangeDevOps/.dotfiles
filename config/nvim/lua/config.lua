@@ -51,13 +51,12 @@ vim.o.number = true
 vim.o.numberwidth = 5
 vim.o.relativenumber = true
 vim.o.showbreak = '↳ ' -- Wrapped line
-vim.o.t_SI = "\\<ESC>]50;CursorShape=1\\x7"
-vim.o.t_SR = "\\<ESC>]50;CursorShape=2\\x7"
-vim.o.t_EI = "\\<ESC>]50;CursorShape=0\\x7"
+-- vim.o.t_SI = "\\<ESC>]50;CursorShape=1\\x7"
+-- vim.o.t_SR = "\\<ESC>]50;CursorShape=2\\x7"
+-- vim.o.t_EI = "\\<ESC>]50;CursorShape=0\\x7"
 -- vim.o.t_SI = "\\<ESC>Ptmux;\\<ESC>\\<ESC>]50;CursorShape=1\\x7\\<ESC>\\\\"
 -- vim.o.t_SR = "\\<ESC>Ptmux;\\<ESC>\\<ESC>]50;CursorShape=2\\x7\\<ESC>\\\\"
 -- vim.o.t_EI = "\\<ESC>Ptmux;\\<ESC>\\<ESC>]50;CursorShape=0\\x7\\<ESC>\\\\"
--- vim.o.
 
 -- Customize highlights
 vim.o.colorcolumn = 80

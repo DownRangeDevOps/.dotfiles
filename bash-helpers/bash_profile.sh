@@ -116,20 +116,12 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
 function nvim() {
-    # load pyenv and the nvim venv if not already
+    # load the nvim venv if not already
     if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
-        eval "workon nvim"
+        workon nvim
     fi
 
-    # only need to load once
-    unset -f nvim
-
-    # avoid running the command twice
-    if [[ -z ${NVIM_INITIALIZED} ]]; then
-        export NVIM_INITIALIZED=true
-        nvim
-    fi
-
+    command nvim "$@"
 }
 
 alias grep=rg
