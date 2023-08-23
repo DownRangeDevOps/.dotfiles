@@ -5,9 +5,9 @@ log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-export ANSIBLE_VAULT_PASSWORDS="~/.ansible/vault-passwords"
-export BITBUCKET_SSH_KEY="~/.ssh/id_rsa"
-[[ -n ${ORG_NAME:-} ]] && export DEVOPS_REPO="~/dev/${ORG_NAME}/src/devops"
+export ANSIBLE_VAULT_PASSWORDS=~/.ansible/vault-passwords
+export BITBUCKET_SSH_KEY=~/.ssh/id_rsa
+[[ -n ${ORG_NAME:-} ]] && export DEVOPS_REPO=~/dev/${ORG_NAME}/src/devops
 
 # ------------------------------------------------
 #  alises
@@ -31,7 +31,7 @@ function ade() {
     -iname '*.vault.*' \
     -exec sh -c 'passfile="$1"; \
         ansible-vault decrypt \
-        --vault-id $passfile' shell "~/.ansible/vault-passwords/${1}" {} \
+        --vault-id $passfile' shell ~/.ansible/vault-passwords/"${1}" {} \
       \;
 }
 
@@ -42,7 +42,7 @@ function aes() {
         return 3
     fi
     read -p "String to encrypt: " -sr
-    ansible-vault encrypt_string --vault-id "~/.ansible/vault-passwords/${1}" -n "${2}" "${REPLY}" \
+    ansible-vault encrypt_string --vault-id ~/.ansible/vault-passwords/"${1}" -n "${2}" "${REPLY}" \
         | sed 's/^  */  /' \
         | tee /dev/tty \
         | pbcopy
@@ -57,7 +57,7 @@ function ads() {
         return 3
     fi
     yq -t read "${2}" "${3}" \
-    | ansible-vault decrypt --vault-password-file "~/.ansible/vault-passwords/${1}" \
+    | ansible-vault decrypt --vault-password-file ~/.ansible/vault-passwords/"${1}" \
     | tee /dev/tty \
     | pbcopy
 

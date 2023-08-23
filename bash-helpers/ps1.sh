@@ -36,7 +36,7 @@ function __ps1_prompt () {
     fi
 
     if __git_is_repo; then
-      git_parent_path="$(dirname "$(echo $(__git_project_root))")"
+      git_parent_path="$(dirname  "$(__git_project_root)")"
       git_root="${YELLOW}git@${PWD/${git_parent_path}\//}${RESET}"
       git_branch_with_state="${MAGENTA}$(__git_show_branch_state)${RESET}"
 

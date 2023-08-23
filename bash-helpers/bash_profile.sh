@@ -32,11 +32,11 @@ alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
 alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 
 alias c="clear"
-alias ebash='nvim ~/.bash_profile'
+alias ebash='nvim ${HOME}/.bash_profile'
 alias ec=ebash
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
-alias sb='source ~/.bash_profile'
+alias sb='source ${HOME}/.bash_profile'
 alias vim="nvim"
 
 # safety
@@ -65,7 +65,7 @@ alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 alias ..r="cd \$(__git_project_root)"
-alias ..~="cd \~"
+alias ..~="cd \${HOME}"
 alias ctags="\$(brew --prefix)/bin/ctags"
 
 # Squeltch egrep warnings
@@ -107,7 +107,7 @@ export HOMEBREW_GITHUB_API_TOKEN=811a3b56929faba4b429317da5752ff4d39afba6
 export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
 
 # fzf (https://github.com/junegunn/fzf)
-export FZF_DEFAULT_OPTS="--history=~/.fzf_history"
+export FZF_DEFAULT_OPTS="--history=${HOME}/.fzf_history"
 export FZF_DEFAULT_COMMAND="rg --files"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
@@ -121,7 +121,7 @@ function nvim() {
         workon nvim
     fi
 
-    command nvim "$@"
+    command nvim -S "${NVIM_SESSION:-}" "$@"
 }
 
 alias grep=rg
@@ -160,8 +160,8 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 # shellcheck disable=SC1091
 {
     # NOTE: These are sourced at the top of the file, here as a reminder
-    # source ~/.dotfiles/bash-helpers/lib.sh
-    # source ~/.dotfiles/bash-helpers/bash.sh
+    # source ${HOME}/.dotfiles/bash-helpers/lib.sh
+    # source ${HOME}/.dotfiles/bash-helpers/bash.sh
 
     source ~/.dotfiles/bash-helpers/ansible.sh    # Ansible helpers
     source ~/.dotfiles/bash-helpers/docker.sh     # Docker helpers

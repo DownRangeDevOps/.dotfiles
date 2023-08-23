@@ -118,7 +118,7 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
 function __git_add() {
   git_root="$(__git_project_root)"
 
-  (cd "${__git_project_root}"
+  (cd "${git_root}" || exit 1
     git add "$@"
 
     local changed_files
@@ -238,7 +238,7 @@ function __git_log_branch() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        --format=format:'%x09%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(yellow)%<(50,trunc)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' \
         "$@" \
         | LESS -SFX -R
 }
@@ -248,13 +248,13 @@ function __git_log_branch_no_trunc_msg() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        --format=format:'%x09%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(yellow)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' \
         "$@" \
         | LESS -SFX -R
 }
 
 function __git_log_branch_only_msg() {
-    git log --color --format=format:'• %C(white)%s%C(reset)' "$@" | LESS -SFX -R
+    git log --color --format=format:'• %C(yellow)%s%C(reset)' "$@" | LESS -SFX -R
 }
 
 function __git_log_all_branches() {
@@ -264,7 +264,7 @@ git log \
     --graph \
     --color \
     --decorate=short \
-    --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+    --format=format:'%x09%C(bold blue)%h%C(reset)%C(auto)%d%C(reset) %C(yellow)%<(60,trunc)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' \
     "$@" \
     | LESS -SFX -R
 }
@@ -276,7 +276,7 @@ git log \
     --graph \
     --color \
     --decorate=short \
-    --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+    --format=format:'%x09%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(yellow)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' \
     | LESS -SFX -R
 }
 
@@ -360,13 +360,13 @@ function git_delete_merged_branches() {
 
         if [[ -n ${LOCAL_BRANCHES} ]]; then
             printf_callout "Deleting merged local branches..."
-            git branch --delete --force ${LOCAL_BRANCHES}
+            git branch --delete --force "${LOCAL_BRANCHES}"
         fi
 
         if [[ -n ${REMOTE_BRANCHES} ]]; then
             for REMOTE in ${REMOTES}; do
                 printf_callout "Deleting merged remote branches from ${REMOTE}..."
-                git push --delete "${REMOTE}" ${REMOTE_BRANCHES}
+                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
             done
         fi
 

@@ -8,10 +8,10 @@ log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
 export BETTER_EXCEPTIONS=1  # python better exceptions
-export PTPYTHON_CONFIG_HOME="~/.config/ptpython/"
+export PTPYTHON_CONFIG_HOME=~/.config/ptpython/
 
 # Pipx
-export PIPX_DEFAULT_PYTHON="~/.pyenv/shims/python"
+export PIPX_DEFAULT_PYTHON=~/.pyenv/shims/python
 
 # ------------------------------------------------
 #  aliases
@@ -121,8 +121,8 @@ function __get_virtualenv_name () {
 # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-export WORKON_HOME="~/.virtualenvs"
-export PROJECT_HOME="~/dev"
+export WORKON_HOME=~/.virtualenvs
+export PROJECT_HOME=~/dev
 export VIRTUALENVWRAPPER_WORKON_CD=1
 
 log debug "Initializing pyenv"
@@ -166,7 +166,7 @@ function lpy() {
             sql-formatter "${SQL_FORMATTER[@]}" --output={} {} | indent_output
 
     header "Running sqlfluff fix with '${SQLFLUFF[*]}'..."
-    [[ -n ${SQL_FILES} ]] && sqlfluff fix "${SQLFLUFF[@]}" . | indent_output
+    [[ -n "${SQL_FILES[*]}" ]] && sqlfluff fix "${SQLFLUFF[@]}" . | indent_output
 
     header "Running flynt with '${FLYNT[*]}'..."
     flynt "${FLYNT[@]}" . | indent_output

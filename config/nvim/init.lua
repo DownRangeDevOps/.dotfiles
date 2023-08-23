@@ -3,6 +3,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require('plugins')
-require('autocommands')
-require('keymap')
 require('config')
+require('autocommands')
+require('highlights')
+require('keymap')

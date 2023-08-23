@@ -33,7 +33,7 @@ function goenv_lazy_init() {
     # add go bins to path
     export PATH="${PATH}:${GOPATH}/bin"
 
-    printf_callout "%s\n" "Done. Running $(green \`${CMD}\`)${BOLD}..."
+    printf_callout "%s\n" "Done. Running $(green \`"${CMD}"\`)${BOLD}..."
     ${CMD}
 }
 
