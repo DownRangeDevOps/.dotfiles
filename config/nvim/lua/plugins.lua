@@ -32,6 +32,7 @@ require('lazy').setup({
   'tpope/vim-repeat', -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
   'tpope/vim-surround', -- Surround text (https://github.com/tpope/vim-surround)
+  'tpope/vim-unimpaired', -- Surround text (https://github.com/tpope/vim-unimpaired)
   { "tenxsoydev/karen-yank.nvim", config = true }, -- Make delete/change behave (https://github.com/tenxsoydev/karen-yank.nvim)
   { 'echasnovski/mini.nvim', version = '*' }, -- mini-align (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
   { 'numToStr/Comment.nvim', opts = {} }, -- Comment/un-comment with vim motions (https://github.com/numToStr/Comment.nvim)
@@ -45,6 +46,9 @@ require('lazy').setup({
   -- ----------------------------------------------
   -- UI
   -- ----------------------------------------------
+
+  -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
+  { 'NvChad/nvim-colorizer.lua' },
 
   -- neo-tree: tree/file browser (https://github.com/nvim-neo-tree/neo-tree.nvim)
   -- :help neo-tree.txt

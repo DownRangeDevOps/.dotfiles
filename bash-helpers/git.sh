@@ -239,6 +239,7 @@ function __git_log_branch() {
         --color \
         --decorate=short \
         --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        "$@" \
         | LESS -SFX -R
 }
 
@@ -248,11 +249,12 @@ function __git_log_branch_no_trunc_msg() {
         --color \
         --decorate=short \
         --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        "$@" \
         | LESS -SFX -R
 }
 
 function __git_log_branch_only_msg() {
-    git log --color --format=format:'• %C(white)%s%C(reset)' | LESS -SFX -R
+    git log --color --format=format:'• %C(white)%s%C(reset)' "$@" | LESS -SFX -R
 }
 
 function __git_log_all_branches() {
@@ -263,6 +265,7 @@ git log \
     --color \
     --decorate=short \
     --format=format:'%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(white)%<(50,trunc)%s%C(reset) %C(black)[%an]%C(reset) %C(bold green)(%ar)%C(reset)' \
+    "$@" \
     | LESS -SFX -R
 }
 

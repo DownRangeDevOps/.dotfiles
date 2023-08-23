@@ -30,6 +30,20 @@ local fk = {
   space = '<Space>',
 }
 
+local project_root = function()
+  local dir = '.'
+
+  if os.execute('git rev-parse') then
+    local fh = io.popen('git rev-parse --show-toplevel')
+
+    if fh then
+      dir = fh:read('*a')
+    end
+  end
+
+  return dir
+end
+
 -- Mapping
 local map = function(mode, keys, func, opts)
   --- Shortcut for vim.keymap.set
@@ -109,6 +123,7 @@ local desc = function(group, desc)
     diag = 'Diagnostic: ',
     file = 'File: ',
     gen = 'General: ',
+    git = "git: ",
     lsp = 'LSP: ',
     nav = 'Nav: ',
     tog = 'Toggle: ',
@@ -194,6 +209,16 @@ nmap('<leader>;', function() harpoon_ui.nav_file(4) end, { desc = desc('file', '
 nmap('<C-d>', function() harpoon_ui.nav_prev() end, { desc = desc('file', 'harpoon next')})
 nmap('<C-j>', function() harpoon_ui.nav_next() end, { desc = desc('file', 'harpoon prev')})
 
+-- Git
+nmap('<leader>gs', function() vim.cmd('Git') end, { desc = desc('git', 'git status')})
+nmap('<leader>gd', function()
+  vim.cmd('tabnew' .. vim.fn.expand('%:p'))
+  vim.cmd('Gdiff')
+end, { desc = desc('git', 'git diff')})
+nmap('<leader>ga', function() vim.cmd('Gwrite') end, { desc = desc('git', 'git add')})
+nmap('<leader>gb', function() vim.cmd('Gblame') end, { desc = desc('git', 'git blame')})
+nmap('<leader>gl', function() vim.cmd('Gclog') end, { desc = desc('git', 'git log')})
+
 -- Copy/paste
 vmap('<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
 nmap('<leader>Y', '"+yg_', { desc = desc('gen', 'EOL copy to system clipboard') })
@@ -245,22 +270,41 @@ tmap('<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
 
 -- Telescope
 -- :help telescope.builtin
-nmap('<C-p>', require('telescope.builtin').find_files, { desc = desc('ts', 'find files') })
-nmap('<leader>fg', require('telescope.builtin').git_files, { desc = desc('ts', 'find git files') })
-nmap('<leader>rg', require('telescope.builtin').live_grep, { desc = desc('ts', 'rg current dir') })
-nmap('<leader>?', require('telescope.builtin').oldfiles, { desc = desc('ts', 'find recent files') })
-nmap('<leader><space>', require('telescope.builtin').buffers, { desc = desc('ts', 'find buffers') })
+local tsb = require('telescope.builtin')
+
+nmap('<C-p>', function()
+  vim.cmd('cd ' .. project_root())
+  tsb.git_files({show_untracked = true})
+end, { desc = desc('ts', 'find git files') })
+
+nmap('<leader>ff', function()
+  vim.cmd('cd ' .. project_root())
+  tsb.find_files()
+end, { desc = desc('ts', 'find files') })
+
+nmap('<leader>fw', function()
+  vim.cmd('cd ' .. project_root())
+  tsb.grep_string()
+end, { desc = desc('ts', 'find word') })
+
+nmap('<leader><space>', tsb.buffers, { desc = desc('ts', 'find buffers') })
+nmap('<leader>?', tsb.oldfiles, { desc = desc('ts', 'find recent files') })
+nmap('<leader>f\'', tsb.marks, { desc = desc('ts', 'find marks') })
+nmap('<leader>fh', tsb.help_tags, { desc = desc('ts', 'find help') })
+nmap('<leader>fk', tsb.keymaps, { desc = desc('ts', 'find keymaps') })
+nmap('<leader>fm', tsb.man_pages, { desc = desc('ts', 'find manpage') })
+nmap('<leader>gd', tsb.lsp_definitions, { desc = desc('ts', 'goto deffinition') })
+nmap('<leader>gi', tsb.lsp_implementations, { desc = desc('ts', 'goto implementation') })
+nmap('<leader>qf', tsb.quickfix, { desc = desc('ts', 'find quickfix') })
+nmap('<leader>rg', tsb.live_grep, { desc = desc('ts', 'rg current dir') })
 nmap('<leader>/', function()
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+  tsb.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     winblend = 10,
     previewer = false,
   })
 end, { desc = desc('ts', 'find in current buffer') })
 
-nmap('<leader>fh', require('telescope.builtin').help_tags, { desc = desc('ts', 'find help') })
-nmap('<leader>fw', require('telescope.builtin').grep_string, { desc = desc('ts', 'find word') })
-
-nmap('<leader>fe', require('telescope.builtin').diagnostics, { desc = desc('ts', 'find errors') })
+nmap('<leader>fe', tsb.diagnostics, { desc = desc('ts', 'find errors') })
 nmap('<leader>e', vim.diagnostic.open_float, { desc = desc('diag', 'show errors') })
 nmap('<leader>E', vim.diagnostic.setloclist, { desc = desc('diag', 'open error list') })
 nmap('[d', vim.diagnostic.goto_prev, { desc = desc('diag', 'previous message') })
