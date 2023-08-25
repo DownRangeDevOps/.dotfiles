@@ -44,8 +44,8 @@ alias tfw="terraform workspace"
 # alias cdp="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|\")"
 # alias cds="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|\")"
 # alias cdd="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|\")"
-# alias cdt="cd \~/dev/${ORG_ROOT)/src/ops/packages/terraform/projects/"
-# alias cdv="cd \~/dev/${ORG_ROOT)/src/ops/vendors/"
+# alias cdt="cd \"${HOME}/dev/${ORG_ROOT)/src/ops/packages/terraform/projects/"
+# alias cdv="cd \"${HOME}/dev/${ORG_ROOT)/src/ops/vendors/"
 
 alias tfia=init_all_modules
 alias tfva=validate_all_modules

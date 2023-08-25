@@ -4,6 +4,12 @@ log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # lazy init goenv
 function goenv_alias() {
+    local go_cmds
+    mapfile -t go_cmds <<-EOF
+        go
+        goenv
+EOF
+
     for cmd in "${go_cmds[@]}"; do
         cmd=$(printf "%s" "${cmd}" | trim)
 
@@ -21,23 +27,12 @@ if [[ -z "${GOENV_ROOT:-}" ]]; then
 fi
 
 function goenv_lazy_init() {
-    # shellcheck disable=SC2155
-    local CMD
-    CMD="$(fc -ln | tail -1 | trim)"
     unset -f goenv_lazy_init
 
     printf_callout "%s\n" "goenv has not been initialized, initializing now..."
     goenv_alias remove
     eval "$(goenv init -)"
 
-    # add go bins to path
-    export PATH="${PATH}:${GOPATH}/bin"
-
-    printf_callout "%s\n" "Done. Running $(green \`"${CMD}"\`)${BOLD}..."
+    printf_warning "%s\n" "goenv initialized, plese re-run the previosu command."
     ${CMD}
 }
-
-mapfile -t go_cmds <<-EOF
-    go
-    goenv
-EOF

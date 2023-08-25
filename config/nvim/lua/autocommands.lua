@@ -1,6 +1,19 @@
 local km = require('keymap')
+local nvim = vim.api.nvim_create_augroup('NVIM', { clear = true })
 local ui = vim.api.nvim_create_augroup('UI', { clear = true })
 local user = vim.api.nvim_create_augroup('USER', { clear = true })
+
+-- ----------------------------------------------
+-- Neovim
+-- ----------------------------------------------
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--     group = nvim,
+--     callback = function()
+--         if vim.env.NVIM_SESSION_FILE_PATH then
+--             vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH)
+--         end
+--     end
+-- })
 
 -- ----------------------------------------------
 -- UI
@@ -16,6 +29,7 @@ vim.api.nvim_create_autocmd({ 'WinScrolled', 'VimResized' }, {
 
 -- Plugins that fuck with options dynamically by default are satanic
 vim.api.nvim_create_autocmd({ 'BufEnter', 'TabEnter', 'BufNew' }, {
+    group = ui,
     callback = function()
         local ignore_filetypes = { 'lspinfo', 'packer', 'checkhealth', 'help', 'man', 'qf', '' }
         local ignore_buftypes = { 'help', 'quickfix', 'terminal', 'nofile', 'prompt' }
@@ -34,8 +48,6 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'TabEnter', 'BufNew' }, {
             vim.opt.relativenumber = true
         end
     end,
-
-    group = ui
 })
 
 -- Highlight on yank

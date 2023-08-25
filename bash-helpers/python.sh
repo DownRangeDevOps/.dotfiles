@@ -8,10 +8,11 @@ log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
 export BETTER_EXCEPTIONS=1  # python better exceptions
-export PTPYTHON_CONFIG_HOME=~/.config/ptpython/
+export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
 
 # Pipx
-export PIPX_DEFAULT_PYTHON=~/.pyenv/shims/python
+export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
+eval "$(register-python-argcomplete pipx)"
 
 # ------------------------------------------------
 #  aliases
@@ -50,10 +51,9 @@ function __get_virtualenv_name () {
 #     # Pyenv (https://github.com/pyenv/pyenv)
 #     # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
 #     # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-#     export PATH="$PYENV_ROOT/bin:$PATH"
 #     export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-#     export WORKON_HOME="~/.virtualenvs"
-#     export PROJECT_HOME="~/dev"
+#     export WORKON_HOME="${HOME}/.virtualenvs"
+#     export PROJECT_HOME="${HOME}/dev"
 #     export VIRTUALENVWRAPPER_WORKON_CD=1
 #
 #     log debug "Unalising pyenv_init"
@@ -119,10 +119,9 @@ function __get_virtualenv_name () {
 # Pyenv (https://github.com/pyenv/pyenv)
 # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
 # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-export WORKON_HOME=~/.virtualenvs
-export PROJECT_HOME=~/dev
+export WORKON_HOME="${HOME}/.virtualenvs"
+export PROJECT_HOME="${HOME}/dev"
 export VIRTUALENVWRAPPER_WORKON_CD=1
 
 log debug "Initializing pyenv"
@@ -150,7 +149,7 @@ function lpy() {
     FLYNT=("--transform-concats" "--line-length=999")
     AUTOPEP8=("--in-place" "--max-line-length=88" "--recursive")
     AUTOFLAKE=("--remove-all-unused-imports" "--remove-duplicate-keys" "--in-place" "--recursive")
-    PRETTIER=("--ignore-path=~/.config/prettier" "--write" "--print-width=88")
+    PRETTIER=("--ignore-path=${HOME}/.config/prettier" "--write" "--print-width=88")
     MDFORMAT=("--number" "--wrap=80")
     ISORT=("--profile=black" "--skip-gitignore" "--trailing-comma" "--wrap-length=88" "--line-length=88" "--use-parentheses" "--ensure-newline-before-comments")
     BLACK=("--preview")

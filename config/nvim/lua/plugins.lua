@@ -1,3 +1,6 @@
+local km = require('keymap')
+local M = {}
+
 -- ----------------------------------------------
 -- Install package manager (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-installation
@@ -513,8 +516,11 @@ require('telescope').load_extension('harpoon')
 -- ----------------------------------------------
 require('nvim-treesitter.install').prefer_git = true
 require('nvim-treesitter.configs').setup {
-    -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = {
+    sync_install = false,
+    ignore_install = { 'cpp' },
+    modules = {},
+    auto_install = true, -- Autoinstall languages that are not installed
+    ensure_installed = { -- Add languages to be installed here that you want installed for treesitter
         'bash',
         'c',
         'cmake',
@@ -552,13 +558,6 @@ require('nvim-treesitter.configs').setup {
         'vimdoc',
         'yaml',
     },
-
-    sync_install = false,
-    ignore_install = { 'cpp' },
-    modules = {}, -- make LSP happy
-
-    auto_install = true, -- Autoinstall languages that are not installed
-
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
@@ -567,56 +566,24 @@ require('nvim-treesitter.configs').setup {
     incremental_selection = {
         enable = true,
         disable = { 'c' },
-        keymaps = {
-            init_selection = '<c-space>',
-            node_incremental = '<c-space>',
-            scope_incremental = '<c-s>',
-            node_decremental = '<M-space>',
-        },
+        keymaps = km.treesitter.incremental_selection
     },
-
     textobjects = {
         select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj
-            keymaps = {
-                -- You can use the capture groups defined in textobjects.scm
-                ['aa'] = '@parameter.outer',
-                ['ia'] = '@parameter.inner',
-                ['af'] = '@function.outer',
-                ['if'] = '@function.inner',
-                ['ac'] = '@class.outer',
-                ['ic'] = '@class.inner',
-            },
+            keymaps = km.textobjects
         },
         move = {
             enable = true,
             set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-                [']m'] = '@function.outer',
-                [']]'] = '@class.outer',
-            },
-            goto_next_end = {
-                [']M'] = '@function.outer',
-                [']['] = '@class.outer',
-            },
-            goto_previous_start = {
-                ['[m'] = '@function.outer',
-                ['[['] = '@class.outer',
-            },
-            goto_previous_end = {
-                ['[M'] = '@function.outer',
-                ['[]'] = '@class.outer',
-            },
+            goto_next_start = km.goto_next_start,
+            goto_next_end = km.goto_next_end,
+            goto_previous_start = km.goto_previous_start,
+            goto_previous_end = km.goto_previous_end,
         },
         swap = {
             enable = true,
-            swap_next = {
-                ['<leader>a'] = '@parameter.inner',
-            },
-            swap_previous = {
-                ['<leader>A'] = '@parameter.inner',
-            },
+            swap_next = km.swap_next,
+            swap_previous = km.swap_previous,
         },
     },
 }
@@ -624,42 +591,6 @@ require('nvim-treesitter.configs').setup {
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
--- LSP key maps
-local on_attach = function(_, bufnr)
-    local km = require('keymap')
-
-    -- refactor
-    km.map('n', '<leader>rn', vim.lsp.buf.rename, km.desc('lsp', 'rename'))
-    km.map('n', '<leader>ca', vim.lsp.buf.code_action, km.desc('lsp', 'code action'))
-
-    -- goto
-    km.map('n', 'gd', vim.lsp.buf.definition, km.desc('lsp', 'goto definition'))
-    km.map('n', 'gr', require('telescope.builtin').lsp_references, km.desc('lsp', 'goto references'))
-    km.map('n', 'gI', vim.lsp.buf.implementation, km.desc('lsp', 'goto implementation'))
-
-    -- Open manpages/help
-    km.map('n', 'K', vim.lsp.buf.hover, km.desc('lsp', 'open documentation')) -- :help K
-    km.map('n', '<C-k>', vim.lsp.buf.signature_help, km.desc('lsp', 'open signature documentation'))
-
-    km.map('n', '<leader>D', vim.lsp.buf.type_definition, km.desc('lsp', 'type definition'))
-    km.map('n', '<leader>ds', require('telescope.builtin').lsp_document_symbols, km.desc('lsp', 'document symbols'))
-    km.map('n', '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, km.desc('lsp', 'workspace symbols'))
-
-    -- Lesser used LSP functionality
-    km.map('n', 'gD', vim.lsp.buf.declaration, km.desc('lsp', 'goto declaration'))
-    km.map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, km.desc('lsp', 'workspace add folder'))
-    km.map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, km.desc('lsp', 'workspace remove folder'))
-    km.map('n', '<leader>wl', function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, km.desc('lsp', 'Workspace list folders'))
-
-    -- Create a command `:Format` local to the LSP buffer and map it
-    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-        vim.lsp.buf.format()
-    end, { desc = km.desc('lsp', 'format current buffer') })
-    km.map('n', '<leader>=', ':Format' .. km.enter, { desc = km.desc('lsp', 'format current buffer') })
-end
 
 -- ----------------------------------------------
 -- [[ Mason ]]
@@ -674,18 +605,35 @@ local mason_lspconfig = require 'mason-lspconfig'
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-    -- clangd = {},
-    -- gopls = {},
-    -- pyright = {},
-    -- rust_analyzer = {},
-    -- tsserver = {},
-    -- html = { filetypes = { 'html', 'twig', 'hbs'} },
     lua_ls = {
         Lua = {
             workspace = { checkThirdParty = false },
             telemetry = { enable = false },
         },
     },
+    -- bashls = {},
+    -- docker_compose_language_server = {},
+    -- -- https://github.com/microsoft/vscode-json-languageservice
+    -- jsonls = {},
+    -- dockerls = {},
+    -- nginx_language_server = { -- https://github.com/pappasam/nginx-language-server
+    --     languageserver = {
+    --         nginx_language_server = {
+    --             command = "nginx-language-server",
+    --             filetypes = { "nginx" },
+    --             rootPatterns = { "nginx.conf", ".git" }
+    --         }
+    --     }
+    -- },
+    -- pyre = {}, -- https://github.com/facebook/pyre-check
+    -- terraformls = {}, -- https://github.com/hashicorp/terraform-lsp
+    -- -- https://github.com/terraform-linters/tflint
+    -- -- plugin "terraform" {
+    -- --    enabled = true
+    -- --    preset  = "recommended"
+    -- -- }
+    -- tflint = {},
+    -- yaml_language_server = {}, -- https://github.com/redhat-developer/yaml-language-server
 }
 
 mason_lspconfig.setup {
@@ -696,7 +644,7 @@ mason_lspconfig.setup_handlers {
     function(server_name)
         require('lspconfig')[server_name].setup {
             capabilities = capabilities,
-            on_attach = on_attach,
+            on_attach = km.lsp_on_attach,
             settings = servers[server_name],
             filetypes = (servers[server_name] or {}).filetypes,
         }
@@ -713,7 +661,7 @@ local cmp_compare = require('cmp.config.compare')
 -- local cmp_under_comparatar = require('cmp-under-comparatar')
 
 
-cmp.setup {
+M.cmp = cmp.setup {
     revision = 0,
     enabled = true,
 
@@ -756,17 +704,16 @@ cmp.setup {
 
     -- Key mappings
     mapping = cmp.mapping.preset.insert {
-        ['<C-j>'] = cmp.mapping.select_next_item(),
-        ['<C-k>'] = cmp.mapping.select_prev_item(),
-        ['<C-f>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-u>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete {},
-        ['<CR>'] = cmp.mapping.confirm {
+        [ M.cmp.select_next_item ] = cmp.mapping.select_next_item(),
+        [ M.select_prev_item ] = cmp.mapping.select_prev_item(),
+        [ M.scroll_docs_up ] = cmp.mapping.scroll_docs(4),
+        [ M.scroll_docs_down ] = cmp.mapping.scroll_docs(-4),
+        [ M.complete ] = cmp.mapping.complete {},
+        [ M.confirm ] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
         },
-
-        ['<Tab>'] = cmp.mapping(function(fallback)
+        [ M.tab] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_locally_jumpable() then
@@ -775,8 +722,7 @@ cmp.setup {
                 fallback()
             end
         end, { 'i', 's' }),
-
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
+        [ M.shift_tab ] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.locally_jumpable(-1) then
@@ -787,3 +733,5 @@ cmp.setup {
         end, { 'i', 's' }),
     },
 }
+
+return M

@@ -2,7 +2,7 @@
 
 # logger is slow, avoid sourcing it unless we need it for now
 if [[ ${DEBUG:-} -eq 1 ]]; then
-    source ~/.dotfiles/lib/log.sh
+    source "${HOME}/.dotfiles/lib/log.sh"
 
     # log.sh sets -u which is too strict for many dependencies
     set +u
@@ -16,11 +16,9 @@ else
 fi
 
 # Source these first as they're dependencies atm
-source ~/.dotfiles/bash-helpers/lib.sh
-source ~/.dotfiles/bash-helpers/bash.sh
-
-# Add custom paths
-set_path
+source "${HOME}/.dotfiles/bash-helpers/lib.sh"
+source "${HOME}/.dotfiles/bash-helpers/path.sh"
+source "${HOME}/.dotfiles/bash-helpers/bash.sh"
 
 # ------------------------------------------------
 #  aliases
@@ -121,7 +119,11 @@ function nvim() {
         workon nvim
     fi
 
-    command nvim -S "${NVIM_SESSION:-}" "$@"
+    if [[ -w "${NVIM_SESSION_FILE_PATH}" ]]; then
+        command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
+    else
+        command nvim "$@"
+    fi
 }
 
 alias grep=rg
@@ -163,17 +165,17 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
     # source ${HOME}/.dotfiles/bash-helpers/lib.sh
     # source ${HOME}/.dotfiles/bash-helpers/bash.sh
 
-    source ~/.dotfiles/bash-helpers/ansible.sh    # Ansible helpers
-    source ~/.dotfiles/bash-helpers/docker.sh     # Docker helpers
-    source ~/.dotfiles/bash-helpers/go.sh         # Golang helpers
-    source ~/.dotfiles/bash-helpers/kubernetes.sh # K8s helpers
-    source ~/.dotfiles/bash-helpers/terraform.sh  # Terraform helpers
-    source ~/.dotfiles/bash-helpers/git.sh        # git helpers
-    source ~/.dotfiles/bash-helpers/aws.sh        # aws helpers
-    source ~/.dotfiles/bash-helpers/osx.sh        # osx helpers
-    source ~/.dotfiles/bash-helpers/python.sh     # python helpers
+    source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
+    source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
+    source "${HOME}/.dotfiles/bash-helpers/go.sh"         # Golang helpers
+    source "${HOME}/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
+    source "${HOME}/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
+    source "${HOME}/.dotfiles/bash-helpers/git.sh"        # git helpers
+    source "${HOME}/.dotfiles/bash-helpers/aws.sh"        # aws helpers
+    source "${HOME}/.dotfiles/bash-helpers/osx.sh"        # osx helpers
+    source "${HOME}/.dotfiles/bash-helpers/python.sh"     # python helpers
     # source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
-    source ~/.dotfiles/bash-helpers/ps1.sh        # set custom PS1
+    source "${HOME}/.dotfiles/bash-helpers/ps1.sh"        # set custom PS1
 }
 
 # Add the direnv hook to PROMPT_COMMAND
@@ -183,11 +185,11 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading direnv hook..."
 eval "$(direnv hook bash)"
 
 # load .bashrc
-if [[ -f ~/.bashrc ]]; then
+if [[ -f "${HOME}/.bashrc" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
 
     # shellcheck source=/Users/ryanfisher/.bashrc
-    source ~/.bashrc
+    source "${HOME}/.bashrc"
 fi
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done." ""

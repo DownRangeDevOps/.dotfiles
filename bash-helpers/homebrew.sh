@@ -5,12 +5,9 @@ log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 # ------------------------------------------------
 #  aliases
 # ------------------------------------------------
-# avoid accidentally linking against a Pyenv-provided Python
-# (see: https://github.com/pyenv/pyenv#installation)
-if pyenv root > /dev/null; then
-  path_without_pyenv_shims="${PATH//~\/.pyenv\/shims:/}"
-    alias brew='env PATH="${path_without_pyenv_shims}" brew'
-fi
+# Avoid linking against any shims
+NO_SHIMS_PATH=$(printf "%s" "${PATH}" | sed -e 's,.*shims[^:]*:,,g')
+alias brew='env PATH=${NO_SHIMS_PATH} brew'
 
 # ------------------------------------------------
 #  config

@@ -2,9 +2,9 @@
 -- Core
 -- ----------------------------------------------
 vim.env.VISUAL = 'nvr -cc split --remote-wait' -- Prevent nested nvim instances
-vim.opt.autochdir = true -- cd .
-vim.opt.autoread = true -- read changed files
-vim.opt.autowrite = true -- write before running command
+vim.opt.autochdir = true
+vim.opt.autoread = true
+vim.opt.autowrite = true
 vim.opt.backup = false
 vim.opt.diffopt = table.concat({
   'filler',
@@ -14,12 +14,14 @@ vim.opt.diffopt = table.concat({
   'linematch:60',
   'algorithm:histogram',
 }, ',')
+
+vim.opt.isfname:append("{,}") -- expand variables before gf, gF
 vim.opt.lazyredraw = true
 vim.opt.mouse = 'a'
 vim.opt.secure = true
 vim.opt.swapfile = false
 vim.opt.timeoutlen = 750
-vim.opt.undodir = os.getenv('HOME') .. '/.nvim/undo/'
+vim.opt.undodir = os.getenv('HOME') .. '/.vim/undo/'
 vim.opt.undofile = true
 vim.opt.updatetime = 250
 vim.opt.viewoptions = table.concat({
@@ -39,9 +41,10 @@ vim.opt.fixendofline = true
 -- vim.opt_global.python3_host_prog = os.execute('pyenv which python')
 
 -- Vim command line completion
-vim.opt.completeopt = 'menuone,noselect'
+vim.opt.completeopt = 'longest,menu,menuone,noinsert,noselect'
+vim.opt.wildmenu = true
 vim.opt.wildignore = '*.o,*.a,__pycache__'
-vim.opt.wildmode = 'list:lastused,list:full'
+vim.opt.wildmode = 'list:lastused,full'
 
 -- ----------------------------------------------
 -- UI
@@ -67,10 +70,10 @@ vim.opt.listchars = table.concat({
 vim.opt.list = true
 
 -- Folding (nvim-ufo)
-vim.o.foldcolumn = '1'
-vim.o.foldlevel = 99
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true
+vim.opt.foldcolumn = '1'
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 
 -- Terminal
 vim.opt.termguicolors = true -- Use 24-bit colors
