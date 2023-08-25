@@ -2,10 +2,6 @@
 -- Core
 -- ----------------------------------------------
 vim.env.VISUAL = 'nvr -cc split --remote-wait' -- Prevent nested nvim instances
-vim.opt.autochdir = true
-vim.opt.autoread = true
-vim.opt.autowrite = true
-vim.opt.backup = false
 vim.opt.diffopt = table.concat({
   'filler',
   'context:100',
@@ -15,7 +11,7 @@ vim.opt.diffopt = table.concat({
   'algorithm:histogram',
 }, ',')
 
-vim.opt.isfname:append("{,}") -- expand variables before gf, gF
+-- vim.opt.isfname:append("{,}") -- expand variables before gf, gF
 vim.opt.lazyredraw = true
 vim.opt.mouse = 'a'
 vim.opt.secure = true
@@ -33,23 +29,56 @@ vim.opt.viewoptions = table.concat({
 
 -- Files
 vim.g.fileencoding = 'ucs-bom,utf-8,latin1'
-vim.opt_global.bomb = false
-vim.opt_global.encoding = 'utf-8'
+vim.opt.bomb = false
+vim.opt.autochdir = true
+vim.opt.browsedir = "current"
+vim.opt.autoread = true
+vim.opt.autowriteall = true
+vim.opt.autowrite = true
+vim.opt.backup = false
+vim.opt.encoding = 'utf-8'
 vim.opt.fixendofline = true
 
 -- Global vars
--- vim.opt_global.python3_host_prog = os.execute('pyenv which python')
+-- vim.opt.python3_host_prog = os.execute('pyenv which python')
 
 -- Vim command line completion
-vim.opt.completeopt = 'longest,menu,menuone,noinsert,noselect'
+vim.opt.completeopt = 'menu,menuone,preview,noinsert,noselect'
+vim.opt.fileignorecase = true
+vim.opt.wildoptions = "fuzzy,tagfile"
 vim.opt.wildmenu = true
-vim.opt.wildignore = '*.o,*.a,__pycache__'
-vim.opt.wildmode = 'list:lastused,full'
+vim.g.wildigorecase = true
+vim.opt.wildignore = table.concat({
+    '*/node_modules/*',
+    '_site',
+    '*.pyc',
+    '*/__pycache__/',
+    '*/venv/*',
+    '*/target/*',
+    '*/.vim$',
+    '\\~$',
+    '*/.log',
+    '*/.aux',
+    '*/.cls',
+    '*/.aux',
+    '*/.bbl',
+    '*/.blg',
+    '*/.fls',
+    '*/.fdb*/',
+    '*/.toc',
+    '*/.out',
+    '*/.glo',
+    '*/.log',
+    '*/.ist',
+    '*/.fdb_latexmk',
+})
+vim.opt.wildmode = 'longest,full'
 
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
 vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#202031' })
+vim.opt.autoindent = true
 vim.opt.backspace = 'indent,eol,start' -- Make backspace behave in a sane manner.
 vim.opt.colorcolumn = '80'
 vim.opt.hidden = true

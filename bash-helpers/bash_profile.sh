@@ -2,17 +2,17 @@
 
 # logger is slow, avoid sourcing it unless we need it for now
 if [[ ${DEBUG:-} -eq 1 ]]; then
-    source "${HOME}/.dotfiles/lib/log.sh"
+	source "${HOME}/.dotfiles/lib/log.sh"
 
-    # log.sh sets -u which is too strict for many dependencies
-    set +u
+	# log.sh sets -u which is too strict for many dependencies
+	set +u
 
-    log debug ""
-    log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+	log debug ""
+	log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 else
-    function log() {
-        true
-    }
+	function log() {
+		true
+	}
 fi
 
 # Source these first as they're dependencies atm
@@ -44,8 +44,8 @@ alias cp="cp -i"
 set -o noclobber
 
 # tmux & tmuxinator
-alias tmux='tmux -2'                # Force 256 colors in tmux
-alias tks='tmux kill-session -t '   # easy kill tmux session
+alias tmux='tmux -2'              # Force 256 colors in tmux
+alias tks='tmux kill-session -t ' # easy kill tmux session
 alias rc='reattach-to-user-namespace pbcopy'
 
 # Generate password hash for MySQL
@@ -112,33 +112,33 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # ------------------------------------------------
 #  utils
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
-function nvim() {
-    # load the nvim venv if not already
-    if [[ ! "${VIRTUAL_ENV}" =~ /nvim$ ]]; then
-        workon nvim
-    fi
-
-    if [[ -w "${NVIM_SESSION_FILE_PATH}" ]]; then
-        command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
-    else
-        command nvim "$@"
-    fi
-}
+# log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
+# function nvim() {
+# 	# load the nvim venv if not already
+# 	if [[ ! ${VIRTUAL_ENV} =~ /nvim$ ]]; then
+# 		workon nvim
+# 	fi
+#
+# 	if [[ -w ${NVIM_SESSION_FILE_PATH} ]]; then
+# 		command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
+# 	else
+# 		command nvim "$@"
+# 	fi
+# }
 
 alias grep=rg
 alias ag=rg
 function rg() {
-    "$(brew --prefix)/bin/rg"\
-        --follow \
-        --hidden \
-        --no-config \
-        --smart-case \
-        --colors 'match:style:bold' \
-        --colors 'match:fg:156,201,159' \
-        --colors 'match:bg:24,64,43' \
-        --glob '!.git' \
-        "$@"
+	"$(brew --prefix)/bin/rg" \
+		--follow \
+		--hidden \
+		--no-config \
+		--smart-case \
+		--colors 'match:style:bold' \
+		--colors 'match:fg:156,201,159' \
+		--colors 'match:bg:24,64,43' \
+		--glob '!.git' \
+		"$@"
 }
 
 # Load package shims
@@ -146,36 +146,36 @@ function rg() {
 # eval "$(rbenv init -)"            # Enable rbenv shims
 
 # lazy load thefuck
-if [[ -n "${TF_ALIAS:-}" ]]; then
-    unalias fuck=tf_init
+if [[ -n ${TF_ALIAS:-} ]]; then
+	unalias fuck=tf_init
 else
-    alias fuck=tf_init
+	alias fuck=tf_init
 fi
 
 function tf_init() {
-    unalias fuck=tf_init
-    eval "$(thefuck --alias)"
-    fuck "$@"
+	unalias fuck=tf_init
+	eval "$(thefuck --alias)"
+	fuck "$@"
 }
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 # shellcheck disable=SC1091
 {
-    # NOTE: These are sourced at the top of the file, here as a reminder
-    # source ${HOME}/.dotfiles/bash-helpers/lib.sh
-    # source ${HOME}/.dotfiles/bash-helpers/bash.sh
+	# NOTE: These are sourced at the top of the file, here as a reminder
+	# source ${HOME}/.dotfiles/bash-helpers/lib.sh
+	# source ${HOME}/.dotfiles/bash-helpers/bash.sh
 
-    source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
-    source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
-    source "${HOME}/.dotfiles/bash-helpers/go.sh"         # Golang helpers
-    source "${HOME}/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
-    source "${HOME}/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
-    source "${HOME}/.dotfiles/bash-helpers/git.sh"        # git helpers
-    source "${HOME}/.dotfiles/bash-helpers/aws.sh"        # aws helpers
-    source "${HOME}/.dotfiles/bash-helpers/osx.sh"        # osx helpers
-    source "${HOME}/.dotfiles/bash-helpers/python.sh"     # python helpers
-    # source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
-    source "${HOME}/.dotfiles/bash-helpers/ps1.sh"        # set custom PS1
+	source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
+	source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
+	source "${HOME}/.dotfiles/bash-helpers/go.sh"         # Golang helpers
+	source "${HOME}/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
+	source "${HOME}/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
+	source "${HOME}/.dotfiles/bash-helpers/git.sh"        # git helpers
+	source "${HOME}/.dotfiles/bash-helpers/aws.sh"        # aws helpers
+	source "${HOME}/.dotfiles/bash-helpers/osx.sh"        # osx helpers
+	source "${HOME}/.dotfiles/bash-helpers/python.sh"     # python helpers
+	# source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
+	source "${HOME}/.dotfiles/bash-helpers/ps1.sh" # set custom PS1
 }
 
 # Add the direnv hook to PROMPT_COMMAND
@@ -186,10 +186,10 @@ eval "$(direnv hook bash)"
 
 # load .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+	log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
 
-    # shellcheck source=/Users/ryanfisher/.bashrc
-    source "${HOME}/.bashrc"
+	# shellcheck source=/Users/ryanfisher/.bashrc
+	source "${HOME}/.bashrc"
 fi
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done." ""

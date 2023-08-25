@@ -164,7 +164,7 @@ M.map('c', '<C-f>', '<nop>') -- up arrow works fuuuuuuu
 -- delete
 -- M.map('n', "d", '"_d', { expr = true, desc = M.desc('txt', 'delete') })
 -- M.map('n', "D", '"_D', { expr = true, desc = M.desc('txt', 'delete -> eol') })
--- map('n', "<leader>d", "d", { expr = true, desc = M.desc('txt', 'yank-delete') })
+-- M.map('n', "<leader>d", "d", { expr = true, desc = M.desc('txt', 'yank-delete') })
 -- M.map('n', "<leader>D", "D", { expr = true, desc = M.desc('txt', 'yank-delete -> eol') })
 --
 -- cut
@@ -180,7 +180,7 @@ M.map('c', '<C-f>', '<nop>') -- up arrow works fuuuuuuu
 -- M.map('v', "P", '"_dgvP', { expr = true, desc = M.desc('txt', 'paste after') })
 -- M.map('v', "<leader>p", "ygvp", { expr = true, desc = M.desc('txt', 'yank-paste after') })
 -- M.map('v', "<leader>P", "ygvP", { expr = true, desc = M.desc('txt', 'yank-paste after') })
---
+
 -- Manipulate lines, maintain cursor pos
 M.map('v', 'J', ':m \'>+1' ..M.fk.enter .. 'gv=gv', { desc = M.desc('txt', 'move lines up') })
 M.map('v', 'K', ':m \'<-2' ..M.fk.enter .. 'gv=gv', { desc = M.desc('txt', 'move lines down')} )
@@ -199,21 +199,21 @@ M.map('n', '<leader>2', function() vim.cmd(
     { silent = true, desc = M.desc('file', 'open sidebar browser') })
 M.map('n', '<leader>w', vim.cmd.write, { silent = true, desc = M.desc('file', 'write to file') })
 M.map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = M.desc('file', 'open undo-tree' ) })
-M.map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = M.desc('file', 'make file +x') })
+-- M.map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = M.desc('file', 'make file +x') })
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
-local harpoon_mark = require("harpoon.mark")
-local harpoon_ui = require("harpoon.ui")
-M.map('n', '<leader>hf', harpoon_mark.toggle_file, { desc = M.desc('file', 'harpoon/release') })
-M.map('n', '<leader>j', function() harpoon_ui.nav_file(1) end, { desc = M.desc('file', 'first harpoon') })
-M.map('n', '<leader>k', function() harpoon_ui.nav_file(2) end, { desc = M.desc('file', 'second harpoon') })
-M.map('n', '<leader>l', function() harpoon_ui.nav_file(3) end, { desc = M.desc('file', 'third harpoon') })
-M.map('n', '<leader>;', function() harpoon_ui.nav_file(4) end, { desc = M.desc('file', 'fourth harpoon') })
-M.map('n', '<leader>ho', harpoon_ui.toggle_quick_menu, { desc = M.desc('file', 'view live well') })
-M.map('n', '<C-j>', function() harpoon_ui.nav_prev() end, { desc = M.desc('file', '<< harpoon') })
-M.map('n', '<C-k>', function() harpoon_ui.nav_next() end, { desc = M.desc('file', 'harpoon >>') })
-M.map('n', '<leader>hc', harpoon_mark.clear_all, { desc = M.desc('file', 'release all harpoons') })
+-- local harpoon_mark = require("harpoon.mark")
+-- local harpoon_ui = require("harpoon.ui")
+-- M.map('n', '<leader>hf', harpoon_mark.toggle_file, { desc = M.desc('file', 'harpoon/release') })
+-- M.map('n', '<leader>j', function() harpoon_ui.nav_file(1) end, { desc = M.desc('file', 'first harpoon') })
+-- M.map('n', '<leader>k', function() harpoon_ui.nav_file(2) end, { desc = M.desc('file', 'second harpoon') })
+-- M.map('n', '<leader>l', function() harpoon_ui.nav_file(3) end, { desc = M.desc('file', 'third harpoon') })
+-- M.map('n', '<leader>;', function() harpoon_ui.nav_file(4) end, { desc = M.desc('file', 'fourth harpoon') })
+-- M.map('n', '<leader>ho', harpoon_ui.toggle_quick_menu, { desc = M.desc('file', 'view live well') })
+-- M.map('n', '<C-j>', function() harpoon_ui.nav_prev() end, { desc = M.desc('file', '<< harpoon') })
+-- M.map('n', '<C-k>', function() harpoon_ui.nav_next() end, { desc = M.desc('file', 'harpoon >>') })
+-- M.map('n', '<leader>hc', harpoon_mark.clear_all, { desc = M.desc('file', 'release all harpoons') })
 
 -- Git
 -- :help Git
@@ -241,8 +241,8 @@ end, { desc = M.desc('git', 'git log')})
 
 -- Use magic when searching
 M.map('n', '/', '/\\v\\c', { desc = M.desc('gen', 'regex search') })
-M.map('c', '%', '%smagic/\\c', { desc = M.desc('gen', 'regex replace') })
-M.map('c', '%%', 'smagic/\\c', { desc = M.desc('gen', 'regex replace selection') })
+M.map('c', '%', '%s/\\v\\c', { desc = M.desc('gen', 'regex replace') })
+M.map('c', '%%', 's/\\v\\c', { desc = M.desc('gen', 'regex replace selection') })
 M.map('n', '<leader>rw', ':%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>', { desc = M.desc('txt', 'replace current word')})
 
 -- Split management
@@ -300,47 +300,45 @@ M.map('t', '<M-l>', '<C-\\><C-n>:tabnext' ..M.fk.enter, { desc = M.desc('nav', '
 -- ----------------------------------------------
 -- nvim-ufo (https://github.com/kevinhwang91/nvim-ufo)
 -- :help nvim-ufl
-M.map('n', 'zR', require('ufo').openAllFolds, { desc = M.desc('ui', 'open all folds') })
-M.map('n', 'zM', require('ufo').closeAllFolds, { desc = M.desc('ui', 'close all folds') })
+-- M.map('n', 'zR', require('ufo').openAllFolds, { desc = M.desc('ui', 'open all folds') })
+-- M.map('n', 'zM', require('ufo').closeAllFolds, { desc = M.desc('ui', 'close all folds') })
 
--- Telescope
--- :help telescope.builtin
-local tsb = require('telescope.builtin')
-
+-- -- Telescope
+-- -- :help telescope.builtin
 M.map('n', '<C-p>', function()
     vim.cmd('cd ' .. project_root)
-    tsb.git_files({show_untracked = true})
+    require('telescope.builtin').git_files({show_untracked = true})
 end, { desc = M.desc('ts', 'find git files') })
 
 M.map('n', '<leader>ff', function()
     vim.cmd('cd ' .. project_root)
-    tsb.find_files()
+    require('telescope.builtin').find_files()
 end, { desc = M.desc('ts', 'find files') })
 
 M.map('n', '<leader>fw', function()
     vim.cmd('cd ' .. project_root)
-    tsb.grep_string()
+    require('telescope.builtin').grep_string()
 end, { desc = M.desc('ts', 'find word') })
 
-M.map('n', '<leader><space>', tsb.buffers, { desc = M.desc('ts', 'find buffers') })
-M.map('n', '<leader>?', tsb.oldfiles, { desc = M.desc('ts', 'find recent files') })
-M.map('n', '<leader>f\'', tsb.marks, { desc = M.desc('ts', 'find marks') })
-M.map('n', '<leader>fh', tsb.help_tags, { desc = M.desc('ts', 'find help') })
-M.map('n', '<leader>fk', tsb.keymaps, { desc = M.desc('ts', 'find keymaps') })
-M.map('n', '<leader>fm', tsb.man_pages, { desc = M.desc('ts', 'find manpage') })
-M.map('n', '<leader>gd', tsb.lsp_definitions, { desc = M.desc('ts', 'goto deffinition') })
-M.map('n', '<leader>gi', tsb.lsp_implementations, { desc = M.desc('ts', 'goto implementation') })
-M.map('n', '<leader>qf', tsb.quickfix, { desc = M.desc('ts', 'find quickfix') })
-M.map('n', '<leader>rg', tsb.live_grep, { desc = M.desc('ts', 'rg current dir') })
+M.map('n', '<leader><space>', function() require('telescope.builtin').buffers() end, { desc = M.desc('ts', 'find buffers') })
+M.map('n', '<leader>?', function() require('telescope.builtin').oldfiles() end, { desc = M.desc('ts', 'find recent files') })
+M.map('n', '<leader>f\'', function() require('telescope.builtin').marks() end, { desc = M.desc('ts', 'find marks') })
+M.map('n', '<leader>fh', function() require('telescope.builtin').help_tags() end, { desc = M.desc('ts', 'find help') })
+M.map('n', '<leader>fk', function() require('telescope.builtin').keymaps() end, { desc = M.desc('ts', 'find keymaps') })
+M.map('n', '<leader>fm', function() require('telescope.builtin').man_pages() end, { desc = M.desc('ts', 'find manpage') })
+M.map('n', '<leader>gd', function() require('telescope.builtin').lsp_definitions() end, { desc = M.desc('ts', 'goto deffinition') })
+M.map('n', '<leader>gi', function() require('telescope.builtin').lsp_implementations() end, { desc = M.desc('ts', 'goto implementation') })
+M.map('n', '<leader>qf', function() require('telescope.builtin').quickfix() end, { desc = M.desc('ts', 'find quickfix') })
+M.map('n', '<leader>rg', function() require('telescope.builtin').live_grep() end, { desc = M.desc('ts', 'rg current dir') })
 M.map('n', '/', function()
-    tsb.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+    require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
         winblend = 10,
         previewer = false,
     })
 end, { desc = M.desc('ts', 'find in current buffer') })
 M.map('n', '<leader>/', '/')
 
-M.map('n', '<leader>fe', tsb.diagnostics, { desc = M.desc('ts', 'find errors') })
+M.map('n', '<leader>fe', function() require('telescope.builtin').diagnostics() end, { desc = M.desc('ts', 'find errors') })
 M.map('n', '<leader>e', vim.diagnostic.open_float, { desc = M.desc('diag', 'show errors') })
 M.map('n', '<leader>E', vim.diagnostic.setloclist, { desc = M.desc('diag', 'open error list') })
 M.map('n', '[d', vim.diagnostic.goto_prev, { desc = M.desc('diag', 'previous message') })
@@ -349,29 +347,29 @@ M.map('n', ']d', vim.diagnostic.goto_next, { desc = M.desc('diag', 'next message
 -- LSP key maps
 M.lsp_on_attach = function(_, bufnr)
     -- refactor
-    M.map('n', '<leader>rn', vim.lsp.buf.rename, M.desc('lsp', 'rename'))
-    M.map('n', '<leader>ca', vim.lsp.buf.code_action, M.desc('lsp', 'code action'))
+    M.map('n', '<leader>rn', vim.lsp.buf.rename, { desc = M.desc('lsp', 'rename') })
+    M.map('n', '<leader>ca', vim.lsp.buf.code_action, { desc = M.desc('lsp', 'code action') })
 
     -- goto
-    M.map('n', 'gd', vim.lsp.buf.definition, M.desc('lsp', 'goto definition'))
-    M.map('n', 'gr', require('telescope.builtin').lsp_references, M.desc('lsp', 'goto references'))
-    M.map('n', 'gI', vim.lsp.buf.implementation, M.desc('lsp', 'goto implementation'))
+    M.map('n', 'gd', vim.lsp.buf.definition, { desc = M.desc('lsp', 'goto definition') })
+    M.map('n', 'gr', function() require('telescope.builtin').lsp_references() end, { desc = M.desc('lsp', 'goto references') })
+    M.map('n', 'gI', vim.lsp.buf.implementation, { desc = M.desc('lsp', 'goto implementation') })
 
     -- Open manpages/help
-    M.map('n', 'K', vim.lsp.buf.hover, M.desc('lsp', 'open documentation')) -- :help K
-    M.map('n', '<C-k>', vim.lsp.buf.signature_help, M.desc('lsp', 'open signature documentation'))
+    M.map('n', 'K', vim.lsp.buf.hover, { desc = M.desc('lsp', 'open documentation') }) -- :help K
+    M.map('n', '<C-k>', vim.lsp.buf.signature_help, { desc = M.desc('lsp', 'open signature documentation') })
 
-    M.map('n', '<leader>D', vim.lsp.buf.type_definition, M.desc('lsp', 'type definition'))
-    M.map('n', '<leader>ds', require('telescope.builtin').lsp_document_symbols, M.desc('lsp', 'document symbols'))
-    M.map('n', '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, M.desc('lsp', 'workspace symbols'))
+    M.map('n', '<leader>D', vim.lsp.buf.type_definition, { desc = M.desc('lsp', 'type definition') })
+    M.map('n', '<leader>ds', function() require('telescope.builtin').lsp_document_symbols() end, { desc = M.desc('lsp', 'document symbols') })
+    M.map('n', '<leader>ws', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, { desc = M.desc('lsp', 'workspace symbols') })
 
     -- Lesser used LSP functionality
-    M.map('n', 'gD', vim.lsp.buf.declaration, M.desc('lsp', 'goto declaration'))
-    M.map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, M.desc('lsp', 'workspace add folder'))
-    M.map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, M.desc('lsp', 'workspace remove folder'))
+    M.map('n', 'gD', vim.lsp.buf.declaration, { desc = M.desc('lsp', 'goto declaration') })
+    M.map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, { desc = M.desc('lsp', 'workspace add folder') })
+    M.map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, { desc = M.desc('lsp', 'workspace remove folder') })
     M.map('n', '<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, M.desc('lsp', 'Workspace list folders'))
+    end, { desc = M.desc('lsp', 'Workspace list folders') })
 
     -- Create a command `:Format` local to the LSP buffer and map it
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -380,7 +378,7 @@ M.lsp_on_attach = function(_, bufnr)
     M.map('n', '<leader>=', ':Format' .. M.fk.enter, { desc = M.desc('lsp', 'format current buffer') })
 end
 
-M.treesitter = {
+M.treesitter_km = {
     incremental_selection = {
         init_selection = '<c-space>',
         node_incremental = '<c-space>',

@@ -1,5 +1,4 @@
-local km = require('keymap')
-local M = {}
+local keymap = require('keymap')
 
 -- ----------------------------------------------
 -- Install package manager (https://github.com/folke/lazy.nvim)
@@ -149,7 +148,7 @@ require('lazy').setup({
                 cmp = true,
                 fidget = true,
                 gitsignts = true,
-                harpoon = true,
+                -- harpoon = true,
                 markdown = true,
                 mason = true,
                 mini = true,
@@ -508,7 +507,7 @@ require('telescope').setup {
 
 -- extensions
 pcall(require('telescope').load_extension, 'fzf') -- Enable telescope fzf native, if installed
-require('telescope').load_extension('harpoon')
+-- require('telescope').load_extension('harpoon')
 
 -- ----------------------------------------------
 -- [[ Treesitter ]]
@@ -566,24 +565,24 @@ require('nvim-treesitter.configs').setup {
     incremental_selection = {
         enable = true,
         disable = { 'c' },
-        keymaps = km.treesitter.incremental_selection
+        keymaps = keymap.treesitter_km.incremental_selection
     },
     textobjects = {
         select = {
-            keymaps = km.textobjects
+            keymaps = keymap.treesitter_km.textobjects
         },
         move = {
             enable = true,
             set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = km.goto_next_start,
-            goto_next_end = km.goto_next_end,
-            goto_previous_start = km.goto_previous_start,
-            goto_previous_end = km.goto_previous_end,
+            goto_next_start = keymap.treesitter_km.move.goto_next_start,
+            goto_next_end = keymap.treesitter_km.move.goto_next_end,
+            goto_previous_start = keymap.treesitter_km.move.goto_previous_start,
+            goto_previous_end = keymap.treesitter_km.move.goto_previous_end,
         },
         swap = {
             enable = true,
-            swap_next = km.swap_next,
-            swap_previous = km.swap_previous,
+            swap_next = keymap.swap_next,
+            swap_previous = keymap.swap_previous,
         },
     },
 }
@@ -644,7 +643,7 @@ mason_lspconfig.setup_handlers {
     function(server_name)
         require('lspconfig')[server_name].setup {
             capabilities = capabilities,
-            on_attach = km.lsp_on_attach,
+            on_attach = keymap.lsp_on_attach,
             settings = servers[server_name],
             filetypes = (servers[server_name] or {}).filetypes,
         }
@@ -661,7 +660,7 @@ local cmp_compare = require('cmp.config.compare')
 -- local cmp_under_comparatar = require('cmp-under-comparatar')
 
 
-M.cmp = cmp.setup {
+keymap.cmp = cmp.setup {
     revision = 0,
     enabled = true,
 
@@ -702,36 +701,36 @@ M.cmp = cmp.setup {
         { name = 'luasnip' },
     },
 
-    -- Key mappings
-    mapping = cmp.mapping.preset.insert {
-        [ M.cmp.select_next_item ] = cmp.mapping.select_next_item(),
-        [ M.select_prev_item ] = cmp.mapping.select_prev_item(),
-        [ M.scroll_docs_up ] = cmp.mapping.scroll_docs(4),
-        [ M.scroll_docs_down ] = cmp.mapping.scroll_docs(-4),
-        [ M.complete ] = cmp.mapping.complete {},
-        [ M.confirm ] = cmp.mapping.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-        },
-        [ M.tab] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_locally_jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-        end, { 'i', 's' }),
-        [ M.shift_tab ] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.locally_jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end, { 'i', 's' }),
-    },
+   -- Key mappings
+   mapping = cmp.mapping.preset.insert {
+       [ keymap.cmp.select_next_item ] = cmp.mapping.select_next_item(),
+       [ keymap.cmp.select_prev_item ] = cmp.mapping.select_prev_item(),
+       [ keymap.cmp.scroll_docs_up ] = cmp.mapping.scroll_docs(4),
+       [ keymap.cmp.scroll_docs_down ] = cmp.mapping.scroll_docs(-4),
+       [ keymap.cmp.complete ] = cmp.mapping.complete {},
+       [ keymap.cmp.confirm ] = cmp.mapping.confirm {
+           behavior = cmp.ConfirmBehavior.Replace,
+           select = true,
+       },
+       [ keymap.cmp.tab] = cmp.mapping(function(fallback)
+           if cmp.visible() then
+               cmp.select_next_item()
+           elseif luasnip.expand_or_locally_jumpable() then
+               luasnip.expand_or_jump()
+           else
+               fallback()
+           end
+       end, { 'i', 's' }),
+       [ keymap.cmp.shift_tab ] = cmp.mapping(function(fallback)
+           if cmp.visible() then
+               cmp.select_prev_item()
+           elseif luasnip.locally_jumpable(-1) then
+               luasnip.jump(-1)
+           else
+               fallback()
+           end
+       end, { 'i', 's' }),
+   },
 }
 
 return M

@@ -1,19 +1,18 @@
-local km = require('keymap')
-local nvim = vim.api.nvim_create_augroup('NVIM', { clear = true })
+local keymap = require('keymap')
 local ui = vim.api.nvim_create_augroup('UI', { clear = true })
 local user = vim.api.nvim_create_augroup('USER', { clear = true })
 
 -- ----------------------------------------------
 -- Neovim
 -- ----------------------------------------------
--- vim.api.nvim_create_autocmd("VimEnter", {
---     group = nvim,
---     callback = function()
---         if vim.env.NVIM_SESSION_FILE_PATH then
---             vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH)
---         end
---     end
--- })
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = nvim,
+    callback = function()
+        if vim.env.NVIM_SESSION_FILE_PATH then
+            vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH)
+        end
+    end
+})
 
 -- ----------------------------------------------
 -- UI
@@ -75,12 +74,12 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave' }, {
 
         if not err then
             if bullets_buftypes[vim.opt:get('buftype')] then
-                vim.keymap.set('i', '<CR>', '<Plug>bullets-newline', { desc = km.desc('txt', 'bullets newline') })
-                vim.keymap.set('n', 'o', '<Plug>(bullets-newline)', { desc = km.desc('txt', 'bullets newline') })
-                vim.keymap.set('v', 'gN', '<Plug>(bullets-renumber)', { desc = km.desc('txt', 'bullets renumber') })
-                vim.keymap.set('n', '<leader>x', '<Plug>(bullets-toggle-checkbox)', { desc = km.desc('txt', 'bullets toggle checkbox') })
-                vim.keymap.set('i', '<C-t>', '<Plug>(bullets-demote)', { desc = km.desc('txt', 'bullets demote') })
-                vim.keymap.set('i', '<C-d>', '<Plug>(bullets-promote)', { desc = km.desc('txt', 'bullets promote') })
+                vim.keymap.set('i', '<CR>', '<Plug>bullets-newline', { desc = keymap.desc('txt', 'bullets newline') })
+                vim.keymap.set('n', 'o', '<Plug>(bullets-newline)', { desc = keymap.desc('txt', 'bullets newline') })
+                vim.keymap.set('v', 'gN', '<Plug>(bullets-renumber)', { desc = keymap.desc('txt', 'bullets renumber') })
+                vim.keymap.set('n', '<leader>x', '<Plug>(bullets-toggle-checkbox)', { desc = keymap.desc('txt', 'bullets toggle checkbox') })
+                vim.keymap.set('i', '<C-t>', '<Plug>(bullets-demote)', { desc = keymap.desc('txt', 'bullets demote') })
+                vim.keymap.set('i', '<C-d>', '<Plug>(bullets-promote)', { desc = keymap.desc('txt', 'bullets promote') })
             else
                 vim.keymap.set('i', '<CR>', '<CR>')
                 vim.keymap.set('n', 'o', 'o')
@@ -109,7 +108,7 @@ vim.api.nvim_create_autocmd({ 'WinEnter' }, {
         local bufnr = vim.fn.bufnr()
 
         if bufnr then
-            km.snap(bufnr)
+            keymap.thanos_snap(bufnr)
         end
     end
 })
