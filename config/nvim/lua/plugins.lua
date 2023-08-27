@@ -269,7 +269,7 @@ require('lazy').setup({
             show_first_indent_level = false,
             show_trailing_blankline_indent = true,
             space_char = '•',
-            space_char_blankline = '•',
+            space_char_blankline = ' ',
             use_treesitter = true,
             use_treesitter_scope = true,
             viewport_buffer = 80,
@@ -437,25 +437,34 @@ require('lazy').setup({
         },
     },
 
-    -- Auto-save (https://github.com/pocco81/auto-save.nvim)
+    -- Auto-save (https://github.com/okuuva/auto-save.nvim)
     {
         'okuuva/auto-save.nvim',
         cmd = 'ASToggle',
         event = { 'InsertLeave', 'TextChanged' },
         opts = {
             enabled = true,
-            execution_message = { enabled = false },
-            trigger_events = { -- See :h events
-                immediate_save = { 'BufLeave', 'FocusLost' }, -- events that trigger immediate save
-                defer_save = {}, -- { 'InsertLeave', 'TextChanged' }, -- events that trigger deferred save
-                cancel_defered_save = { 'InsertEnter', 'BufWrite' }, -- events that cancel a pending deferred save
-            },
-            condition = nil, -- callback to validate buffer save (return true|false, nil = disabled)
-            write_all_buffers = false, -- write all buffers `condition` is met
-            noautocmd = false, -- do not execute autocmds when saving
-            debounce_delay = 1000, -- delay before executing pending save
-            debug = false, -- log for debug messages (saved in neovim cache directory)
+            message = function()
+                return ("AutoSaved " .. vim.fn.expand('%:t') .. vim.fn.strftime(" (%H:%M:%S)"))
+            end,
+            dim = 0.18,
+            cleaning_interval = 500, -- milliseconds
         },
+        trigger_events = {
+            immediate_save = { 'BufLeave', 'FocusLost' },
+            defer_save = {},
+            cancel_defered_save = {},
+        },
+        condition = function()
+            -- don't save special-buffers
+            if vim.fn.getbufvar(vim.api.nvim_win_get_buf(0), "&buftype") ~= '' then
+                return false
+            end
+        end,
+        write_all_buffers = false, -- write all buffers `condition` is met
+        noautocmd = false, -- do not execute autocmds when saving
+        debounce_delay = 1000, -- delay before executing pending save
+        debug = false, -- log for debug messages (saved in neovim cache directory)
     },
 
     -- ----------------------------------------------
