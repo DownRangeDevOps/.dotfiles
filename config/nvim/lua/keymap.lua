@@ -32,18 +32,25 @@ M.fk = {
     space = '<Space>',
 }
 
+M.git_is_repo = function()
+    if os.execute('git rev-parse') then
+        return true
+    else
+        return false
+    end
+end
+
 M.get_project_root = function()
     local dir = '${HOME}'
-    local is_git_repo = os.execute('git rev-parse')
 
-    if is_git_repo == 0 then
+    if M.is_git_repo then
         local stdout, err = io.popen("git rev-parse --show-toplevel")
 
         if stdout then
             dir = stdout:read("*a")
             stdout:close()
         else
-            error("Failed: " .. err, vim.log.levels.DEBUG)
+            dir = vim.env.HOME
         end
     end
 
@@ -145,28 +152,30 @@ vim.on_key(
 M.map('i', 'jj', M.fk.escape, { desc = M.desc('gen', 'Escape') })
 M.map('n', 'gl', 'gu') -- err 'go lower' sure makes sense to me...
 M.map('n', 'gL', 'gu') -- err 'go lower' sure makes sense to me...
-M.map('n', 'Q', '<nop>') -- rreeeeeeeeeeeee
-M.map('n', 'gQ', '<nop>') -- get off my lawn
-M.map('n', '<C-u>', '<C-b') -- can't be bothered to switch to the proper keys...
-M.map('c', '<C-f>', '<nop>') -- up arrow works fuuuuuuu
+M.map('n', 'gQ', '<nop>') -- reeeeeee (use :Ex-mode if you really need it, which will be never)
+
+-- fuuuuuuu (disable command-line mode, use <C-F>, see :h c_CTRL-F)
+M.map('c', 'q:', ':')
+M.map('c', 'q/', '/')
+M.map('c', 'q/', '?')
 
 -- Karen without Karenness
 -- NOTE: test for a while then add response:
 -- (https://stackoverflow.com/questions/11993851/how-to-delete-not-cut-in-vim)
 --
 -- Copy/paste to/from system clipboard
--- M.map('', '<leader>y', '"+y', { desc = M.desc('gen', 'copy to system clipboard') })
--- M.map('n', '<leader>Y', '"+y$', { desc = M.desc('gen', 'copy -> eol to system clipboard') })
--- M.map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = M.desc('gen', 'copy on mouse select') })
--- M.map('n', '<leader>yy', '"+yy', { desc = M.desc('gen', 'copy line to system clipboard') })
--- M.map('n', '<leader>p', '"+p', { desc = M.desc('gen', 'paste system clipboard') })
+M.map('', '<leader>y', '"+y', { desc = M.desc('gen', 'copy to system clipboard') })
+M.map('n', '<leader>Y', '"+y$', { desc = M.desc('gen', 'copy -> eol to system clipboard') })
+M.map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = M.desc('gen', 'copy on mouse select') })
+M.map('n', '<leader>yy', '"+yy', { desc = M.desc('gen', 'copy line to system clipboard') })
+M.map('n', '<leader>p', '"+p', { desc = M.desc('gen', 'paste system clipboard') })
 --
 -- delete
--- M.map('n', "d", '"_d', { expr = true, desc = M.desc('txt', 'delete') })
--- M.map('n', "D", '"_D', { expr = true, desc = M.desc('txt', 'delete -> eol') })
--- M.map('n', "<leader>d", "d", { expr = true, desc = M.desc('txt', 'yank-delete') })
--- M.map('n', "<leader>D", "D", { expr = true, desc = M.desc('txt', 'yank-delete -> eol') })
---
+M.map('n', "d", '"_d', { expr = true, desc = M.desc('txt', 'delete') })
+M.map('n', "D", '"_D', { expr = true, desc = M.desc('txt', 'delete -> eol') })
+M.map('n', "<leader>d", "d", { expr = true, desc = M.desc('txt', 'yank-delete') })
+M.map('n', "<leader>D", "D", { expr = true, desc = M.desc('txt', 'yank-delete -> eol') })
+
 -- cut
 -- M.map("", "c", '"_c', { expr = true, desc = M.desc('txt', 'change') })
 -- M.map("", "C", '"_C', { expr = true, desc = M.desc('txt', 'change -> eol') })
@@ -240,9 +249,19 @@ M.map('n', '<leader>gl', function()
 end, { desc = M.desc('git', 'git log')})
 
 -- Use magic when searching
-M.map('n', '/', '/\\v\\c', { desc = M.desc('gen', 'regex search') })
-M.map('c', '%', '%s/\\v\\c', { desc = M.desc('gen', 'regex replace') })
-M.map('c', '%%', 's/\\v\\c', { desc = M.desc('gen', 'regex replace selection') })
+local use_magic = function(key, prefix)
+    local pos = vim.fn.getcmdpos()
+
+    if pos == 1 or pos == string.len(prefix) then
+        vim.fn.setcmdline(vim.fn.getcmdline() .. prefix)
+    else
+        vim.fn.setcmdline(vim.fn.getcmdline() .. key)
+    end
+end
+
+M.map('n', '/', function() use_magic('/', '/\\v\\c') end, { desc = M.desc('gen', 'regex search') })
+M.map('c', '%', function() use_magic('%', '%s/\\v\\c') end, { desc = M.desc('gen', 'regex replace') })
+M.map('c', '%%', function() use_magic('%%', 's/\\v\\c') end, { desc = M.desc('gen', 'regex replace visual') })
 M.map('n', '<leader>rw', ':%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>', { desc = M.desc('txt', 'replace current word')})
 
 -- Split management

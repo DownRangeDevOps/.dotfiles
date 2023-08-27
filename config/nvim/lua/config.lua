@@ -43,11 +43,12 @@ vim.opt.fixendofline = true
 -- vim.opt.python3_host_prog = os.execute('pyenv which python')
 
 -- Vim command line completion
-vim.opt.completeopt = 'menu,menuone,preview,noinsert,noselect'
+vim.opt.completeopt = 'menu,menuone,noinsert,noselect'
 vim.opt.fileignorecase = true
-vim.opt.wildoptions = "fuzzy,tagfile"
-vim.opt.wildmenu = true
+vim.g.wildmenu = true
 vim.g.wildigorecase = true
+vim.opt.wildmode = 'list,full'
+vim.opt.wildoptions = "fuzzy,tagfile"
 vim.opt.wildignore = table.concat({
     '*/node_modules/*',
     '_site',
@@ -72,7 +73,6 @@ vim.opt.wildignore = table.concat({
     '*/.ist',
     '*/.fdb_latexmk',
 })
-vim.opt.wildmode = 'longest,full'
 
 -- ----------------------------------------------
 -- UI
@@ -143,3 +143,5 @@ vim.g.bullets_checkbox_markers = ' ⁃✔︎'
 vim.g.bullets_enabled_file_types = { 'markdown', 'text', 'gitcommit', 'scratch' }
 
 -- Obsession
+
+-- Catppuchin

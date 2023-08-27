@@ -94,7 +94,42 @@ require('lazy').setup({
 
     -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
     -- :help nvim-colorizer
-    { 'NvChad/nvim-colorizer.lua' },
+    --
+    -- Attach to buffer
+    -- require("colorizer").attach_to_buffer(0, { mode = "background", css = true})
+    --
+    -- Detach from buffer
+    -- require("colorizer").detach_from_buffer(0, { mode = "virtualtext", css = true})
+    {
+        'NvChad/nvim-colorizer.lua',
+        opts = {
+            filetypes = { "*" },
+            user_default_options = {
+                RGB = false, -- #RGB hex codes
+                RRGGBB = true, -- #RRGGBB hex codes
+                names = true, -- "Name" codes like Blue or blue
+                RRGGBBAA = false, -- #RRGGBBAA hex codes
+                AARRGGBB = false, -- 0xAARRGGBB hex codes
+                rgb_fn = false, -- CSS rgb() and rgba() functions
+                hsl_fn = false, -- CSS hsl() and hsla() functions
+                css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+                css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+                -- Available modes for `mode`: foreground, background,  virtualtext
+                mode = "virtualtext", -- Set the display mode.
+                -- Available methods are false / true / "normal" / "lsp" / "both"
+                -- True is same as normal
+                tailwind = false, -- Enable tailwind colors
+                -- parsers can contain values used in |user_default_options|
+                sass = { enable = false, parsers = { "css" }, }, -- Enable sass colors
+                virtualtext = "●",
+                -- update color values even if buffer is not focused
+                -- example use: cmp_menu, cmp_docs
+                always_update = false
+            },
+            -- all the sub-options of filetypes apply to buftypes
+            buftypes = {},
+        }
+    },
 
     -- neo-tree: tree/file browser (https://github.com/nvim-neo-tree/neo-tree.nvim)
     -- :help neo-tree.txt
@@ -657,7 +692,6 @@ mason_lspconfig.setup_handlers {
 local cmp = require('cmp')
 local cmp_default = require('cmp.config.default')
 local cmp_compare = require('cmp.config.compare')
--- local cmp_under_comparatar = require('cmp-under-comparatar')
 
 
 keymap.cmp = cmp.setup {

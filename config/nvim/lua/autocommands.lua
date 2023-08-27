@@ -1,4 +1,9 @@
 local keymap = require('keymap')
+
+-- ----------------------------------------------
+-- Auto-command Groups
+-- ----------------------------------------------
+local nvim = vim.api.nvim_create_augroup('NVIM', { clear = true })
 local ui = vim.api.nvim_create_augroup('UI', { clear = true })
 local user = vim.api.nvim_create_augroup('USER', { clear = true })
 
@@ -11,40 +16,54 @@ vim.api.nvim_create_autocmd("VimEnter", {
         if vim.env.NVIM_SESSION_FILE_PATH then
             vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH)
         end
+
+        vim.cmd.cd(keymap.get_project_root())
     end
 })
 
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
--- Set scroll to 80% of win_height & bind CTRL-U to CTRL-B
-vim.api.nvim_create_autocmd({ 'WinScrolled', 'VimResized' }, {
+-- Set scroll distance for <C-u> and <C-d>
+vim.api.nvim_create_autocmd({ 'BufEnter', 'WinScrolled', 'VimResized' }, {
     group = ui,
     callback = function()
-        local cur_win_height = vim.fn.ceil(vim.api.nvim_win_get_height(0) * 0.8)
+        local cur_win_height = vim.fn.ceil(vim.api.nvim_win_get_height(0) * 0.66)
         if cur_win_height then vim.opt.scroll = cur_win_height end
     end
 })
 
--- Plugins that fuck with options dynamically by default are satanic
+-- Set options for specific file and buffer types
 vim.api.nvim_create_autocmd({ 'BufEnter', 'TabEnter', 'BufNew' }, {
     group = ui,
     callback = function()
-        local ignore_filetypes = { 'lspinfo', 'packer', 'checkhealth', 'help', 'man', 'qf', '' }
-        local ignore_buftypes = { 'help', 'quickfix', 'terminal', 'nofile', 'prompt' }
+        local clean_filetypes = {
+            lspinfo = true,
+            packer = true,
+            checkhealth = true,
+            help = true,
+            man = true,
+            qf = true,
+        }
+        local clean_buftypes = {
+            help = true,
+            quickfix = true,
+            terminal = true,
+            nofile = true,
+            prompt = true,
+        }
+        local filetype = vim.bo.filetype
+        local buftype = vim.bo.buftype
 
-        if ignore_filetypes[vim.bo.filetype] or ignore_buftypes[vim.bo.buftype] then
-            vim.b.minipairs_disable = true
-            vim.opt.colorcolumn = false
-            vim.opt.list = false
-            vim.opt.number = false
-            vim.opt.relativenumber = false
-            vim.opt.spell = false
-        else
-            vim.opt.list = true
-            vim.opt.number = true
-            vim.opt.numberwidth = 5
-            vim.opt.relativenumber = true
+        filetype = filetype or "nofiletype"
+        buftype = buftype or "nobuftype"
+
+        if clean_filetypes[filetype] or clean_buftypes[buftype] then
+            vim.wo.colorcolumn = false
+            vim.wo.list = false
+            vim.wo.number = false
+            vim.wo.relativenumber = false
+            vim.wo.spell = false
         end
     end,
 })
@@ -102,13 +121,13 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
 })
 
 -- Overpower some buffers
-vim.api.nvim_create_autocmd({ 'WinEnter' }, {
-    group = user,
-    callback = function()
-        local bufnr = vim.fn.bufnr()
-
-        if bufnr then
-            keymap.thanos_snap(bufnr)
-        end
-    end
-})
+-- vim.api.nvim_create_autocmd({ 'WinEnter' }, {
+--     group = user,
+--     callback = function()
+--         local bufnr = vim.fn.bufnr()
+--
+--         if bufnr then
+--             keymap.thanos_snap(bufnr)
+--         end
+--     end
+-- })
