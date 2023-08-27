@@ -162,7 +162,6 @@ M.map('c', 'q/', '?')
 -- Karen without Karenness
 -- NOTE: test for a while then add response:
 -- (https://stackoverflow.com/questions/11993851/how-to-delete-not-cut-in-vim)
---
 -- Copy/paste to/from system clipboard
 M.map('', '<leader>y', '"+y', { desc = M.desc('gen', 'copy to system clipboard') })
 M.map('n', '<leader>Y', '"+y$', { desc = M.desc('gen', 'copy -> eol to system clipboard') })
@@ -171,24 +170,24 @@ M.map('n', '<leader>yy', '"+yy', { desc = M.desc('gen', 'copy line to system cli
 M.map('n', '<leader>p', '"+p', { desc = M.desc('gen', 'paste system clipboard') })
 --
 -- delete
-M.map('n', "d", '"_d', { expr = true, desc = M.desc('txt', 'delete') })
-M.map('n', "D", '"_D', { expr = true, desc = M.desc('txt', 'delete -> eol') })
-M.map('n', "<leader>d", "d", { expr = true, desc = M.desc('txt', 'yank-delete') })
-M.map('n', "<leader>D", "D", { expr = true, desc = M.desc('txt', 'yank-delete -> eol') })
-
+M.map('n', "d", '"_d', { desc = M.desc('txt', 'delete') })
+M.map('n', "D", '"_D', { desc = M.desc('txt', 'delete -> eol') })
+M.map('n', "<leader>d", "d", { desc = M.desc('txt', 'yank-delete') })
+M.map('n', "<leader>D", "D", { desc = M.desc('txt', 'yank-delete -> eol') })
+--
 -- cut
--- M.map("", "c", '"_c', { expr = true, desc = M.desc('txt', 'change') })
--- M.map("", "C", '"_C', { expr = true, desc = M.desc('txt', 'change -> eol') })
--- M.map("", "<leader>c", "c", { expr = true , desc = M.desc('txt', 'yank-change')})
--- M.map("", "<leader>C", "C", { expr = true , desc = M.desc('txt', 'yank-change -> eol')})
+M.map("", "c", '"_c', { desc = M.desc('txt', 'change') })
+M.map("", "C", '"_C', { desc = M.desc('txt', 'change -> eol') })
+M.map("", "<leader>c", "c", { desc = M.desc('txt', 'yank-change')})
+M.map("", "<leader>C", "C", { desc = M.desc('txt', 'yank-change -> eol')})
 --
 -- paste
--- M.map('n', "p", '"_dp', { expr = true, desc = M.desc('txt', 'paste') })
--- M.map('n', "P", '"_dP', { expr = true, desc = M.desc('txt', 'paste after') })
--- M.map('v', "p", '"_dgvp', { expr = true, desc = M.desc('txt', 'paste') })
--- M.map('v', "P", '"_dgvP', { expr = true, desc = M.desc('txt', 'paste after') })
--- M.map('v', "<leader>p", "ygvp", { expr = true, desc = M.desc('txt', 'yank-paste after') })
--- M.map('v', "<leader>P", "ygvP", { expr = true, desc = M.desc('txt', 'yank-paste after') })
+M.map('n', "p", '"_dp', { desc = M.desc('txt', 'paste') })
+M.map('n', "P", '"_dP', { desc = M.desc('txt', 'paste after') })
+M.map('v', "p", '"_dgvp', { desc = M.desc('txt', 'paste') })
+M.map('v', "P", '"_dgvP', { desc = M.desc('txt', 'paste after') })
+M.map('v', "<leader>p", "ygvp", { desc = M.desc('txt', 'yank-paste after') })
+M.map('v', "<leader>P", "ygvP", { desc = M.desc('txt', 'yank-paste after') })
 
 -- Manipulate lines, maintain cursor pos
 M.map('v', 'J', ':m \'>+1' ..M.fk.enter .. 'gv=gv', { desc = M.desc('txt', 'move lines up') })
@@ -212,17 +211,15 @@ M.map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = M.desc('file', 'open un
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
--- local harpoon_mark = require("harpoon.mark")
--- local harpoon_ui = require("harpoon.ui")
--- M.map('n', '<leader>hf', harpoon_mark.toggle_file, { desc = M.desc('file', 'harpoon/release') })
--- M.map('n', '<leader>j', function() harpoon_ui.nav_file(1) end, { desc = M.desc('file', 'first harpoon') })
--- M.map('n', '<leader>k', function() harpoon_ui.nav_file(2) end, { desc = M.desc('file', 'second harpoon') })
--- M.map('n', '<leader>l', function() harpoon_ui.nav_file(3) end, { desc = M.desc('file', 'third harpoon') })
--- M.map('n', '<leader>;', function() harpoon_ui.nav_file(4) end, { desc = M.desc('file', 'fourth harpoon') })
--- M.map('n', '<leader>ho', harpoon_ui.toggle_quick_menu, { desc = M.desc('file', 'view live well') })
--- M.map('n', '<C-j>', function() harpoon_ui.nav_prev() end, { desc = M.desc('file', '<< harpoon') })
--- M.map('n', '<C-k>', function() harpoon_ui.nav_next() end, { desc = M.desc('file', 'harpoon >>') })
--- M.map('n', '<leader>hc', harpoon_mark.clear_all, { desc = M.desc('file', 'release all harpoons') })
+M.map('n', '<leader>hf', function() require("harpoon.mark").toggle_file() end, { desc = M.desc('file', 'harpoon/release') })
+M.map('n', '<leader>j', function() require("harpoon.ui").nav_file(1) end, { desc = M.desc('file', 'first harpoon') })
+M.map('n', '<leader>k', function() require("harpoon.ui").nav_file(2) end, { desc = M.desc('file', 'second harpoon') })
+M.map('n', '<leader>l', function() require("harpoon.ui").nav_file(3) end, { desc = M.desc('file', 'third harpoon') })
+M.map('n', '<leader>;', function() require("harpoon.ui").nav_file(4) end, { desc = M.desc('file', 'fourth harpoon') })
+M.map('n', '<leader>ho', function() require("harpoon.ui").toggle_quick_menu() end, { desc = M.desc('file', 'view live well') })
+M.map('n', '<C-j>', function() require("harpoon.ui").nav_prev() end, { desc = M.desc('file', '<< harpoon') })
+M.map('n', '<C-k>', function() require("harpoon.ui").nav_next() end, { desc = M.desc('file', 'harpoon >>') })
+M.map('n', '<leader>hc', function() require("harpoon.mark").clear_all() end, { desc = M.desc('file', 'release all harpoons') })
 
 -- Git
 -- :help Git
@@ -375,8 +372,9 @@ M.lsp_on_attach = function(_, bufnr)
     M.map('n', 'gI', vim.lsp.buf.implementation, { desc = M.desc('lsp', 'goto implementation') })
 
     -- Open manpages/help
-    M.map('n', 'K', vim.lsp.buf.hover, { desc = M.desc('lsp', 'open documentation') }) -- :help K
-    M.map('n', '<C-k>', vim.lsp.buf.signature_help, { desc = M.desc('lsp', 'open signature documentation') })
+    M.map('n', 'K', vim.lsp.buf.hover, { desc = M.desc('lsp', 'show symbol info') })
+    M.map('n', '<C-n>', vim.lsp.buf.signature_help, { desc = M.desc('lsp', 'show signature info') })
+
 
     M.map('n', '<leader>D', vim.lsp.buf.type_definition, { desc = M.desc('lsp', 'type definition') })
     M.map('n', '<leader>ds', function() require('telescope.builtin').lsp_document_symbols() end, { desc = M.desc('lsp', 'document symbols') })
