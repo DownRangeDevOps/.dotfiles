@@ -1,65 +1,32 @@
 -- ----------------------------------------------
 -- Helpers
 -- ----------------------------------------------
---
--- trying to figure out metatables
--- local function require_arg(arg)
---   assert(arg ~= nil, arg .. ' argument required')
---   return arg
--- end
---
--- local mt_require_arg = {
---   __call = function(fn, ...)
---     local args = {...}
---
---     for i, arg in ipairs(args) do
---       args[i] = require_arg(arg)
---     end
---
---   return fn(unpack(args))
---   end
--- }
 
 local M = {}
 
-local bin = {
+M.bin = {
     bash = '$(brew --prefix)/bin/bash --login'
 }
+local bin = M.bin
 
 M.fk = {
     escape = '<Esc>',
     enter = '<CR>',
     space = '<Space>',
 }
+local fk = M.fk
 
-M.git_is_repo = function()
-    if os.execute('git rev-parse') then
+M.is_git_repo = function()
+    if os.execute('git rev-parse') == 0 then
         return true
     else
         return false
     end
 end
-
-M.get_project_root = function()
-    local dir = '${HOME}'
-
-    if M.is_git_repo then
-        local stdout, err = io.popen("git rev-parse --show-toplevel")
-
-        if stdout then
-            dir = stdout:read("*a")
-            stdout:close()
-        else
-            dir = vim.env.HOME
-        end
-    end
-
-    return dir
-end
-
-local project_root = M.get_project_root()
+local is_git_repo = M.is_git_repo
 
 -- Mapping
+-- TODO: Use to auto add which-key documentation
 M.map = function(mode, lhs, rhs, opts)
     --- Shortcut for vim.keymap.set
     --
@@ -77,6 +44,7 @@ M.map = function(mode, lhs, rhs, opts)
         vim.keymap.set(mode, lhs, rhs)
     end
 end
+local map = M.map
 
 M.desc = function(group, desc)
     --- Prefix descriptions with a group
@@ -103,6 +71,7 @@ M.desc = function(group, desc)
 
     return desc
 end
+local desc = M.desc
 
 -- You should have gone for the head...
 M.thanos_snap = function(bufnr)
@@ -114,7 +83,7 @@ M.thanos_snap = function(bufnr)
     local the_disgraced = { 'quickfix', 'prompt', 'nofile' } -- buf types
 
     local snap_while_wearing_a_gauntlet = function ()
-        M.map('n', 'q', ':quit', { buffer = bufnr, desc = M.desc('gui', "don't @ me") })
+        map('n', 'q', ':quit', { buffer = bufnr, desc = desc('gui', "don't @ me") })
     end
 
     if bufnr then
@@ -149,77 +118,77 @@ vim.on_key(
 )
 
 -- QOL
-M.map('i', 'jj', M.fk.escape, { desc = M.desc('gen', 'Escape') })
-M.map('n', 'gl', 'gu') -- err 'go lower' sure makes sense to me...
-M.map('n', 'gL', 'gu') -- err 'go lower' sure makes sense to me...
-M.map('n', 'gQ', '<nop>') -- reeeeeee (use :Ex-mode if you really need it, which will be never)
+map('i', 'jj', fk.escape, { desc = desc('gen', 'Escape') })
+map('n', 'gl', 'gu') -- err 'go lower' sure makes sense to me...
+map('n', 'gL', 'gu') -- err 'go lower' sure makes sense to me...
+map('n', 'gQ', '<nop>') -- reeeeeee (use :Ex-mode if you really need it, which will be never)
 
 -- fuuuuuuu (disable command-line mode, use <C-F>, see :h c_CTRL-F)
-M.map('c', 'q:', ':')
-M.map('c', 'q/', '/')
-M.map('c', 'q/', '?')
+map('c', 'q:', ':')
+map('c', 'q/', '/')
+map('c', 'q/', '?')
 
 -- Karen without Karenness
 -- NOTE: test for a while then add response:
 -- (https://stackoverflow.com/questions/11993851/how-to-delete-not-cut-in-vim)
 -- Copy/paste to/from system clipboard
-M.map('', '<leader>y', '"+y', { desc = M.desc('gen', 'copy to system clipboard') })
-M.map('n', '<leader>Y', '"+y$', { desc = M.desc('gen', 'copy -> eol to system clipboard') })
-M.map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = M.desc('gen', 'copy on mouse select') })
-M.map('n', '<leader>yy', '"+yy', { desc = M.desc('gen', 'copy line to system clipboard') })
-M.map('n', '<leader>p', '"+p', { desc = M.desc('gen', 'paste system clipboard') })
+map('', '<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
+map('n', '<leader>Y', '"+y$', { desc = desc('gen', 'copy -> eol to system clipboard') })
+map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = desc('gen', 'copy on mouse select') })
+map('n', '<leader>yy', '"+yy', { desc = desc('gen', 'copy line to system clipboard') })
+map('n', '<leader>p', '"+p', { desc = desc('gen', 'paste system clipboard') })
 --
 -- delete
-M.map('n', "d", '"_d', { desc = M.desc('txt', 'delete') })
-M.map('n', "D", '"_D', { desc = M.desc('txt', 'delete -> eol') })
-M.map('n', "<leader>d", "d", { desc = M.desc('txt', 'yank-delete') })
-M.map('n', "<leader>D", "D", { desc = M.desc('txt', 'yank-delete -> eol') })
+map('n', "d", '"_d', { desc = desc('txt', 'delete') })
+map('n', "D", '"_D', { desc = desc('txt', 'delete -> eol') })
+map('n', "<leader>d", "d", { desc = desc('txt', 'yank-delete') })
+map('n', "<leader>D", "D", { desc = desc('txt', 'yank-delete -> eol') })
 --
 -- cut
-M.map("", "c", '"_c', { desc = M.desc('txt', 'change') })
-M.map("", "C", '"_C', { desc = M.desc('txt', 'change -> eol') })
-M.map("", "<leader>c", "c", { desc = M.desc('txt', 'yank-change')})
-M.map("", "<leader>C", "C", { desc = M.desc('txt', 'yank-change -> eol')})
+map("", "c", '"_c', { desc = desc('txt', 'change') })
+map("", "C", '"_C', { desc = desc('txt', 'change -> eol') })
+map("", "<leader>c", "c", { desc = desc('txt', 'yank-change')})
+map("", "<leader>C", "C", { desc = desc('txt', 'yank-change -> eol')})
 --
 -- paste
-M.map('n', "p", '"_dp', { desc = M.desc('txt', 'paste') })
-M.map('n', "P", '"_dP', { desc = M.desc('txt', 'paste after') })
-M.map('v', "p", '"_dgvp', { desc = M.desc('txt', 'paste') })
-M.map('v', "P", '"_dgvP', { desc = M.desc('txt', 'paste after') })
-M.map('v', "<leader>p", "ygvp", { desc = M.desc('txt', 'yank-paste after') })
-M.map('v', "<leader>P", "ygvP", { desc = M.desc('txt', 'yank-paste after') })
+-- map('n', "p", '"_dp', { desc = desc('txt', 'paste') })
+-- map('n', "P", '"_dP', { desc = desc('txt', 'paste after') })
+map('v', "p", '"_dgvp', { desc = desc('txt', 'paste') })
+map('v', "P", '"_dgvP', { desc = desc('txt', 'paste after') })
+map('v', "<leader>p", "ygvp", { desc = desc('txt', 'yank-paste after') })
+map('v', "<leader>P", "ygvP", { desc = desc('txt', 'yank-paste after') })
 
 -- Manipulate lines, maintain cursor pos
-M.map('v', 'J', ':m \'>+1' ..M.fk.enter .. 'gv=gv', { desc = M.desc('txt', 'move lines up') })
-M.map('v', 'K', ':m \'<-2' ..M.fk.enter .. 'gv=gv', { desc = M.desc('txt', 'move lines down')} )
-M.map('n', 'J', 'mzJ`z', { desc = M.desc('txt', 'join w/o hop') })
-M.map('n', '<C-u>', '<C-u>zz', { desc = M.desc('gen', 'pgup') })
-M.map('n', '<C-d>', '<C-d>zz', { desc = M.desc('gen', 'pgdn') })
-M.map('n', 'n', 'nzzzv', { desc = M.desc('next search') })
-M.map('n', 'N', 'Nzzzv', { desc = M.desc('prev search') })
+map('v', 'J', ':m \'>+1' ..fk.enter .. 'gv=gv', { desc = desc('txt', 'move lines up') })
+map('v', 'K', ':m \'<-2' ..fk.enter .. 'gv=gv', { desc = desc('txt', 'move lines down')} )
+map('n', 'J', 'mzJ`z', { desc = desc('txt', 'join w/o hop') })
+map('n', '<C-u>', '<C-u>zz', { desc = desc('gen', 'pgup') })
+map('n', '<C-d>', '<C-d>zz', { desc = desc('gen', 'pgdn') })
+map('n', 'n', 'nzzzv', { desc = desc('next search') })
+map('n', 'N', 'Nzzzv', { desc = desc('prev search') })
 
 -- File management
-M.map('n', '<leader>1', function() vim.cmd(
+map('n', '<leader>1', function() vim.cmd(
     'Neotree action=focus source=filesystem position=current toggle reveal') end,
-    { silent = true, desc = M.desc('file', 'open browser') })
-M.map('n', '<leader>2', function() vim.cmd(
+    { silent = true, desc = desc('file', 'open browser') })
+map('n', '<leader>2', function() vim.cmd(
     'Neotree action=show source=filesystem position=left toggle reveal') end,
-    { silent = true, desc = M.desc('file', 'open sidebar browser') })
-M.map('n', '<leader>w', vim.cmd.write, { silent = true, desc = M.desc('file', 'write to file') })
-M.map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = M.desc('file', 'open undo-tree' ) })
--- M.map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = M.desc('file', 'make file +x') })
+    { silent = true, desc = desc('file', 'open sidebar browser') })
+map('n', '<leader>w', vim.cmd.write, { silent = true, desc = desc('file', 'write to file') })
+map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = desc('file', 'open undo-tree' ) })
+-- map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = desc('file', 'make file +x') })
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
-M.map('n', '<leader>hf', function() require("harpoon.mark").toggle_file() end, { desc = M.desc('file', 'harpoon/release') })
-M.map('n', '<leader>j', function() require("harpoon.ui").nav_file(1) end, { desc = M.desc('file', 'first harpoon') })
-M.map('n', '<leader>k', function() require("harpoon.ui").nav_file(2) end, { desc = M.desc('file', 'second harpoon') })
-M.map('n', '<leader>l', function() require("harpoon.ui").nav_file(3) end, { desc = M.desc('file', 'third harpoon') })
-M.map('n', '<leader>;', function() require("harpoon.ui").nav_file(4) end, { desc = M.desc('file', 'fourth harpoon') })
-M.map('n', '<leader>ho', function() require("harpoon.ui").toggle_quick_menu() end, { desc = M.desc('file', 'view live well') })
-M.map('n', '<C-j>', function() require("harpoon.ui").nav_prev() end, { desc = M.desc('file', '<< harpoon') })
-M.map('n', '<C-k>', function() require("harpoon.ui").nav_next() end, { desc = M.desc('file', 'harpoon >>') })
-M.map('n', '<leader>hc', function() require("harpoon.mark").clear_all() end, { desc = M.desc('file', 'release all harpoons') })
+map('n', '<leader>hf', function() require("harpoon.mark").toggle_file() end, { desc = desc('file', 'harpoon/release') })
+map('n', '<leader>j', function() require("harpoon.ui").nav_file(1) end, { desc = desc('file', 'first harpoon') })
+map('n', '<leader>k', function() require("harpoon.ui").nav_file(2) end, { desc = desc('file', 'second harpoon') })
+map('n', '<leader>l', function() require("harpoon.ui").nav_file(3) end, { desc = desc('file', 'third harpoon') })
+map('n', '<leader>;', function() require("harpoon.ui").nav_file(4) end, { desc = desc('file', 'fourth harpoon') })
+map('n', '<leader>ho', function() require("harpoon.ui").toggle_quick_menu() end, { desc = desc('file', 'view live well') })
+map('n', '<C-j>', function() require("harpoon.ui").nav_prev() end, { desc = desc('file', '<< harpoon') })
+map('n', '<C-k>', function() require("harpoon.ui").nav_next() end, { desc = desc('file', 'harpoon >>') })
+map('n', '<leader>hc', function() require("harpoon.mark").clear_all() end, { desc = desc('file', 'release all harpoons') })
 
 -- Git
 -- :help Git
@@ -233,166 +202,163 @@ local git_log_branch = ''
     .. '%C(bold green)(%ar)%C(reset)' -- time elapsed
     .. '"'
 
-M.map('n', '<leader>gs', function() vim.cmd('Git status') end, { desc = M.desc('git', 'git status')})
-M.map('n', '<leader>gb', function() vim.cmd('GitBlame') end, { desc = M.desc('git', 'git blame')})
+map('n', '<leader>gs', function() vim.cmd('Git status') end, { desc = desc('git', 'git status')})
+map('n', '<leader>gb', function() vim.cmd('GitBlame') end, { desc = desc('git', 'git blame')})
 
-M.map('n', '<leader>gD', function()
+map('n', '<leader>gD', function()
     vim.cmd('tabnew' .. vim.fn.expand('%:p'))
     vim.cmd('Gdiff')
-end, { desc = M.desc('git', 'git diff')})
+end, { desc = desc('git', 'git diff')})
 
-M.map('n', '<leader>gl', function()
+map('n', '<leader>gl', function()
     vim.cmd('botright Git log' .. git_log_branch)
-end, { desc = M.desc('git', 'git log')})
+end, { desc = desc('git', 'git log')})
 
 -- Use magic when searching
 local use_magic = function(key, prefix)
     local pos = vim.fn.getcmdpos()
 
-    if pos == 1 or pos == string.len(prefix) then
+    if pos == 1 or pos == 6 then
         vim.fn.setcmdline(vim.fn.getcmdline() .. prefix)
     else
         vim.fn.setcmdline(vim.fn.getcmdline() .. key)
     end
 end
 
-M.map('n', '/', function() use_magic('/', '/\\v\\c') end, { desc = M.desc('gen', 'regex search') })
-M.map('c', '%', function() use_magic('%', '%s/\\v\\c') end, { desc = M.desc('gen', 'regex replace') })
-M.map('c', '%%', function() use_magic('%%', 's/\\v\\c') end, { desc = M.desc('gen', 'regex replace visual') })
-M.map('n', '<leader>rw', ':%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>', { desc = M.desc('txt', 'replace current word')})
+map('n', '*', '*N', { desc = desc('gen', 'find word at cur')})
+map('n', '/', '/\\v\\c', { desc = desc('gen', 'regex search') })
+map('c', '%', function() use_magic('%', '%s/\\v\\c') end, { desc = desc('gen', 'regex replace') })
+map('c', '%%', function() use_magic('%%', 's/\\v\\c') end, { desc = desc('gen', 'regex replace visual') })
+map('n', '<leader>rw', ':%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>', { desc = desc('txt', 'replace current word')})
 
 -- Split management
-M.map('n', '<leader>\\', function() vim.cmd('vsplit') end, { silent = true, desc = M.desc('gen', 'vsplit') })
-M.map('n', '<leader>-', function() vim.cmd('split') end, { silent = true, desc = M.desc('gen', 'split') })
-M.map('n', '<leader>q', '<C-^>:bd#' ..M.fk.enter, { silent = true, desc = M.desc('gen', 'close') })
-M.map('n', '<leader>Q', function() vim.cmd('q') end, { silent = true, desc = M.desc('gen', 'quit') })
+map('n', '<leader>\\', function() vim.cmd('vsplit') end, { silent = true, desc = desc('gen', 'vsplit') })
+map('n', '<leader>-', function() vim.cmd('split') end, { silent = true, desc = desc('gen', 'split') })
+map('n', '<leader>q', '<C-^>:bd#' ..fk.enter, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
+map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
 
 -- Terminal split management
-M.map('n', '<leader>`', function()
+map('n', '<leader>`', function()
     vim.cmd('vsplit term://' .. bin.bash)
     vim.cmd('startinser')
-end, { silent = true, desc = M.desc('gen', ':vsplit term') })
-M.map('n', '<leader>~', function()
+end, { silent = true, desc = desc('gen', ':vsplit term') })
+map('n', '<leader>~', function()
     vim.cmd('split term://' .. bin.bash)
     vim.cmd('startinser')
-end, { silent = true, desc = M.desc('gen', ':split term') })
+end, { silent = true, desc = desc('gen', ':split term') })
 
 -- Split navigation
-M.map('i', '<C-h>',M.fk.escape .. '<C-w>h', { desc = M.desc('nav', 'left window') })
-M.map('i', '<C-j>',M.fk.escape .. '<C-w>j', { desc = M.desc('nav', 'down window') })
-M.map('i', '<C-k>',M.fk.escape .. '<C-w>k', { desc = M.desc('nav', 'up window') })
-M.map('i', '<C-l>',M.fk.escape .. '<C-w>l', { desc = M.desc('nav', 'right window') })
+map('i', '<C-h>',fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
+map('i', '<C-j>',fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
+map('i', '<C-k>',fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
+map('i', '<C-l>',fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
 
-M.map('v', '<C-h>',M.fk.escape .. '<C-w>h', { desc = M.desc('nav', 'left window') })
-M.map('v', '<C-j>',M.fk.escape .. '<C-w>j', { desc = M.desc('nav', 'down window') })
-M.map('v', '<C-k>',M.fk.escape .. '<C-w>k', { desc = M.desc('nav', 'up window') })
-M.map('v', '<C-l>',M.fk.escape .. '<C-w>l', { desc = M.desc('nav', 'right window') })
+map('v', '<C-h>',fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
+map('v', '<C-j>',fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
+map('v', '<C-k>',fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
+map('v', '<C-l>',fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
 
-M.map('n', '<C-h>', '<C-w>h', { desc = M.desc('nav', 'left window') })
-M.map('n', '<C-j>', '<C-w>j', { desc = M.desc('nav', 'down window') })
-M.map('n', '<C-k>', '<C-w>k', { desc = M.desc('nav', 'up window') })
-M.map('n', '<C-l>', '<C-w>l', { desc = M.desc('nav', 'right window') })
+map('n', '<C-h>', '<C-w>h', { desc = desc('nav', 'left window') })
+map('n', '<C-j>', '<C-w>j', { desc = desc('nav', 'down window') })
+map('n', '<C-k>', '<C-w>k', { desc = desc('nav', 'up window') })
+map('n', '<C-l>', '<C-w>l', { desc = desc('nav', 'right window') })
 
-M.map('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = M.desc('nav', 'left window') })
-M.map('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = M.desc('nav', 'down window') })
-M.map('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = M.desc('nav', 'up window') })
-M.map('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = M.desc('nav', 'right window') })
+map('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = desc('nav', 'left window') })
+map('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = desc('nav', 'down window') })
+map('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = desc('nav', 'up window') })
+map('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
 
 -- Tab navigation
-M.map('i', '<M-h>',M.fk.escape .. ':tabprevious' ..M.fk.enter, { desc = M.desc('nav', 'prev tab') })
-M.map('i', '<M-l>',M.fk.escape .. ':tabnext' ..M.fk.enter, { desc = M.desc('nav', 'next tab') })
+map('i', '<M-h>',fk.escape .. ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev tab') })
+map('i', '<M-l>',fk.escape .. ':tabnext' ..fk.enter, { desc = desc('nav', 'next tab') })
 
-M.map('v', '<M-h>',M.fk.escape .. ':tabprevious' ..M.fk.enter, { desc = M.desc('nav', 'prev window') })
-M.map('v', '<M-l>',M.fk.escape .. ':tabnext' ..M.fk.enter, { desc = M.desc('nav', 'next window') })
+map('v', '<M-h>',fk.escape .. ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
+map('v', '<M-l>',fk.escape .. ':tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
 
-M.map('n', '<M-h>', ':tabprevious' ..M.fk.enter, { desc = M.desc('nav', 'prev window') })
-M.map('n', '<M-l>', ':tabnext' ..M.fk.enter, { desc = M.desc('nav', 'next window') })
+map('n', '<M-h>', ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
+map('n', '<M-l>', ':tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
 
-M.map('t', '<M-h>', '<C-\\><C-n>:tabprevious' ..M.fk.enter, { desc = M.desc('nav', 'prev window') })
-M.map('t', '<M-l>', '<C-\\><C-n>:tabnext' ..M.fk.enter, { desc = M.desc('nav', 'next window') })
+map('t', '<M-h>', '<C-\\><C-n>:tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
+map('t', '<M-l>', '<C-\\><C-n>:tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
 
 -- ----------------------------------------------
 -- Plugin Keymaps
 -- ----------------------------------------------
 -- nvim-ufo (https://github.com/kevinhwang91/nvim-ufo)
 -- :help nvim-ufl
--- M.map('n', 'zR', require('ufo').openAllFolds, { desc = M.desc('ui', 'open all folds') })
--- M.map('n', 'zM', require('ufo').closeAllFolds, { desc = M.desc('ui', 'close all folds') })
+-- map('n', 'zR', require('ufo').openAllFolds, { desc = desc('ui', 'open all folds') })
+-- map('n', 'zM', require('ufo').closeAllFolds, { desc = desc('ui', 'close all folds') })
 
 -- -- Telescope
 -- -- :help telescope.builtin
-M.map('n', '<C-p>', function()
-    vim.cmd('cd ' .. project_root)
-    require('telescope.builtin').git_files({show_untracked = true})
-end, { desc = M.desc('ts', 'find git files') })
+map('n', '<C-p>', function()
+    if is_git_repo() then
+        vim.print("Running Telescope git_files in " .. vim.cmd.pwd())
+        require('telescope.builtin').git_files({show_untracked = true})
+    else
+        vim.print("Running Telescope find_files in " .. vim.cmd.pwd())
+        require('telescope.builtin').find_files()
+    end
+end, { desc = desc('ts', 'find git files') })
+map('n', '<leader>ff', function() require('telescope.builtin').find_files() end, { desc = desc('ts', 'find files') })
+map('n', '<leader>fw', function() require('telescope.builtin').grep_string() end, { desc = desc('ts', 'find word') })
 
-M.map('n', '<leader>ff', function()
-    vim.cmd('cd ' .. project_root)
-    require('telescope.builtin').find_files()
-end, { desc = M.desc('ts', 'find files') })
-
-M.map('n', '<leader>fw', function()
-    vim.cmd('cd ' .. project_root)
-    require('telescope.builtin').grep_string()
-end, { desc = M.desc('ts', 'find word') })
-
-M.map('n', '<leader><space>', function() require('telescope.builtin').buffers() end, { desc = M.desc('ts', 'find buffers') })
-M.map('n', '<leader>?', function() require('telescope.builtin').oldfiles() end, { desc = M.desc('ts', 'find recent files') })
-M.map('n', '<leader>f\'', function() require('telescope.builtin').marks() end, { desc = M.desc('ts', 'find marks') })
-M.map('n', '<leader>fh', function() require('telescope.builtin').help_tags() end, { desc = M.desc('ts', 'find help') })
-M.map('n', '<leader>fk', function() require('telescope.builtin').keymaps() end, { desc = M.desc('ts', 'find keymaps') })
-M.map('n', '<leader>fm', function() require('telescope.builtin').man_pages() end, { desc = M.desc('ts', 'find manpage') })
-M.map('n', '<leader>gd', function() require('telescope.builtin').lsp_definitions() end, { desc = M.desc('ts', 'goto deffinition') })
-M.map('n', '<leader>gi', function() require('telescope.builtin').lsp_implementations() end, { desc = M.desc('ts', 'goto implementation') })
-M.map('n', '<leader>qf', function() require('telescope.builtin').quickfix() end, { desc = M.desc('ts', 'find quickfix') })
-M.map('n', '<leader>rg', function() require('telescope.builtin').live_grep() end, { desc = M.desc('ts', 'rg current dir') })
-M.map('n', '/', function()
+map('n', '<leader><space>', function() require('telescope.builtin').buffers() end, { desc = desc('ts', 'find buffers') })
+map('n', '<leader>?', function() require('telescope.builtin').oldfiles() end, { desc = desc('ts', 'find recent files') })
+map('n', '<leader>f\'', function() require('telescope.builtin').marks() end, { desc = desc('ts', 'find marks') })
+map('n', '<leader>fh', function() require('telescope.builtin').help_tags() end, { desc = desc('ts', 'find help') })
+map('n', '<leader>fk', function() require('telescope.builtin').keymaps() end, { desc = desc('ts', 'find keymaps') })
+map('n', '<leader>fm', function() require('telescope.builtin').man_pages() end, { desc = desc('ts', 'find manpage') })
+map('n', '<leader>gd', function() require('telescope.builtin').lsp_definitions() end, { desc = desc('ts', 'goto deffinition') })
+map('n', '<leader>gi', function() require('telescope.builtin').lsp_implementations() end, { desc = desc('ts', 'goto implementation') })
+map('n', '<leader>qf', function() require('telescope.builtin').quickfix() end, { desc = desc('ts', 'find quickfix') })
+map('n', '<leader>rg', function() require('telescope.builtin').live_grep() end, { desc = desc('ts', 'rg current dir') })
+map('n', '<leader>/', function()
     require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
         winblend = 10,
         previewer = false,
     })
-end, { desc = M.desc('ts', 'find in current buffer') })
-M.map('n', '<leader>/', '/')
+end, { desc = desc('ts', 'find in current buffer') })
 
-M.map('n', '<leader>fe', function() require('telescope.builtin').diagnostics() end, { desc = M.desc('ts', 'find errors') })
-M.map('n', '<leader>e', vim.diagnostic.open_float, { desc = M.desc('diag', 'show errors') })
-M.map('n', '<leader>E', vim.diagnostic.setloclist, { desc = M.desc('diag', 'open error list') })
-M.map('n', '[d', vim.diagnostic.goto_prev, { desc = M.desc('diag', 'previous message') })
-M.map('n', ']d', vim.diagnostic.goto_next, { desc = M.desc('diag', 'next message') })
+map('n', '<leader>fe', function() require('telescope.builtin').diagnostics() end, { desc = desc('ts', 'find errors') })
+map('n', '<leader>e', vim.diagnostic.open_float, { desc = desc('diag', 'show errors') })
+map('n', '<leader>E', vim.diagnostic.setloclist, { desc = desc('diag', 'open error list') })
+map('n', '[d', vim.diagnostic.goto_prev, { desc = desc('diag', 'previous message') })
+map('n', ']d', vim.diagnostic.goto_next, { desc = desc('diag', 'next message') })
 
 -- LSP key maps
 M.lsp_on_attach = function(_, bufnr)
     -- refactor
-    M.map('n', '<leader>rn', vim.lsp.buf.rename, { desc = M.desc('lsp', 'rename') })
-    M.map('n', '<leader>ca', vim.lsp.buf.code_action, { desc = M.desc('lsp', 'code action') })
+    map('n', '<leader>rn', vim.lsp.buf.rename, { desc = desc('lsp', 'rename') })
+    map('n', '<leader>ca', vim.lsp.buf.code_action, { desc = desc('lsp', 'code action') })
 
     -- goto
-    M.map('n', 'gd', vim.lsp.buf.definition, { desc = M.desc('lsp', 'goto definition') })
-    M.map('n', 'gr', function() require('telescope.builtin').lsp_references() end, { desc = M.desc('lsp', 'goto references') })
-    M.map('n', 'gI', vim.lsp.buf.implementation, { desc = M.desc('lsp', 'goto implementation') })
+    map('n', 'gd', vim.lsp.buf.definition, { desc = desc('lsp', 'goto definition') })
+    map('n', 'gr', function() require('telescope.builtin').lsp_references() end, { desc = desc('lsp', 'goto references') })
+    map('n', 'gI', vim.lsp.buf.implementation, { desc = desc('lsp', 'goto implementation') })
 
     -- Open manpages/help
-    M.map('n', 'K', vim.lsp.buf.hover, { desc = M.desc('lsp', 'show symbol info') })
-    M.map('n', '<C-n>', vim.lsp.buf.signature_help, { desc = M.desc('lsp', 'show signature info') })
+    map('n', 'K', vim.lsp.buf.hover, { desc = desc('lsp', 'show symbol info') })
+    map('n', '<C-n>', vim.lsp.buf.signature_help, { desc = desc('lsp', 'show signature info') })
 
 
-    M.map('n', '<leader>D', vim.lsp.buf.type_definition, { desc = M.desc('lsp', 'type definition') })
-    M.map('n', '<leader>ds', function() require('telescope.builtin').lsp_document_symbols() end, { desc = M.desc('lsp', 'document symbols') })
-    M.map('n', '<leader>ws', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, { desc = M.desc('lsp', 'workspace symbols') })
+    map('n', '<leader>D', vim.lsp.buf.type_definition, { desc = desc('lsp', 'type definition') })
+    map('n', '<leader>ds', function() require('telescope.builtin').lsp_document_symbols() end, { desc = desc('lsp', 'document symbols') })
+    map('n', '<leader>ws', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, { desc = desc('lsp', 'workspace symbols') })
 
     -- Lesser used LSP functionality
-    M.map('n', 'gD', vim.lsp.buf.declaration, { desc = M.desc('lsp', 'goto declaration') })
-    M.map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, { desc = M.desc('lsp', 'workspace add folder') })
-    M.map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, { desc = M.desc('lsp', 'workspace remove folder') })
-    M.map('n', '<leader>wl', function()
+    map('n', 'gD', vim.lsp.buf.declaration, { desc = desc('lsp', 'goto declaration') })
+    map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, { desc = desc('lsp', 'workspace add folder') })
+    map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, { desc = desc('lsp', 'workspace remove folder') })
+    map('n', '<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, { desc = M.desc('lsp', 'Workspace list folders') })
+    end, { desc = desc('lsp', 'Workspace list folders') })
 
     -- Create a command `:Format` local to the LSP buffer and map it
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
         vim.lsp.buf.format()
-    end, { desc = M.desc('lsp', 'format current buffer') })
-    M.map('n', '<leader>=', ':Format' .. M.fk.enter, { desc = M.desc('lsp', 'format current buffer') })
+    end, { desc = desc('lsp', 'format current buffer') })
+    map('n', '<leader>=', ':Format' .. fk.enter, { desc = desc('lsp', 'format current buffer') })
 end
 
 M.treesitter_km = {
@@ -450,7 +416,7 @@ local get_off_my_lawn = function(args)
     end
 end
 
-M.cmp = {
+M.cmp_keys = {
     select_next_item = '<C-j>',
     select_prev_item = '<C-k>',
     scroll_docs_up = '<C-u>',

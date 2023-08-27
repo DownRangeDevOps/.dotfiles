@@ -1,3 +1,4 @@
+-- local conf = require('config')
 local keymap = require('keymap')
 
 -- ----------------------------------------------
@@ -14,16 +15,26 @@ vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
     callback = function()
         if vim.env.NVIM_SESSION_FILE_PATH then
-            vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH)
+            vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH) -- set by .envrc
         end
-
-        vim.cmd.cd(keymap.get_project_root())
     end
 })
 
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
+-- Set cursorline when search highlight is active
+vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
+    group = ui,
+    callback = function()
+        if vim.opt.hlsearch:get() then
+            vim.opt.cursorline = true
+        else
+            vim.opt.cursorline = false
+        end
+    end
+})
+
 -- Set scroll distance for <C-u> and <C-d>
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinScrolled', 'VimResized' }, {
     group = ui,
@@ -112,22 +123,24 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave' }, {
 })
 
 -- Trim trailing white-space/lines
-vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+vim.api.nvim_create_autocmd({ 'BufWritePre', 'InsertLeave' }, {
     group = user,
     callback = function()
-        MiniTrailspace.trim()
-        MiniTrailspace.trim_last_lines()
+        if vim.api.nvim_buf_get_option(0, 'modifiable') then
+            MiniTrailspace.trim()
+            MiniTrailspace.trim_last_lines()
+        end
     end
 })
 
 -- Overpower some buffers
--- vim.api.nvim_create_autocmd({ 'WinEnter' }, {
---     group = user,
---     callback = function()
---         local bufnr = vim.fn.bufnr()
---
---         if bufnr then
---             keymap.thanos_snap(bufnr)
---         end
---     end
--- })
+vim.api.nvim_create_autocmd({ 'WinEnter' }, {
+    group = user,
+    callback = function()
+        local bufnr = vim.fn.bufnr()
+
+        if bufnr then
+            keymap.thanos_snap(bufnr)
+        end
+    end
+})

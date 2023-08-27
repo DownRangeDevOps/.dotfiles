@@ -1,3 +1,4 @@
+local M = {}
 local keymap = require('keymap')
 
 -- ----------------------------------------------
@@ -45,6 +46,11 @@ require('lazy').setup({
     'tpope/vim-unimpaired', -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
     'zhimsel/vim-stay', --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
     { 'windwp/nvim-autopairs', event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
+
+    -- ----------------------------------------------
+    -- vim-rooter
+    -- ----------------------------------------------
+    { 'airblade/vim-rooter', config = true}, -- Always cd to project root (https://github.com/airblade/vim-rooter)
 
     -- ----------------------------------------------
     -- mini.nvim
@@ -172,10 +178,13 @@ require('lazy').setup({
         opts = {
             transparent_background = true,
             highlight_overrides = {
-                mocha = function(latte)
+                theme = function(theme)
                     return {
-                        Cursor = { fg = latte.none },
+                        Cursor = { fg = theme.none },
                         CmpBorder = { fg = "#3e4145" },
+                        Normal = { bg = theme.mantle },
+                        CurSearch = { fg = theme.base, bg = theme.green },
+                        Search = { fg = theme.base, bg = theme.sky },
                     }
                 end,
             },
@@ -216,8 +225,8 @@ require('lazy').setup({
             },
             dim_inactive = {
                 enabled = false,
-                -- shade = 'dark',
-                -- percentage = 0.15
+                shade = 'base',
+                percentage = 0.15,
             }
         },
         config = function()
@@ -252,15 +261,15 @@ require('lazy').setup({
             -- show_foldtext
             char = '┊',
             context_char = '┊',
-            context_char_blankline = "",
+            context_char_blankline = '┊',
             show_current_context = true,
             show_current_context_start = false,
             show_current_context_start_on_current_line = false,
             show_end_of_line = false,
             show_first_indent_level = false,
-            show_trailing_blankline_indent = false,
-            space_char = '·',
-            space_char_blankline = '',
+            show_trailing_blankline_indent = true,
+            space_char = '•',
+            space_char_blankline = '•',
             use_treesitter = true,
             use_treesitter_scope = true,
             viewport_buffer = 80,
@@ -438,13 +447,13 @@ require('lazy').setup({
             execution_message = { enabled = false },
             trigger_events = { -- See :h events
                 immediate_save = { 'BufLeave', 'FocusLost' }, -- events that trigger immediate save
-                defer_save = { 'InsertLeave', 'TextChanged' }, -- events that trigger deferred save
-                cancel_defered_save = { 'InsertEnter' }, -- events that cancel a pending deferred save
+                defer_save = {}, -- { 'InsertLeave', 'TextChanged' }, -- events that trigger deferred save
+                cancel_defered_save = { 'InsertEnter', 'BufWrite' }, -- events that cancel a pending deferred save
             },
             condition = nil, -- callback to validate buffer save (return true|false, nil = disabled)
             write_all_buffers = false, -- write all buffers `condition` is met
             noautocmd = false, -- do not execute autocmds when saving
-            debounce_delay = 5000, -- delay before executing pending save
+            debounce_delay = 1000, -- delay before executing pending save
             debug = false, -- log for debug messages (saved in neovim cache directory)
         },
     },
@@ -735,36 +744,69 @@ keymap.cmp = cmp.setup {
         { name = 'luasnip' },
     },
 
-   -- Key mappings
-   mapping = cmp.mapping.preset.insert {
-       [ keymap.cmp.select_next_item ] = cmp.mapping.select_next_item(),
-       [ keymap.cmp.select_prev_item ] = cmp.mapping.select_prev_item(),
-       [ keymap.cmp.scroll_docs_up ] = cmp.mapping.scroll_docs(4),
-       [ keymap.cmp.scroll_docs_down ] = cmp.mapping.scroll_docs(-4),
-       [ keymap.cmp.complete ] = cmp.mapping.complete {},
-       [ keymap.cmp.confirm ] = cmp.mapping.confirm {
-           behavior = cmp.ConfirmBehavior.Replace,
-           select = true,
-       },
-       [ keymap.cmp.tab] = cmp.mapping(function(fallback)
-           if cmp.visible() then
-               cmp.select_next_item()
-           elseif luasnip.expand_or_locally_jumpable() then
-               luasnip.expand_or_jump()
-           else
-               fallback()
-           end
-       end, { 'i', 's' }),
-       [ keymap.cmp.shift_tab ] = cmp.mapping(function(fallback)
-           if cmp.visible() then
-               cmp.select_prev_item()
-           elseif luasnip.locally_jumpable(-1) then
-               luasnip.jump(-1)
-           else
-               fallback()
-           end
-       end, { 'i', 's' }),
-   },
+    -- Key mappings
+    mapping = cmp.mapping.preset.insert {
+        ['<C-j>'] = cmp.mapping.select_next_item(),
+        ['<C-k>'] = cmp.mapping.select_prev_item(),
+        ['<C-f>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-u>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete {},
+        ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = false,
+        },
+
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.expand_or_locally_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.locally_jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+    },
+
+    -- Key mappings
+    -- mapping = cmp.mapping.preset.insert {
+    --     [ keymap.cmp_keys.select_next_item ] = cmp.mapping.select_next_item(),
+    --     [ keymap.cmp_keys.select_prev_item ] = cmp.mapping.select_prev_item(),
+    --     [ keymap.cmp_keys.scroll_docs_up ] = cmp.mapping.scroll_docs(4),
+    --     [ keymap.cmp_keys.scroll_docs_down ] = cmp.mapping.scroll_docs(-4),
+    --     [ keymap.cmp_keys.complete ] = cmp.mapping.complete {},
+    --     [ keymap.cmp_keys.confirm ] = cmp.mapping.confirm {
+    --         behavior = cmp.ConfirmBehavior.Replace,
+    --         select = false,
+    --     },
+    --     [ keymap.cmp_keys.tab] = cmp.mapping(function(fallback)
+    --         if cmp.visible() then
+    --             cmp.select_next_item()
+    --         elseif luasnip.expand_or_locally_jumpable() then
+    --             luasnip.expand_or_jump()
+    --         else
+    --             fallback()
+    --         end
+    --     end, { 'i', 's' }),
+    --     [ keymap.cmp_keys.shift_tab ] = cmp.mapping(function(fallback)
+    --         if cmp.visible() then
+    --             cmp.select_prev_item()
+    --         elseif luasnip.locally_jumpable(-1) then
+    --             luasnip.jump(-1)
+    --         else
+    --             fallback()
+    --         end
+    --     end, { 'i', 's' }),
+    -- },
 }
 
 return M

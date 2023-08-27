@@ -1,3 +1,5 @@
+local M = {}
+
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
@@ -30,11 +32,11 @@ vim.opt.viewoptions = table.concat({
 -- Files
 vim.g.fileencoding = 'ucs-bom,utf-8,latin1'
 vim.opt.bomb = false
-vim.opt.autochdir = true
+vim.opt.autochdir = false
 vim.opt.browsedir = "current"
 vim.opt.autoread = true
-vim.opt.autowriteall = true
-vim.opt.autowrite = true
+vim.opt.autowriteall = false
+vim.opt.autowrite = false
 vim.opt.backup = false
 vim.opt.encoding = 'utf-8'
 vim.opt.fixendofline = true
@@ -47,8 +49,8 @@ vim.opt.completeopt = 'menu,menuone,noinsert,noselect'
 vim.opt.fileignorecase = true
 vim.g.wildmenu = true
 vim.g.wildigorecase = true
-vim.opt.wildmode = 'list,full'
-vim.opt.wildoptions = "fuzzy,tagfile"
+vim.opt.wildmode = 'longest:full,full'
+vim.opt.wildoptions:append("fuzzy,tagfile")
 vim.opt.wildignore = table.concat({
     '*/node_modules/*',
     '_site',
@@ -142,6 +144,9 @@ vim.g.bullets_outline_levels = { 'num', 'std*' }
 vim.g.bullets_checkbox_markers = ' ⁃✔︎'
 vim.g.bullets_enabled_file_types = { 'markdown', 'text', 'gitcommit', 'scratch' }
 
--- Obsession
+M.script_path = function()
+   local str = debug.getinfo(2, "S").source:sub(2)
+   return str:match("(.*/)")
+end
 
--- Catppuchin
+return M

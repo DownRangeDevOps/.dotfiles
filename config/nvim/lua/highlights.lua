@@ -32,6 +32,7 @@
 -- 	mantle = "#181825",
 -- 	crust = "#11111b",
 -- }
+
 local mocha = require('catppuccin.palettes.mocha')
 vim.cmd.highlight(
     "IndentBlanklineContextChar"
