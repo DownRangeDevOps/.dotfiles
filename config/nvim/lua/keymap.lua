@@ -132,10 +132,11 @@ map('c', 'q/', '?')
 -- (https://stackoverflow.com/questions/11993851/how-to-delete-not-cut-in-vim)
 -- Copy/paste to/from system clipboard
 map('', '<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
-map('n', '<leader>Y', '"+y$', { desc = desc('gen', 'copy -> eol to system clipboard') })
+map('n', '<leader>Y', '"+Y', { desc = desc('gen', 'copy -> eol to system clipboard') })
 map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = desc('gen', 'copy on mouse select') })
 map('n', '<leader>yy', '"+yy', { desc = desc('gen', 'copy line to system clipboard') })
 map('n', '<leader>p', '"+p', { desc = desc('gen', 'paste system clipboard') })
+map('n', '<leader>P', '"+P', { desc = desc('gen', 'paste system clipboard') })
 --
 -- delete
 map('n', "d", '"_d', { desc = desc('txt', 'delete') })

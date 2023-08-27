@@ -48,35 +48,75 @@ require('lazy').setup({
     { 'windwp/nvim-autopairs', event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
 
     -- ----------------------------------------------
-    -- vim-rooter
+    -- vim-rooter Always cd to project root (https://github.com/airblade/vim-rooter)
+    -- :help vim-rooter
     -- ----------------------------------------------
-    { 'airblade/vim-rooter', config = true}, -- Always cd to project root (https://github.com/airblade/vim-rooter)
+    {
+        'airblade/vim-rooter', config = function()
+            vim.g.rooter_buftypes = { '', 'nofile' }
+            vim.g.rooter_patterns = { '.git' }
+            vim.g.rooter_change_directory_for_non_project_files = 'home'
+        end
+    },
 
     -- ----------------------------------------------
-    -- mini.nvim
+    -- mini.nvim plugins
     -- ----------------------------------------------
 
     -- mini-align (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
     -- :help mini-align
     { 'echasnovski/mini.align', version = '*', config = true, },
 
-    -- Comment/un-comment with vim motions (https://github.com/echasnovski/mini.comment)
+    -- Comment/un-comment with vim motions (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.comment)
     -- :help mini.comment
     { 'echasnovski/mini.comment', version = '*', config = true, },
 
-    -- mini-jump, f/t over eol (https://github.io/echasnovski/mini.jump)
+    -- mini-jump, f/t over eol (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.jump)
     -- :help mini.jump'
     { 'echasnovski/mini.jump', version = '*', config = true, },
 
-    -- mini-starter: (https://github.io/echasnovski/mini.starter)
+    -- mini-starter: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.starter)
     -- :help mini-starter
-    { 'echasnovski/mini.starter',
+    {
+        'echasnovski/mini.starter',
         version = '*',
-        -- opts = {},
-        config = true, },
+        opts = {
+                autoopen = true,
+                evaluate_single = false,
+
+                -- Items to be displayed. Should be an array with the following elements:
+                -- - Item: table with <action>, <name>, and <section> keys.
+                -- - Function: should return one of these three categories.
+                -- - Array: elements of these three types (i.e. item, array, function).
+                -- If `nil` (default), default items will be used (see |mini.starter|).
+                items = nil,
+                header = ""
+                    .. '"Everybody has a plan until they get punched in the mouth."\n'
+                    .. '                                         – Mike Tyson',
+
+                -- Footer to be displayed after items. Converted to single string via
+                -- `tostring` (use `\n` to display several lines). If function, it is
+                -- evaluated first. If `nil` (default), default usage help will be shown.
+                footer = nil,
+
+                -- Array  of functions to be applied consecutively to initial content.
+                -- Each function should take and return content for 'Starter' buffer (see
+                -- |mini.starter| and |MiniStarter.content| for more details).
+                content_hooks = nil,
+
+                -- Characters to update query. Each character will have special buffer
+                -- mapping overriding your global ones. Be careful to not add `:` as it
+                -- allows you to go into command mode.
+                query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_-.',
+
+                -- Whether to disable showing non-error feedback
+                silent = false,
+            },
+        config = true,
+    },
 
     -- :help mini-trailspace
-    -- mini-trailspace (https://github.com/cappyzawa/trim.nvim)
+    -- mini-trailspace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/rim.nvim)
     { 'echasnovski/mini.trailspace', verion = '*', config = true, },
 
     -- Bullets (https://github.io/dkarter/bullets.vim)
