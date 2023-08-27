@@ -234,7 +234,7 @@ map('n', '<leader>rw', ':%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>', { desc
 -- Split management
 map('n', '<leader>\\', function() vim.cmd('vsplit') end, { silent = true, desc = desc('gen', 'vsplit') })
 map('n', '<leader>-', function() vim.cmd('split') end, { silent = true, desc = desc('gen', 'split') })
-map('n', '<leader>q', '<C-^>:bd#' ..fk.enter, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
+map('n', '<leader>q', '<C-^>:bd#i' ..fk.enter, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
 map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
 
 -- Terminal split management

@@ -4675,7 +4675,7 @@ Password Manager</string>
 	<key>LeftCommand</key>
 	<integer>7</integer>
 	<key>LeftOption</key>
-	<integer>2</integer>
+	<integer>3</integer>
 	<key>MaxVertically</key>
 	<false/>
 	<key>New Bookmarks</key>

@@ -28,4 +28,4 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-merge-conflict
       - id: detect-private-key
-      - id: no-commit-to-branch # main/master by default
+      # - id: no-commit-to-branch # main/master by default

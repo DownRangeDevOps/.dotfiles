@@ -63,3 +63,5 @@ function ads() {
 
 	printf_callout "%s\n" "The result has been copied to your clipboard."
 }
+
+find . -type f -iname 'foobar' -exec bash -c "rm -rf {}" \;
