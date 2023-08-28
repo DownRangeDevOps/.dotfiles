@@ -75,8 +75,22 @@ function create_symlinks() {
 }
 
 function install_docopts() {
-    local docopts_install_cmd="cd external/docopts get_docopts.sh"
-    local docopts_sh_install_cmd="cd bin && ln -sfv ../external/docopts/docopts.sh"
+    local tmp_dir
+    tmp_dir="$(mktemp --directory --tmpdir)"
+
+    local docopts_install_cmd="
+        go install
+        github.com/docopt/docopt-go
+        github.com/docopt/docopts
+        "
+    local docopts_sh_install_cmd="
+        (cd ${tmp_dir} || exit 1 &&
+            (
+                curl -O https://raw.githubusercontent.com/docopt/docopts/master/docopts.sh;
+                chmod + x docopts.sh;
+                mv docopts.sh /usr/local/bin
+            )
+        )"
 
     if [[ ! -f bin/docopts ]]; then
         printf_callout "Installing docopts..."

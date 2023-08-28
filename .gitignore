@@ -6,3 +6,6 @@
 .vim-jenkins
 tags
 lazy-lock.json
+
+# Bin dependencies
+bin/docopts*
