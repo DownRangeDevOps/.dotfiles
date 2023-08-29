@@ -483,36 +483,6 @@ require('lazy').setup({
         },
     },
 
-    -- Auto-save (https://github.com/okuuva/auto-save.nvim)
-    {
-        'okuuva/auto-save.nvim',
-        cmd = 'ASToggle',
-        event = { 'InsertLeave', 'TextChanged' },
-        opts = {
-            enabled = true,
-            message = function()
-                return ("AutoSaved " .. vim.fn.expand('%:t') .. vim.fn.strftime(" (%H:%M:%S)"))
-            end,
-            dim = 0.18,
-            cleaning_interval = 500, -- milliseconds
-            trigger_events = {
-                immediate_save = { 'BufLeave', 'FocusLost' },
-                defer_save = {},
-                cancel_defered_save = {},
-            },
-            condition = function()
-                -- don't save special-buffers
-                if vim.fn.getbufvar(vim.api.nvim_win_get_buf(0), "&buftype") ~= '' then
-                    return false
-                end
-            end,
-            write_all_buffers = false, -- write all buffers `condition` is met
-            noautocmd = false, -- do not execute autocmds when saving
-            debounce_delay = 1000, -- delay before executing pending save
-            debug = false, -- log for debug messages (saved in neovim cache directory)
-        },
-    },
-
     -- ----------------------------------------------
     -- LSP Configuration & Plugins
     -- ----------------------------------------------
