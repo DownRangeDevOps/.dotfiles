@@ -2,17 +2,17 @@
 
 # logger is slow, avoid sourcing it unless we need it for now
 if [[ ${DEBUG:-} -eq 1 ]]; then
-	source "${HOME}/.dotfiles/lib/log.sh"
+    source "${HOME}/.dotfiles/lib/log.sh"
 
-	# log.sh sets -u which is too strict for many dependencies
-	set +u
+    # log.sh sets -u which is too strict for many dependencies
+    set +u
 
-	log debug ""
-	log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+    log debug ""
+    log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 else
-	function log() {
-		true
-	}
+    function log() {
+        true
+    }
 fi
 
 # Source these first as they're dependencies atm
@@ -114,50 +114,50 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # ------------------------------------------------
 # log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
 # function nvim() {
-# 	# load the nvim venv if not already
-# 	if [[ ! ${VIRTUAL_ENV} =~ /nvim$ ]]; then
-# 		workon nvim
-# 	fi
+#     # load the nvim venv if not already
+#     if [[ ! ${VIRTUAL_ENV:-} =~ /nvim$ ]]; then
+#         workon nvim
+#     fi
 #
-# 	if [[ -w ${NVIM_SESSION_FILE_PATH} ]]; then
-# 		command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
-# 	else
-# 		command nvim "$@"
-# 	fi
+#     if [[ -w ${NVIM_SESSION_FILE_PATH} ]]; then
+#         command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
+#     else
+#         command nvim "$@"
+#     fi
 # }
 
-alias grep=rg
-alias ag=rg
 function rg() {
-	"$(brew --prefix)/bin/rg" \
-		--follow \
-		--hidden \
-		--no-config \
-		--smart-case \
-		--colors 'match:style:bold' \
-		--colors 'match:fg:156,201,159' \
-		--colors 'match:bg:24,64,43' \
-		--glob '!.git' \
-		"$@"
+    "$(brew --prefix)/bin/rg" \
+        --follow \
+        --hidden \
+        --no-config \
+        --smart-case \
+        --colors 'match:style:bold' \
+        --colors 'match:fg:205,214,244' \
+        --colors 'match:bg:62,87,103' \
+        --glob '!.git' \
+        "$@"
 }
 
 # lazy load thefuck
 if [[ -n ${TF_ALIAS:-} ]]; then
-	unalias fuck=tf_init
+    unalias fuck=tf_init
 else
-	alias fuck=tf_init
+    alias fuck=tf_init
 fi
 
 function tf_init() {
-	unalias fuck=tf_init
-	eval "$(thefuck --alias)"
-	fuck "$@"
+    unalias fuck=tf_init
+    set +u
+    eval "$(thefuck --alias)"
+    set -u
+    fuck "$@"
 }
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 # shellcheck disable=SC1091
 {
-	# NOTE: These are sourced at the top of the file, here as a reminder
+    # NOTE: These are sourced at the top of the file, here as a reminder
     # source "${HOME}/.dotfiles/bash-helpers/lib.sh"
     # source "${HOME}/.dotfiles/bash-helpers/path.sh"
     # source "${HOME}/.dotfiles/bash-helpers/bash.sh"
@@ -178,10 +178,10 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 
 # .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then
-	log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
 
-	# shellcheck source=/Users/ryanfisher/.bashrc
-	source "${HOME}/.bashrc"
+    # shellcheck source=/Users/ryanfisher/.bashrc
+    source "${HOME}/.bashrc"
 fi
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done." ""

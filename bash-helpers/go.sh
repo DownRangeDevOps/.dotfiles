@@ -31,9 +31,11 @@ function goenv_lazy_init() {
 
     printf_warning "goenv has not been initialized, initializing now..." >&2
 
+    set +u
     goenv_alias remove
     eval "$(goenv init -)"
     add_to_path "prepend" "$(goenv prefix)/bin" # Go binaries
+    set -u
 
     $last_cmd
 }

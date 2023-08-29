@@ -62,6 +62,7 @@ function pyenv_init() {
     export PROJECT_HOME="${HOME}/dev"
     export VIRTUALENVWRAPPER_WORKON_CD=1
 
+    set +u
     eval "$(pyenv init -)"
     add_to_path "prepend" "$(pyenv prefix)" # pyenv
 
@@ -72,6 +73,7 @@ function pyenv_init() {
     # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
     log debug "$(printf_callout Initializing virtualenvwrapper...)"
     pyenv virtualenvwrapper_lazy
+    set -u
 
     $last_cmd
 }

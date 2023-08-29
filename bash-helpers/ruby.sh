@@ -43,6 +43,7 @@ function rbenv_lazy_init() {
     export RBENV_INITALIZED=1
     eval "$(rbenv init -)"
     add_to_path "prepend" "$(rbenv prefix)/bin"
+    set -u
 
     $last_cmd
 }
