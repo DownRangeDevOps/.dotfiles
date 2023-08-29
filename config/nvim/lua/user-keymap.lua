@@ -4,7 +4,7 @@ local M = {}
 -- ----------------------------------------------
 
 M.bin = {
-    bash = '$(brew --prefix)/bin/bash --login'
+    bash = vim.env.BREW_PREFIX .. '/bin/bash --login'
 }
 local bin = M.bin
 
