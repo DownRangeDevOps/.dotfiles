@@ -1,4 +1,3 @@
-# python.sh
 log debug ""
 log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
@@ -36,7 +35,7 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function __get_virtualenv_name() {
-	if [[ $VIRTUAL_ENV ]]; then
+	if [[ ${VIRTUAL_ENV:-} ]]; then
 		printf "%s\n" " $(basename "$VIRTUAL_ENV")"
 	else
 		printf "%s\n" ""

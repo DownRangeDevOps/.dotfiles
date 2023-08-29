@@ -1,5 +1,4 @@
 # shellcheck disable=SC1090,SC1091
-
 # logger is slow, avoid sourcing it unless we need it for now
 if [[ ${DEBUG:-} -eq 1 ]]; then
     source "${HOME}/.dotfiles/lib/log.sh"

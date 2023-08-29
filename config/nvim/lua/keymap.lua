@@ -248,38 +248,38 @@ map('n', '<leader>~', function()
 end, { silent = true, desc = desc('gen', ':split term') })
 
 -- Split navigation
-map('i', '<C-h>',fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
-map('i', '<C-j>',fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
-map('i', '<C-k>',fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
-map('i', '<C-l>',fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
-
-map('v', '<C-h>',fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
-map('v', '<C-j>',fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
-map('v', '<C-k>',fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
-map('v', '<C-l>',fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
-
-map('n', '<C-h>', '<C-w>h', { desc = desc('nav', 'left window') })
-map('n', '<C-j>', '<C-w>j', { desc = desc('nav', 'down window') })
-map('n', '<C-k>', '<C-w>k', { desc = desc('nav', 'up window') })
-map('n', '<C-l>', '<C-w>l', { desc = desc('nav', 'right window') })
-
-map('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = desc('nav', 'left window') })
-map('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = desc('nav', 'down window') })
-map('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = desc('nav', 'up window') })
-map('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
+map('i', '<C-h>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>h', { desc = desc('nav', 'left window') })
+map('i', '<C-j>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>j', { desc = desc('nav', 'down window') })
+map('i', '<C-k>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>k', { desc = desc('nav', 'up window') })
+map('i', '<C-l>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>l', { desc = desc('nav', 'right window') })
+--
+map('v', '<C-h>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>h', { desc = desc('nav', 'left window') })
+map('v', '<C-j>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>j', { desc = desc('nav', 'down window') })
+map('v', '<C-k>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>k', { desc = desc('nav', 'up window') })
+map('v', '<C-l>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>l', { desc = desc('nav', 'right window') })
+--
+map('n', '<C-h>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>h', { desc = desc('nav', 'left window') })
+map('n', '<C-j>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>j', { desc = desc('nav', 'down window') })
+map('n', '<C-k>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>k', { desc = desc('nav', 'up window') })
+map('n', '<C-l>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>l', { desc = desc('nav', 'right window') })
+--
+map('t', '<C-h>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>h', { desc = desc('nav', 'left window') })
+map('t', '<C-j>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>j', { desc = desc('nav', 'down window') })
+map('t', '<C-k>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>k', { desc = desc('nav', 'up window') })
+map('t', '<C-l>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>l', { desc = desc('nav', 'right window') })
 
 -- Tab navigation
-map('i', '<M-h>',fk.escape .. ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev tab') })
-map('i', '<M-l>',fk.escape .. ':tabnext' ..fk.enter, { desc = desc('nav', 'next tab') })
+map('i', '˙',fk.escape .. ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev tab') })
+map('i', '¬',fk.escape .. ':tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next tab') })
 
-map('v', '<M-h>',fk.escape .. ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
-map('v', '<M-l>',fk.escape .. ':tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
+map('v', '˙',fk.escape .. ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev window') })
+map('v', '¬',fk.escape .. ':tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next window') })
 
-map('n', '<M-h>', ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
-map('n', '<M-l>', ':tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
+map('n', '˙', ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev window') })
+map('n', '¬', ':tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next window') })
 
-map('t', '<M-h>', '<C-\\><C-n>:tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
-map('t', '<M-l>', '<C-\\><C-n>:tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
+map('t', '˙', '<C-\\><C-n>:tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev window') })
+map('t', '¬', '<C-\\><C-n>:tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next window') })
 
 -- ----------------------------------------------
 -- Plugin Keymaps

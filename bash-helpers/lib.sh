@@ -1,4 +1,3 @@
-# lib.ssh
 # shellcheck disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
 if [[ ${DEBUG:-} -eq 1 ]]; then
     source "${HOME}/.dotfiles/lib/log.sh"

@@ -1,4 +1,3 @@
-# go.sh
 log debug ""
 log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
@@ -27,7 +26,7 @@ function goenv_lazy_init() {
     last_cmd=$(fc -l | tail -1 | cut -d ' ' -f 2-)
 
     log debug "$(printf_callout Initalizing goenv...)"
-	unset -f goenv_lazy_init
+    unset -f goenv_lazy_init
 
     printf_warning "goenv has not been initialized, initializing now..." >&2
 
