@@ -101,16 +101,18 @@ pyenv
 EOF
 
         for cmd in "${virtualenv_cmds[@]}"; do
-            if [[ $1 == "remove" ]]; then
+            if [[ $1 == "create" ]]; then
                 log debug "Aliasing ${cmd} to pyenv_init"
 
                 # shellcheck disable=SC2139
                 alias "${cmd}=pyenv_init"
-            else
+            elif [[ $1 == "remove" ]]; then
                 log debug "Unaliasing ${virtualenv_cmds[*]}"
 
                 # shellcheck disable=SC2139
                 unalias "${virtualenv_cmds[@]}" 2>/dev/null
+            else
+                printf_error "pyenv_alias: unknown argument $1"
             fi
         done
 }

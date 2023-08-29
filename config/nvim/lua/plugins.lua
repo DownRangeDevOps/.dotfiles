@@ -91,9 +91,9 @@ require('lazy').setup({
                 -- If `nil` (default), default items will be used (see |mini.starter|).
                 items = nil,
                 header = ""
-                    .. 'If you look for truth, you may find comfort in the end; if you look for'
-                    .. 'comfort you will not get either comfort or truth only soft soap and wishful'
-                    .. 'thinking to begin, and in the end, despair.'
+                    .. 'If you look for truth, you may find comfort in the end; if you look for\n'
+                    .. 'comfort you will not get either comfort or truth only soft soap and wishful\n'
+                    .. 'thinking to begin, and in the end, despair.\n'
                     .. '                                         – C. S. Lewis\n'
                     .. '\n'
                     .. '"Everybody has a plan until they get punched in the mouth."\n'
