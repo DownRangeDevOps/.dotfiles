@@ -1,5 +1,5 @@
 -- local conf = require('config')
-local keymap = require('keymap')
+local keymap = require('user-keymap')
 
 -- ----------------------------------------------
 -- Auto-command Groups

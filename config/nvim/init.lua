@@ -2,9 +2,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-require('commands')
-require('plugins')
-require('highlights')
-require('keymap')
-require('autocommands')
-require('config')
+require('user-commands')
+require('user-plugins')
+require('user-highlights')
+require('user-keymap')
+require('user-autocommands')
+require('user-config')

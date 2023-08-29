@@ -168,14 +168,24 @@ map('n', 'n', 'nzzzv', { desc = desc('next search') })
 map('n', 'N', 'Nzzzv', { desc = desc('prev search') })
 
 -- File management
+map('n', '<leader>w', vim.cmd.write, { silent = true, desc = desc('file', 'write to file') })
+map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = desc('file', 'open undo-tree' ) })
 map('n', '<leader>1', function() vim.cmd(
     'Neotree action=focus source=filesystem position=current toggle reveal') end,
     { silent = true, desc = desc('file', 'open browser') })
 map('n', '<leader>2', function() vim.cmd(
     'Neotree action=show source=filesystem position=left toggle reveal') end,
     { silent = true, desc = desc('file', 'open sidebar browser') })
-map('n', '<leader>w', vim.cmd.write, { silent = true, desc = desc('file', 'write to file') })
-map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = desc('file', 'open undo-tree' ) })
+
+M.neo_tree = {
+    window = {
+        mappings = {
+            ['-'] = 'navigate_up',
+            ['<C-r>'] = 'Neotree refresh',
+        }
+    }
+}
+
 -- map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = desc('file', 'make file +x') })
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)

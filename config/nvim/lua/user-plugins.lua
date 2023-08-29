@@ -1,5 +1,5 @@
 local M = {}
-local keymap = require('keymap')
+local keymap = require('user-keymap')
 
 -- ----------------------------------------------
 -- Install package manager (https://github.com/folke/lazy.nvim)
@@ -23,7 +23,6 @@ vim.opt.rtp:prepend(lazypath)
 -- Install and configure plugins (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-plugin-spec
 -- ----------------------------------------------
--- require('plugins')
 require('lazy').setup({
 
     -- Git manager: vim-fugitive clone (https://github.com/dinhhuy258/git.nvim)
@@ -183,8 +182,8 @@ require('lazy').setup({
         }
     },
 
-    -- neo-tree: tree/file browser (https://github.com/nvim-neo-tree/neo-tree.nvim)
-    -- :help neo-tree.txt
+    -- -- neo-tree: tree/file browser (https://github.com/nvim-neo-tree/neo-tree.nvim)
+    -- -- :help neo-tree.txt
     {
         "nvim-neo-tree/neo-tree.nvim",
         branch = "v3.x",
@@ -194,14 +193,26 @@ require('lazy').setup({
             "MunifTanjim/nui.nvim",
         },
         opts = {
-            filesystem = {
+            window = {
+                position = "current",
+                noremap = true,
+                nowait = true,
                 window = {
-                    mappings = {
-                        ["-"] = "navigate_up",
-                        ["<C-r"] = "refresh",
+                    mappings = keymap.neo_tree
+                },
+            },
+            filesystem = {
+                filtered_items = {
+                    hide_dotfiles = false,
+                    hide_gitignored = false,
+                    follow_current_file = {
+                        enabled = true,
+                        leave_dirs_open = false,
+                        hijack_netrw_behavior = "open_current",
+                        use_libuv_file_watcher = true,
                     }
-                }
-            }
+                },
+            },
         },
     },
 
@@ -280,8 +291,8 @@ require('lazy').setup({
         end,
     },
 
-    -- LuaLine
-    -- :help lualine.txt
+    -- -- LuaLine
+    -- -- :help lualine.txt
     {
         'nvim-lualine/lualine.nvim', -- https://github.com/nvim-lualine/lualine.nvim
         opts = {
