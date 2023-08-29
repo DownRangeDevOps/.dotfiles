@@ -43,95 +43,83 @@ function __get_virtualenv_name() {
 	fi
 }
 
-# # Initalize pyenv
-# function pyenv_init() {
-#     # local last_cmd
-#     # last_cmd=$(fc -l | tail -1 | cut -d ' ' -f 2-)
-#
-#     # Pyenv (https://github.com/pyenv/pyenv)
-#     # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
-#     # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-#     export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-#     export WORKON_HOME="${HOME}/.virtualenvs"
-#     export PROJECT_HOME="${HOME}/dev"
-#     export VIRTUALENVWRAPPER_WORKON_CD=1
-#
-#     log debug "Unalising pyenv_init"
-#     pyenv_alias remove
-#
-#     # init pyenv + tools
-#     log debug "Initializing pyenv"
-#     eval "$(pyenv init -)"
-#
-#     log debug "Initializing virtualenv"
-#     eval "$(pyenv virtualenv-init -)"
-#
-#     log debug "Initializing virtualenvwrapper"
-#     command pyenv virtualenvwrapper_lazy
-# }
 
-# function pyenv_alias() {
-#     local virtualenv_cmds
-#     mapfile -t virtualenv_cmds <<EOF
-# add2virtualenv
-# allvirtualenv
-# cdproject
-# cdsitepackages
-# cdvirtualenv
-# cpvirtualenv
-# lssitepackages
-# lsvirtualenv
-# mkproject
-# mktmpenv
-# mkvirtualenv
-# rmvirtualenv
-# setvirtualenvproject
-# showvirtualenv
-# toggleglobalsitepackages
-# wipeenv
-# workon
-# pyenv
-# EOF
-#
-#     if [[ $1 == "create" ]]; then
-#         for cmd in "${virtualenv_cmds[@]}"; do
-#             log debug "Aliasing ${cmd} to pyenv_init"
-#
-#             # shellcheck disable=SC2139
-#             alias "${cmd}=pyenv_init"
-#         done
-#         else
-#             log debug "Unaliasing ${virtualenv_cmds[*]}"
-#
-#             # shellcheck disable=SC2139
-#             unalias "${virtualenv_cmds[@]}"
-#     fi
-# }
+function pyenv_init() {
+    local last_cmd
+    last_cmd=$(fc -l | tail -1 | cut -d ' ' -f 2-)
 
-# Alias pyenv/virtualenvwrapper cmds to pyenv lazy loader
-# if [[ -z ${PYENV_ROOT} ]]; then
-#     pyenv_alias create
-# else
-#     pyenv_alias remove
-# fi
+	printf_warning "pyenv has not been initialized, initializing now..." >&2
 
-# init pyenv + tools
-# Pyenv (https://github.com/pyenv/pyenv)
-# pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
-# pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-export WORKON_HOME="${HOME}/.virtualenvs"
-export PROJECT_HOME="${HOME}/dev"
-export VIRTUALENVWRAPPER_WORKON_CD=1
+    log debug "Unalising pyenv_init"
+    pyenv_alias "remove"
 
-log debug "$(printf_callout Initializing pyenv...)"
-eval "$(pyenv init -)"
+    # Initalize pyenv (https://github.com/pyenv/pyenv)
+    log debug "$(printf_callout Initializing pyenv...)"
 
-log debug "$(printf_callout Initializing virtualenv...)"
-eval "$(pyenv virtualenv-init -)"
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+    export WORKON_HOME="${HOME}/.virtualenvs"
+    export PROJECT_HOME="${HOME}/dev"
+    export VIRTUALENVWRAPPER_WORKON_CD=1
 
-log debug "$(printf_callout Initializing virtualenvwrapper...)"
-pyenv virtualenvwrapper_lazy
+    eval "$(pyenv init -)"
+    add_to_path "prepend" "$(pyenv prefix)" # pyenv
+
+    # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
+    log debug "$(printf_callout Initializing virtualenv...)"
+    eval "$(pyenv virtualenv-init -)"
+
+    # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
+    log debug "$(printf_callout Initializing virtualenvwrapper...)"
+    pyenv virtualenvwrapper_lazy
+
+    $last_cmd
+}
+
+function pyenv_alias() {
+    local virtualenv_cmds
+    mapfile -t virtualenv_cmds <<EOF
+add2virtualenv
+allvirtualenv
+cdproject
+cdsitepackages
+cdvirtualenv
+cpvirtualenv
+lssitepackages
+lsvirtualenv
+mkproject
+mktmpenv
+mkvirtualenv
+rmvirtualenv
+setvirtualenvproject
+showvirtualenv
+toggleglobalsitepackages
+wipeenv
+workon
+pyenv
+EOF
+
+        for cmd in "${virtualenv_cmds[@]}"; do
+            if [[ $1 == "remove" ]]; then
+                log debug "Aliasing ${cmd} to pyenv_init"
+
+                # shellcheck disable=SC2139
+                alias "${cmd}=pyenv_init"
+            else
+                log debug "Unaliasing ${virtualenv_cmds[*]}"
+
+                # shellcheck disable=SC2139
+                unalias "${virtualenv_cmds[@]}" 2>/dev/null
+            fi
+        done
+}
+
+# Alias virtualenv lazy loader
+if [[ -z ${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION:-} ]]; then
+    pyenv_alias create
+else
+    pyenv_alias remove
+fi
 
 # Megalinter helper
 function run_mega_linter_python() {
