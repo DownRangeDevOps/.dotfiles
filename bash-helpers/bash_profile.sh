@@ -141,10 +141,6 @@ function rg() {
 		"$@"
 }
 
-# Load package shims
-# eval "$(goenv init -)"            # Setup shell to make go binary available  # Slows loading, disabling for now
-# eval "$(rbenv init -)"            # Enable rbenv shims
-
 # lazy load thefuck
 if [[ -n ${TF_ALIAS:-} ]]; then
 	unalias fuck=tf_init
@@ -162,8 +158,9 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 # shellcheck disable=SC1091
 {
 	# NOTE: These are sourced at the top of the file, here as a reminder
-	# source ${HOME}/.dotfiles/bash-helpers/lib.sh
-	# source ${HOME}/.dotfiles/bash-helpers/bash.sh
+    # source "${HOME}/.dotfiles/bash-helpers/lib.sh"
+    # source "${HOME}/.dotfiles/bash-helpers/path.sh"
+    # source "${HOME}/.dotfiles/bash-helpers/bash.sh"
 
 	source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
 	source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
@@ -178,13 +175,7 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 	source "${HOME}/.dotfiles/bash-helpers/ps1.sh" # set custom PS1
 }
 
-# Add the direnv hook to PROMPT_COMMAND
-log debug ""
-log debug "$(printf_callout "[${BASH_SOURCE[0]}]")"
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading direnv hook..."
-eval "$(direnv hook bash)"
-
-# load .bashrc
+# .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then
 	log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
 

@@ -116,7 +116,7 @@ require('lazy').setup({
     },
 
     -- :help mini-trailspace
-    -- mini-trailspace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/rim.nvim)
+    -- mini-trailspace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
     { 'echasnovski/mini.trailspace', verion = '*', config = true, },
 
     -- Bullets (https://github.io/dkarter/bullets.vim)
@@ -489,22 +489,22 @@ require('lazy').setup({
             end,
             dim = 0.18,
             cleaning_interval = 500, -- milliseconds
+            trigger_events = {
+                immediate_save = { 'BufLeave', 'FocusLost' },
+                defer_save = {},
+                cancel_defered_save = {},
+            },
+            condition = function()
+                -- don't save special-buffers
+                if vim.fn.getbufvar(vim.api.nvim_win_get_buf(0), "&buftype") ~= '' then
+                    return false
+                end
+            end,
+            write_all_buffers = false, -- write all buffers `condition` is met
+            noautocmd = false, -- do not execute autocmds when saving
+            debounce_delay = 1000, -- delay before executing pending save
+            debug = false, -- log for debug messages (saved in neovim cache directory)
         },
-        trigger_events = {
-            immediate_save = { 'BufLeave', 'FocusLost' },
-            defer_save = {},
-            cancel_defered_save = {},
-        },
-        condition = function()
-            -- don't save special-buffers
-            if vim.fn.getbufvar(vim.api.nvim_win_get_buf(0), "&buftype") ~= '' then
-                return false
-            end
-        end,
-        write_all_buffers = false, -- write all buffers `condition` is met
-        noautocmd = false, -- do not execute autocmds when saving
-        debounce_delay = 1000, -- delay before executing pending save
-        debug = false, -- log for debug messages (saved in neovim cache directory)
     },
 
     -- ----------------------------------------------

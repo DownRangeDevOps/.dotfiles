@@ -3,10 +3,14 @@ function set_path() {
 	log debug "[$(basename "${BASH_SOURCE[0]}")]: Resetting PATH"
 
 	local brew_prefix
+    local rbenv_prefix
+    local goenv_prefix
 	local gnu_tools=("gnu-tar" "gnu-which" "gnu-sed" "grep" "coreutils" "findutils" "make")
 	local compilers=("llvm/bin")
 
 	if brew --version >/dev/null 2<&1; then brew_prefix="$(brew --prefix)"; fi
+	if rbenv --version >/dev/null 2<&1; then rbenv_prefix="$(rbenv prefix)"; fi
+	if goenv --version >/dev/null 2<&1; then goenv_prefix="$(goenv prefix)"; fi
 
 	export PATH=""      # Reset
 	source /etc/profile # Base
@@ -31,7 +35,7 @@ function set_path() {
 	add_to_path "append" "${HOME}/.local/bin"  # Ansible
 	add_to_path "append" "${HOME}/.cabal/bin/" # Haskell
 
-	if rbenv --version >/dev/null 2>&1; then add_to_path "prepend" "$(rbenv prefix)"; fi # rbenv
+	if rbenv --version >/dev/null 2>&1; then add_to_path "prepend" "${rbenv_prefix}/bin"; fi # rbenv
 
 	if pyenv --version >/dev/null 2>&1; then
 		add_to_path "prepend" "$(pyenv prefix)" # pyenv
@@ -39,8 +43,7 @@ function set_path() {
 	fi
 
 	if goenv --version >/dev/null 2>&1; then
-		add_to_path "prepend" "$(goenv prefix)"     # Go binaries
-		add_to_path "prepend" "$(goenv prefix)/bin" # Go binaries
+		add_to_path "prepend" "${goenv_prefix}/bin" # Go binaries
 	fi
 }
 set_path

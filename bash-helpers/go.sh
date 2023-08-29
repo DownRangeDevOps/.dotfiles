@@ -22,11 +22,8 @@ function goenv_alias() {
 	done
 }
 
-if [[ -z ${GOENV_ROOT:-} ]]; then
-	goenv_alias create
-fi
-
 function goenv_lazy_init() {
+    log debug "$(printf_callout Initalizing goenv...)"
 	unset -f goenv_lazy_init
 
 	printf_callout "%s\n" "goenv has not been initialized, initializing now..."
@@ -34,5 +31,8 @@ function goenv_lazy_init() {
 	eval "$(goenv init -)"
 
 	printf_warning "%s\n" "goenv initialized, plese re-run the previosu command."
-	${CMD}
 }
+
+if [[ -z ${GOENV_ROOT:-} ]]; then
+    goenv_alias create
+fi

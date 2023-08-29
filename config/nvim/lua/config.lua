@@ -13,7 +13,6 @@ vim.opt.diffopt = table.concat({
   'algorithm:histogram',
 }, ',')
 
--- vim.opt.isfname:append("{,}") -- expand variables before gf, gF
 vim.opt.lazyredraw = true
 vim.opt.mouse = 'a'
 vim.opt.secure = true
@@ -49,7 +48,7 @@ vim.opt.completeopt = 'menu,menuone,noinsert,noselect'
 vim.opt.fileignorecase = true
 vim.g.wildmenu = true
 vim.g.wildigorecase = true
-vim.opt.wildmode = 'longest:full,full'
+vim.opt.wildmode = 'longest,full'
 vim.opt.wildoptions:append("fuzzy,tagfile")
 vim.opt.wildignore = table.concat({
     '*/node_modules/*',
