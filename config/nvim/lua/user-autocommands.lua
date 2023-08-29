@@ -75,6 +75,17 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
             vim.wo.number = false
             vim.wo.relativenumber = false
             vim.wo.spell = false
+        else
+            vim.opt.colorcolumn = '80'
+            vim.opt.list = true
+            vim.opt.number = true
+            vim.opt.numberwidth = 5
+            vim.opt.relativenumber = true
+            vim.opt.listchars = table.concat({
+                'tab:»·',
+                'trail:·',
+                'nbsp:·',
+            }, ',')
         end
     end,
 })
