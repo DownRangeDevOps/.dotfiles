@@ -117,7 +117,7 @@ require('lazy').setup({
 
     -- :help mini-trailspace
     -- mini-trailspace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
-    { 'echasnovski/mini.trailspace', verion = '*', config = true, },
+    { 'echasnovski/mini.trailspace', config = true, },
 
     -- Bullets (https://github.io/dkarter/bullets.vim)
     -- :help bullets

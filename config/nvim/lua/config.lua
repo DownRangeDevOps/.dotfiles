@@ -12,7 +12,6 @@ vim.opt.diffopt = table.concat({
   'linematch:60',
   'algorithm:histogram',
 }, ',')
-
 vim.opt.lazyredraw = true
 vim.opt.mouse = 'a'
 vim.opt.secure = true
@@ -28,6 +27,12 @@ vim.opt.viewoptions = table.concat({
   'unix',
 }, ',')
 
+-- Providers
+vim.g.node_host_prog = '/usr/local/bin/neovim-node-host'
+vim.g.perl_host_prog = '/usr/local/bin/perl'
+vim.g.python3_host_prog = '/Users/ryanfisher/.pyenv/versions/3.11.4/bin/python'
+vim.g.ruby_host_prog = '/Users/ryanfisher/.rbenv/versions/3.0.3/bin/ruby'
+
 -- Files
 vim.g.fileencoding = 'ucs-bom,utf-8,latin1'
 vim.opt.bomb = false
@@ -39,9 +44,6 @@ vim.opt.autowrite = false
 vim.opt.backup = false
 vim.opt.encoding = 'utf-8'
 vim.opt.fixendofline = true
-
--- Global vars
--- vim.opt.python3_host_prog = os.execute('pyenv which python')
 
 -- Vim command line completion
 vim.opt.completeopt = 'menu,menuone,noinsert,noselect'
@@ -143,9 +145,10 @@ vim.g.bullets_outline_levels = { 'num', 'std*' }
 vim.g.bullets_checkbox_markers = ' ⁃✔︎'
 vim.g.bullets_enabled_file_types = { 'markdown', 'text', 'gitcommit', 'scratch' }
 
-M.script_path = function()
+local script_path = function()
    local str = debug.getinfo(2, "S").source:sub(2)
    return str:match("(.*/)")
 end
+M.script_path = script_path()
 
 return M

@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinScrolled', 'VimResized' }, {
 })
 
 -- Set options for specific file and buffer types
-vim.api.nvim_create_autocmd({ 'BufEnter', 'TabEnter', 'BufNew' }, {
+vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
     group = ui,
     callback = function()
         local clean_filetypes = {

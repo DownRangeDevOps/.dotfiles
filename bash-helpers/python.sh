@@ -124,13 +124,13 @@ export WORKON_HOME="${HOME}/.virtualenvs"
 export PROJECT_HOME="${HOME}/dev"
 export VIRTUALENVWRAPPER_WORKON_CD=1
 
-log debug "Initializing pyenv"
+log debug "$(printf_callout Initializing pyenv...)"
 eval "$(pyenv init -)"
 
-log debug "Initializing virtualenv"
+log debug "$(printf_callout Initializing virtualenv...)"
 eval "$(pyenv virtualenv-init -)"
 
-log debug "Initializing virtualenvwrapper"
+log debug "$(printf_callout Initializing virtualenvwrapper...)"
 pyenv virtualenvwrapper_lazy
 
 # Megalinter helper
