@@ -17,7 +17,7 @@ alias gcom="git checkout \$(__git_master_or_main)"
 alias gd="__git_diff_so_fancy_with_less"
 alias gd1="__git_diff_so_fancy_with_less HEAD~"
 alias gdd="__git_diff_so_fancy_with_less origin/develop..."
-alias gdm="__git_diff_so_fancy_with_less origin/master..."
+alias gdm="__git_diff_so_fancy_with_less origin/\$(__git_master_or_main)..."
 alias gdmb="git_delete_merged_branches"
 alias gf="git fetch --prune"
 alias gfu="git_fixup"
@@ -216,7 +216,7 @@ function __git_status_vs_master() {
 }
 
 function __git_status_vs_develop() {
-    if git show-ref --verify --quiet refs/heads/master; then
+    if git show-ref --verify --quiet "refs/heads/$(__git_master_or_main)"; then
         printf "%s\n" \
             "==> Log: " \
             "$(indent_output "$(git log origin/develop..)")" \
@@ -284,7 +284,7 @@ function __git_log_all_branches_no_trunc_msg() {
 
 function __git_get_merged_branches() {
     git branch --all --merged "origin/$(__git_master_or_main)" |
-        "$(brew --prefix)/bin/rg" --invert-match '>|master|main|develop|release' |
+        "${BREW_PREFIX}/bin/rg" --invert-match '>|master|main|develop|release' |
         tr -d ' '
 }
 

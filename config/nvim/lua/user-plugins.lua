@@ -199,7 +199,7 @@ require('lazy').setup({
 
     -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
     -- :help nvim-ufo
-    { 'kevinhwang91/nvim-ufo', lazy = false, config = true, dependencies = 'kevinhwang91/promise-async' },
+    -- { 'kevinhwang91/nvim-ufo', lazy = false, config = true, dependencies = 'kevinhwang91/promise-async' },
 
     -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
     -- :help nvim-colorizer
@@ -572,7 +572,7 @@ require('lazy').setup({
             presist_size = true,
             presist_mode = true,
             direction = 'float',
-            shell = '$(brew --prefix)/bin/bash --login',
+            shell = vim.env.BREW_PREFIX .. '/bin/bash --login',
             auto_scroll = true,
             border = 'curved',
             highlights = {
