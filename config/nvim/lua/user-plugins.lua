@@ -24,34 +24,30 @@ vim.opt.rtp:prepend(lazypath)
 -- :help lazy.nvim-lazy.nvim-plugin-spec
 -- ----------------------------------------------
 require('lazy').setup({
+    -- Vim user sovereign rights
+    { 'ThePrimeagen/harpoon', lazy = false }, -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
+    { 'mbbill/undotree', lazy = false }, -- Browse undo-tree (https://github.com/mbbill/undotree.git)
+    { 'tpope/vim-obsession', lazy = false }, -- Session mgmt (https://github.com/tpope/vim-obsession)
+    { 'tpope/vim-repeat', lazy = false }, -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
+    { 'tpope/vim-sleuth', lazy = true, event = "InsertEnter" }, -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
+    { 'tpope/vim-surround', lazy = false, event = "InsertEnter" }, -- Surround text (https://github.com/tpope/vim-surround)
+    { 'tpope/vim-unimpaired', lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
+    { 'zhimsel/vim-stay', lazy = false }, --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
+    { 'windwp/nvim-autopairs', lazy = true, event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
 
     -- Git manager: vim-fugitive clone (https://github.com/dinhhuy258/git.nvim)
-    {
-        'dinhhuy258/git.nvim',
-        config = true,
-        opts = {
-            default_mappings = false,
-            target_branch = 'main',
-        },
+    { 'dinhhuy258/git.nvim', lazy = true, event = 'CmdlineEnter', config = true,
+        opts = { default_mappings = false, target_branch = 'main', },
     },
-
-    -- Vim user sovereign rights
-    'ThePrimeagen/harpoon', -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
-    'mbbill/undotree', -- Browse undo-tree (https://github.com/mbbill/undotree.git)
-    'tpope/vim-obsession', -- Session mgmt (https://github.com/tpope/vim-obsession)
-    'tpope/vim-repeat', -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
-    'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
-    'tpope/vim-surround', -- Surround text (https://github.com/tpope/vim-surround)
-    'tpope/vim-unimpaired', -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
-    'zhimsel/vim-stay', --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
-    { 'windwp/nvim-autopairs', event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
 
     -- ----------------------------------------------
     -- vim-rooter Always cd to project root (https://github.com/airblade/vim-rooter)
     -- :help vim-rooter
     -- ----------------------------------------------
     {
-        'airblade/vim-rooter', config = function()
+        'airblade/vim-rooter',
+        lazy = false,
+        config = function()
             vim.g.rooter_buftypes = { '', 'nofile' }
             vim.g.rooter_patterns = { '.git' }
             vim.g.rooter_change_directory_for_non_project_files = 'home'
@@ -61,171 +57,72 @@ require('lazy').setup({
     -- ----------------------------------------------
     -- mini.nvim plugins
     -- ----------------------------------------------
-
     -- mini-align (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
     -- :help mini-align
-    { 'echasnovski/mini.align', version = '*', config = true, },
+    { 'echasnovski/mini.align', lazy = true, event = 'InsertEnter', version = '*', config = true, },
 
     -- Comment/un-comment with vim motions (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.comment)
     -- :help mini.comment
-    { 'echasnovski/mini.comment', version = '*', config = true, },
-
-    -- mini-jump, f/t over eol (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.jump)
-    -- :help mini.jump'
-    { 'echasnovski/mini.jump', version = '*', config = true, },
+    { 'echasnovski/mini.comment', lazy = false, version = '*', config = true, },
 
     -- mini-starter: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.starter)
     -- :help mini-starter
     {
         'echasnovski/mini.starter',
+        lazy = false,
         version = '*',
         opts = {
-                autoopen = true,
-                evaluate_single = false,
+            autoopen = true,
+            evaluate_single = false,
 
-                -- Items to be displayed. Should be an array with the following elements:
-                -- - Item: table with <action>, <name>, and <section> keys.
-                -- - Function: should return one of these three categories.
-                -- - Array: elements of these three types (i.e. item, array, function).
-                -- If `nil` (default), default items will be used (see |mini.starter|).
-                items = nil,
-                header = ""
-                    .. 'If you look for truth, you may find comfort in the end; if you look for\n'
-                    .. 'comfort you will not get either comfort or truth only soft soap and wishful\n'
-                    .. 'thinking to begin, and in the end, despair.\n'
-                    .. '                                         – C. S. Lewis\n'
-                    .. '\n'
-                    .. '"Everybody has a plan until they get punched in the mouth."\n'
-                    .. '                                         – Mike Tyson\n'
-                    .. '\n',
+            -- Items to be displayed. Should be an array with the following elements:
+            -- - Item: table with <action>, <name>, and <section> keys.
+            -- - Function: should return one of these three categories.
+            -- - Array: elements of these three types (i.e. item, array, function).
+            -- If `nil` (default), default items will be used (see |mini.starter|).
+            items = nil,
+            header = ""
+            .. 'If you look for truth, you may find comfort in the end; if you look for\n'
+            .. 'comfort you will not get either comfort or truth only soft soap and wishful\n'
+            .. 'thinking to begin, and in the end, despair.\n'
+            .. '                                         – C. S. Lewis\n'
+            .. '\n'
+            .. '"Everybody has a plan until they get punched in the mouth."\n'
+            .. '                                         – Mike Tyson\n'
+            .. '\n',
 
-                -- Footer to be displayed after items. Converted to single string via
-                -- `tostring` (use `\n` to display several lines). If function, it is
-                -- evaluated first. If `nil` (default), default usage help will be shown.
-                footer = nil,
+            -- Footer to be displayed after items. Converted to single string via
+            -- `tostring` (use `\n` to display several lines). If function, it is
+            -- evaluated first. If `nil` (default), default usage help will be shown.
+            footer = nil,
 
-                -- Array  of functions to be applied consecutively to initial content.
-                -- Each function should take and return content for 'Starter' buffer (see
-                -- |mini.starter| and |MiniStarter.content| for more details).
-                content_hooks = nil,
+            -- Array  of functions to be applied consecutively to initial content.
+            -- Each function should take and return content for 'Starter' buffer (see
+            -- |mini.starter| and |MiniStarter.content| for more details).
+            content_hooks = nil,
 
-                -- Characters to update query. Each character will have special buffer
-                -- mapping overriding your global ones. Be careful to not add `:` as it
-                -- allows you to go into command mode.
-                query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_-.',
+            -- Characters to update query. Each character will have special buffer
+            -- mapping overriding your global ones. Be careful to not add `:` as it
+            -- allows you to go into command mode.
+            query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_-.',
 
-                -- Whether to disable showing non-error feedback
-                silent = false,
-            },
+            -- Whether to disable showing non-error feedback
+            silent = false,
+        },
         config = true,
     },
 
     -- :help mini-trailspace
     -- mini-trailspace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
-    { 'echasnovski/mini.trailspace', config = true, },
+    { 'echasnovski/mini.trailspace', lazy = true, event = 'BufWritePre', config = true, },
 
     -- Bullets (https://github.io/dkarter/bullets.vim)
     -- :help bullets
-    'dkarter/bullets.vim',
+    { 'dkarter/bullets.vim', lazy = true, event = 'FileType ' .. table.concat(vim.g.bullets_enabled_file_types, ',') },
 
     -- ----------------------------------------------
     -- UI
     -- ----------------------------------------------
-    -- taboo.vim (https://github.com/gcmt/taboo.vim)
-    -- :help taboo
-    { 'gcmt/taboo.vim' },
-
-    -- toggleterm.nvim (https://github.com/akinsho/toggleterm.nvim)
-    -- :help toggleterm.nvim
-    { 'akinsho/toggleterm.nvim', version = "*", config = true },
-
-    -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
-    -- :help nvim-ufo
-    { 'kevinhwang91/nvim-ufo', config = true, dependencies = 'kevinhwang91/promise-async' },
-
-    -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
-    -- :help nvim-colorizer
-    --
-    -- Attach to buffer
-    -- require("colorizer").attach_to_buffer(0, { mode = "background", css = true})
-    --
-    -- Detach from buffer
-    -- require("colorizer").detach_from_buffer(0, { mode = "virtualtext", css = true})
-    {
-        'NvChad/nvim-colorizer.lua',
-        opts = {
-            filetypes = { "*" },
-            user_default_options = {
-                RGB = false, -- #RGB hex codes
-                RRGGBB = true, -- #RRGGBB hex codes
-                names = true, -- "Name" codes like Blue or blue
-                RRGGBBAA = false, -- #RRGGBBAA hex codes
-                AARRGGBB = false, -- 0xAARRGGBB hex codes
-                rgb_fn = false, -- CSS rgb() and rgba() functions
-                hsl_fn = false, -- CSS hsl() and hsla() functions
-                css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-                css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
-                -- Available modes for `mode`: foreground, background,  virtualtext
-                mode = "virtualtext", -- Set the display mode.
-                -- Available methods are false / true / "normal" / "lsp" / "both"
-                -- True is same as normal
-                tailwind = false, -- Enable tailwind colors
-                -- parsers can contain values used in |user_default_options|
-                sass = { enable = false, parsers = { "css" }, }, -- Enable sass colors
-                virtualtext = "●",
-                -- update color values even if buffer is not focused
-                -- example use: cmp_menu, cmp_docs
-                always_update = false
-            },
-            -- all the sub-options of filetypes apply to buftypes
-            buftypes = {},
-        }
-    },
-
-    -- -- neo-tree: tree/file browser (https://github.com/nvim-neo-tree/neo-tree.nvim)
-    -- -- :help neo-tree.txt
-    {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-            "MunifTanjim/nui.nvim",
-        },
-        opts = {
-            window = {
-                position = "current",
-                noremap = true,
-                nowait = true,
-                window = {
-                    mappings = keymap.neo_tree
-                },
-            },
-            filesystem = {
-                filtered_items = {
-                    hide_dotfiles = false,
-                    hide_gitignored = false,
-                    follow_current_file = {
-                        enabled = true,
-                        leave_dirs_open = false,
-                        hijack_netrw_behavior = "open_current",
-                        use_libuv_file_watcher = true,
-                    }
-                },
-            },
-        },
-    },
-
-    -- Treesitter: Syntax and code navigation (https://github.com/nvim-treesitter/nvim-treesitter)
-    -- :help treesitter.txtt i
-    {
-        'nvim-treesitter/nvim-treesitter',
-        dependencies = {
-            'nvim-treesitter/nvim-treesitter-textobjects', -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-        },
-        build = ':TSUpdate',
-    },
-
     -- Colorscheme/Theme
     -- :help catppuccin.txt
     {
@@ -291,10 +188,110 @@ require('lazy').setup({
         end,
     },
 
-    -- -- LuaLine
-    -- -- :help lualine.txt
+    -- taboo.vim (https://github.com/gcmt/taboo.vim)
+    -- :help taboo
+    { 'gcmt/taboo.vim', lazy = true, event = 'CmdlineEnter' },
+
+    -- toggleterm.nvim (https://github.com/akinsho/toggleterm.nvim)
+    -- :help toggleterm.nvim
+    { 'akinsho/toggleterm.nvim', lazy = false, version = "*", config = true },
+
+    -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
+    -- :help nvim-ufo
+    { 'kevinhwang91/nvim-ufo', lazy = false, config = true, dependencies = 'kevinhwang91/promise-async' },
+
+    -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
+    -- :help nvim-colorizer
+    --
+    -- Attach to buffer
+    -- require("colorizer").attach_to_buffer(0, { mode = "background", css = true})
+    --
+    -- Detach from buffer
+    -- require("colorizer").detach_from_buffer(0, { mode = "virtualtext", css = true})
+    {
+        'NvChad/nvim-colorizer.lua',
+        lazy = true,
+        event = 'InsertEnter',
+        opts = {
+            filetypes = { "*" },
+            user_default_options = {
+                RGB = false, -- #RGB hex codes
+                RRGGBB = true, -- #RRGGBB hex codes
+                names = false, -- "Name" codes like Blue or blue
+                RRGGBBAA = false, -- #RRGGBBAA hex codes
+                AARRGGBB = false, -- 0xAARRGGBB hex codes
+                rgb_fn = false, -- CSS rgb() and rgba() functions
+                hsl_fn = false, -- CSS hsl() and hsla() functions
+                css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+                css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+                -- Available modes for `mode`: foreground, background,  virtualtext
+                mode = "virtualtext", -- Set the display mode.
+                -- Available methods are false / true / "normal" / "lsp" / "both"
+                -- True is same as normal
+                tailwind = false, -- Enable tailwind colors
+                -- parsers can contain values used in |user_default_options|
+                sass = { enable = false, parsers = { "css" }, }, -- Enable sass colors
+                virtualtext = "●",
+                -- update color values even if buffer is not focused
+                -- example use: cmp_menu, cmp_docs
+                always_update = false
+            },
+            -- all the sub-options of filetypes apply to buftypes
+            buftypes = {},
+        }
+    },
+
+    -- neo-tree: tree/file browser (https://github.com/nvim-neo-tree/neo-tree.nvim)
+    -- :help neo-tree.txt
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        lazy = false,
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "MunifTanjim/nui.nvim",
+        },
+        opts = {
+            window = {
+                position = "current",
+                noremap = true,
+                nowait = true,
+                window = {
+                    mappings = keymap.neo_tree
+                },
+            },
+            filesystem = {
+                filtered_items = {
+                    hide_dotfiles = false,
+                    hide_gitignored = false,
+                    follow_current_file = {
+                        enabled = true,
+                        leave_dirs_open = false,
+                        hijack_netrw_behavior = "open_current",
+                        use_libuv_file_watcher = true,
+                    }
+                },
+            },
+        },
+    },
+
+    -- Treesitter: Syntax and code navigation (https://github.com/nvim-treesitter/nvim-treesitter)
+    -- :help treesitter.txtt i
+    {
+        'nvim-treesitter/nvim-treesitter',
+        lazy = false,
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects', -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+        },
+        build = ':TSUpdate',
+    },
+
+    -- LuaLine
+    -- :help lualine.txt
     {
         'nvim-lualine/lualine.nvim', -- https://github.com/nvim-lualine/lualine.nvim
+        lazy = false,
         opts = {
             options = {
                 icons_enabled = false,
@@ -313,9 +310,8 @@ require('lazy').setup({
     -- :help indent_blankline.txt
     {
         'lukas-reineke/indent-blankline.nvim',
+        lazy = false,
         opts = {
-            -- disable_with_nolist
-            -- show_foldtext
             char = '┊',
             context_char = '┊',
             context_char_blankline = '┊',
@@ -384,6 +380,7 @@ require('lazy').setup({
     -- :help which-key.nvim.txt
     {
         'folke/which-key.nvim',
+        lazy = false,
         init = function()
             vim.opt.timeout = true
             vim.opt.timeoutlen = 500
@@ -475,6 +472,7 @@ require('lazy').setup({
     -- :help gitsigns.txt
     {
         'lewis6991/gitsigns.nvim',
+        lazy = false,
         opts = {
             signs = {
                 add = { text = '+' },
@@ -499,6 +497,7 @@ require('lazy').setup({
     -- ----------------------------------------------
     {
         'neovim/nvim-lspconfig', -- https://github.com/neovim/nvim-lspconfig
+        lazy = false,
         dependencies = {
             -- Automatically install LSPs to stdpath for neovim
             { 'williamboman/mason.nvim', config = true },  -- https://github.com/williamboman/mason.nvim
@@ -508,7 +507,7 @@ require('lazy').setup({
             { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} }, -- https://github.com/j-hui/fidget.nvim
 
             -- Additional lua configuration, makes nvim stuff amazing!
-            'folke/neodev.nvim', -- https://github.com/folke/neodev.nvim
+            { 'folke/neodev.nvim', lazy = true } -- https://github.com/folke/neodev.nvim
         },
     },
 
@@ -517,6 +516,7 @@ require('lazy').setup({
     -- ----------------------------------------------
     {
         'hrsh7th/nvim-cmp', -- https://github.com/hrsh7th/nvim-cmp
+        lazy = false,
         dependencies = {
             -- Snippet Engine & its associated nvim-cmp source
             'L3MON4D3/LuaSnip', -- https://github.com/L3MON4D3/LuaSnip
@@ -533,7 +533,6 @@ require('lazy').setup({
 
             -- Auto complete rule: Underscores last (/) and command (:) (https://github.com/lukas-reineke/cmp-under-comparator)
             'lukas-reineke/cmp-under-comparator',
-
         },
     },
 
@@ -543,6 +542,7 @@ require('lazy').setup({
     {
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
+        lazy = false,
         dependencies = {
             'nvim-lua/plenary.nvim', -- https://github.com/nvim-lua/plenary.nvim
             {
@@ -555,7 +555,42 @@ require('lazy').setup({
             },
         },
     },
+
+    -- toggleterm (https://github.com/akinsho/toggleterm.nvim)
+    -- :help toggleterm
+    {
+        "akinsho/toggleterm.nvim",
+        lazy = false,
+        version = "*",
+        opts = {
+            hide_numbers = true,
+            shade_terminals = false,
+            start_in_insert = true,
+            insert_mappings = false,
+            terminal_mappings = false,
+            presist_size = true,
+            presist_mode = true,
+            direction = 'float',
+            shell = '$(brew --prefix)/bin/bash --login',
+            auto_scroll = true,
+            border = 'curved',
+            highlights = {
+                Normal = {
+                    guibg = '#181825'
+                },
+                NormalFloat = {
+                    guibg = '#181825'
+                },
+                FloatBorder = {
+                    guibg = '#181825'
+                },
+            },
+        },
+    },
 })
+-- ----------------------------------------------
+-- End of Lazy loading
+-- ----------------------------------------------
 
 -- ----------------------------------------------
 -- [[ LuaSnip ]]

@@ -8,7 +8,7 @@
 -- ----------------------------------------------
 -- Clear registers
 vim.api.nvim_create_user_command(
-    'ClearRegisters',
+    'CR',
     function()
         local registers = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"*+'
         for reg in registers:gmatch(".") do
@@ -21,7 +21,7 @@ vim.api.nvim_create_user_command(
 -- Clear registers
 --   command! -nargs=* Only call CloseHiddenBuffers()
 vim.api.nvim_create_user_command(
-    'CloseHiddenBuffers',
+    'CB',
     function()
         --  get all visible buffers in all tabs
         local visible = {}

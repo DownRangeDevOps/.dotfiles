@@ -36,6 +36,6 @@
 local mocha = require('catppuccin.palettes.mocha')
 vim.cmd.highlight(
     "IndentBlanklineContextChar"
-    .. " guifg=" .. mocha.overlay0
+    .. " guifg=" .. mocha.surface1
     .. " gui=nocombine"
 )

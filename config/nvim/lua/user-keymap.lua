@@ -15,6 +15,19 @@ M.fk = {
 }
 local fk = M.fk
 
+M.tc = function(str)
+    assert(tostring(str), 'invalid argument: str :string required')
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+local tc = M.tc
+
+M.save_clear_modifiable = function()
+    vim.fn.feedkeys(tc(fk.escape))
+    vim.cmd.wa()
+    vim.cmd("echo ''")
+end
+local save_clear_modifiable = M.save_clear_modifiable
+
 M.is_git_repo = function()
     if os.execute('git rev-parse') == 0 then
         return true
@@ -29,13 +42,13 @@ local is_git_repo = M.is_git_repo
 M.map = function(mode, lhs, rhs, opts)
     --- Shortcut for vim.keymap.set
     --
-    -- @param mode:string|table ('n'|'i'|'v'|'c'|'t')
-    -- @param keys:string
-    -- @param func:string|func
-    -- @param opts:table|nil
-    assert(tostring(mode), 'invalid argument: mode string required')
-    assert(tostring(lhs), 'invalid argument: lhs string required')
-    assert(tostring(rhs), 'invalid argument: rhs string required')
+    -- @param mode :string|table ('n'|'i'|'v'|'c'|'t')
+    -- @param keys :string
+    -- @param func :string|func
+    -- @param opts :table|nil
+    assert(tostring(mode), 'invalid argument: mode :string required')
+    assert(tostring(lhs), 'invalid argument: lhs :string required')
+    assert(tostring(rhs), 'invalid argument: rhs :string required')
 
     if opts then
         vim.keymap.set(mode, lhs, rhs, opts)
@@ -48,8 +61,8 @@ local map = M.map
 M.desc = function(group, desc)
     --- Prefix descriptions with a group
     --
-    -- @param group:string Group prefix (cond|diag|file|gen|lsp|nav|tog|ts)
-    -- @param desc:string Description
+    -- @param group :string Group prefix (cond|diag|file|gen|lsp|nav|tog|ts)
+    -- @param desc :string Description
     local groups = {
         cond = 'Cond: ',
         diag = 'Diag: ',
@@ -167,7 +180,7 @@ map('n', '<C-d>', '<C-d>zz', { desc = desc('gen', 'pgdn') })
 map('n', 'n', 'nzzzv', { desc = desc('next search') })
 map('n', 'N', 'Nzzzv', { desc = desc('prev search') })
 
--- File management
+-- File management (auto-save, browser)
 map('n', '<leader>w', vim.cmd.write, { silent = true, desc = desc('file', 'write to file') })
 map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = desc('file', 'open undo-tree' ) })
 map('n', '<leader>1', function() vim.cmd(
@@ -248,35 +261,101 @@ map('n', '<leader>q', ':w' .. fk.enter .. '<C-^>:bd#' .. fk.enter .. 'i' .. fk.e
 map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
 
 -- Terminal split management
+map('n', '`', ':ToggleTerm size=20 direction=float' .. fk.enter, { desc = desc('gen', 'open floating terminal')})
 map('n', '<leader>`', function()
-    vim.cmd('vsplit term://' .. bin.bash)
+    vim.cmd.nor('vsplit term://' .. bin.bash)
     vim.cmd('startinser')
 end, { silent = true, desc = desc('gen', ':vsplit term') })
+
 map('n', '<leader>~', function()
     vim.cmd('split term://' .. bin.bash)
     vim.cmd('startinser')
 end, { silent = true, desc = desc('gen', ':split term') })
 
 -- Split navigation
-map('i', '<C-h>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>h', { desc = desc('nav', 'left window') })
-map('i', '<C-j>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>j', { desc = desc('nav', 'down window') })
-map('i', '<C-k>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>k', { desc = desc('nav', 'up window') })
-map('i', '<C-l>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>l', { desc = desc('nav', 'right window') })
+map('i', '<C-h>', function()
+    -- save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>h'), 'n')
+end, { desc = desc('nav', 'left window') })
+
+map('i', '<C-j>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>j'), 'n')
+end, { desc = desc('nav', 'down window') })
+
+map('i', '<C-k>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>k'), 'n')
+end, { desc = desc('nav', 'up window') })
+
+map('i', '<C-l>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>l'), 'n')
+end, { desc = desc('nav', 'right window') })
 --
-map('v', '<C-h>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>h', { desc = desc('nav', 'left window') })
-map('v', '<C-j>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>j', { desc = desc('nav', 'down window') })
-map('v', '<C-k>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>k', { desc = desc('nav', 'up window') })
-map('v', '<C-l>',fk.escape .. ':wa'.. fk.enter .. ':echo ""' .. fk.enter ..'<C-w>l', { desc = desc('nav', 'right window') })
+map('v', '<C-h>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>h'), 'n')
+end, { desc = desc('nav', 'left window') })
+
+map('v', '<C-j>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>j'), 'n')
+end, { desc = desc('nav', 'down window') })
+
+map('v', '<C-k>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>k'), 'n')
+end, { desc = desc('nav', 'up window') })
+
+map('v', '<C-l>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>l'), 'n')
+end, { desc = desc('nav', 'right window') })
 --
-map('n', '<C-h>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>h', { desc = desc('nav', 'left window') })
-map('n', '<C-j>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>j', { desc = desc('nav', 'down window') })
-map('n', '<C-k>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>k', { desc = desc('nav', 'up window') })
-map('n', '<C-l>', ':wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>l', { desc = desc('nav', 'right window') })
+map('n', '<C-h>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>h'), 'n')
+end, { desc = desc('nav', 'left window') })
+
+map('n', '<C-j>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>j'), 'n')
+end, { desc = desc('nav', 'down window') })
+
+map('n', '<C-k>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>k'), 'n')
+end, { desc = desc('nav', 'up window') })
+
+map('n', '<C-l>', function()
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>l'), 'n')
+end, { desc = desc('nav', 'right window') })
 --
-map('t', '<C-h>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>h', { desc = desc('nav', 'left window') })
-map('t', '<C-j>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>j', { desc = desc('nav', 'down window') })
-map('t', '<C-k>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>k', { desc = desc('nav', 'up window') })
-map('t', '<C-l>', '<C-\\><C-n>:wa' .. fk.enter .. ':echo ""' .. fk.enter .. '<C-w>l', { desc = desc('nav', 'right window') })
+map('t', '<C-h>', function()
+    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>h'), 'n')
+end, { desc = desc('nav', 'left window') })
+
+map('t', '<C-j>', function()
+    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>j'), 'n')
+end, { desc = desc('nav', 'down window') })
+
+map('t', '<C-k>', function()
+    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
+    save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>k'), 'n')
+end, { desc = desc('nav', 'up window') })
+
+map('t', '<C-l>', function()
+    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
+    M.save_clear_modifiable()
+    vim.fn.feedkeys(tc('<C-w>l'), 'n')
+end, { desc = desc('nav', 'right window') })
 
 -- Tab navigation
 map('i', '˙',fk.escape .. ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev tab') })
