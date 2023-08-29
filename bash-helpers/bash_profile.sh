@@ -162,17 +162,18 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
     # source "${HOME}/.dotfiles/bash-helpers/path.sh"
     # source "${HOME}/.dotfiles/bash-helpers/bash.sh"
 
-	source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
-	source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
-	source "${HOME}/.dotfiles/bash-helpers/go.sh"         # Golang helpers
-	source "${HOME}/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
-	source "${HOME}/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
-	source "${HOME}/.dotfiles/bash-helpers/git.sh"        # git helpers
-	source "${HOME}/.dotfiles/bash-helpers/aws.sh"        # aws helpers
-	source "${HOME}/.dotfiles/bash-helpers/osx.sh"        # osx helpers
-	source "${HOME}/.dotfiles/bash-helpers/python.sh"     # python helpers
-	# source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
-	source "${HOME}/.dotfiles/bash-helpers/ps1.sh" # set custom PS1
+    source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
+    source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
+    source "${HOME}/.dotfiles/bash-helpers/go.sh"         # Golang helpers
+    source "${HOME}/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
+    source "${HOME}/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
+    source "${HOME}/.dotfiles/bash-helpers/git.sh"        # git helpers
+    source "${HOME}/.dotfiles/bash-helpers/aws.sh"        # aws helpers
+    source "${HOME}/.dotfiles/bash-helpers/osx.sh"        # osx helpers
+    source "${HOME}/.dotfiles/bash-helpers/python.sh"     # python helpers
+    # source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
+    source "${HOME}/.dotfiles/bash-helpers/ps1.sh" # set custom PS1
+    source "${HOME}/.dotfiles/bash-helpers/ruby.sh"     # python helpers
 }
 
 # .bashrc
