@@ -13,6 +13,7 @@ local user = vim.api.nvim_create_augroup('USER', { clear = true })
 -- ----------------------------------------------
 vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
+    pattern = '*',
     callback = function()
         if vim.env.NVIM_SESSION_FILE_PATH then
             vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH) -- set by .envrc
@@ -26,6 +27,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- Set cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
     group = ui,
+    pattern = '*',
     callback = function()
         if vim.opt.hlsearch:get() then
             vim.opt.cursorline = true
@@ -38,6 +40,7 @@ vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
 -- Set scroll distance for <C-u> and <C-d>
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinScrolled', 'VimResized' }, {
     group = ui,
+    pattern = '*',
     callback = function()
         local cur_win_height = vim.fn.ceil(vim.api.nvim_win_get_height(0) * 0.66)
         if cur_win_height then vim.opt.scroll = cur_win_height end
@@ -47,6 +50,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinScrolled', 'VimResized' }, {
 -- Set options for specific file and buffer types
 vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
     group = ui,
+    pattern = '*',
     callback = function()
         local clean_filetypes = {
             lspinfo = true,
@@ -108,6 +112,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Map/unmap shitty plugin auto bindings
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave' }, {
     group = user,
+    pattern = '*',
     callback = function()
         local bullets_buftypes, err = pcall(function()
             vim.g.bullets_enabled_file_types()
@@ -136,6 +141,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave' }, {
 -- Trim trailing white-space/lines
 vim.api.nvim_create_autocmd({ 'BufWritePre', 'InsertLeave' }, {
     group = user,
+    pattern = '*',
     callback = function()
         if vim.api.nvim_buf_get_option(0, 'modifiable') then
             MiniTrailspace.trim()
@@ -147,6 +153,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePre', 'InsertLeave' }, {
 -- Overpower some buffers
 vim.api.nvim_create_autocmd({ 'WinEnter' }, {
     group = user,
+    pattern = '*',
     callback = function()
         local bufnr = vim.fn.bufnr()
 
@@ -155,3 +162,24 @@ vim.api.nvim_create_autocmd({ 'WinEnter' }, {
         end
     end
 })
+
+-- Protect large files from sourcing and other overhead
+-- Files become read only
+-- vim.api.nvim_create_autocmd({ 'BufReadPre' }, {
+--     group = user,
+--     pattern = '*',
+--     callback = function()
+--         local large_file = 1024 * 1024 * 10
+--         local file = vim.fn.expand("<afile>")
+--         local file_type = vim.fn.getftype(file)
+--
+--         if vim.fn.getfsize(file) > large_file then
+--             vim.opt.eventignore:append(file_type)
+--             vim.bo.noswapfile  = true
+--             vim.bo.bufhidden = 'unload'
+--             vim.bo.buftype = 'nowrite'
+--             vim.opt.undolevels:remove(1)
+--         else
+--             vim.opt.eventignore:remove(file_type)
+--         end
+-- end, })
