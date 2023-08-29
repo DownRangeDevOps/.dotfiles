@@ -3,16 +3,13 @@ log debug ""
 log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
 # ------------------------------------------------
-#  aliases
-# ------------------------------------------------
-# avoid accidentally linking against a Pyenv-provided Python
-# (see: https://github.com/pyenv/pyenv#installation)
-if pyenv root > /dev/null: then;
-  local path_without_pyenv_shims="${PATH//~\/.pyenv\/shims:/}"
-    alias brew='env PATH="${path_without_pyenv_shims}" brew'
-fi
-
-# ------------------------------------------------
 #  config
 # ------------------------------------------------
 export HOMEBREW_GITHUB_API_TOKEN="${SECRET_HOMEBREW_GITHUB_PAT}"
+
+# ------------------------------------------------
+#  aliases
+# ------------------------------------------------
+# Avoid linking against any shims
+NO_SHIMS_PATH=$(printf "%s" "${PATH}" | sed -e 's,.*shims[^:]*:,,g')
+alias brew='env PATH=${NO_SHIMS_PATH} HOMEBREW_NO_AUTO_UPDATE=1 brew'

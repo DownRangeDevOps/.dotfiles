@@ -1,313 +1,432 @@
+local M = {}
 -- ----------------------------------------------
 -- Helpers
 -- ----------------------------------------------
---
--- trying to figure out metatables
--- local function require_arg(arg)
---   assert(arg ~= nil, arg .. ' argument required')
---   return arg
--- end
---
--- local mt_require_arg = {
---   __call = function(fn, ...)
---     local args = {...}
---
---     for i, arg in ipairs(args) do
---       args[i] = require_arg(arg)
---     end
---
---   return fn(unpack(args))
---   end
--- }
 
-local bin = {
-  bash = '$(brew --prefix)/bin/bash --login'
+M.bin = {
+    bash = '$(brew --prefix)/bin/bash --login'
 }
+local bin = M.bin
 
-local fk = {
-  escape = '<Esc>',
-  enter = '<CR>',
-  space = '<Space>',
+M.fk = {
+    escape = '<Esc>',
+    enter = '<CR>',
+    space = '<Space>',
 }
+local fk = M.fk
 
-local project_root = function()
-  local dir = '.'
-
-  if os.execute('git rev-parse') then
-    local fh = io.popen('git rev-parse --show-toplevel')
-
-    if fh then
-      dir = fh:read('*a')
+M.is_git_repo = function()
+    if os.execute('git rev-parse') == 0 then
+        return true
+    else
+        return false
     end
-  end
-
-  return dir
 end
+local is_git_repo = M.is_git_repo
 
 -- Mapping
-local map = function(mode, keys, func, opts)
-  --- Shortcut for vim.keymap.set
-  --
-  -- @param mode:string|table ('n'|'i'|'v'|'c'|'t')
-  -- @param keys:string
-  -- @param func:string|func
-  -- @param opts:table|nil
+-- TODO: Use to auto add which-key documentation
+M.map = function(mode, lhs, rhs, opts)
+    --- Shortcut for vim.keymap.set
+    --
+    -- @param mode:string|table ('n'|'i'|'v'|'c'|'t')
+    -- @param keys:string
+    -- @param func:string|func
+    -- @param opts:table|nil
+    assert(tostring(mode), 'invalid argument: mode string required')
+    assert(tostring(lhs), 'invalid argument: lhs string required')
+    assert(tostring(rhs), 'invalid argument: rhs string required')
 
-  opts = opts or nil
-
-  vim.keymap.set(mode, keys, func)
+    if opts then
+        vim.keymap.set(mode, lhs, rhs, opts)
+    else
+        vim.keymap.set(mode, lhs, rhs)
+    end
 end
+local map = M.map
 
-local cmap = function(keys, func, opts)
-  --- Shortcut for vim.keymap.set('c', ...)
-  --
-  -- @param keys:string
-  -- @param func:string|func
-  -- @param opts:table|nil
+M.desc = function(group, desc)
+    --- Prefix descriptions with a group
+    --
+    -- @param group:string Group prefix (cond|diag|file|gen|lsp|nav|tog|ts)
+    -- @param desc:string Description
+    local groups = {
+        cond = 'Cond: ',
+        diag = 'Diag: ',
+        file = 'File: ',
+        gen = 'Gen: ',
+        git = 'Git: ',
+        lsp = 'LSP: ',
+        nav = 'Nav: ',
+        tog = 'Togg: ',
+        ts = 'TS: ',
+        txt = 'TXT: ',
+        ui = 'UI: ',
+    }
 
-  opts = opts or nil
-  map('c', keys, func, opts)
+    if groups[group] then
+        desc = groups[group] .. desc
+    end
+
+    return desc
 end
+local desc = M.desc
 
-local imap = function(keys, func, opts)
-  --- Shortcut for vim.keymap.set('i', ...)
-  --
-  -- @param keys:string
-  -- @param func:string|func
-  -- @param opts:table|nil
+-- You should have gone for the head...
+M.thanos_snap = function(bufnr)
+    local modifiable = vim.api.nvim_buf_get_option(bufnr, 'modifiable')
+    local readonly = vim.api.nvim_buf_get_option(bufnr, 'readonly')
+    local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
+    local filetype = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+    local the_unfortunate = { 'help', 'qf', 'man', 'checkhouth', 'lspinfo', 'checkhealth' } -- file types
+    local the_disgraced = { 'quickfix', 'prompt', 'nofile' } -- buf types
 
-  opts = opts or nil
-  map('i', keys, func, opts)
-end
+    local snap_while_wearing_a_gauntlet = function ()
+        map('n', 'q', ':quit', { buffer = bufnr, desc = desc('gui', "don't @ me") })
+    end
 
-local nmap = function(keys, func, opts)
-  --- Shortcut for vim.keymap.set('n', ...)
-  --
-  -- @param keys:string
-  -- @param func:string|func
-  -- @param opts:table|nil
-
-  opts = opts or nil
-  map('n', keys, func, opts)
-end
-
-local tmap = function(keys, func, opts)
-  --- Shortcut for vim.keymap.set('t', ...)
-  --
-  -- @param keys:string
-  -- @param func:string|func
-  -- @param opts:table|nil
-
-  opts = opts or nil
-  map('t', keys, func, opts)
-end
-
-local vmap = function(keys, func, opts)
-  --- Shortcut for vim.keymap.set('v', ...)
-  --
-  -- @param keys:string
-  -- @param func:string|func
-  -- @param opts:table|nil
-
-  opts = opts or nil
-  map('v', keys, func, opts)
-end
-
-local desc = function(group, desc)
-  --- Prefix descriptions with a group
-  --
-  -- @param group:string Group prefix (cond|diag|file|gen|lsp|nav|tog|ts)
-  -- @param desc:string Description
-  local groups = {
-    cond = 'Conditional: ',
-    diag = 'Diagnostic: ',
-    file = 'File: ',
-    gen = 'General: ',
-    git = "git: ",
-    lsp = 'LSP: ',
-    nav = 'Nav: ',
-    tog = 'Toggle: ',
-    ts = 'TS: ',
-  }
-
-  if groups[group] then
-    desc = groups[group] .. desc
-  end
-
-  return desc
-end
-
-local helpers = {
-  fk = fk,
-  desc = desc,
-  imap = nmap,
-  nmap = nmap,
-  tmap = nmap,
-  vmap = nmap,
-}
-
-local should_overload_q = function()
-  local cur_buffer = vim.api.nvim_get_current_buf()
-
-  local is_readonly =  vim.api.nvim_buf_get_option(cur_buffer, 'readonly')
-  local is_not_modifiable = not vim.api.nvim_buf_get_option(cur_buffer, 'modifiable')
-  local is_overload_type = (function()
-    local buf_types = { 'quickfix', 'help' }
-    local buf_type = vim.api.nvim_buf_get_option(cur_buffer, 'buftype')
-
-    return buf_types[buf_type]
-  end)
-
-  print(is_readonly and "true" or "readonly: false")
-  print(is_not_modifiable and "true" or "is not modifiable: false")
-  print(is_overload_type() and "true" or "is overload type: false")
-
-  return is_readonly or is_not_modifiable or is_overload_type or nil
+    if bufnr then
+        if buftype == 'prompt' then
+            snap_while_wearing_a_gauntlet()
+        else
+            if not modifiable and readonly and (the_unfortunate[filetype] or the_disgraced[buftype]) then
+                snap_while_wearing_a_gauntlet()
+            end
+        end
+    end
 end
 
 -- ----------------------------------------------
 -- Keymaps
 -- ----------------------------------------------
-
 -- Clear search highlight
 vim.on_key(
-  function(char)
-  if vim.fn.mode() == "n" then
-    local new_hlsearch = vim.tbl_contains(
-      { "<CR>", "n", "N", "*", "#", "?", "/" },
-      vim.fn.keytrans(char)
-    )
+    function(char)
+        if vim.fn.mode() == "n" then
+            local new_hlsearch = vim.tbl_contains(
+                { "n", "N", "*", "?", "/", "v" },
+                vim.fn.keytrans(char)
+            )
 
-      if vim.opt.hlsearch:get() ~= new_hlsearch then
-        vim.opt.hlsearch = new_hlsearch
-      end
-    end
-  end,
-  vim.api.nvim_create_namespace "auto_hlsearch"
+            if vim.opt.hlsearch:get() ~= new_hlsearch then
+                vim.opt.hlsearch = new_hlsearch
+            end
+        end
+    end,
+    vim.api.nvim_create_namespace "auto_hlsearch"
 )
 
 -- QOL
-imap('jj', fk.escape, { desc = desc('gen', 'Escape') })
-nmap('<leader>s', ':call ToggleSpell()' .. fk.enter, { silent = true, desc = desc('tog', 'toggle spellcheck') })
--- nmap('q', function() return should_overload_q() and ':echom "QUIT"' .. fk.enter or ':echom "Q"' .. fk.enter end, { expr = true, silent = true, desc = desc('cond', 'close readonly buffer') })
+map('i', 'jj', fk.escape, { desc = desc('gen', 'Escape') })
+map('n', 'gl', 'gu') -- err 'go lower' sure makes sense to me...
+map('n', 'gL', 'gu') -- err 'go lower' sure makes sense to me...
+map('n', 'gQ', '<nop>') -- reeeeeee (use :Ex-mode if you really need it, which will be never)
+
+-- fuuuuuuu (disable command-line mode, use <C-F>, see :h c_CTRL-F)
+map('c', 'q:', ':')
+map('c', 'q/', '/')
+map('c', 'q/', '?')
+
+-- Karen without Karenness
+-- NOTE: test for a while then add response:
+-- (https://stackoverflow.com/questions/11993851/how-to-delete-not-cut-in-vim)
+-- Copy/paste to/from system clipboard
+map('', '<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
+map('n', '<leader>Y', '"+Y', { desc = desc('gen', 'copy -> eol to system clipboard') })
+map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = desc('gen', 'copy on mouse select') })
+map('n', '<leader>yy', '"+yy', { desc = desc('gen', 'copy line to system clipboard') })
+map('n', '<leader>p', '"+p', { desc = desc('gen', 'paste system clipboard') })
+map('n', '<leader>P', '"+P', { desc = desc('gen', 'paste system clipboard') })
+--
+-- delete
+map('n', "d", '"_d', { desc = desc('txt', 'delete') })
+map('n', "D", '"_D', { desc = desc('txt', 'delete -> eol') })
+map('n', "<leader>d", "d", { desc = desc('txt', 'yank-delete') })
+map('n', "<leader>D", "D", { desc = desc('txt', 'yank-delete -> eol') })
+--
+-- cut
+map("", "c", '"_c', { desc = desc('txt', 'change') })
+map("", "C", '"_C', { desc = desc('txt', 'change -> eol') })
+map("", "<leader>c", "c", { desc = desc('txt', 'yank-change')})
+map("", "<leader>C", "C", { desc = desc('txt', 'yank-change -> eol')})
+--
+-- paste
+-- map('n', "p", '"_dp', { desc = desc('txt', 'paste') })
+-- map('n', "P", '"_dP', { desc = desc('txt', 'paste after') })
+map('v', "p", '"_dgvp', { desc = desc('txt', 'paste') })
+map('v', "P", '"_dgvP', { desc = desc('txt', 'paste after') })
+map('v', "<leader>p", "ygvp", { desc = desc('txt', 'yank-paste after') })
+map('v', "<leader>P", "ygvP", { desc = desc('txt', 'yank-paste after') })
+
+-- Manipulate lines, maintain cursor pos
+map('v', 'J', ':m \'>+1' ..fk.enter .. 'gv=gv', { desc = desc('txt', 'move lines up') })
+map('v', 'K', ':m \'<-2' ..fk.enter .. 'gv=gv', { desc = desc('txt', 'move lines down')} )
+map('n', 'J', 'mzJ`z', { desc = desc('txt', 'join w/o hop') })
+map('n', '<C-u>', '<C-u>zz', { desc = desc('gen', 'pgup') })
+map('n', '<C-d>', '<C-d>zz', { desc = desc('gen', 'pgdn') })
+map('n', 'n', 'nzzzv', { desc = desc('next search') })
+map('n', 'N', 'Nzzzv', { desc = desc('prev search') })
 
 -- File management
-nmap('<leader>w', ':write' .. fk.enter, { silent = true, desc = desc('file', 'write to file') })
-nmap('<leader>1', '::Neotree source=filesystem reveal=true position=current' .. fk.enter, { silent = true, desc = desc('file', 'open browser') })
-nmap('<leader>2', '::Neotree source=filesystem reveal=true position=left' .. fk.enter, { silent = true, desc = desc('file', 'open browser') })
-nmap('<leader>u', vim.cmd.UndotreeToggle, { desc = desc('file', 'open undo-tree' ) })
+map('n', '<leader>1', function() vim.cmd(
+    'Neotree action=focus source=filesystem position=current toggle reveal') end,
+    { silent = true, desc = desc('file', 'open browser') })
+map('n', '<leader>2', function() vim.cmd(
+    'Neotree action=show source=filesystem position=left toggle reveal') end,
+    { silent = true, desc = desc('file', 'open sidebar browser') })
+map('n', '<leader>w', vim.cmd.write, { silent = true, desc = desc('file', 'write to file') })
+map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = desc('file', 'open undo-tree' ) })
+-- map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = desc('file', 'make file +x') })
 
-local harpoon_mark = require("harpoon.mark")
-local harpoon_ui = require("harpoon.ui")
-
-nmap('<leader>ha', harpoon_mark.add_file, { desc = desc('file', 'harpoon current file')})
-nmap('<leader>ho', harpoon_ui.toggle_quick_menu, { desc = desc('file', 'open harpoon')})
-nmap('<leader>j', function() harpoon_ui.nav_file(1) end, { desc = desc('file', 'harpoon first')})
-nmap('<leader>k', function() harpoon_ui.nav_file(2) end, { desc = desc('file', 'harpoon second')})
-nmap('<leader>l', function() harpoon_ui.nav_file(3) end, { desc = desc('file', 'harpoon third')})
-nmap('<leader>;', function() harpoon_ui.nav_file(4) end, { desc = desc('file', 'harpoon fourth')})
-nmap('<C-d>', function() harpoon_ui.nav_prev() end, { desc = desc('file', 'harpoon next')})
-nmap('<C-j>', function() harpoon_ui.nav_next() end, { desc = desc('file', 'harpoon prev')})
+-- Harpoon (https://github.com/ThePrimeagen/harpoon)
+-- :help harpoon
+map('n', '<leader>hf', function() require("harpoon.mark").toggle_file() end, { desc = desc('file', 'harpoon/release') })
+map('n', '<leader>j', function() require("harpoon.ui").nav_file(1) end, { desc = desc('file', 'first harpoon') })
+map('n', '<leader>k', function() require("harpoon.ui").nav_file(2) end, { desc = desc('file', 'second harpoon') })
+map('n', '<leader>l', function() require("harpoon.ui").nav_file(3) end, { desc = desc('file', 'third harpoon') })
+map('n', '<leader>;', function() require("harpoon.ui").nav_file(4) end, { desc = desc('file', 'fourth harpoon') })
+map('n', '<leader>ho', function() require("harpoon.ui").toggle_quick_menu() end, { desc = desc('file', 'view live well') })
+map('n', '<C-j>', function() require("harpoon.ui").nav_prev() end, { desc = desc('file', '<< harpoon') })
+map('n', '<C-k>', function() require("harpoon.ui").nav_next() end, { desc = desc('file', 'harpoon >>') })
+map('n', '<leader>hc', function() require("harpoon.mark").clear_all() end, { desc = desc('file', 'release all harpoons') })
 
 -- Git
-nmap('<leader>gs', function() vim.cmd('Git') end, { desc = desc('git', 'git status')})
-nmap('<leader>gd', function()
-  vim.cmd('tabnew' .. vim.fn.expand('%:p'))
-  vim.cmd('Gdiff')
-end, { desc = desc('git', 'git diff')})
-nmap('<leader>ga', function() vim.cmd('Gwrite') end, { desc = desc('git', 'git add')})
-nmap('<leader>gb', function() vim.cmd('Gblame') end, { desc = desc('git', 'git blame')})
-nmap('<leader>gl', function() vim.cmd('Gclog') end, { desc = desc('git', 'git log')})
+-- :help Git
+local git_log_branch = ''
+    .. '--branches --remotes --graph --color --decorate=short --format=format:'
+    .. '"'
+    .. '%x09%C(bold blue)%h%C(reset)' -- short hash
+    .. '-%C(auto)%d%C(reset)' -- ref name
+    .. '%C(yellow)%<(40,trunc)%s%C(reset)' -- comment
+    .. '%C(normal)[%cn]%C(reset)' -- committer
+    .. '%C(bold green)(%ar)%C(reset)' -- time elapsed
+    .. '"'
 
--- Copy/paste
-vmap('<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
-nmap('<leader>Y', '"+yg_', { desc = desc('gen', 'EOL copy to system clipboard') })
-vmap('<LeftRelease>', '"+y<LeftRelease>', { desc = desc('gen', 'copy on mouse select') })
-nmap('<leader>yy', '"+yy', { desc = desc('gen', 'copy line to system clipboard') })
-nmap('<leader>p', '"+p', { desc = desc('gen', 'paste system clipboard') })
+map('n', '<leader>gs', function() vim.cmd('Git status') end, { desc = desc('git', 'git status')})
+map('n', '<leader>gb', function() vim.cmd('GitBlame') end, { desc = desc('git', 'git blame')})
+
+map('n', '<leader>gD', function()
+    vim.cmd('tabnew' .. vim.fn.expand('%:p'))
+    vim.cmd('Gdiff')
+end, { desc = desc('git', 'git diff')})
+
+map('n', '<leader>gl', function()
+    vim.cmd('botright Git log' .. git_log_branch)
+end, { desc = desc('git', 'git log')})
 
 -- Use magic when searching
-nmap('/', '/\\v\\c', { desc = desc('gen', 'Case insensitive regex search') })
-vmap('/', '/\\v\\c', { desc = desc('gen', 'Case insensitive regex search') })
-cmap('%', '%s/\\v', { desc = desc('gen', 'regex search buffer') })
-cmap('%%', 's/\\v', { desc = desc('gen', 'regex search selection') })
+local use_magic = function(key, prefix)
+    local pos = vim.fn.getcmdpos()
+
+    if pos == 1 or pos == 6 then
+        vim.fn.setcmdline(vim.fn.getcmdline() .. prefix)
+    else
+        vim.fn.setcmdline(vim.fn.getcmdline() .. key)
+    end
+end
+
+map('n', '*', '*N', { desc = desc('gen', 'find word at cur')})
+map('n', '/', '/\\v\\c', { desc = desc('gen', 'regex search') })
+map('c', '%', function() use_magic('%', '%s/\\v\\c') end, { desc = desc('gen', 'regex replace') })
+map('c', '%%', function() use_magic('%%', 's/\\v\\c') end, { desc = desc('gen', 'regex replace visual') })
+map('n', '<leader>rw', ':%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>', { desc = desc('txt', 'replace current word')})
 
 -- Split management
-nmap('<leader>\\', ':vsplit' .. fk.enter, { silent = true, desc = desc('gen', 'vsplit') })
-nmap('<leader>-', ':split' .. fk.enter, { silent = true, desc = desc('gen', 'split') })
-nmap('<leader>q', '<C-^>:bd#' .. fk.enter, { silent = true, desc = desc('gen', 'close') })
-nmap('<leader>Q', ':q' .. fk.enter, { silent = true, desc = desc('gen', 'quit') })
+map('n', '<leader>\\', function() vim.cmd('vsplit') end, { silent = true, desc = desc('gen', 'vsplit') })
+map('n', '<leader>-', function() vim.cmd('split') end, { silent = true, desc = desc('gen', 'split') })
+map('n', '<leader>q', ':w' .. fk.enter .. '<C-^>:bd#' .. fk.enter .. 'i' .. fk.enter, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
+map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
 
 -- Terminal split management
-local insert_mode = bin.bash .. fk.enter .. ':startinsert' .. fk.enter
-nmap('<leader>`', ':vsplit term://' .. insert_mode, { silent = true, desc = desc('gen', ':vsplit term') })
-nmap('<leader>~', ':split term://' .. insert_mode, { silent = true, desc = desc('gen', ':split term') })
+map('n', '<leader>`', function()
+    vim.cmd('vsplit term://' .. bin.bash)
+    vim.cmd('startinser')
+end, { silent = true, desc = desc('gen', ':vsplit term') })
+map('n', '<leader>~', function()
+    vim.cmd('split term://' .. bin.bash)
+    vim.cmd('startinser')
+end, { silent = true, desc = desc('gen', ':split term') })
 
 -- Split navigation
-imap('<C-h>', fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
-imap('<C-j>', fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
-imap('<C-k>', fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
-imap('<C-l>', fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
+map('i', '<C-h>',fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
+map('i', '<C-j>',fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
+map('i', '<C-k>',fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
+map('i', '<C-l>',fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
 
-vmap('<C-h>', fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
-vmap('<C-j>', fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
-vmap('<C-k>', fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
-vmap('<C-l>', fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
+map('v', '<C-h>',fk.escape .. '<C-w>h', { desc = desc('nav', 'left window') })
+map('v', '<C-j>',fk.escape .. '<C-w>j', { desc = desc('nav', 'down window') })
+map('v', '<C-k>',fk.escape .. '<C-w>k', { desc = desc('nav', 'up window') })
+map('v', '<C-l>',fk.escape .. '<C-w>l', { desc = desc('nav', 'right window') })
 
-nmap('<C-h>', '<C-w>h', { desc = desc('nav', 'left window') })
-nmap('<C-j>', '<C-w>j', { desc = desc('nav', 'down window') })
-nmap('<C-k>', '<C-w>k', { desc = desc('nav', 'up window') })
-nmap('<C-l>', '<C-w>l', { desc = desc('nav', 'right window') })
+map('n', '<C-h>', '<C-w>h', { desc = desc('nav', 'left window') })
+map('n', '<C-j>', '<C-w>j', { desc = desc('nav', 'down window') })
+map('n', '<C-k>', '<C-w>k', { desc = desc('nav', 'up window') })
+map('n', '<C-l>', '<C-w>l', { desc = desc('nav', 'right window') })
 
-tmap('<C-h>', '<C-\\><C-n><C-w>h', { desc = desc('nav', 'left window') })
-tmap('<C-j>', '<C-\\><C-n><C-w>j', { desc = desc('nav', 'down window') })
-tmap('<C-k>', '<C-\\><C-n><C-w>k', { desc = desc('nav', 'up window') })
-tmap('<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
+map('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = desc('nav', 'left window') })
+map('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = desc('nav', 'down window') })
+map('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = desc('nav', 'up window') })
+map('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
+
+-- Tab navigation
+map('i', '<M-h>',fk.escape .. ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev tab') })
+map('i', '<M-l>',fk.escape .. ':tabnext' ..fk.enter, { desc = desc('nav', 'next tab') })
+
+map('v', '<M-h>',fk.escape .. ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
+map('v', '<M-l>',fk.escape .. ':tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
+
+map('n', '<M-h>', ':tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
+map('n', '<M-l>', ':tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
+
+map('t', '<M-h>', '<C-\\><C-n>:tabprevious' ..fk.enter, { desc = desc('nav', 'prev window') })
+map('t', '<M-l>', '<C-\\><C-n>:tabnext' ..fk.enter, { desc = desc('nav', 'next window') })
 
 -- ----------------------------------------------
 -- Plugin Keymaps
 -- ----------------------------------------------
+-- nvim-ufo (https://github.com/kevinhwang91/nvim-ufo)
+-- :help nvim-ufl
+-- map('n', 'zR', require('ufo').openAllFolds, { desc = desc('ui', 'open all folds') })
+-- map('n', 'zM', require('ufo').closeAllFolds, { desc = desc('ui', 'close all folds') })
 
--- Telescope
--- :help telescope.builtin
-local tsb = require('telescope.builtin')
-
-nmap('<C-p>', function()
-  vim.cmd('cd ' .. project_root())
-  tsb.git_files({show_untracked = true})
+-- -- Telescope
+-- -- :help telescope.builtin
+map('n', '<C-p>', function()
+    if is_git_repo() then
+        vim.print("Running Telescope git_files in " .. vim.cmd.pwd())
+        require('telescope.builtin').git_files({show_untracked = true})
+    else
+        vim.print("Running Telescope find_files in " .. vim.cmd.pwd())
+        require('telescope.builtin').find_files()
+    end
 end, { desc = desc('ts', 'find git files') })
+map('n', '<leader>ff', function() require('telescope.builtin').find_files() end, { desc = desc('ts', 'find files') })
+map('n', '<leader>fw', function() require('telescope.builtin').grep_string() end, { desc = desc('ts', 'find word') })
 
-nmap('<leader>ff', function()
-  vim.cmd('cd ' .. project_root())
-  tsb.find_files()
-end, { desc = desc('ts', 'find files') })
-
-nmap('<leader>fw', function()
-  vim.cmd('cd ' .. project_root())
-  tsb.grep_string()
-end, { desc = desc('ts', 'find word') })
-
-nmap('<leader><space>', tsb.buffers, { desc = desc('ts', 'find buffers') })
-nmap('<leader>?', tsb.oldfiles, { desc = desc('ts', 'find recent files') })
-nmap('<leader>f\'', tsb.marks, { desc = desc('ts', 'find marks') })
-nmap('<leader>fh', tsb.help_tags, { desc = desc('ts', 'find help') })
-nmap('<leader>fk', tsb.keymaps, { desc = desc('ts', 'find keymaps') })
-nmap('<leader>fm', tsb.man_pages, { desc = desc('ts', 'find manpage') })
-nmap('<leader>gd', tsb.lsp_definitions, { desc = desc('ts', 'goto deffinition') })
-nmap('<leader>gi', tsb.lsp_implementations, { desc = desc('ts', 'goto implementation') })
-nmap('<leader>qf', tsb.quickfix, { desc = desc('ts', 'find quickfix') })
-nmap('<leader>rg', tsb.live_grep, { desc = desc('ts', 'rg current dir') })
-nmap('<leader>/', function()
-  tsb.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
+map('n', '<leader><space>', function() require('telescope.builtin').buffers() end, { desc = desc('ts', 'find buffers') })
+map('n', '<leader>?', function() require('telescope.builtin').oldfiles() end, { desc = desc('ts', 'find recent files') })
+map('n', '<leader>f\'', function() require('telescope.builtin').marks() end, { desc = desc('ts', 'find marks') })
+map('n', '<leader>fh', function() require('telescope.builtin').help_tags() end, { desc = desc('ts', 'find help') })
+map('n', '<leader>fk', function() require('telescope.builtin').keymaps() end, { desc = desc('ts', 'find keymaps') })
+map('n', '<leader>fm', function() require('telescope.builtin').man_pages() end, { desc = desc('ts', 'find manpage') })
+map('n', '<leader>gd', function() require('telescope.builtin').lsp_definitions() end, { desc = desc('ts', 'goto deffinition') })
+map('n', '<leader>gi', function() require('telescope.builtin').lsp_implementations() end, { desc = desc('ts', 'goto implementation') })
+map('n', '<leader>qf', function() require('telescope.builtin').quickfix() end, { desc = desc('ts', 'find quickfix') })
+map('n', '<leader>rg', function() require('telescope.builtin').live_grep() end, { desc = desc('ts', 'rg current dir') })
+map('n', '<leader>/', function()
+    require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+        winblend = 10,
+        previewer = false,
+    })
 end, { desc = desc('ts', 'find in current buffer') })
 
-nmap('<leader>fe', tsb.diagnostics, { desc = desc('ts', 'find errors') })
-nmap('<leader>e', vim.diagnostic.open_float, { desc = desc('diag', 'show errors') })
-nmap('<leader>E', vim.diagnostic.setloclist, { desc = desc('diag', 'open error list') })
-nmap('[d', vim.diagnostic.goto_prev, { desc = desc('diag', 'previous message') })
-nmap(']d', vim.diagnostic.goto_next, { desc = desc('diag', 'next message') })
+map('n', '<leader>fe', function() require('telescope.builtin').diagnostics() end, { desc = desc('ts', 'find errors') })
+map('n', '<leader>e', vim.diagnostic.open_float, { desc = desc('diag', 'show errors') })
+map('n', '<leader>E', vim.diagnostic.setloclist, { desc = desc('diag', 'open error list') })
+map('n', '[d', vim.diagnostic.goto_prev, { desc = desc('diag', 'previous message') })
+map('n', ']d', vim.diagnostic.goto_next, { desc = desc('diag', 'next message') })
 
-return helpers
+-- LSP key maps
+M.lsp_on_attach = function(_, bufnr)
+    -- refactor
+    map('n', '<leader>rn', vim.lsp.buf.rename, { desc = desc('lsp', 'rename') })
+    map('n', '<leader>ca', vim.lsp.buf.code_action, { desc = desc('lsp', 'code action') })
+
+    -- goto
+    map('n', 'gd', vim.lsp.buf.definition, { desc = desc('lsp', 'goto definition') })
+    map('n', 'gr', function() require('telescope.builtin').lsp_references() end, { desc = desc('lsp', 'goto references') })
+    map('n', 'gI', vim.lsp.buf.implementation, { desc = desc('lsp', 'goto implementation') })
+
+    -- Open manpages/help
+    map('n', 'K', vim.lsp.buf.hover, { desc = desc('lsp', 'show symbol info') })
+    map('n', '<C-n>', vim.lsp.buf.signature_help, { desc = desc('lsp', 'show signature info') })
+
+
+    map('n', '<leader>D', vim.lsp.buf.type_definition, { desc = desc('lsp', 'type definition') })
+    map('n', '<leader>ds', function() require('telescope.builtin').lsp_document_symbols() end, { desc = desc('lsp', 'document symbols') })
+    map('n', '<leader>ws', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, { desc = desc('lsp', 'workspace symbols') })
+
+    -- Lesser used LSP functionality
+    map('n', 'gD', vim.lsp.buf.declaration, { desc = desc('lsp', 'goto declaration') })
+    map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, { desc = desc('lsp', 'workspace add folder') })
+    map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, { desc = desc('lsp', 'workspace remove folder') })
+    map('n', '<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, { desc = desc('lsp', 'Workspace list folders') })
+
+    -- Create a command `:Format` local to the LSP buffer and map it
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+        vim.lsp.buf.format()
+    end, { desc = desc('lsp', 'format current buffer') })
+    map('n', '<leader>=', ':Format' .. fk.enter, { desc = desc('lsp', 'format current buffer') })
+end
+
+M.treesitter_km = {
+    incremental_selection = {
+        init_selection = '<c-space>',
+        node_incremental = '<c-space>',
+        scope_incremental = '<c-s>',
+        node_decremental = '<M-space>',
+    },
+    textobjects = {
+        -- You can use the capture groups defined in textobjects.scm
+        ['aa'] = '@parameter.outer',
+        ['ia'] = '@parameter.inner',
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner',
+    },
+    move = {
+        goto_next_start = {
+            [']m'] = '@function.outer',
+            [']]'] = '@class.outer',
+        },
+        goto_next_end = {
+            [']M'] = '@function.outer',
+            [']['] = '@class.outer',
+        },
+        goto_previous_start = {
+            ['[m'] = '@function.outer',
+            ['[['] = '@class.outer',
+        },
+        goto_previous_end = {
+            ['[M'] = '@function.outer',
+            ['[]'] = '@class.outer',
+        },
+    },
+    swap = {
+        swap_next = {
+            ['<leader>a'] = '@parameter.inner',
+        },
+        swap_previous = {
+            ['<leader>A'] = '@parameter.inner',
+        },
+    }
+}
+
+-- Unmap annoying maps forced by plugin authors
+local unimpaired = { '<s', '>s', '=s', '<p', '>p', '<P', '>P' }
+local bullets = { '<<', '<', '>', '>>'}
+local get_off_my_lawn = function(args)
+    for _, tbl in ipairs(args) do
+        for _, v in ipairs(tbl) do
+            vim.keymap.del('', v)
+        end
+    end
+end
+
+M.cmp_keys = {
+    select_next_item = '<C-j>',
+    select_prev_item = '<C-k>',
+    scroll_docs_up = '<C-u>',
+    scroll_docs_down = '<C-f>',
+    complete = '<C-Space>',
+    confirm = '<CR>',
+    tab = '<Tab>',
+    shift_tab = '<S-Tab>',
+}
+
+pcall(get_off_my_lawn, { unimpaired, bullets })
+
+return M
