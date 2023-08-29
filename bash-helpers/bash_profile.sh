@@ -1,18 +1,17 @@
 # shellcheck disable=SC1090,SC1091
-
 # logger is slow, avoid sourcing it unless we need it for now
 if [[ ${DEBUG:-} -eq 1 ]]; then
-	source "${HOME}/.dotfiles/lib/log.sh"
+    source "${HOME}/.dotfiles/lib/log.sh"
 
-	# log.sh sets -u which is too strict for many dependencies
-	set +u
+    # log.sh sets -u which is too strict for many dependencies
+    set +u
 
-	log debug ""
-	log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+    log debug ""
+    log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 else
-	function log() {
-		true
-	}
+    function log() {
+        true
+    }
 fi
 
 # Source these first as they're dependencies atm
@@ -93,9 +92,12 @@ history -n
 export LS_COLORS='rs=0:di=1;35:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.axa=00;36:*.oga=00;36:*.spx=00;36:*.xspf=00;36:'
 
 # config
-LDFLAGS="-L$(brew --prefix)/llvm/lib" && export LDFLAGS
-CPPFLAGS="-I$(brew --prefix)/llvm/include" && export CPPFLAGS
-LLVM_INCLUDE_FLAGS="-L$(brew --prefix)/" && export LLVM_INCLUDE_FLAGS
+brew_prefix=$(brew --prefix)
+
+LDFLAGS="-L${brew_prefix}/llvm/lib" && export LDFLAGS
+CPPFLAGS="-I${brew_prefix}(brew --prefix)/llvm/include" && export CPPFLAGS
+LLVM_INCLUDE_FLAGS="-L${brew_prefix}(brew --prefix)/" && export LLVM_INCLUDE_FLAGS
+
 export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
@@ -112,75 +114,71 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # ------------------------------------------------
 #  utils
 # ------------------------------------------------
-# log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
-# function nvim() {
-# 	# load the nvim venv if not already
-# 	if [[ ! ${VIRTUAL_ENV} =~ /nvim$ ]]; then
-# 		workon nvim
-# 	fi
-#
-# 	if [[ -w ${NVIM_SESSION_FILE_PATH} ]]; then
-# 		command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
-# 	else
-# 		command nvim "$@"
-# 	fi
-# }
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
+function nvim() {
+    if [[ -w ${NVIM_SESSION_FILE_PATH:-} ]]; then
+        command nvim -S "${NVIM_SESSION_FILE_PATH}" "$@"
+    else
+        command nvim "$@"
+    fi
+}
 
-alias grep=rg
-alias ag=rg
 function rg() {
-	"$(brew --prefix)/bin/rg" \
-		--follow \
-		--hidden \
-		--no-config \
-		--smart-case \
-		--colors 'match:style:bold' \
-		--colors 'match:fg:156,201,159' \
-		--colors 'match:bg:24,64,43' \
-		--glob '!.git' \
-		"$@"
+    "$(brew --prefix)/bin/rg" \
+        --follow \
+        --hidden \
+        --no-config \
+        --smart-case \
+        --colors 'match:style:bold' \
+        --colors 'match:fg:205,214,244' \
+        --colors 'match:bg:62,87,103' \
+        --glob '!.git' \
+        "$@"
 }
 
 # lazy load thefuck
 if [[ -n ${TF_ALIAS:-} ]]; then
-	unalias fuck=tf_init
+    unalias fuck=tf_init
 else
-	alias fuck=tf_init
+    alias fuck=tf_init
 fi
 
 function tf_init() {
-	unalias fuck=tf_init
-	eval "$(thefuck --alias)"
-	fuck "$@"
+    unalias fuck=tf_init
+    set +u
+    eval "$(thefuck --alias)"
+    set -u
+    fuck "$@"
 }
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helper files..."
 # shellcheck disable=SC1091
 {
-	# NOTE: These are sourced at the top of the file, here as a reminder
+    # NOTE: These are sourced at the top of the file, here as a reminder
     # source "${HOME}/.dotfiles/bash-helpers/lib.sh"
     # source "${HOME}/.dotfiles/bash-helpers/path.sh"
     # source "${HOME}/.dotfiles/bash-helpers/bash.sh"
 
-	source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
-	source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
-	source "${HOME}/.dotfiles/bash-helpers/go.sh"         # Golang helpers
-	source "${HOME}/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
-	source "${HOME}/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
-	source "${HOME}/.dotfiles/bash-helpers/git.sh"        # git helpers
-	source "${HOME}/.dotfiles/bash-helpers/aws.sh"        # aws helpers
-	source "${HOME}/.dotfiles/bash-helpers/osx.sh"        # osx helpers
-	source "${HOME}/.dotfiles/bash-helpers/python.sh"     # python helpers
-	# source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
-	source "${HOME}/.dotfiles/bash-helpers/ps1.sh" # set custom PS1
+    source "${HOME}/.dotfiles/bash-helpers/ansible.sh"    # Ansible helpers
+    source "${HOME}/.dotfiles/bash-helpers/docker.sh"     # Docker helpers
+    source "${HOME}/.dotfiles/bash-helpers/go.sh"         # Golang helpers
+    source "${HOME}/.dotfiles/bash-helpers/kubernetes.sh" # K8s helpers
+    source "${HOME}/.dotfiles/bash-helpers/terraform.sh"  # Terraform helpers
+    source "${HOME}/.dotfiles/bash-helpers/git.sh"        # git helpers
+    source "${HOME}/.dotfiles/bash-helpers/aws.sh"        # aws helpers
+    source "${HOME}/.dotfiles/bash-helpers/osx.sh"        # osx helpers
+    source "${HOME}/.dotfiles/bash-helpers/python.sh"     # python helpers
+    # source "/usr/local/etc/profile.d/z.sh"              # z cd auto completion
+    source "${HOME}/.dotfiles/bash-helpers/ps1.sh" # set custom PS1
+    source "${HOME}/.dotfiles/bash-helpers/ruby.sh"     # python helpers
 }
 
 # .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then
-	log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
 
-	# shellcheck source=/Users/ryanfisher/.bashrc
-	source "${HOME}/.bashrc"
+    # shellcheck source=/Users/ryanfisher/.bashrc
+    source "${HOME}/.bashrc"
 fi
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done." ""

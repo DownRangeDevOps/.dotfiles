@@ -1,4 +1,3 @@
-# aws.sh
 log debug ""
 log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
 
@@ -33,13 +32,13 @@ alias avsci="aws-vault exec msr-sci-sbx --"
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function __get_aws_vault() {
-	[[ -n ${AWS_VAULT:-} ]] && printf "%s" "aws:${AWS_VAULT}"
+    [[ -n ${AWS_VAULT:-} ]] && printf "%s" "aws:${AWS_VAULT}"
 }
 
 function ave() {
-	aws-vault exec "${@}"
+    aws-vault exec "${@}"
 }
 
 function ave-sbx() {
-	aws-vault exec ryan-msr-ops-sbx -- "${@}"
+    aws-vault exec ryan-msr-ops-sbx -- "${@}"
 }
