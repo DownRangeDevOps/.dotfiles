@@ -1,5 +1,5 @@
 log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+log debug "==> [${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  Alises
@@ -313,7 +313,7 @@ function git_fixup() {
 
 # Branching
 function git_branch() {
-    case $1 in
+    case ${1:-} in
     -D | -m)
         git branch "${@}"
         ;;
@@ -463,7 +463,7 @@ git_rebase_merge_and_push() {
 
 gcpu() {
     # git commit and push
-    if [[ ${1:-} == "help" || $1 == "--help" ]]; then
+    if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
         echo "Usage: gacp [-a] [-m <message>]"
         return 1

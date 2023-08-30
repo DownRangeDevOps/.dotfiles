@@ -2,7 +2,7 @@ local M = {}
 local keymap = require('user-keymap')
 
 -- ----------------------------------------------
--- Install package manager (https://github.com/folke/lazy.nvim)
+-- Install Lazy.nvim (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-installation
 -- ----------------------------------------------
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
@@ -20,6 +20,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- ----------------------------------------------
+-- Load plugins (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-plugin-spec
 -- ----------------------------------------------
 require('lazy').setup({
@@ -42,7 +43,7 @@ require('lazy').setup({
     },
 
     -- ----------------------------------------------
-    -- vim-rooter Always cd to project root (https://github.com/airblade/vim-rooter)
+    -- vim-rooter: cd to project root (https://github.com/airblade/vim-rooter)
     -- :help vim-rooter
     -- ----------------------------------------------
     {
@@ -56,13 +57,13 @@ require('lazy').setup({
     },
 
     -- ----------------------------------------------
-    -- mini.nvim plugins
+    -- mini.nvim plugins (https://github.com/echasnovski/mini.nvim)
     -- ----------------------------------------------
-    -- mini-align (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
+    -- align/columns (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
     -- :help mini-align
     { 'echasnovski/mini.align', lazy = true, event = 'InsertEnter', version = '*', config = true, },
 
-    -- Comment/un-comment with vim motions (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.comment)
+    -- comment/un-comment (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.comment)
     -- :help mini.comment
     { 'echasnovski/mini.comment', lazy = false, version = '*', config = true, },
 
@@ -77,9 +78,9 @@ require('lazy').setup({
             evaluate_single = false,
 
             -- Items to be displayed. Should be an array with the following elements:
-            -- - Item: table with <action>, <name>, and <section> keys.
-            -- - Function: should return one of these three categories.
-            -- - Array: elements of these three types (i.e. item, array, function).
+            --     Item: table with <action>, <name>, and <section> keys.
+            --     Function: should return one of these three categories.
+            --     Array: elements of these three types (i.e. item, array, function).
             -- If `nil` (default), default items will be used (see |mini.starter|).
             items = nil,
             header = ""
@@ -113,18 +114,15 @@ require('lazy').setup({
         config = true,
     },
 
+    -- mini-trailspace: delete trailing whitespace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
     -- :help mini-trailspace
-    -- mini-trailspace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
     { 'echasnovski/mini.trailspace', lazy = false, config = true, },
 
-    -- Bullets (https://github.io/dkarter/bullets.vim)
+    -- bullet formatting (https://github.io/dkarter/bullets.vim)
     -- :help bullets
     { 'dkarter/bullets.vim', lazy = true, event = 'FileType ' .. table.concat(vim.g.bullets_enabled_file_types, ',') },
 
-    -- ----------------------------------------------
-    -- UI
-    -- ----------------------------------------------
-    -- Colorscheme/Theme
+    -- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
     -- :help catppuccin.txt
     {
         'catppuccin/nvim',
@@ -135,10 +133,11 @@ require('lazy').setup({
             highlight_overrides = {
                 theme = function(theme)
                     return {
-                        Cursor = { fg = theme.none },
                         CmpBorder = { fg = "#3e4145" },
-                        Normal = { bg = theme.mantle },
                         CurSearch = { fg = theme.base, bg = theme.green },
+                        Cursor = { fg = theme.none, bg = theme.saphire },
+                        MsgArea = { bg = theme.crust },
+                        Normal = { bg = theme.mantle },
                         Search = { fg = theme.base, bg = theme.sky },
                     }
                 end,
@@ -189,13 +188,9 @@ require('lazy').setup({
         end,
     },
 
-    -- taboo.vim (https://github.com/gcmt/taboo.vim)
+    -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
     -- :help taboo
     { 'gcmt/taboo.vim', lazy = true, event = 'CmdlineEnter' },
-
-    -- toggleterm.nvim (https://github.com/akinsho/toggleterm.nvim)
-    -- :help toggleterm.nvim
-    { 'akinsho/toggleterm.nvim', lazy = false, version = "*", config = true },
 
     -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
     -- :help nvim-ufo
@@ -212,24 +207,20 @@ require('lazy').setup({
     {
         'NvChad/nvim-colorizer.lua',
         lazy = true,
-        event = 'InsertEnter',
         opts = {
             filetypes = { "*" },
             user_default_options = {
-                RGB = false, -- #RGB hex codes
-                RRGGBB = true, -- #RRGGBB hex codes
-                names = false, -- "Name" codes like Blue or blue
-                RRGGBBAA = false, -- #RRGGBBAA hex codes
-                AARRGGBB = false, -- 0xAARRGGBB hex codes
-                rgb_fn = false, -- CSS rgb() and rgba() functions
-                hsl_fn = false, -- CSS hsl() and hsla() functions
-                css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-                css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
-                -- Available modes for `mode`: foreground, background,  virtualtext
-                mode = "virtualtext", -- Set the display mode.
-                -- Available methods are false / true / "normal" / "lsp" / "both"
-                -- True is same as normal
-                tailwind = false, -- Enable tailwind colors
+                RGB = true, -- #RGB
+                RRGGBB = true, -- #RRGGBB
+                names = true, -- Blue or blue
+                RRGGBBAA = true, -- #RRGGBBAA
+                AARRGGBB = true, -- 0xAARRGGBB
+                rgb_fn = true, -- CSS rgb() and rgba()
+                hsl_fn = true, -- CSS hsl() and hsla()
+                css = true, -- rgb_fn, hsl_fn, names, RGB, RRGGBB
+                css_fn = true, -- rgb_fn, hsl_fn
+                mode = "virtualtext", -- foreground, background,  virtualtext
+                tailwind = false, -- false, true/normal, lsp, both
                 -- parsers can contain values used in |user_default_options|
                 sass = { enable = false, parsers = { "css" }, }, -- Enable sass colors
                 virtualtext = "●",
@@ -375,7 +366,7 @@ require('lazy').setup({
     },
 
     -- ----------------------------------------------
-    -- [[ Utils ]]
+    --  Utils
     -- ----------------------------------------------
     -- Which-Key (https://github.com/folke/which-key.nvim)
     -- :help which-key.nvim.txt
@@ -513,10 +504,10 @@ require('lazy').setup({
     },
 
     -- ----------------------------------------------
-    -- Auto-completion
+    -- CMP (https://github.com/hrsh7th/nvim-cmp)
     -- ----------------------------------------------
     {
-        'hrsh7th/nvim-cmp', -- https://github.com/hrsh7th/nvim-cmp
+        'hrsh7th/nvim-cmp',
         lazy = false,
         dependencies = {
             -- Snippet Engine & its associated nvim-cmp source
@@ -571,19 +562,19 @@ require('lazy').setup({
             terminal_mappings = false,
             presist_size = true,
             presist_mode = true,
-            direction = 'float',
+            direction = 'horizontal',
             shell = vim.env.BREW_PREFIX .. '/bin/bash --login',
             auto_scroll = true,
             border = 'curved',
             highlights = {
                 Normal = {
-                    guibg = '#181825'
+                    guibg = '#11111b'
                 },
                 NormalFloat = {
-                    guibg = '#181825'
+                    guibg = '#11111b'
                 },
                 FloatBorder = {
-                    guibg = '#181825'
+                    guibg = '#11111b'
                 },
             },
         },
@@ -594,19 +585,19 @@ require('lazy').setup({
 -- ----------------------------------------------
 
 -- ----------------------------------------------
--- [[ LuaSnip ]]
+--  LuaSnip
 -- ----------------------------------------------
 local luasnip = require('luasnip')
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
 -- ----------------------------------------------
--- [[ Neodev ]] (neovim lua help and completion)
+--  Neodev  (neovim lua help and completion)
 -- ----------------------------------------------
 require('neodev').setup()
 
 -- ----------------------------------------------
--- [[ Telescope ]]
+--  Telescope
 -- :help telescope
 -- :help telescope.setup()
 -- ----------------------------------------------
@@ -626,7 +617,7 @@ pcall(require('telescope').load_extension, 'fzf') -- Enable telescope fzf native
 -- require('telescope').load_extension('harpoon')
 
 -- ----------------------------------------------
--- [[ Treesitter ]]
+--  Treesitter
 -- :help nvim-treesitter
 -- ----------------------------------------------
 require('nvim-treesitter.install').prefer_git = true
@@ -708,7 +699,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- ----------------------------------------------
--- [[ Mason ]]
+--  Mason
 -- :help mason
 -- ----------------------------------------------
 local mason_lspconfig = require 'mason-lspconfig'

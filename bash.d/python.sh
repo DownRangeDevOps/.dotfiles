@@ -1,5 +1,5 @@
 log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+log debug "==> [${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  config
@@ -43,7 +43,7 @@ function __get_virtualenv_name() {
 }
 
 # Initalize pyenv (https://github.com/pyenv/pyenv)
-log debug "$(printf_callout Initializing pyenv...)"
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
 export PYENV_ROOT="$HOME/.pyenv"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 export WORKON_HOME="${HOME}/.virtualenvs"
@@ -62,12 +62,12 @@ function pyenv_init() {
     printf_warning "pyenv-virtualenv has not been initialized, initializing now..." >&2
 
     # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
-    log debug "$(printf_callout Initializing virtualenv...)"
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing virtualenv..."
     set +u
     eval "$(pyenv virtualenv-init -)"
 
     # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-    log debug "$(printf_callout Initializing virtualenvwrapper...)"
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing virtualenvwrapper..."
     pyenv virtualenvwrapper_lazy
     set -u
 
@@ -96,21 +96,23 @@ wipeenv
 workon
 EOF
 
-        for cmd in "${virtualenv_cmds[@]}"; do
-            if [[ $1 == "create" ]]; then
-                log debug "Aliasing ${cmd} to pyenv_init"
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: ==> Managing aliases to pyenv_init"
 
-                # shellcheck disable=SC2139
-                alias "${cmd}=pyenv_init"
-            elif [[ $1 == "remove" ]]; then
-                log debug "Unaliasing ${virtualenv_cmds[*]}"
+    for cmd in "${virtualenv_cmds[@]}"; do
+        if [[ ${1:-} == "create" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]}")]: Aliasing ${cmd} to pyenv_init"
 
-                # shellcheck disable=SC2139
-                unalias "${virtualenv_cmds[@]}" 2>/dev/null
-            else
-                printf_error "pyenv_alias: unknown argument $1"
-            fi
-        done
+            # shellcheck disable=SC2139
+            alias "${cmd}=pyenv_init"
+        elif [[ ${1:-} == "remove" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]}")]: Unaliasing ${virtualenv_cmds[*]}"
+
+            # shellcheck disable=SC2139
+            unalias "${virtualenv_cmds[@]}" 2>/dev/null
+        else
+            printf_error "pyenv_alias: unknown argument $1"
+        fi
+    done
 }
 
 # Alias virtualenv lazy loader
@@ -144,34 +146,34 @@ function lpy() {
     mapfile -t ALL_FILES < <(rg --files --color=never)
     mapfile -t SQL_FILES < <(rg --files --color=never --glob '*.sql')
 
-    header "Removing trailing whitespace..."
+    printf_callout "Removing trailing whitespace..."
     printf "%s" "${ALL_FILES[@]}" | xargs -L 1 sed -E -i 's/\s*$//g' | indent_output
 
-    header "Running sql-formatter fix with '${SQL_FORMATTER[*]}'..."
+    printf_callout "Running sql-formatter fix with '${SQL_FORMATTER[*]}'..."
     printf "%s" "${SQL_FILES[@]}" | xargs -I {} -L 1 \
         sql-formatter "${SQL_FORMATTER[@]}" --output={} {} | indent_output
 
-    header "Running sqlfluff fix with '${SQLFLUFF[*]}'..."
+    printf_callout "Running sqlfluff fix with '${SQLFLUFF[*]}'..."
     [[ -n ${SQL_FILES[*]} ]] && sqlfluff fix "${SQLFLUFF[@]}" . | indent_output
 
-    header "Running flynt with '${FLYNT[*]}'..."
+    printf_callout "Running flynt with '${FLYNT[*]}'..."
     flynt "${FLYNT[@]}" . | indent_output
 
-    header "Running autopep8 with '${AUTOPEP8[*]}'..."
+    printf_callout "Running autopep8 with '${AUTOPEP8[*]}'..."
     autopep8 "${AUTOPEP8[@]}" . | indent_output
 
-    header "Running autoflake with '${AUTOFLAKE[*]}'..."
+    printf_callout "Running autoflake with '${AUTOFLAKE[*]}'..."
     autoflake "${AUTOFLAKE[@]}" . | indent_output
 
-    header "Running prettier with '${PRETTIER[*]}'..."
+    printf_callout "Running prettier with '${PRETTIER[*]}'..."
     prettier "${PRETTIER[@]}" . | indent_output
 
-    header "Running mdformat with '${MDFORMAT[*]}'..."
+    printf_callout "Running mdformat with '${MDFORMAT[*]}'..."
     mdformat "${MDFORMAT[@]}" . | indent_output
 
-    header "Running isort with '${ISORT[*]}'..."
+    printf_callout "Running isort with '${ISORT[*]}'..."
     isort "${ISORT[@]}" . | indent_output
 
-    header "Running black with '${BLACK[*]}'..."
+    printf_callout "Running black with '${BLACK[*]}'..."
     black "${BLACK[@]}" . | indent_output
 }
