@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- UI
 -- ----------------------------------------------
 -- Enable relative line numbers in neo-tree
-vim.api.nvim_create_autocmd( { 'BufWinEnter' }, {
+vim.api.nvim_create_autocmd( { 'BufWinEnter', 'BufEnter', 'BufNew', 'BufNewFile', 'BufRead', 'BufLoad' }, {
     group = ui,
     pattern = 'neo-tree',
     command = 'setlocal relativenumber',

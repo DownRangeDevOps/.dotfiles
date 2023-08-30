@@ -50,7 +50,6 @@ function __ps1_prompt() {
     PS1="${ps1}"
 }
 
-PROMPT_COMMAND="history -a ~/.bash_history; history -n ~/.bash_history; __ps1_prompt"
-
-# Add the direnv hook to PROMPT_COMMAND
-# eval "$(direnv hook bash)"
+if [[ ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then
+    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}history -a ~/.bash_history; history -n ~/.bash_history; __ps1_prompt"
+fi
