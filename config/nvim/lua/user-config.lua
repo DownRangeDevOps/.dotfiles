@@ -3,6 +3,7 @@ local M = {}
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
+vim.g.auto_save = true -- used by auto-save autocmd
 vim.env.VISUAL = 'nvr -cc split --remote-wait' -- Prevent nested nvim instances
 vim.opt.diffopt = table.concat({
   'filler',
@@ -49,7 +50,7 @@ vim.opt.fixendofline = true
 vim.opt.completeopt = 'menu,menuone,noinsert,noselect'
 vim.opt.fileignorecase = true
 vim.g.wildmenu = true
-vim.g.wildigorecase = true
+vim.g.wildigorecase = false
 vim.opt.wildmode = 'longest,full'
 vim.opt.wildoptions:append("fuzzy,tagfile")
 vim.opt.wildignore = table.concat({
@@ -84,10 +85,6 @@ local disabled_built_ins = {
   "getscriptPlugin",
   "gzip",
   "logipat",
-  "netrw",
-  "netrwPlugin",
-  "netrwSettings",
-  "netrwFileHandlers",
   "matchit",
   "matchparen",
   "tar",

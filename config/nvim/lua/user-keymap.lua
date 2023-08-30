@@ -21,13 +21,6 @@ M.tc = function(str)
 end
 local tc = M.tc
 
-M.save_clear_modifiable = function()
-    vim.fn.feedkeys(tc(fk.escape))
-    vim.cmd.wa()
-    vim.cmd("echo ''")
-end
-local save_clear_modifiable = M.save_clear_modifiable
-
 M.is_git_repo = function()
     if os.execute('git rev-parse') == 0 then
         return true
@@ -273,89 +266,15 @@ map('n', '<leader>~', function()
 end, { silent = true, desc = desc('gen', ':split term') })
 
 -- Split navigation
-map('i', '<C-h>', function()
-    -- save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>h'), 'n')
-end, { desc = desc('nav', 'left window') })
+map({ 'i', 'v', 'n' }, '<C-h>', '<C-w>h', { desc = desc('nav', 'left window') })
+map({ 'i', 'v', 'n' }, '<C-j>', '<C-w>j', { desc = desc('nav', 'down window') })
+map({ 'i', 'v', 'n' }, '<C-k>', '<C-w>k', { desc = desc('nav', 'up window') })
+map({ 'i', 'v', 'n' }, '<C-l>', '<C-w>l', { desc = desc('nav', 'right window') })
 
-map('i', '<C-j>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>j'), 'n')
-end, { desc = desc('nav', 'down window') })
-
-map('i', '<C-k>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>k'), 'n')
-end, { desc = desc('nav', 'up window') })
-
-map('i', '<C-l>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>l'), 'n')
-end, { desc = desc('nav', 'right window') })
---
-map('v', '<C-h>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>h'), 'n')
-end, { desc = desc('nav', 'left window') })
-
-map('v', '<C-j>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>j'), 'n')
-end, { desc = desc('nav', 'down window') })
-
-map('v', '<C-k>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>k'), 'n')
-end, { desc = desc('nav', 'up window') })
-
-map('v', '<C-l>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>l'), 'n')
-end, { desc = desc('nav', 'right window') })
---
-map('n', '<C-h>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>h'), 'n')
-end, { desc = desc('nav', 'left window') })
-
-map('n', '<C-j>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>j'), 'n')
-end, { desc = desc('nav', 'down window') })
-
-map('n', '<C-k>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>k'), 'n')
-end, { desc = desc('nav', 'up window') })
-
-map('n', '<C-l>', function()
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>l'), 'n')
-end, { desc = desc('nav', 'right window') })
---
-map('t', '<C-h>', function()
-    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>h'), 'n')
-end, { desc = desc('nav', 'left window') })
-
-map('t', '<C-j>', function()
-    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>j'), 'n')
-end, { desc = desc('nav', 'down window') })
-
-map('t', '<C-k>', function()
-    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
-    save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>k'), 'n')
-end, { desc = desc('nav', 'up window') })
-
-map('t', '<C-l>', function()
-    vim.fn.feedkeys(tc('<C-\\><C-n>'), 'n')
-    M.save_clear_modifiable()
-    vim.fn.feedkeys(tc('<C-w>l'), 'n')
-end, { desc = desc('nav', 'right window') })
+map('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = desc('nav', 'left window') })
+map('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = desc('nav', 'down window') })
+map('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = desc('nav', 'up window') })
+map('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
 
 -- Tab navigation
 map('i', '˙',fk.escape .. ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev tab') })

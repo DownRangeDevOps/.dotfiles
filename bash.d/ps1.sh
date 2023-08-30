@@ -1,5 +1,5 @@
 log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+log debug "==> [${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  helpers
@@ -50,4 +50,7 @@ function __ps1_prompt() {
     PS1="${ps1}"
 }
 
-PROMPT_COMMAND='history -a ~/.bash_history; history -n ~/.bash_history; __ps1_prompt'
+PROMPT_COMMAND="history -a ~/.bash_history; history -n ~/.bash_history; __ps1_prompt"
+
+# Add the direnv hook to PROMPT_COMMAND
+# eval "$(direnv hook bash)"

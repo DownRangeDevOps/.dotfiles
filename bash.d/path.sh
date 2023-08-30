@@ -1,3 +1,6 @@
+log debug ""
+log debug "==> [${BASH_SOURCE[0]}]"
+
 # Reset PATH then add bins
 function set_path() {
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Resetting PATH"
@@ -16,7 +19,7 @@ function set_path() {
         add_to_path "prepend" "${BREW_PREFIX}/sbin"    # Homebrew
 
         for tool in "${gnu_tools[@]}"; do
-            add_to_path prepend "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
+            add_to_path "prepend" "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
             add_to_path prepend "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
         done
 

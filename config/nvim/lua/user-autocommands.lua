@@ -101,7 +101,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     callback = function()
         vim.highlight.on_yank({
             higroup = 'Question',
-            timeout = 150,
+            timeout = 250,
         })
     end,
 })
@@ -109,6 +109,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- ----------------------------------------------
 -- User
 -- ----------------------------------------------
+-- Auto-Save
+vim.api.nvim_create_autocmd({ 'InsertLeave', 'TextChanged' }, {
+    group = user,
+    pattern = '*',
+    callback = function()
+        if vim.api.nvim_buf_get_option(0, 'modifiable') and vim.g.auto_save then
+            vim.cmd.write()
+        end
+    end
+})
+
 -- Map/unmap shitty plugin auto bindings
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave' }, {
     group = user,

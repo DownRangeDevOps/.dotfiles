@@ -1,5 +1,5 @@
 log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+log debug "==> [${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  aliases

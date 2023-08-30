@@ -4,13 +4,26 @@
 # - We should ensure pipelines fail if commands within them fail
 set -uo pipefail
 
+if [[ ${DEBUG:-} -eq 1 ]]; then
+    source "${HOME}/.dotfiles/lib/log.sh"
+else
+    function log() {
+        true
+    }
+fi
+
+log debug ""
+log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+
 # Globals
 BREW_PREFIX="$(brew --prefix)" && export BREW_PREFIX
+export DOTFILES_PREFIX="${HOME}/.dotfiles"
+export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 
 # Use my ncurses and terminfo
-PATH="${BREW_PREFIX}/opt/ncurses/bin:$PATH" && export PATH
-TERMINFO=~/.local/share/terminfo && export TERMINFO
-TERMINFO_DIRS=~/.local/share/terminfo && export TERMINFO_DIRS
+export PATH="${BREW_PREFIX}/opt/ncurses/bin:$PATH"
+export TERMINFO=~/.local/share/terminfo
+export TERMINFO_DIRS=~/.local/share/terminfo
 
 # History
 HISTSIZE=1000
@@ -30,4 +43,11 @@ bind '"jj":vi-movement-mode'
 stty -ixon
 
 # Load everything else
-source ~/.dotfiles/bash-helpers/bash.sh
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+source "${BASH_D_PATH}/lib.sh"
+source "${BASH_D_PATH}/path.sh"
+source "${BASH_D_PATH}/bash.sh"
+
+set +u
+
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Done, .bash_profile loaded."

@@ -9,11 +9,15 @@ fi
 
 # Declare this before usage
 function printf_callout() {
-    printf "%s\n" "$(tput bold)==> ${1}$(tput sgr0)"
+    if [[ -n "${1:-}" ]]; then
+        printf "%s\n" "$(tput bold)==> ${1}$(tput sgr0)"
+    else
+        printf "%b\n" "${BOLD}${YELLOW}No msg provided, args: ${*}${RESET}"
+    fi
 }
 
 log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+log debug "==> [${BASH_SOURCE[0]}]"
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
 
@@ -51,10 +55,6 @@ function indent_output() {
     fi
 
     pr --omit-header --indent $((indent_levels * indent_size))
-}
-
-function printf_callout() {
-    printf "%s\n" "${BOLD}==> ${1}${RESET}"
 }
 
 # Color printf
@@ -105,11 +105,11 @@ function prompt_to_continue() {
 
 # Utils
 function add_to_path() {
-    log trace "[$(basename "${BASH_SOURCE[0]}")]: add_to_path | args: $*"
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: add_to_path | args: $*"
 
-    local position="$1"
+    local position="${1:-}"
     local new_path
-    new_path="$(printf "%s" "$2" | trim)"
+    new_path="$(printf "%s" "${2:-}" | trim)"
 
     if [[ ! -d ${new_path} ]]; then
         printf_error "ERROR: ${new_path} is not a directory"
@@ -130,11 +130,13 @@ function add_to_path() {
             printf_error "ERROR: position argument missing" "USAGE: add_to_path <prepend|append> <path>"
             ;;
         esac
+    else
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: ${new_path} is already in PATH, skipping..."
     fi
 }
 
 function join() {
-    local IFS=$1
+    local IFS=${1:-}
     __="${*:2}"
 }
 

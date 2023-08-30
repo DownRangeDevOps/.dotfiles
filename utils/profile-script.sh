@@ -4,12 +4,11 @@ if [[ -z $1 ]]; then
     printf "%s\n" "USAGE: $(basename "${BASH_SCRIPT[0]}") <file>"
 fi
 
-
 SCRIPT_TO_PROFILE=$1
 LOG_FILE="${SCRIPT_TO_PROFILE}.log"
-SCRIPT_PATH="$(dirname "${BASH_SOURCE[0]}")"
 
-source "${SCRIPT_PATH}/../bash-helpers/lib.sh"
+# shellcheck disable=SC1090,SC1091
+source "${HOME}/.dotfiles/bash-helpers/lib.sh"
 
 rm -rf /tmp/profile.log /tmp/profile.tim
 
@@ -25,10 +24,12 @@ done
 
 for ((i=2; i--;))
 do
+    printf_callout "Profiling ${SCRIPT_TO_PROFILE}"
+
     # shellcheck disable=SC1090
     source "${SCRIPT_TO_PROFILE}"
-    printf "\n\n" >| "${PWD}/${LOG_FILE}"
-    printf "%s\n" "***** PROFILING START *****" >> "${PWD}/${LOG_FILE}"
+    printf "\n\n" >| "./${LOG_FILE}"
+    printf "%s\n" "***** PROFILING START *****" >> "./${LOG_FILE}"
 done
 
 set +x
@@ -43,6 +44,6 @@ paste <(
                                  ${ctot:0:${#ctot}-9}.${ctot:${#ctot}-9}
         last=${tim//.}
     done < /tmp/profile.tim
-) /tmp/profile.log >> "${PWD}/${LOG_FILE}"
+) /tmp/profile.log >> "./${LOG_FILE}"
 
-printf_callout "Log saved to ${PWD}/${LOG_FILE}"
+printf_callout "Log saved to ./${LOG_FILE}"

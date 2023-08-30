@@ -1,5 +1,5 @@
 log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+log debug "==> [${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
 #  aliases
@@ -97,7 +97,7 @@ function docker_ps() {
 
 # Search tags on docker hub
 function search_docker_tags() {
-    name=$1
+    name=${1:-}
 
     # Initial URL
     url="https://registry.hub.docker.com/v2/repositories/library/${name}/tags/?page_size=100"
@@ -164,7 +164,7 @@ function docker_select_image() {
 }
 
 function docker_exec() {
-    if [[ ${1} =~ 'help' ]]; then
+    if [[ ${1:-} =~ 'help' ]]; then
         printf "%s\n" \
             "Docker helper to connect to a running container" \
             "" \
