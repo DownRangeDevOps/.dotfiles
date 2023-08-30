@@ -24,6 +24,13 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
+-- Enable relative line numbers in neo-tree
+vim.api.nvim_create_autocmd( { 'BufWinEnter' }, {
+    group = ui,
+    pattern = 'neo-tree',
+    command = 'setlocal relativenumber',
+})
+
 -- Set cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
     group = ui,
@@ -60,20 +67,22 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
             man = true,
             qf = true,
         }
+
         local clean_buftypes = {
             help = true,
             quickfix = true,
             terminal = true,
-            nofile = true,
+            -- nofile = true,
             prompt = true,
         }
+
         local filetype = vim.bo.filetype
         local buftype = vim.bo.buftype
 
         filetype = filetype or "nofiletype"
         buftype = buftype or "nobuftype"
 
-        if clean_filetypes[filetype] or clean_buftypes[buftype] then
+        if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
             vim.wo.colorcolumn = false
             vim.wo.list = false
             vim.wo.number = false
