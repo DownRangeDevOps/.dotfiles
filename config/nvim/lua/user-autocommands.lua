@@ -114,8 +114,12 @@ vim.api.nvim_create_autocmd({ 'InsertLeave', 'TextChanged' }, {
     group = user,
     pattern = '*',
     callback = function()
-        if vim.api.nvim_buf_get_option(0, 'modifiable') and vim.g.auto_save then
+        if vim.g.auto_save
+            and vim.api.nvim_buf_get_option(0, 'buftype') == ''
+            and vim.api.nvim_buf_get_option(0, 'modifiable') then
+
             vim.cmd.write()
+            vim.fn.timer_start(500, function() vim.cmd.echon('""') end)
         end
     end
 })

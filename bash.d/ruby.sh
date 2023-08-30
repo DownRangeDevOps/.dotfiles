@@ -33,7 +33,7 @@ function rbenv_lazy_init() {
     local last_cmd
     last_cmd=$(fc -l | tail -1 | cut -d ' ' -f 2-)
 
-    log debug "$(printf_callout Initalizing goenv...)"
+    log debug "Initalizing goenv..."
     unset -f rbenv_lazy_init
 
     printf_warning "rbenv has not been initialized, initializing now..." >&2
