@@ -13,7 +13,7 @@ else
 fi
 
 log debug ""
-log debug "$(printf_callout ["${BASH_SOURCE[0]}"])"
+log debug "[${BASH_SOURCE[0]}]"
 
 # Globals
 BREW_PREFIX="$(brew --prefix)" && export BREW_PREFIX

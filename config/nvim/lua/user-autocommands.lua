@@ -24,6 +24,13 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
+-- Enable relative line numbers in neo-tree
+vim.api.nvim_create_autocmd( { 'BufWinEnter', 'BufEnter', 'BufNew', 'BufNewFile', 'BufRead', 'BufLoad' }, {
+    group = ui,
+    pattern = 'neo-tree',
+    command = 'setlocal relativenumber',
+})
+
 -- Set cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
     group = ui,
@@ -60,20 +67,22 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
             man = true,
             qf = true,
         }
+
         local clean_buftypes = {
             help = true,
             quickfix = true,
             terminal = true,
-            nofile = true,
+            -- nofile = true,
             prompt = true,
         }
+
         local filetype = vim.bo.filetype
         local buftype = vim.bo.buftype
 
         filetype = filetype or "nofiletype"
         buftype = buftype or "nobuftype"
 
-        if clean_filetypes[filetype] or clean_buftypes[buftype] then
+        if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
             vim.wo.colorcolumn = false
             vim.wo.list = false
             vim.wo.number = false
@@ -114,8 +123,12 @@ vim.api.nvim_create_autocmd({ 'InsertLeave', 'TextChanged' }, {
     group = user,
     pattern = '*',
     callback = function()
-        if vim.api.nvim_buf_get_option(0, 'modifiable') and vim.g.auto_save then
+        if vim.g.auto_save
+            and vim.api.nvim_buf_get_option(0, 'buftype') == ''
+            and vim.api.nvim_buf_get_option(0, 'modifiable') then
+
             vim.cmd.write()
+            vim.fn.timer_start(500, function() vim.cmd.echon('""') end)
         end
     end
 })

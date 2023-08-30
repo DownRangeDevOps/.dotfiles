@@ -509,6 +509,8 @@ require('lazy').setup({
     {
         'hrsh7th/nvim-cmp',
         lazy = false,
+        version = '2.*',
+        build = 'make install_jsregexp',
         dependencies = {
             -- Snippet Engine & its associated nvim-cmp source
             'L3MON4D3/LuaSnip', -- https://github.com/L3MON4D3/LuaSnip

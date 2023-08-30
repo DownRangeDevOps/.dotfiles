@@ -15,12 +15,6 @@ M.fk = {
 }
 local fk = M.fk
 
-M.tc = function(str)
-    assert(tostring(str), 'invalid argument: str :string required')
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-local tc = M.tc
-
 M.is_git_repo = function()
     if os.execute('git rev-parse') == 0 then
         return true
@@ -137,28 +131,26 @@ map('c', 'q/', '?')
 -- NOTE: test for a while then add response:
 -- (https://stackoverflow.com/questions/11993851/how-to-delete-not-cut-in-vim)
 -- Copy/paste to/from system clipboard
-map('', '<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
+map({ 'n', 'v' }, '<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
 map('n', '<leader>Y', '"+Y', { desc = desc('gen', 'copy -> eol to system clipboard') })
 map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = desc('gen', 'copy on mouse select') })
 map('n', '<leader>yy', '"+yy', { desc = desc('gen', 'copy line to system clipboard') })
 map('n', '<leader>p', '"+p', { desc = desc('gen', 'paste system clipboard') })
 map('n', '<leader>P', '"+P', { desc = desc('gen', 'paste system clipboard') })
---
+
 -- delete
-map('n', "d", '"_d', { desc = desc('txt', 'delete') })
+map({ 'n', 'v' }, "d", '"_d', { desc = desc('txt', 'delete') })
 map('n', "D", '"_D', { desc = desc('txt', 'delete -> eol') })
-map('n', "<leader>d", "d", { desc = desc('txt', 'yank-delete') })
+map({ 'n', 'v' }, "<leader>d", "d", { desc = desc('txt', 'yank-delete') })
 map('n', "<leader>D", "D", { desc = desc('txt', 'yank-delete -> eol') })
---
+
 -- cut
 map("", "c", '"_c', { desc = desc('txt', 'change') })
 map("", "C", '"_C', { desc = desc('txt', 'change -> eol') })
 map("", "<leader>c", "c", { desc = desc('txt', 'yank-change')})
 map("", "<leader>C", "C", { desc = desc('txt', 'yank-change -> eol')})
---
+
 -- paste
--- map('n', "p", '"_dp', { desc = desc('txt', 'paste') })
--- map('n', "P", '"_dP', { desc = desc('txt', 'paste after') })
 map('v', "p", '"_dgvp', { desc = desc('txt', 'paste') })
 map('v', "P", '"_dgvP', { desc = desc('txt', 'paste after') })
 map('v', "<leader>p", "ygvp", { desc = desc('txt', 'yank-paste after') })
@@ -223,7 +215,7 @@ map('n', '<leader>gb', function() vim.cmd('GitBlame') end, { desc = desc('git', 
 
 map('n', '<leader>gD', function()
     vim.cmd('tabnew' .. vim.fn.expand('%:p'))
-    vim.cmd('Gdiff')
+    vim.cmd('GitDiff')
 end, { desc = desc('git', 'git diff')})
 
 map('n', '<leader>gl', function()
