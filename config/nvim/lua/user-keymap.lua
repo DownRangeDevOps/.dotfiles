@@ -261,15 +261,15 @@ map('n', '<leader>q', ':w' .. fk.enter .. '<C-^>:bd#' .. fk.enter .. 'i' .. fk.e
 map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
 
 -- Terminal split management
-map('n', '`', ':ToggleTerm size=20 direction=float' .. fk.enter, { desc = desc('gen', 'open floating terminal')})
+map('n', '`', ':ToggleTerm size=15 direction=horizontal' .. fk.enter, { desc = desc('gen', 'open floating terminal')})
 map('n', '<leader>`', function()
-    vim.cmd.nor('vsplit term://' .. bin.bash)
-    vim.cmd('startinser')
+    vim.cmd.vsplit('term://' .. bin.bash)
+    vim.cmd.startinsert()
 end, { silent = true, desc = desc('gen', ':vsplit term') })
 
 map('n', '<leader>~', function()
-    vim.cmd('split term://' .. bin.bash)
-    vim.cmd('startinser')
+    vim.cmd.split('term://' .. bin.bash)
+    vim.cmd.startinser()
 end, { silent = true, desc = desc('gen', ':split term') })
 
 -- Split navigation

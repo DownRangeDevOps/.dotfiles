@@ -23,6 +23,6 @@ vim.g.bullets_enabled_file_types = { 'markdown', 'text', 'gitcommit', 'scratch' 
 require('user-commands')
 require('user-plugins')
 require('user-highlights')
-require('user-keymap')
 require('user-autocommands')
+require('user-keymap')
 require('user-config')

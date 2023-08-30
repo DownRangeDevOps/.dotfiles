@@ -28,9 +28,5 @@ function set_path() {
     add_to_path "prepend" "/opt/X11/bin"       # X11
     add_to_path "append" "${HOME}/.local/bin"  # Ansible
     add_to_path "append" "${HOME}/.cabal/bin/" # Haskell
-
-    if command -v pipx >/dev/null 2>&1; then
-        pipx ensurepath >/dev/null 2>&1         # pipx
-    fi
 }
 set_path

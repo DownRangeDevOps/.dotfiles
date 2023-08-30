@@ -193,10 +193,6 @@ require('lazy').setup({
     -- :help taboo
     { 'gcmt/taboo.vim', lazy = true, event = 'CmdlineEnter' },
 
-    -- toggleterm.nvim (https://github.com/akinsho/toggleterm.nvim)
-    -- :help toggleterm.nvim
-    { 'akinsho/toggleterm.nvim', lazy = false, version = "*", config = true },
-
     -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
     -- :help nvim-ufo
     -- { 'kevinhwang91/nvim-ufo', lazy = false, config = true, dependencies = 'kevinhwang91/promise-async' },
@@ -571,7 +567,7 @@ require('lazy').setup({
             terminal_mappings = false,
             presist_size = true,
             presist_mode = true,
-            direction = 'float',
+            direction = 'horizontal',
             shell = vim.env.BREW_PREFIX .. '/bin/bash --login',
             auto_scroll = true,
             border = 'curved',
