@@ -16,6 +16,7 @@ vim.opt.diffopt = table.concat({
   'algorithm:histogram',
 }, ',')
 vim.opt.lazyredraw = true
+vim.g.netrw_altfile = 1
 vim.opt.mouse = 'a'
 vim.opt.secure = true
 vim.opt.swapfile = false

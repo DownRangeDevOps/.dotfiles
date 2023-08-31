@@ -128,33 +128,37 @@ map('c', 'q/', '/')
 map('c', 'q/', '?')
 
 -- Karen without Karenness
--- NOTE: test for a while then add response:
--- (https://stackoverflow.com/questions/11993851/how-to-delete-not-cut-in-vim)
 -- Copy/paste to/from system clipboard
+map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = desc('gen', 'copy on mouse select') })
 map({ 'n', 'v' }, '<leader>y', '"+y', { desc = desc('gen', 'copy to system clipboard') })
 map('n', '<leader>Y', '"+Y', { desc = desc('gen', 'copy -> eol to system clipboard') })
-map('v', '<LeftRelease>', '"+y<LeftRelease>', { desc = desc('gen', 'copy on mouse select') })
 map('n', '<leader>yy', '"+yy', { desc = desc('gen', 'copy line to system clipboard') })
 map('n', '<leader>p', '"+p', { desc = desc('gen', 'paste system clipboard') })
 map('n', '<leader>P', '"+P', { desc = desc('gen', 'paste system clipboard') })
 
--- delete
+-- paste (p/P)
+map('v', "p", '"_dgvp', { desc = desc('txt', 'paste') })
+map('v', "P", '"_dgvP', { desc = desc('txt', 'paste after') })
+map('v', "<leader>p", "ygvp", { desc = desc('txt', 'yank-paste after') })
+map('v', "<leader>P", "ygvP", { desc = desc('txt', 'yank-paste after') })
+
+-- delete (d/D)
 map({ 'n', 'v' }, "d", '"_d', { desc = desc('txt', 'delete') })
 map('n', "D", '"_D', { desc = desc('txt', 'delete -> eol') })
 map({ 'n', 'v' }, "<leader>d", "d", { desc = desc('txt', 'yank-delete') })
 map('n', "<leader>D", "D", { desc = desc('txt', 'yank-delete -> eol') })
 
--- cut
+-- change (c/D)
 map("", "c", '"_c', { desc = desc('txt', 'change') })
 map("", "C", '"_C', { desc = desc('txt', 'change -> eol') })
 map("", "<leader>c", "c", { desc = desc('txt', 'yank-change')})
 map("", "<leader>C", "C", { desc = desc('txt', 'yank-change -> eol')})
 
--- paste
-map('v', "p", '"_dgvp', { desc = desc('txt', 'paste') })
-map('v', "P", '"_dgvP', { desc = desc('txt', 'paste after') })
-map('v', "<leader>p", "ygvp", { desc = desc('txt', 'yank-paste after') })
-map('v', "<leader>P", "ygvP", { desc = desc('txt', 'yank-paste after') })
+-- cut (x/X)
+map("", "x", '"_x', { desc = desc('txt', 'delete') })
+map("", "X", '"_X', { desc = desc('txt', 'delete -> eol') })
+map("", "<leader>x", "x", { desc = desc('txt', 'yank-cut')})
+map("", "<leader>X", "X", { desc = desc('txt', 'yank-cut -> eol')})
 
 -- Manipulate lines, maintain cursor pos
 map('v', 'J', ':m \'>+1' ..fk.enter .. 'gv=gv', { desc = desc('txt', 'move lines up') })
@@ -166,7 +170,10 @@ map('n', 'n', 'nzzzv', { desc = desc('next search') })
 map('n', 'N', 'Nzzzv', { desc = desc('prev search') })
 
 -- File management (auto-save, browser)
-map('n', '<leader>w', vim.cmd.write, { silent = true, desc = desc('file', 'write to file') })
+map('n', '<leader>w', function()
+    local modifiable  = vim.api.nvim_buf_get_option(0, 'modifiable')
+    if modifiable then vim.cmd.write() end
+end, { silent = true, desc = desc('file', 'write to file') })
 map('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = desc('file', 'open undo-tree' ) })
 map('n', '<leader>1', function() vim.cmd(
     'Neotree action=focus source=filesystem position=current toggle reveal') end,
@@ -174,15 +181,10 @@ map('n', '<leader>1', function() vim.cmd(
 map('n', '<leader>2', function() vim.cmd(
     'Neotree action=show source=filesystem position=left toggle reveal') end,
     { silent = true, desc = desc('file', 'open sidebar browser') })
-
-M.neo_tree = {
-    window = {
-        mappings = {
-            ['-'] = 'navigate_up',
-            ['<C-r>'] = 'Neotree refresh',
-        }
-    }
-}
+map({ 'n', 'v' }, '-', function()
+    if vim.api.nvim_buf_get_option(0, 'filetype') == 'neo-tree' then
+        vim.fn.feedkeys('<BS>') else vim.fn.feedkeys('-') end
+end, { desc = desc('file', 'navigate up a dir') })
 
 -- map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = desc('file', 'make file +x') })
 
@@ -200,29 +202,34 @@ map('n', '<leader>hc', function() require("harpoon.mark").clear_all() end, { des
 
 -- Git
 -- :help Git
-local git_log_branch = ''
-    .. '--branches --remotes --graph --color --decorate=short --format=format:'
-    .. '"'
-    .. '%x09%C(bold blue)%h%C(reset)' -- short hash
-    .. '-%C(auto)%d%C(reset)' -- ref name
-    .. '%C(yellow)%<(40,trunc)%s%C(reset)' -- comment
-    .. '%C(normal)[%cn]%C(reset)' -- committer
-    .. '%C(bold green)(%ar)%C(reset)' -- time elapsed
-    .. '"'
+-- git log --graph
+map('n', '<leader>gl', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gl')
+end, { desc = desc('git', 'git log this branch')})
+--
+map('n', '<leader>gl-', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gl-')
+end, { desc = desc('git', 'git log this branch trunc msg')})
+--
+map('n', '<leader>gL', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gL-')
+end, { desc = desc('git', 'git log all branches')})
+--
+map('n', '<leader>gL', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gL-')
+end, { desc = desc('git', 'git log all branches')})
 
-map('n', '<leader>gs', function() vim.cmd('Git status') end, { desc = desc('git', 'git status')})
-map('n', '<leader>gb', function() vim.cmd('Git blame') end, { desc = desc('git', 'git blame')})
+-- git status/blame
+map('n', '<leader>gs', function() vim.cmd('Git') end, { desc = desc('git', 'git status')})
+map('n', '<leader>gb', function() vim.cmd('Git_blame') end, { desc = desc('git', 'git blame')})
 
+-- git diff
 map('n', '<leader>gD', function()
     vim.cmd('tabnew' .. vim.fn.expand('%:p'))
-    vim.cmd('Git diff')
+    vim.cmd('Gvdiffsplit')
 end, { desc = desc('git', 'git diff')})
 
-map('n', '<leader>gl', function()
-    vim.cmd('botright Git log' .. git_log_branch)
-end, { desc = desc('git', 'git log')})
-
--- Use magic when searching
+-- use magic when searching
 local use_magic = function(key, prefix)
     local pos = vim.fn.getcmdpos()
 
@@ -242,8 +249,18 @@ map('n', '<leader>rw', ':%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>', { desc
 -- Split management
 map('n', '<leader>\\', function() vim.cmd('vsplit') end, { silent = true, desc = desc('gen', 'vsplit') })
 map('n', '<leader>-', function() vim.cmd('split') end, { silent = true, desc = desc('gen', 'split') })
+map('n', '<leader>q', function()
+    vim.cmd.write()
+    vim.cmd.bprevious()
+    vim.cmd.bwipeout('#')
+
+    if vim.api.nvim_buf_get_option(0, 'buftype') == 'terminal' then
+        vim.cmd.startinsert()
+    end
+end, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
 map('n', '<leader>q', ':w' .. fk.enter .. '<C-^>:bd#' .. fk.enter .. 'i' .. fk.enter, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
 map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
+map('n', '<leader>tc', function() vim.cmd.tabclose() end, { desc = desc('gen', 'close tab')})
 
 -- Terminal split management
 map('n', '`', ':ToggleTerm size=15 direction=horizontal' .. fk.enter, { desc = desc('gen', 'open bottom terminal')})
