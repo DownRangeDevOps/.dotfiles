@@ -187,9 +187,6 @@ require('lazy').setup({
                 position = "current",
                 noremap = true,
                 nowait = true,
-                window = {
-                    mappings = keymap.neo_tree
-                },
             },
             filesystem = {
                 filtered_items = {

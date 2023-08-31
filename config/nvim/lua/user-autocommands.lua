@@ -66,6 +66,7 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
             help = true,
             man = true,
             qf = true,
+            git = true,
         }
 
         local clean_buftypes = {

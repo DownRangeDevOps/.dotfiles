@@ -175,14 +175,9 @@ map('n', '<leader>2', function() vim.cmd(
     'Neotree action=show source=filesystem position=left toggle reveal') end,
     { silent = true, desc = desc('file', 'open sidebar browser') })
 
-M.neo_tree = {
-    window = {
-        mappings = {
-            ['-'] = 'navigate_up',
-            ['<C-r>'] = 'Neotree refresh',
-        }
-    }
-}
+local neotree = {}
+neotree.window.mappings = { ['-'] = 'navigate_up' }
+require("neo-tree").setup(neotree)
 
 -- map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = desc('file', 'make file +x') })
 
@@ -200,29 +195,34 @@ map('n', '<leader>hc', function() require("harpoon.mark").clear_all() end, { des
 
 -- Git
 -- :help Git
-local git_log_branch = ''
-    .. '--branches --remotes --graph --color --decorate=short --format=format:'
-    .. '"'
-    .. '%x09%C(bold blue)%h%C(reset)' -- short hash
-    .. '-%C(auto)%d%C(reset)' -- ref name
-    .. '%C(yellow)%<(40,trunc)%s%C(reset)' -- comment
-    .. '%C(normal)[%cn]%C(reset)' -- committer
-    .. '%C(bold green)(%ar)%C(reset)' -- time elapsed
-    .. '"'
+-- git log --graph
+map('n', '<leader>gl', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gl')
+end, { desc = desc('git', 'git log this branch')})
+--
+map('n', '<leader>gl-', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gl-')
+end, { desc = desc('git', 'git log this branch trunc msg')})
+--
+map('n', '<leader>gL', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gL-')
+end, { desc = desc('git', 'git log all branches')})
+--
+map('n', '<leader>gL', function()
+    vim.cmd.TermExec('size=15 direction=horizontal cmd=gL-')
+end, { desc = desc('git', 'git log all branches')})
 
-map('n', '<leader>gs', function() vim.cmd('Git status') end, { desc = desc('git', 'git status')})
-map('n', '<leader>gb', function() vim.cmd('Git blame') end, { desc = desc('git', 'git blame')})
+-- git status/blame
+map('n', '<leader>gs', function() vim.cmd('Git') end, { desc = desc('git', 'git status')})
+map('n', '<leader>gb', function() vim.cmd('Git_blame') end, { desc = desc('git', 'git blame')})
 
+-- git diff
 map('n', '<leader>gD', function()
     vim.cmd('tabnew' .. vim.fn.expand('%:p'))
-    vim.cmd('Git diff')
+    vim.cmd('Gvdiffsplit')
 end, { desc = desc('git', 'git diff')})
 
-map('n', '<leader>gl', function()
-    vim.cmd('botright Git log' .. git_log_branch)
-end, { desc = desc('git', 'git log')})
-
--- Use magic when searching
+-- use magic when searching
 local use_magic = function(key, prefix)
     local pos = vim.fn.getcmdpos()
 
@@ -244,6 +244,7 @@ map('n', '<leader>\\', function() vim.cmd('vsplit') end, { silent = true, desc =
 map('n', '<leader>-', function() vim.cmd('split') end, { silent = true, desc = desc('gen', 'split') })
 map('n', '<leader>q', ':w' .. fk.enter .. '<C-^>:bd#' .. fk.enter .. 'i' .. fk.enter, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
 map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
+map('n', '<leader>tc', function() vim.cmd.tabclose() end, { desc = desc('gen', 'close tab')})
 
 -- Terminal split management
 map('n', '`', ':ToggleTerm size=15 direction=horizontal' .. fk.enter, { desc = desc('gen', 'open bottom terminal')})

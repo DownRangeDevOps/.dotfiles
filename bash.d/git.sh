@@ -27,7 +27,7 @@ alias gs="git status"
 # logging
 alias gl="__git_log_branch"
 alias gl-="__git_log_branch_no_trunc_msg"
-alias gl--="__git_log_branch_only_msg"
+alias glm="__git_log_branch_only_msg"
 alias gL="__git_log_all_branches"
 alias gL-="__git_log_all_branches_no_trunc_msg"
 alias gstat="__git_status_vs_master"
@@ -240,7 +240,7 @@ function __git_log_branch() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(yellow)%<(50,trunc)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
         "$@" |
         LESS -SFX -R
 }
@@ -250,7 +250,7 @@ function __git_log_branch_no_trunc_msg() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(yellow)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
         "$@" |
         LESS -SFX -R
 }
@@ -266,7 +266,7 @@ function __git_log_all_branches() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(bold blue)%h%C(reset)%C(auto)%d%C(reset) %C(yellow)%<(60,trunc)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' \
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
         "$@" |
         LESS -SFX -R
 }
@@ -278,7 +278,7 @@ function __git_log_all_branches_no_trunc_msg() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(bold blue)%h%C(reset) -%C(auto)%d%C(reset) %C(yellow)%s%C(reset) %C(normal)[%cn]%C(reset) %C(bold green)(%ar)%C(reset)' |
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' |
         LESS -SFX -R
 }
 
