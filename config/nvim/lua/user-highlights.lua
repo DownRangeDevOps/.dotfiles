@@ -18,7 +18,7 @@
 -- 	sky = "#89dceb",
 -- 	sapphire = "#74c7ec",
 -- 	blue = "#89b4fa",
--- 	lavender = "#b4befe",
+-- 	lavender = "#b4befe":,
 -- 	text = "#cdd6f4",
 -- 	subtext1 = "#bac2de",
 -- 	subtext0 = "#a6adc8",
@@ -33,9 +33,9 @@
 -- 	crust = "#11111b",
 -- }
 
-local mocha = require('catppuccin.palettes.mocha')
+local theme = require('catppuccin.palettes.mocha')
 vim.cmd.highlight(
     "IndentBlanklineContextChar"
-    .. " guifg=" .. mocha.surface1
+    .. " guifg=" .. theme.surface1
     .. " gui=nocombine"
 )

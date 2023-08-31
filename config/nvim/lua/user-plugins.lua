@@ -27,25 +27,23 @@ require('lazy').setup({
     -- Vim user sovereign rights
     { 'ThePrimeagen/harpoon', lazy = false }, -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
     { 'mbbill/undotree', lazy = false }, -- Browse undo-tree (https://github.com/mbbill/undotree.git)
+    { 'tpope/vim-fugitive' }, -- Git manager (https://github.com/tpope/vim-fugitive)
     { 'tpope/vim-obsession', lazy = false }, -- Session mgmt (https://github.com/tpope/vim-obsession)
     { 'tpope/vim-repeat', lazy = false }, -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
     { 'tpope/vim-sleuth', lazy = true, event = "InsertEnter" }, -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
     { 'tpope/vim-surround', lazy = false, event = "InsertEnter" }, -- Surround text (https://github.com/tpope/vim-surround)
     { 'tpope/vim-unimpaired', lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
-    { 'zhimsel/vim-stay', lazy = false }, --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
     { 'windwp/nvim-autopairs', lazy = true, event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
+    { 'zhimsel/vim-stay', lazy = false }, --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
 
     { "nathom/filetype.nvim", lazy = true }, -- Replacement for slow filetype.vim builtin (https://github.com/nathom/filetype.nvim)
 
-    -- Git manager: vim-fugitive clone (https://github.com/dinhhuy258/git.nvim)
-    { 'dinhhuy258/git.nvim', lazy = true, event = 'CmdlineEnter', config = true,
-        opts = { default_mappings = false, target_branch = 'main', },
-    },
+    -- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
+    -- :help catppuccin.txt
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
-    -- ----------------------------------------------
     -- vim-rooter: cd to project root (https://github.com/airblade/vim-rooter)
     -- :help vim-rooter
-    -- ----------------------------------------------
     {
         'airblade/vim-rooter',
         lazy = false,
@@ -122,79 +120,19 @@ require('lazy').setup({
     -- :help bullets
     { 'dkarter/bullets.vim', lazy = true, event = 'FileType ' .. table.concat(vim.g.bullets_enabled_file_types, ',') },
 
-    -- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
-    -- :help catppuccin.txt
-    {
-        'catppuccin/nvim',
-        name = 'catppuccin',
-        priority = 1000,
-        opts = {
-            transparent_background = true,
-            highlight_overrides = {
-                theme = function(theme)
-                    return {
-                        CmpBorder = { fg = "#3e4145" },
-                        CurSearch = { fg = theme.base, bg = theme.green },
-                        Cursor = { fg = theme.none, bg = theme.saphire },
-                        MsgArea = { bg = theme.crust },
-                        Normal = { bg = theme.mantle },
-                        Search = { fg = theme.base, bg = theme.sky },
-                    }
-                end,
-            },
-            integrations = {
-                cmp = true,
-                fidget = true,
-                gitsignts = true,
-                -- harpoon = true,
-                markdown = true,
-                mason = true,
-                mini = true,
-                neotree = true,
-                telescope = true,
-                treesitter = true,
-                which_key = true,
-                indent_blankline = {
-                    enabled = true,
-                    colored_indent_levels = false,
-                },
-                native_lsp = {
-                    enabled = true,
-                    virtual_text = {
-                        errors = { "italic" },
-                        hints = { "italic" },
-                        warnings = { "italic" },
-                        information = { "italic" },
-                    },
-                    underlines = {
-                        errors = { "underline" },
-                        hints = { "underline" },
-                        warnings = { "underline" },
-                        information = { "underline" },
-                    },
-                    inlay_hints = {
-                        background = true,
-                    },
-                },
-            },
-            dim_inactive = {
-                enabled = false,
-                shade = 'base',
-                percentage = 0.15,
-            }
-        },
-        config = function()
-            vim.cmd.colorscheme 'catppuccin-mocha'
-        end,
-    },
-
     -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
     -- :help taboo
     { 'gcmt/taboo.vim', lazy = true, event = 'CmdlineEnter' },
 
     -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
     -- :help nvim-ufo
-    -- { 'kevinhwang91/nvim-ufo', lazy = false, config = true, dependencies = 'kevinhwang91/promise-async' },
+    {
+        'kevinhwang91/nvim-ufo',
+        lazy = false,
+        config = true,
+        opts = { provider_selector = function() return { 'treesitter', 'indent' } end },
+        dependencies = 'kevinhwang91/promise-async'
+    },
 
     -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
     -- :help nvim-colorizer
@@ -567,7 +505,7 @@ require('lazy').setup({
             direction = 'horizontal',
             shell = vim.env.BREW_PREFIX .. '/bin/bash --login',
             auto_scroll = true,
-            border = 'curved',
+            border = 'curve',
             highlights = {
                 Normal = {
                     guibg = '#11111b'
@@ -767,7 +705,6 @@ local cmp = require('cmp')
 local cmp_default = require('cmp.config.default')
 local cmp_compare = require('cmp.config.compare')
 
-
 keymap.cmp = cmp.setup {
     revision = 0,
     enabled = true,
@@ -841,37 +778,65 @@ keymap.cmp = cmp.setup {
             end
         end, { 'i', 's' }),
     },
-
-    -- Key mappings
-    -- mapping = cmp.mapping.preset.insert {
-    --     [ keymap.cmp_keys.select_next_item ] = cmp.mapping.select_next_item(),
-    --     [ keymap.cmp_keys.select_prev_item ] = cmp.mapping.select_prev_item(),
-    --     [ keymap.cmp_keys.scroll_docs_up ] = cmp.mapping.scroll_docs(4),
-    --     [ keymap.cmp_keys.scroll_docs_down ] = cmp.mapping.scroll_docs(-4),
-    --     [ keymap.cmp_keys.complete ] = cmp.mapping.complete {},
-    --     [ keymap.cmp_keys.confirm ] = cmp.mapping.confirm {
-    --         behavior = cmp.ConfirmBehavior.Replace,
-    --         select = false,
-    --     },
-    --     [ keymap.cmp_keys.tab] = cmp.mapping(function(fallback)
-    --         if cmp.visible() then
-    --             cmp.select_next_item()
-    --         elseif luasnip.expand_or_locally_jumpable() then
-    --             luasnip.expand_or_jump()
-    --         else
-    --             fallback()
-    --         end
-    --     end, { 'i', 's' }),
-    --     [ keymap.cmp_keys.shift_tab ] = cmp.mapping(function(fallback)
-    --         if cmp.visible() then
-    --             cmp.select_prev_item()
-    --         elseif luasnip.locally_jumpable(-1) then
-    --             luasnip.jump(-1)
-    --         else
-    --             fallback()
-    --         end
-    --     end, { 'i', 's' }),
-    -- },
 }
+
+-- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
+-- :help catppuccin.txt
+require('catppuccin').setup({
+    dim_inactive = { enabled = false },
+    highlight_overrides = {
+        mocha = function(mocha)
+            return {
+                -- https://github.com/catppuccin/nvim/blob/main/lua/catppuccin/groups/editor.lua
+                CmpBorder = { fg = "#3e4145" },
+                ColorColumn = { bg = mocha.base },
+                CurSearch = { fg = mocha.base, bg = mocha.green },
+                Cursor = { fg = mocha.crust },
+                CursorLineNr = { fg = mocha.sapphire },
+                Folded = { bg = mocha.surface0 },
+                LineNr = { fg = mocha.surface1 },
+                MsgArea = { bg = mocha.crust },
+                Normal = { bg = mocha.mantle },
+                Search = { fg = mocha.base, bg = mocha.sky },
+            }
+        end,
+    },
+    transparent_background = false,
+    integrations = {
+        cmp = true,
+        fidget = true,
+        gitsigns = true,
+        harpoon = true,
+        markdown = true,
+        mason = true,
+        mini = true,
+        neotree = true,
+        telescope = { enabled = true },
+        treesitter = true,
+        which_key = true,
+        indent_blankline = {
+            enabled = true,
+            colored_indent_levels = false,
+        },
+        native_lsp = {
+            enabled = true,
+            virtual_text = {
+                errors = { "italic" },
+                hints = { "italic" },
+                warnings = { "italic" },
+                information = { "italic" },
+            },
+            underlines = {
+                errors = { "underline" },
+                hints = { "underline" },
+                warnings = { "underline" },
+                information = { "underline" },
+            },
+            inlay_hints = {
+                background = true,
+            },
+        },
+    }
+})
 
 return M
