@@ -211,11 +211,11 @@ local git_log_branch = ''
     .. '"'
 
 map('n', '<leader>gs', function() vim.cmd('Git status') end, { desc = desc('git', 'git status')})
-map('n', '<leader>gb', function() vim.cmd('GitBlame') end, { desc = desc('git', 'git blame')})
+map('n', '<leader>gb', function() vim.cmd('Git blame') end, { desc = desc('git', 'git blame')})
 
 map('n', '<leader>gD', function()
     vim.cmd('tabnew' .. vim.fn.expand('%:p'))
-    vim.cmd('GitDiff')
+    vim.cmd('Git diff')
 end, { desc = desc('git', 'git diff')})
 
 map('n', '<leader>gl', function()
@@ -246,7 +246,7 @@ map('n', '<leader>q', ':w' .. fk.enter .. '<C-^>:bd#' .. fk.enter .. 'i' .. fk.e
 map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
 
 -- Terminal split management
-map('n', '`', ':ToggleTerm size=15 direction=horizontal' .. fk.enter, { desc = desc('gen', 'open floating terminal')})
+map('n', '`', ':ToggleTerm size=15 direction=horizontal' .. fk.enter, { desc = desc('gen', 'open bottom terminal')})
 map('n', '<leader>`', function()
     vim.cmd.vsplit('term://' .. bin.bash)
     vim.cmd.startinsert()
@@ -257,7 +257,7 @@ map('n', '<leader>~', function()
     vim.cmd.startinser()
 end, { silent = true, desc = desc('gen', ':split term') })
 
--- Split navigation
+-- Split navigation and sizing
 map({ 'i', 'v', 'n' }, '<C-h>', '<C-w>h', { desc = desc('nav', 'left window') })
 map({ 'i', 'v', 'n' }, '<C-j>', '<C-w>j', { desc = desc('nav', 'down window') })
 map({ 'i', 'v', 'n' }, '<C-k>', '<C-w>k', { desc = desc('nav', 'up window') })
@@ -268,29 +268,27 @@ map('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = desc('nav', 'down window') })
 map('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = desc('nav', 'up window') })
 map('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
 
+map('n', '<M-Up>', function() vim.cmd.resize('+4') end, { desc = desc('nav', 'increase win height') })
+map('n', '<M-Down>', function() vim.cmd.resize('-4') end, { desc = desc('nav', 'decrease win height') })
+map('n', '<M-Left>', function() vim.cmd('vertical resize +4') end, { desc = desc('nav', 'increase win width') })
+map('n', '<M-Right>', function() vim.cmd('vertical resize -4') end, { desc = desc('nav', 'decrease win width') })
+
 -- Tab navigation
-map('i', '˙',fk.escape .. ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev tab') })
-map('i', '¬',fk.escape .. ':tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next tab') })
-
-map('v', '˙',fk.escape .. ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev window') })
-map('v', '¬',fk.escape .. ':tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next window') })
-
-map('n', '˙', ':tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev window') })
-map('n', '¬', ':tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next window') })
-
-map('t', '˙', '<C-\\><C-n>:tabprevious' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'prev window') })
-map('t', '¬', '<C-\\><C-n>:tabnext' .. fk.enter .. ':echo ""' .. fk.enter, { desc = desc('nav', 'next window') })
+map('', '˙', function() vim.cmd.tabprevious() end, { desc = desc('nav', 'prev window') })
+map('', '¬', function() vim.cmd.tabnext() end, { desc = desc('nav', 'next window') })
 
 -- ----------------------------------------------
 -- Plugin Keymaps
 -- ----------------------------------------------
 -- nvim-ufo (https://github.com/kevinhwang91/nvim-ufo)
 -- :help nvim-ufl
--- map('n', 'zR', require('ufo').openAllFolds, { desc = desc('ui', 'open all folds') })
--- map('n', 'zM', require('ufo').closeAllFolds, { desc = desc('ui', 'close all folds') })
+map('n', 'zR', require('ufo').openAllFolds, { desc = desc('ui', 'open all folds') })
+map('n', 'zM', require('ufo').closeAllFolds, { desc = desc('ui', 'close all folds') })
+map('n', 'zr', require('ufo').openFoldsExceptKinds, { desc = desc('ui', 'open folds') })
+map('n', 'zm', require('ufo').closeFoldsWith, { desc = desc('ui', 'close folds') })
 
--- -- Telescope
--- -- :help telescope.builtin
+-- Telescope
+-- :help telescope.builtin
 map('n', '<C-p>', function()
     if is_git_repo() then
         vim.print("Running Telescope git_files in " .. vim.cmd.pwd())

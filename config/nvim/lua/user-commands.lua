@@ -2,6 +2,25 @@
 -- Plugins
 -- Listed here as a reminder/easy access
 -- ----------------------------------------------
+vim.api.nvim_create_user_command(
+    'ColorizerToggle',
+    function()
+        local switch = not vim.g.colorizer_attached
+        local msg = switch and 'disabled' or 'enabled'
+
+        if switch then
+            require("colorizer").detach_from_buffer(0)
+        else
+            require("colorizer").attach_to_buffer(0)
+        end
+
+        vim.g.colorizer_attached = switch
+
+        vim.cmd.echon('"Colorizer ' .. msg .. '"')
+        -- vim.fn.timer_start(1000, function() vim.cmd.echon('""') end)
+    end,
+    { desc = 'Toggle colorizer'}
+)
 
 -- ----------------------------------------------
 -- Helpers
@@ -10,10 +29,13 @@
 vim.api.nvim_create_user_command(
     'AutoSaveToggle',
     function()
-        vim.g.auto_save = not vim.g.auto_save
+        local switch = not vim.g.auto_save
+        local msg = switch and 'enabled' or 'disabled'
 
-        local msg = vim.g.auto_save and 'enabled' or 'disabled'
-        vim.cmd.echo('"AutoSave ' .. msg .. '"')
+        vim.g.auto_save = not switch
+
+        vim.cmd.echon('"AutoSave ' .. msg .. '"')
+        vim.fn.timer_start(1000, function() vim.cmd.echon('""') end)
     end,
     { desc = 'Toggle AutoSave' }
 )

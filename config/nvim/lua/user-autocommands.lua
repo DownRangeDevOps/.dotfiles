@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- UI
 -- ----------------------------------------------
 -- Enable relative line numbers in neo-tree
-vim.api.nvim_create_autocmd( { 'BufWinEnter', 'BufEnter', 'BufNew', 'BufNewFile', 'BufRead', 'BufLoad' }, {
+vim.api.nvim_create_autocmd( { 'BufWinEnter' }, {
     group = ui,
     pattern = 'neo-tree',
     command = 'setlocal relativenumber',
@@ -37,9 +37,9 @@ vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
     pattern = '*',
     callback = function()
         if vim.opt.hlsearch:get() then
-            vim.opt.cursorline = true
+            vim.opt.cursorlineopt = 'both'
         else
-            vim.opt.cursorline = false
+            vim.opt.cursorlineopt = 'number'
         end
     end
 })
@@ -128,7 +128,7 @@ vim.api.nvim_create_autocmd({ 'InsertLeave', 'TextChanged' }, {
             and vim.api.nvim_buf_get_option(0, 'modifiable') then
 
             vim.cmd.write()
-            vim.fn.timer_start(500, function() vim.cmd.echon('""') end)
+            vim.fn.timer_start(1000, function() vim.cmd.echon('""') end)
         end
     end
 })

@@ -1,9 +1,11 @@
+local theme = require("catppuccin.palettes.mocha")
 local M = {}
 
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
 vim.g.auto_save = true -- used by auto-save autocmd
+vim.cmd.colorscheme("catppuccin")
 vim.env.VISUAL = 'nvr -cc split --remote-wait' -- Prevent nested nvim instances
 vim.opt.diffopt = table.concat({
   'filler',
@@ -103,10 +105,10 @@ end
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
-vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#202031' })
 vim.opt.autoindent = true
 vim.opt.backspace = 'indent,eol,start' -- Make backspace behave in a sane manner.
 vim.opt.colorcolumn = '80'
+vim.opt.cursorline = true
 vim.opt.hidden = true
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
@@ -142,6 +144,9 @@ vim.opt.guicursor = table.concat({
 -- ----------------------------------------------
 -- Editing
 -- ----------------------------------------------
+-- Editorconfig
+vim.g.EditorConfig_exclude_patterns = { 'fugitive://.\\*', 'scp://.\\*' }
+
 -- Insert
 vim.opt.shiftround = true
 vim.opt.expandtab = true
