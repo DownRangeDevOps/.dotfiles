@@ -41,7 +41,7 @@ require('lazy').setup({
 
     -- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
     -- :help catppuccin.txt
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000, lazy = false }, -- setup called later in file
 
     -- vim-rooter: cd to project root (https://github.com/airblade/vim-rooter)
     -- :help vim-rooter
@@ -130,6 +130,7 @@ require('lazy').setup({
     {
         'kevinhwang91/nvim-ufo',
         lazy = false,
+        enabled = false, -- until I figure out why folds keep auto-closing
         config = true,
         opts = {
             provider_selector = function() return { 'treesitter', 'indent' } end,
@@ -193,25 +194,25 @@ require('lazy').setup({
                 nowait = true,
             },
             filesystem = {
-                window = {
-                    mappings = {
-                        ["-"] = "navigate_up",
-                        ["<CR>"] = function(state)
-                            local node = state.tree:get_node()
-                            vim.cmd.keepalt(vim.cmd.edit(node))
-                        end
-                    }
-                },
-                filtered_items = {
-                    hide_dotfiles = false,
-                    hide_gitignored = false,
-                    follow_current_file = {
-                        enabled = true,
-                        leave_dirs_open = false,
-                        hijack_netrw_behavior = "open_current",
-                        use_libuv_file_watcher = true,
-                    }
-                },
+                -- window = {
+                --     mappings = {
+                --         ["-"] = "navigate_up",
+                --         ["<CR>"] = function(state)
+                --             local node = state.tree:get_node()
+                --             vim.cmd.keepalt(vim.cmd.edit(node))
+                --         end
+                --     },
+                -- },
+            },
+            filtered_items = {
+                hide_dotfiles = false,
+                hide_gitignored = false,
+                follow_current_file = {
+                    enabled = true,
+                    leave_dirs_open = false,
+                    hijack_netrw_behavior = "open_current",
+                    use_libuv_file_watcher = true,
+                }
             },
         },
     },
@@ -224,30 +225,28 @@ require('lazy').setup({
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
         },
-        config = function()
-            require("refactoring").setup({
-                prompt_func_return_type = {
-                    go = false,
-                    java = false,
-                    cpp = false,
-                    c = false,
-                    h = false,
-                    hpp = false,
-                    cxx = false,
-                },
-                prompt_func_param_type = {
-                    go = false,
-                    java = false,
-                    cpp = false,
-                    c = false,
-                    h = false,
-                    hpp = false,
-                    cxx = false,
-                },
-                printf_statements = {},
-                print_var_statements = {},
-            })
-        end,
+        opts = {
+            prompt_func_return_type = {
+                go = false,
+                java = false,
+                cpp = false,
+                c = false,
+                h = false,
+                hpp = false,
+                cxx = false,
+            },
+            prompt_func_param_type = {
+                go = false,
+                java = false,
+                cpp = false,
+                c = false,
+                h = false,
+                hpp = false,
+                cxx = false,
+            },
+            printf_statements = {},
+            print_var_statements = {},
+        },
     },
 
     -- Treesitter: Syntax and code navigation (https://github.com/nvim-treesitter/nvim-treesitter)
@@ -619,6 +618,7 @@ require('nvim-treesitter.configs').setup {
         'dockerfile',
         'git_config',
         'git_rebase',
+        'gitattributes',
         'gitcommit',
         'gitignore',
         'go',

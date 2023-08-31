@@ -116,8 +116,7 @@ vim.opt.incsearch = true
 vim.opt.number = true
 vim.opt.numberwidth = 5
 vim.opt.relativenumber = true
-vim.opt.scrolloff = 8 -- never stray too far...
-vim.opt.showbreak = '↳ ' -- Wrapped line
+vim.opt.scrolloff = 8
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.listchars = table.concat({
@@ -126,6 +125,10 @@ vim.opt.listchars = table.concat({
   'nbsp:·',
 }, ',')
 vim.opt.list = true
+
+-- Line wrapping
+vim.opt.showbreak = '↳ ' -- show wrapped lines
+vim.opt.wrap = false
 
 -- Folding (nvim-ufo)
 vim.opt.foldcolumn = '1'

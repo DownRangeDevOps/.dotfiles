@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+# https://stackoverflow.com/questions/5014823/how-can-i-profile-a-bash-shell-script-slow-startup/20855353#20855353
 
 if [[ -z $1 ]]; then
     printf "%s\n" "USAGE: $(basename "${BASH_SCRIPT[0]}") <file>"
@@ -7,14 +8,16 @@ fi
 SCRIPT_TO_PROFILE=$1
 LOG_FILE="${SCRIPT_TO_PROFILE}.log"
 
-# shellcheck disable=SC1090,SC1091
-source "${HOME}/.dotfiles/bash-helpers/lib.sh"
-
 rm -rf /tmp/profile.log /tmp/profile.tim
 
 exec 3>&2 2> >(tee /tmp/profile.log |
     sed -u 's/^.*$/now/' |
     date -f - +%s.%N >/tmp/profile.tim)
+
+printf "\n\n" >| "./${LOG_FILE}"
+printf "%s\n" "***** PROFILING START *****" >> "./${LOG_FILE}"
+
+# Start profiling
 set -x
 
 for ((i=3; i--;))
@@ -22,14 +25,11 @@ do
     sleep .1
 done
 
+
 for ((i=2; i--;))
 do
-    printf_callout "Profiling ${SCRIPT_TO_PROFILE}"
-
     # shellcheck disable=SC1090
     source "${SCRIPT_TO_PROFILE}"
-    printf "\n\n" >| "./${LOG_FILE}"
-    printf "%s\n" "***** PROFILING START *****" >> "./${LOG_FILE}"
 done
 
 set +x

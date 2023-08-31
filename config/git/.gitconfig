@@ -1,45 +1,46 @@
 [user]
-    name = Ryan Fisher
-    email = ryan@downrangedevops.com
-    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyfjN2C677gfJWdPPkmP9jMYaZMIRyB2qpJ4ykrHx46
+	name = Ryan Fisher
+	email = ryan@downrangedevops.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyfjN2C677gfJWdPPkmP9jMYaZMIRyB2qpJ4ykrHx46
 [gpg]
-  format = ssh
+	format = ssh
 [gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-    allowedSignersFile = ~/.dotfiles/config/git/allowed_ssh_signers
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+	allowedSignersFile = ~/.dotfiles/config/git/allowed_ssh_signers
 [include]
-    path = ~/.dotfiles/config/git/.gitconfig_aliases
+	path = ~/.dotfiles/config/git/.gitconfig_aliases
 [core]
 	excludesfile = /Users/ryanfisher/.dotfiles/config/git/.gitignore_global
-    autocrlf = input
-    editor = nvr --remote-wait-silent
-    ignorecase = false
+	autocrlf = input
+	editor = nvr --remote-wait-silent
+	ignorecase = false
 [diff]
-    tool = vim-fugitive
-    algorithm = histogram
+	tool = vim-fugitive
+	algorithm = histogram
+	context = 6
 [difftool "vim-fugitive"]
-    cmd = 'vim -f -c "Gvdiff" "$MERGED"'
+	cmd = 'vim -f -c "Gvdiff" "$MERGED"'
 [merge]
-    ; conflictstyle = diff3
-    tool = pycharm
+	; conflictstyle = diff3
+	tool = pycharm
 [mergetool "pycharm"]
-    cmd = /usr/local/bin/charm-ce merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
-    trustExitCode = true
-    keepBackup = false
+	cmd = /usr/local/bin/charm-ce merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+	trustExitCode = true
+	keepBackup = false
 [mergetool]
-    keepBackup = false
+	keepBackup = false
 [push]
-    default = simple
+	default = simple
 [rerere]
-    enabled = true
-    autoupdate = false
+	enabled = true
+	autoupdate = false
 [branch]
-    autosetuprebase = always
+	autosetuprebase = always
 [commit]
-    gpgsign = true
-    template = ~/.dotfiles/config/git/.stCommitMsg
+	gpgsign = true
+	template = ~/.dotfiles/config/git/.stCommitMsg
 [help]
-    autocorrect = 0
+	autocorrect = 0
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path =
@@ -47,28 +48,28 @@
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [init]
-    templateDir = ~/.dotfiles/config/git/.git-template
-    defaultBranch = main
+	templateDir = ~/.dotfiles/config/git/.git-template
+	defaultBranch = main
 [color]
-    ui = true
+	ui = true
 [color "diff-highlight"]
-    oldNormal = red bold
-    oldHighlight = red bold 88
-    newNormal = green bold
-    newHighlight = green bold 29
+	oldNormal = red bold
+	oldHighlight = red bold 88
+	newNormal = green bold
+	newHighlight = green bold 29
 [color "diff"]
-    meta = yellow
-    frag = magenta bold
-    commit = yellow bold
-    old = red bold
-    new = green bold
-    whitespace = red reverse
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
 [rebase]
-    autosquash = true
+	autosquash = true
 [pack]
-    windowMemory = 100m
-    SizeLimit = 100m
-    threads = 1
-    window = 0
+	windowMemory = 100m
+	SizeLimit = 100m
+	threads = 1
+	window = 0
 [advice]
-    ignoredHook = false
+	ignoredHook = false

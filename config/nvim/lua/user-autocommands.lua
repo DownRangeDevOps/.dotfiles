@@ -80,9 +80,10 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
             help = true,
             quickfix = true,
             terminal = true,
-            -- nofile = true,
             prompt = true,
         }
+
+        local tab_filetypes = { gitconfig = true }
 
         local filetype = vim.bo.filetype
         local buftype = vim.bo.buftype
@@ -90,6 +91,7 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
         filetype = filetype or "nofiletype"
         buftype = buftype or "nobuftype"
 
+        -- set overall ui
         if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
             vim.wo.colorcolumn = false
             vim.wo.list = false
@@ -97,18 +99,21 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter', 'TabEnter', 'BufNew' }, {
             vim.wo.relativenumber = false
             vim.wo.spell = false
         else
-            vim.opt.colorcolumn = '80'
-            vim.opt.list = true
-            vim.opt.number = true
-            vim.opt.numberwidth = 5
-            vim.opt.relativenumber = true
-            vim.opt.listchars = table.concat({
-                'tab:»·',
-                'trail:·',
-                'nbsp:·',
-            }, ',')
+            vim.wo.colorcolumn = '80'
+            vim.wo.list = true
+            vim.wo.number = true
+            vim.wo.numberwidth = 5
+            vim.wo.relativenumber = true
+            vim.wo.spell = true
+            vim.wo.listchars = 'tab:⇢•,precedes:«,extends:»,trail:•,nbsp:•,multispace:•'
         end
-    end,
+
+        -- set file specific ui
+        if tab_filetypes[filetype] then
+            vim.wo.listchars = 'tab:⇢ ,precedes:«,extends:»,trail:•,nbsp:•,multispace:•'
+            vim.bo.expandtab = false
+        end
+    end
 })
 
 -- Highlight on yank

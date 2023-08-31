@@ -297,14 +297,15 @@ map('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = desc('nav', 'down window') })
 map('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = desc('nav', 'up window') })
 map('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = desc('nav', 'right window') })
 
-map('n', '<M-Up>', function() vim.cmd.resize('+4') end, { desc = desc('nav', 'increase win height') })
-map('n', '<M-Down>', function() vim.cmd.resize('-4') end, { desc = desc('nav', 'decrease win height') })
-map('n', '<M-Left>', function() vim.cmd('vertical resize +4') end, { desc = desc('nav', 'increase win width') })
-map('n', '<M-Right>', function() vim.cmd('vertical resize -4') end, { desc = desc('nav', 'decrease win width') })
+-- my iTerm is setup to send mac ⌥ (option) key instead of meta, which will look like gibberish to most
+map('n', '˚', function() vim.cmd.resize('+2') end, { desc = desc('nav', 'increase win height') })
+map('n', '∆', function() vim.cmd.resize('-2') end, { desc = desc('nav', 'decrease win height') })
+map('n', '˙', function() vim.cmd('vertical resize +2') end, { desc = desc('nav', 'increase win width') })
+map('n', '¬', function() vim.cmd('vertical resize -2') end, { desc = desc('nav', 'decrease win width') })
 
 -- Tab navigation
-map('', '˙', function() vim.cmd.tabprevious() end, { desc = desc('nav', 'prev window') })
-map('', '¬', function() vim.cmd.tabnext() end, { desc = desc('nav', 'next window') })
+map('', '<leader>˙', function() vim.cmd.tabprevious() end, { desc = desc('nav', 'prev window') })
+map('', '<leader>¬', function() vim.cmd.tabnext() end, { desc = desc('nav', 'next window') })
 
 -- ----------------------------------------------
 -- Plugin Keymaps
