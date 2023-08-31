@@ -25,11 +25,15 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- UI
 -- ----------------------------------------------
 -- Enable relative line numbers in neo-tree and exclude from file/jump list
-vim.api.nvim_create_autocmd( { 'BufWinEnter' }, {
-    group = ui,
-    pattern = 'neo-tree',
-    command = 'setlocal relativenumber nobuflisted bufhidden=wipe',
-})
+-- vim.api.nvim_create_autocmd( { 'BufWinEnter' }, { group = ui,
+--     pattern = '*',
+--     callback = function()
+--         if vim.api.nvim_buf_get_option(0, 'filetype') == 'neo-tree' then
+--             vim.bo.relativenumber = true
+--             vim.bo.buflisted = false
+--         end
+--     end
+-- })
 
 -- Set cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
@@ -139,28 +143,27 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave' }, {
     group = user,
     pattern = '*',
     callback = function()
-        local bullets_buftypes, err = pcall(function()
-            vim.g.bullets_enabled_file_types()
-        end)
-
-        if not err then
-            if bullets_buftypes[vim.opt:get('buftype')] then
-                vim.keymap.set('i', '<CR>', '<Plug>bullets-newline', { desc = keymap.desc('txt', 'bullets newline') })
-                vim.keymap.set('n', 'o', '<Plug>(bullets-newline)', { desc = keymap.desc('txt', 'bullets newline') })
-                vim.keymap.set('v', 'gN', '<Plug>(bullets-renumber)', { desc = keymap.desc('txt', 'bullets renumber') })
-                vim.keymap.set('n', '<leader>x', '<Plug>(bullets-toggle-checkbox)', { desc = keymap.desc('txt', 'bullets toggle checkbox') })
-                vim.keymap.set('i', '<C-t>', '<Plug>(bullets-demote)', { desc = keymap.desc('txt', 'bullets demote') })
-                vim.keymap.set('i', '<C-d>', '<Plug>(bullets-promote)', { desc = keymap.desc('txt', 'bullets promote') })
-            else
-                vim.keymap.set('i', '<CR>', '<CR>')
-                vim.keymap.set('n', 'o', 'o')
-                vim.keymap.del('v', 'gN')
-                vim.keymap.del('n', '<leader>x')
-                vim.keymap.del('i', '<C-t>')
-                vim.keymap.del('i', '<C-d>')
+        local bullets_mappings = {
+            promote    = { mode = 'i',  lhs = '<C-d>',     rhs = function() vim.cmd('BulletPromote') end,       opts = { desc = keymap.desc('txt', 'bullets promote') } },
+            demote     = { mode = 'i',  lhs = '<C-t>',     rhs = function() vim.cmd('BulletDemote') end,        opts = { desc = keymap.desc('txt', 'bullets demote') } },
+            vpromote   = { mode = 'v', lhs  = '<C-d>',     rhs = function() vim.cmd('BulletPromoteVisual') end, opts = { desc = keymap.desc('txt', 'bullets promote') } },
+            vdemote    = { mode = 'v', lhs  = '<C-t>',     rhs = function() vim.cmd('BulletDemoteVisual') end,  opts = { desc = keymap.desc('txt', 'bullets demote') } },
+            enter      = { mode = 'i',  lhs = '<CR>',      rhs = function() vim.cmd('InsertNewBullet') end,     opts = { desc = keymap.desc('txt', 'bullets newline') } },
+            checkbliox = { mode = 'n',  lhs = '<leader>x', rhs = function() vim.cmd('ToggleCheckbox') end,      opts = { desc = keymap.desc('txt', 'bullets toggle checkbox') } },
+            openline   = { mode = 'n',  lhs = 'o',         rhs = function() vim.cmd('InsertNewBullet') end,     opts = { desc = keymap.desc('txt', 'bullets newline') } },
+            renumber   = { mode = 'n',  lhs = 'gN',        rhs = function() vim.cmd('RenumberList') end,        opts = { desc = keymap.desc('txt', 'bullets renumber') } },
+            vrenumber  = { mode = 'v', lhs  = 'gN',        rhs = function() vim.cmd('RenumberSelection') end,   opts = { desc = keymap.desc('txt', 'bullets renumber') } },
+        }
+        if vim.g.bullets_enabled_file_types_tbl[vim.api.nvim_buf_get_option(0, 'filetype')] then
+            for _, value in pairs(bullets_mappings) do
+                vim.keymap.set(value['mode'], value['lhs'], value['rhs'], value['opts'])
+            end
+        else
+            for _, value in pairs(bullets_mappings) do
+                pcall(vim.keymap.del, value['mode'], value['lhs'])
             end
         end
-    end,
+    end
 })
 
 -- Trim trailing white-space/lines
