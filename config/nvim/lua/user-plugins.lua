@@ -130,11 +130,7 @@ require('lazy').setup({
         'kevinhwang91/nvim-ufo',
         lazy = false,
         config = true,
-        opts = {
-            provider_selector = function(bufnr, filetype, buftype)
-                return { 'treesitter', 'indent' }
-            end
-        },
+        opts = { provider_selector = function() return { 'treesitter', 'indent' } end },
         dependencies = 'kevinhwang91/promise-async'
     },
 
@@ -797,6 +793,7 @@ require('catppuccin').setup({
                 CurSearch = { fg = mocha.base, bg = mocha.green },
                 Cursor = { fg = mocha.crust },
                 CursorLineNr = { fg = mocha.sapphire },
+                Folded = { bg = mocha.surface0 },
                 LineNr = { fg = mocha.surface1 },
                 MsgArea = { bg = mocha.crust },
                 Normal = { bg = mocha.mantle },

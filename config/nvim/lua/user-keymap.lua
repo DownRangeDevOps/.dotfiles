@@ -282,10 +282,10 @@ map('', '¬', function() vim.cmd.tabnext() end, { desc = desc('nav', 'next windo
 -- ----------------------------------------------
 -- nvim-ufo (https://github.com/kevinhwang91/nvim-ufo)
 -- :help nvim-ufl
-map('n', 'zR', require('ufo').openAllFolds, { desc = desc('ui', 'open all folds') })
-map('n', 'zM', require('ufo').closeAllFolds, { desc = desc('ui', 'close all folds') })
-map('n', 'zr', require('ufo').openFoldsExceptKinds, { desc = desc('ui', 'open folds') })
-map('n', 'zm', require('ufo').closeFoldsWith, { desc = desc('ui', 'close folds') })
+map('n', 'zR', function() require('ufo').openAllFolds() end, { desc = desc('ui', 'open all folds') })
+map('n', 'zM', function() require('ufo').closeAllFolds() end, { desc = desc('ui', 'close all folds') })
+map('n', 'zr', function() require('ufo').openFoldsExceptKinds() end, { desc = desc('ui', 'open folds') })
+map('n', 'zm', function() require('ufo').closeFoldsWith() end, { desc = desc('ui', 'close folds') })
 
 -- Telescope
 -- :help telescope.builtin
