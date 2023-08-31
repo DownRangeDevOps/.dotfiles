@@ -25,15 +25,18 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- UI
 -- ----------------------------------------------
 -- Enable relative line numbers in neo-tree and exclude from file/jump list
--- vim.api.nvim_create_autocmd( { 'BufWinEnter' }, { group = ui,
---     pattern = '*',
---     callback = function()
---         if vim.api.nvim_buf_get_option(0, 'filetype') == 'neo-tree' then
---             vim.bo.relativenumber = true
---             vim.bo.buflisted = false
---         end
---     end
--- })
+vim.api.nvim_create_autocmd( { 'BufWinEnter' }, { group = ui,
+    pattern = '*',
+    callback = function()
+        if vim.api.nvim_buf_get_option(0, 'filetype') == 'neo-tree' then
+            local bufnr = vim.api.nvim_get_current_buf()
+
+            vim.opt.relativenumber = true
+            vim.api.nvim_buf_set_option(bufnr, 'buflisted', false)
+            vim.api.nvim_buf_set_option(bufnr, 'bufhidden', 'delete')
+        end
+    end
+})
 
 -- Set cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ 'CursorMoved' }, {
