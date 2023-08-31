@@ -169,7 +169,7 @@ map('n', '<C-d>', '<C-d>zz', { desc = desc('gen', 'pgdn') })
 map('n', 'n', 'nzzzv', { desc = desc('next search') })
 map('n', 'N', 'Nzzzv', { desc = desc('prev search') })
 
--- File management (auto-save, browser)
+-- File/buffer management (auto-save, browser)
 map('n', '<leader>w', function()
     local modifiable  = vim.api.nvim_buf_get_option(0, 'modifiable')
     if modifiable then vim.cmd.write() end
@@ -185,6 +185,21 @@ map({ 'n', 'v' }, '-', function()
     if vim.api.nvim_buf_get_option(0, 'filetype') == 'neo-tree' then
         vim.fn.feedkeys('<BS>') else vim.fn.feedkeys('-') end
 end, { desc = desc('file', 'navigate up a dir') })
+
+-- neo-tree
+require("neo-tree").setup({
+    filesystem = {
+        window = {
+            mappings = {
+                ["-"] = "navigate_up",
+                ["<CR>"] = function(state)
+                    local node = state.tree:get_node()
+                    vim.cmd.keepalt(vim.cmd.edit(node))
+                end
+            }
+        }
+    }
+})
 
 -- map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = desc('file', 'make file +x') })
 
