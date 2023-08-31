@@ -95,7 +95,7 @@ function install_docopts() {
     if [[ ! -f bin/docopts ]]; then
         printf_callout "Installing docopts..."
 
-        if $dry_run; then
+       if $dry_run; then
             printf "%s\n" "${docopts_install_cmd}" | indent_output
         else
             (eval "${docopts_install_cmd}" | indent_output)

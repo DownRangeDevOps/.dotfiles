@@ -193,6 +193,15 @@ require('lazy').setup({
                 nowait = true,
             },
             filesystem = {
+                window = {
+                    mappings = {
+                        ["-"] = "navigate_up",
+                        ["<CR>"] = function(state)
+                            local node = state.tree:get_node()
+                            vim.cmd.keepalt(vim.cmd.edit(node))
+                        end
+                    }
+                },
                 filtered_items = {
                     hide_dotfiles = false,
                     hide_gitignored = false,
