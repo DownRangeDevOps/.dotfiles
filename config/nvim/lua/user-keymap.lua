@@ -185,23 +185,15 @@ map({ 'n', 'v' }, '-', function()
     if vim.api.nvim_buf_get_option(0, 'filetype') == 'neo-tree' then
         vim.fn.feedkeys('<BS>') else vim.fn.feedkeys('-') end
 end, { desc = desc('file', 'navigate up a dir') })
-
--- neo-tree
-require("neo-tree").setup({
-    filesystem = {
-        window = {
-            mappings = {
-                ["-"] = "navigate_up",
-                ["<CR>"] = function(state)
-                    local node = state.tree:get_node()
-                    vim.cmd.keepalt(vim.cmd.edit(node))
-                end
-            }
-        }
-    }
-})
-
--- map('n', '<leader>x', function() vim.cmd([[chmod +x %]]) end, { desc = desc('file', 'make file +x') })
+map('n', '<leader>mx', function()
+    local file = vim.fn.shellescape(vim.fn.expand('%'))
+    if os.execute('[[ -f ' .. file .. ' ]]') == 0 then
+        os.execute('chmod +x ' .. file)
+        vim.cmd.echomsg('"' .. vim.fn.expand('%') .. ' +x"')
+    else
+        vim.cmd.echoerr('"' .. vim.fn.expand('%') .. ' is not a file"')
+    end
+ end, { desc = desc('file', 'make file +x') })
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
