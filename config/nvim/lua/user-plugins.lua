@@ -28,6 +28,7 @@ require('lazy').setup({
     { 'ThePrimeagen/harpoon', lazy = false }, -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
     { 'mbbill/undotree', lazy = false }, -- Browse undo-tree (https://github.com/mbbill/undotree.git)
     { 'tpope/vim-fugitive' }, -- Git manager (https://github.com/tpope/vim-fugitive)
+    { 'tpope/vim-ablish', url = 'git@github.com:tpope/vim-abolish.git' }, -- Fix typos and advanced case/conjugation sensitive replace (https://github.com/tpope/vim-abolish)
     { 'tpope/vim-obsession', lazy = false }, -- Session mgmt (https://github.com/tpope/vim-obsession)
     { 'tpope/vim-repeat', lazy = false }, -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
     { 'tpope/vim-sleuth', lazy = true, event = "InsertEnter" }, -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
@@ -201,6 +202,40 @@ require('lazy').setup({
                 },
             },
         },
+    },
+
+    -- refactoring.vim: Refactoring library (https://github.com/ThePrimeagen/refactoring.nvim)
+    -- :help refactoring.nvim
+    {
+        "ThePrimeagen/refactoring.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        config = function()
+            require("refactoring").setup({
+                prompt_func_return_type = {
+                    go = false,
+                    java = false,
+                    cpp = false,
+                    c = false,
+                    h = false,
+                    hpp = false,
+                    cxx = false,
+                },
+                prompt_func_param_type = {
+                    go = false,
+                    java = false,
+                    cpp = false,
+                    c = false,
+                    h = false,
+                    hpp = false,
+                    cxx = false,
+                },
+                printf_statements = {},
+                print_var_statements = {},
+            })
+        end,
     },
 
     -- Treesitter: Syntax and code navigation (https://github.com/nvim-treesitter/nvim-treesitter)

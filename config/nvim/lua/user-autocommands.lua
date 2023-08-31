@@ -24,11 +24,11 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
--- Enable relative line numbers in neo-tree
+-- Enable relative line numbers in neo-tree and exclude from file/jump list
 vim.api.nvim_create_autocmd( { 'BufWinEnter' }, {
     group = ui,
     pattern = 'neo-tree',
-    command = 'setlocal relativenumber',
+    command = 'setlocal relativenumber nobuflisted bufhidden=wipe',
 })
 
 -- Set cursorline when search highlight is active
