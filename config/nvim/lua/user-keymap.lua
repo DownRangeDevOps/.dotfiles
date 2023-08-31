@@ -263,7 +263,13 @@ map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = d
 map('n', '<leader>tc', function() vim.cmd.tabclose() end, { desc = desc('gen', 'close tab')})
 
 -- Terminal split management
-map('n', '`', ':ToggleTerm size=15 direction=horizontal' .. fk.enter, { desc = desc('gen', 'open bottom terminal')})
+map('n', '`', function()
+    vim.cmd('ToggleTerm size=15 direction=horizontal')
+
+    if vim.api.nvim_buf_get_option(0, 'buftype') == 'terminal' then
+        vim.cmd.startinsert()
+    end
+end, { desc = desc('gen', 'bottom terminal')})
 map('n', '<leader>`', function()
     vim.cmd.vsplit('term://' .. bin.bash)
     vim.cmd.startinsert()
