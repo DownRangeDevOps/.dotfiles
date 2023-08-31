@@ -33,7 +33,7 @@
 -- 	crust = "#11111b",
 -- }
 
-local theme = require('catppuccin.palettes.mocha')
+local theme = require("catppuccin.palettes.mocha")
 vim.cmd.highlight(
     "IndentBlanklineContextChar"
     .. " guifg=" .. theme.surface1
