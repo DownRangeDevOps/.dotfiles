@@ -131,7 +131,7 @@ vim.opt.list = true
 vim.opt.foldcolumn = '1'
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
-vim.opt.foldenable = true
+vim.opt.foldenable = false
 
 -- Terminal
 vim.opt.termguicolors = true -- Use 24-bit colors

@@ -119,7 +119,7 @@ require('lazy').setup({
 
     -- bullet formatting (https://github.io/dkarter/bullets.vim)
     -- :help bullets
-    { 'dkarter/bullets.vim', lazy = true, event = 'FileType ' .. table.concat(vim.g.bullets_enabled_file_types, ',') },
+    { 'dkarter/bullets.vim', lazy = true, event = 'FileType ' .. vim.g.bullets_enabled_file_types },
 
     -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
     -- :help taboo
@@ -131,7 +131,10 @@ require('lazy').setup({
         'kevinhwang91/nvim-ufo',
         lazy = false,
         config = true,
-        opts = { provider_selector = function() return { 'treesitter', 'indent' } end },
+        opts = {
+            provider_selector = function() return { 'treesitter', 'indent' } end,
+            close_fold_kinds = {}
+        },
         dependencies = 'kevinhwang91/promise-async'
     },
 

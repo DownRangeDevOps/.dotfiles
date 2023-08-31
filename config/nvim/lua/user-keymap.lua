@@ -251,14 +251,13 @@ map('n', '<leader>\\', function() vim.cmd('vsplit') end, { silent = true, desc =
 map('n', '<leader>-', function() vim.cmd('split') end, { silent = true, desc = desc('gen', 'split') })
 map('n', '<leader>q', function()
     vim.cmd.write()
-    vim.cmd.bprevious()
+    vim.cmd.buffer('#')
     vim.cmd.bwipeout('#')
 
     if vim.api.nvim_buf_get_option(0, 'buftype') == 'terminal' then
         vim.cmd.startinsert()
     end
-end, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
-map('n', '<leader>q', ':w' .. fk.enter .. '<C-^>:bd#' .. fk.enter .. 'i' .. fk.enter, { silent = true, desc = desc('gen', 'close') }) -- TODO: fix if no prev buffer or last buf is terminal
+end, { silent = true, desc = desc('gen', 'close') })
 map('n', '<leader>Q', function() vim.cmd('quit!') end, { silent = true, desc = desc('gen', 'quit') })
 map('n', '<leader>tc', function() vim.cmd.tabclose() end, { desc = desc('gen', 'close tab')})
 
