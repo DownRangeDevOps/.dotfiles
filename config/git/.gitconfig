@@ -6,20 +6,23 @@
 	format = ssh
 [gpg "ssh"]
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-	allowedSignersFile = ~/.dotfiles/config/git/allowed_ssh_signers
+	allowedSignersFile = ~/.dotfiles/config/git/.gitconfig_ssh_signers
 [include]
 	path = ~/.dotfiles/config/git/.gitconfig_aliases
 [core]
 	excludesfile = /Users/ryanfisher/.dotfiles/config/git/.gitignore_global
 	autocrlf = input
-	editor = nvr --remote-wait-silent
+	editor = nvim
 	ignorecase = false
+	pager = less -JRS
+[cleanup]
+	strip = true
 [diff]
 	tool = vim-fugitive
 	algorithm = histogram
 	context = 6
 [difftool "vim-fugitive"]
-	cmd = 'vim -f -c "Gvdiff" "$MERGED"'
+	cmd = 'nvim -f -c "Gvdiff" "$MERGED"'
 [merge]
 	; conflictstyle = diff3
 	tool = pycharm
@@ -38,7 +41,7 @@
 	autosetuprebase = always
 [commit]
 	gpgsign = true
-	template = ~/.dotfiles/config/git/.stCommitMsg
+	template = ~/.dotfiles/config/git/.gitconfig_commit_tmpl
 [help]
 	autocorrect = 0
 [difftool "sourcetree"]
@@ -51,19 +54,7 @@
 	templateDir = ~/.dotfiles/config/git/.git-template
 	defaultBranch = main
 [color]
-	ui = true
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 88
-	newNormal = green bold
-	newHighlight = green bold 29
-[color "diff"]
-	meta = yellow
-	frag = magenta bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
+	ui = auto
 [rebase]
 	autosquash = true
 [pack]

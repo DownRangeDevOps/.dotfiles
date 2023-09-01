@@ -211,24 +211,3 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
         end
     end
 })
-
--- Protect large files from sourcing and other overhead
--- Files become read only
--- vim.api.nvim_create_autocmd({ "BufReadPre" }, {
---     group = user,
---     pattern = "*",
---     callback = function()
---         local large_file = 1024 * 1024 * 10
---         local file = vim.fn.expand("<afile>")
---         local file_type = vim.fn.getftype(file)
---
---         if vim.fn.getfsize(file) > large_file then
---             vim.opt.eventignore:append(file_type)
---             vim.bo.noswapfile  = true
---             vim.bo.bufhidden = "unload"
---             vim.bo.buftype = "nowrite"
---             vim.opt.undolevels:remove(1)
---         else
---             vim.opt.eventignore:remove(file_type)
---         end
--- end, })

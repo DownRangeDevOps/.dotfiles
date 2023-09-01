@@ -172,6 +172,7 @@ vim.g.EditorConfig_exclude_patterns = { "fugitive://.\\*", "scp://.\\*" }
 -- Insert
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
 
 -- Spelling
 vim.opt.spell = true
