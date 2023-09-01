@@ -3,9 +3,33 @@ local M = {}
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
-vim.g.auto_save = true -- used by auto-save autocmd
 vim.cmd.colorscheme("catppuccin")
 vim.env.VISUAL = "nvr -cc split --remote-wait" -- Prevent nested nvim instances
+vim.g.auto_save = true -- used by auto-save autocmd
+vim.g.netrw_altfile = 1
+
+vim.opt.lazyredraw = true
+vim.opt.mouse = "a"
+vim.opt.secure = true
+vim.opt.swapfile = false
+vim.opt.timeoutlen = 750
+vim.opt.undodir = os.getenv("HOME") .. "/.nvim/undo/"
+vim.opt.undofile = true
+vim.opt.updatetime = 250
+
+vim.opt.grepprg = table.concat({
+    "${BREW_PREFIX}/bin/rg",
+    " --follow",
+    " --hidden",
+    " --no-config",
+    " --smart-case",
+    " --colors 'match:style:bold'",
+    " --colors 'match:fg:205,214,244'",
+    " --colors 'match:bg:62,87,103'",
+    " --glob '!.git'",
+    " $@",
+}, ",")
+
 vim.opt.diffopt = table.concat({
     "filler",
     "context:100",
@@ -14,15 +38,7 @@ vim.opt.diffopt = table.concat({
     "linematch:60",
     "algorithm:histogram",
 }, ",")
-vim.opt.lazyredraw = true
-vim.g.netrw_altfile = 1
-vim.opt.mouse = "a"
-vim.opt.secure = true
-vim.opt.swapfile = false
-vim.opt.timeoutlen = 750
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undo/"
-vim.opt.undofile = true
-vim.opt.updatetime = 250
+
 vim.opt.viewoptions = table.concat({
     "cursor",
     "folds",

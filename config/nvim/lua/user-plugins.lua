@@ -204,7 +204,7 @@ require("lazy").setup({
         branch = "v3.x",
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "nvim-tree/nvim-web-devicons", -- https://github.com/nvim-tree/nvim-web-devicons
             "MunifTanjim/nui.nvim",
         },
         opts = {
@@ -451,23 +451,16 @@ require("lazy").setup({
         }
     },
 
-    -- Fuzzy Finder
-    -- https://github.com/nvim-telescope/telescope.nvim
-    -- :help telescope
+    -- Telescope: Fuzzy Finder (https://github.com/nvim-telescope/telescope.nvim)
+    -- :help telescope.nvim
     {
         "nvim-telescope/telescope.nvim",
         branch = "0.1.x",
         lazy = false,
         dependencies = {
-            "nvim-lua/plenary.nvim", -- https://github.com/nvim-lua/plenary.nvim
-            {
-                -- https://github.com/nvim-telescope/telescope-fzf-native.nvim
-                "nvim-telescope/telescope-fzf-native.nvim",
-                build = "make",
-                cond = function()
-                    return vim.fn.executable "make" == 1
-                end,
-            },
+            { "nvim-lua/plenary.nvim" }, -- https://github.com/nvim-lua/plenary.nvim
+            { "nvim-tree/nvim-web-devicons" }, -- https://github.com/nvim-tree/nvim-web-devicons
+            { "nvim-telescope/telescope-fzf-native.nvim", build = "make", } -- https://github.com/nvim-telescope/telescope-fzf-native.nvim
         },
     },
 
@@ -654,6 +647,15 @@ require("lazy").setup({
 -- :help telescope.setup()
 -- ----------------------------------------------
 require("telescope").setup {
+    extensions = {
+        fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+        },
+        harpoon = {},
+    },
     defaults = {
         mappings = {
             i = {
@@ -664,8 +666,8 @@ require("telescope").setup {
     },
 }
 
--- extensions
-pcall(require("telescope").load_extension, "fzf") -- Enable telescope fzf native, if installed
+-- load extensions
+require("telescope").load_extension("fzf")
 require("telescope").load_extension("harpoon")
 
 -- ----------------------------------------------
