@@ -104,7 +104,7 @@ vim.on_key(
     function(char)
         if vim.fn.mode() == "n" then
             local new_hlsearch = vim.tbl_contains(
-                { "n", "N", "*", "?", "/", "v" },
+            {"v", "n", "N", "", "", "", "", "*", "?", "/" },
                 vim.fn.keytrans(char)
             )
 
@@ -160,16 +160,14 @@ map("", "X", '"_X', { desc = desc("txt", "delete -> eol") })
 map("", "<leader>x", "x", { desc = desc("txt", "yank-cut")})
 map("", "<leader>X", "X", { desc = desc("txt", "yank-cut -> eol")})
 
--- Manipulate lines, maintain cursor pos
-map("v", "J", function () vim.cmd.move("'>+1") vim.cmd.normal("gv=gv") end, { desc = desc("txt", "move lines up") })
-map("v", "K", function () vim.cmd.move("'<-2") vim.cmd.normal("gv=gv") end, { desc = desc("txt", "move lines down") })
+-- maintain cursor pos
 map("n", "J", "mzJ`z", { desc = desc("txt", "join w/o hop") })
 map("n", "<C-u>", "<C-u>zz", { desc = desc("gen", "pgup") })
 map("n", "<C-d>", "<C-d>zz", { desc = desc("gen", "pgdn") })
 map("n", "n", "nzzzv", { desc = desc("next search") })
 map("n", "N", "Nzzzv", { desc = desc("prev search") })
 
--- File/buffer management (auto-save, browser)
+-- file/buffer management (auto-save, browser)
 map("n", "<leader>w", function()
     local modifiable  = vim.api.nvim_buf_get_option(0, "modifiable")
     if modifiable then vim.cmd.write() end

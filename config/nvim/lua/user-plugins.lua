@@ -27,23 +27,24 @@ require("lazy").setup({
     -- ----------------------------------------------
     -- Vim user sovereign rights
     -- ----------------------------------------------
-    { "ThePrimeagen/harpoon", lazy = false }, -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
-    { "mbbill/undotree", lazy = false }, -- Browse undo-tree (https://github.com/mbbill/undotree.git)
-    { "tpope/vim-fugitive" }, -- Git manager (https://github.com/tpope/vim-fugitive)
-    { "tpope/vim-ablish", url = "git@github.com:tpope/vim-abolish.git" }, -- Fix typos and advanced case/conjugation sensitive replace (https://github.com/tpope/vim-abolish)
-    { "tpope/vim-obsession", lazy = false }, -- Session mgmt (https://github.com/tpope/vim-obsession)
-    { "tpope/vim-repeat", lazy = false }, -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
-    { "tpope/vim-sleuth", lazy = true, event = "InsertEnter" }, -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
-    { "tpope/vim-surround", lazy = false, event = "InsertEnter" }, -- Surround text (https://github.com/tpope/vim-surround)
-    { "tpope/vim-unimpaired", lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
-    { "windwp/nvim-autopairs", lazy = true, event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
-    { "zhimsel/vim-stay", lazy = false }, --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
-    { "nathom/filetype.nvim", lazy = true }, -- Replacement for slow filetype.vim builtin (https://github.com/nathom/filetype.nvim)
+    { "ThePrimeagen/harpoon",  name = "nvim-harpoon",   lazy = false }, -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
+    { "mbbill/undotree",       name = "nvim-undotree",  lazy = false }, -- Browse undo-tree (https://github.com/mbbill/undotree.git)
+    { "nathom/filetype.nvim",  name = "vim-filetype",   lazy = true },  -- Replacement for slow filetype.vim builtin (https://github.com/nathom/filetype.nvim)
+    { "tpope/vim-abolish",     name = "vim-abolish",    lazy = false }, -- Fix typos and advanced case/conjugation sensitive replace (https://github.com/tpope/vim-abolish)
+    { "tpope/vim-fugitive",    name = "vim-fugitive",   lazy = false},  -- Git manager (https://github.com/tpope/vim-fugitive)
+    { "tpope/vim-obsession",   name = "vim-obsession",  lazy = false }, -- Session mgmt (https://github.com/tpope/vim-obsession)
+    { "tpope/vim-repeat",      name = "vim-repeat",     lazy = false }, -- Repeat plugin maps (https://github.com/tpope/vim-repeat)
+    { "tpope/vim-sleuth",      name = "vim-sleuth",     lazy = true,    event = "InsertEnter" }, -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
+    { "tpope/vim-surround",    name = "vim-surround",   lazy = false,   event = "InsertEnter" }, -- Surround text (https://github.com/tpope/vim-surround)
+    { "tpope/vim-unimpaired",  name = "vim-unimpaired", lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
+    { "windwp/nvim-autopairs", name = "nvim-autopairs", lazy = true,    event = "InsertEnter",   opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
+    { "zhimsel/vim-stay",      name = "vim-stay",       lazy = false }, --  Stay in your lane,   vim! (https://github.com/zhimsel/vim-stay)
 
     -- vim-rooter: cd to project root (https://github.com/airblade/vim-rooter)
     -- :help vim-rooter
     {
         "airblade/vim-rooter",
+        name = "vim-rooter",
         lazy = false,
         config = function()
             vim.g.rooter_buftypes = { "", "nofile" }
@@ -57,12 +58,13 @@ require("lazy").setup({
     -- ----------------------------------------------
     -- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
     -- :help catppuccin.txt
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000, lazy = false }, -- setup called later in file
+    { "catppuccin/nvim", name = "nvim-catppuccin", priority = 1000, lazy = false }, -- setup called later in file
 
     -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
     -- :help nvim-ufo
     {
         "kevinhwang91/nvim-ufo",
+        name = "nvim-ufo",
         lazy = false,
         enabled = false, -- until I figure out why folds keep auto-closing
         config = true,
@@ -70,14 +72,18 @@ require("lazy").setup({
             provider_selector = function() return { "treesitter", "indent" } end,
             close_fold_kinds = {}
         },
-        dependencies = "kevinhwang91/promise-async"
+        dependencies = {
+            { "kevinhwang91/promise-async", name = "nvim-promise-async", lazy = true }
+    }
     },
 
     -- LuaLine
     -- :help lualine.txt
     {
         "nvim-lualine/lualine.nvim", -- https://github.com/nvim-lualine/lualine.nvim
+        name = "nvim-lualine",
         lazy = false,
+        config = true,
         opts = {
             options = {
                 icons_enabled = false,
@@ -96,6 +102,7 @@ require("lazy").setup({
     -- :help indent_blankline.txt
     {
         "lukas-reineke/indent-blankline.nvim",
+        name = "nvim-blankline",
         lazy = false,
         opts = {
             char = "┊",
@@ -119,13 +126,14 @@ require("lazy").setup({
                 "prompt",
             },
             filetype_exclude = {
-                "lspinfo",
-                "packer",
+                "",
                 "checkhealth",
                 "help",
+                "lspinfo",
                 "man",
+                "neo-tree",
+                "packer",
                 "qf",
-                "",
             },
             context_patterns = {
                 "class",
@@ -169,6 +177,7 @@ require("lazy").setup({
     -- require("colorizer").detach_from_buffer(0, { mode = "virtualtext", css = true})
     {
         "NvChad/nvim-colorizer.lua",
+        name = "nvim-colorizer",
         lazy = true,
         opts = {
             filetypes = { "*" },
@@ -200,12 +209,13 @@ require("lazy").setup({
     -- :help neo-tree.txt
     {
         "nvim-neo-tree/neo-tree.nvim",
+        name = "nvim-neotree",
         lazy = false,
         branch = "v3.x",
         dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", -- https://github.com/nvim-tree/nvim-web-devicons
-            "MunifTanjim/nui.nvim",
+            { "nvim-lua/plenary.nvim", name = "nvim-plenary", lazy = false },
+            { "nvim-tree/nvim-web-devicons", name = "nvim-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
+            { "MunifTanjim/nui.nvim", name = "nvim-nui", lazy = false },
         },
         opts = {
             window = {
@@ -241,10 +251,12 @@ require("lazy").setup({
     -- :help refactoring.nvim
     {
         "ThePrimeagen/refactoring.nvim",
+        name = "nvim-refactoring",
         dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
+            { "nvim-lua/plenary.nvim", name = "nvim-plenary", lazy = false },
+            { "nvim-treesitter/nvim-treesitter", name = "nvim-treesitter", lazy = false },
         },
+        config = true,
         opts = {
             prompt_func_return_type = {
                 go = false,
@@ -273,7 +285,9 @@ require("lazy").setup({
     -- :help gitsigns.txt
     {
         "lewis6991/gitsigns.nvim",
+        name = "nvim-gitsigns",
         lazy = false,
+        config = true,
         opts = {
             signs = {
                 add = { text = "+" },
@@ -300,12 +314,40 @@ require("lazy").setup({
     -- :help mini-align
     { "echasnovski/mini.align", lazy = true, event = "InsertEnter", version = "*", config = true, },
 
-    -- mini-starter: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.starter)
+    -- mini-move: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-move)
+    -- :help mini-move
+    {
+        'echasnovski/mini.move',
+        lazy = false,
+        version = '*',
+        config = true,
+        opts = {
+            mappings = {
+                -- Move visual selection
+                left = '<S-h>',
+                right = '<S-l>',
+                down = '<S-j>',
+                up = '<S-k>',
+
+                -- Move current line in normal mode
+                line_left = '',
+                line_right = '',
+                line_down = '',
+                line_up = '',
+            },
+            options = {
+                reindent_linewise = true, -- re-indent selection during vertical move
+            },
+        }
+    },
+
+    -- mini-starter: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-starter)
     -- :help mini-starter
     {
         "echasnovski/mini.starter",
         lazy = false,
         version = "*",
+        config = true,
         opts = {
             autoopen = true,
             evaluate_single = false,
@@ -344,25 +386,25 @@ require("lazy").setup({
             -- Whether to disable showing non-error feedback
             silent = false,
         },
-        config = true,
     },
 
     -- mini-trailspace: delete trailing whitespace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
     -- :help mini-trailspace
-    { "echasnovski/mini.trailspace", lazy = false, config = true, },
+    { "echasnovski/mini.trailspace", lazy = false, version = "*", config = true },
 
     -- bullet formatting (https://github.io/dkarter/bullets.vim)
     -- :help bullets
-    { "dkarter/bullets.vim", lazy = true, event = "FileType " .. vim.g.bullets_enabled_file_types },
+    { "dkarter/bullets.vim", name = "vim-bullets", lazy = true, event = "FileType " .. vim.g.bullets_enabled_file_types },
 
     -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
     -- :help taboo
-    { "gcmt/taboo.vim", lazy = true, event = "CmdlineEnter" },
+    { "gcmt/taboo.vim", name = "vim-taboo", lazy = true, event = "CmdlineEnter", },
 
     -- Which-Key (https://github.com/folke/which-key.nvim)
     -- :help which-key.nvim.txt
     {
         "folke/which-key.nvim",
+        name = "nvim-which-key",
         lazy = false,
         init = function()
             vim.opt.timeout = true
@@ -455,12 +497,33 @@ require("lazy").setup({
     -- :help telescope.nvim
     {
         "nvim-telescope/telescope.nvim",
+        name = "nvim-telescope",
         branch = "0.1.x",
         lazy = false,
         dependencies = {
-            { "nvim-lua/plenary.nvim" }, -- https://github.com/nvim-lua/plenary.nvim
-            { "nvim-tree/nvim-web-devicons" }, -- https://github.com/nvim-tree/nvim-web-devicons
-            { "nvim-telescope/telescope-fzf-native.nvim", build = "make", } -- https://github.com/nvim-telescope/telescope-fzf-native.nvim
+            { "nvim-lua/plenary.nvim", name = "nvim-plenary", lazy = false }, -- https://github.com/nvim-lua/plenary.nvim
+            { "nvim-tree/nvim-web-devicons", name = "nvim-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
+            { "nvim-telescope/telescope-fzf-native.nvim", name = "nvim-telescope-fzf-native", lazy = false, build = "make", } -- https://github.com/nvim-telescope/telescope-fzf-native.nvim
+        },
+        config = true,
+        opts = {
+            extensions = {
+                fzf = {
+                    fuzzy = true,
+                    override_generic_sorter = true,
+                    override_file_sorter = true,
+                    case_mode = "smart_case",
+                },
+                harpoon = {},
+            },
+            defaults = {
+                mappings = {
+                    i = {
+                        ["<C-u>"] = false,
+                        ["<C-d>"] = false,
+                    },
+                },
+            },
         },
     },
 
@@ -468,6 +531,7 @@ require("lazy").setup({
     -- :help toggleterm
     {
         "akinsho/toggleterm.nvim",
+        name = "vim-toggleterm",
         lazy = false,
         version = "*",
         opts = {
@@ -503,6 +567,7 @@ require("lazy").setup({
     -- :help treesitter.txtt i
     {
         "nvim-treesitter/nvim-treesitter",
+        name = "nvim-treesitter",
         lazy = false,
         opts = {
             sync_install = false,
@@ -587,23 +652,24 @@ require("lazy").setup({
     -- :help lspconfig.txt
     {
         "neovim/nvim-lspconfig",
+        name = "nvim-lspconfig",
         lazy = false,
         dependencies = {
             -- Mason: LSP and related plugin manager (https://github.com/williamboman/mason.nvim)
             -- :help mason.nvim
-            { "williamboman/mason.nvim", lazy = false, config = true },
+            { "williamboman/mason.nvim", name = "nvim-mason", lazy = false, config = true },
 
             -- Mason helper for LSP configs/plugins (https://github.com/williamboman/mason-lspconfig.nvim)
             -- :help mason-lspconfig.nvim
-            { "williamboman/mason-lspconfig.nvim", lazy = false, config = true },
+            { "williamboman/mason-lspconfig.nvim", name = "nvim-mason-lspconfig", lazy = false, config = true },
 
             -- NeoDev: lua-ls configuration for nvim runtime and api (https://github.com/folke/neodev.nvim)
             -- :help neodev.nvim.txt
-            { "folke/neodev.nvim", lazy = false, config = true },
+            { "folke/neodev.nvim", name = "nvim-neodev", lazy = false, config = true },
 
             -- Fidget: LSP status updates (https://github.com/j-hui/fidget.nvim)
             -- :help fidget.txt
-            { "j-hui/fidget.nvim", tag = "legacy", lazy = true, event = "LspAttach" },
+            { "j-hui/fidget.nvim", name = "nvim-fidget", tag = "legacy", lazy = true, event = "LspAttach" },
         },
     },
 
@@ -611,60 +677,36 @@ require("lazy").setup({
     -- :help cmp
     {
         "hrsh7th/nvim-cmp",
+        name = "nvim-cmp",
         lazy = false,
         version = "2.*",
         build = "make install_jsregexp",
         dependencies = {
             --  LuaSnip: snippets manager (https://github.com/L3MON4D3/LuaSnip)
             -- :help luasnip.txt
-            { "L3MON4D3/LuaSnip", lazy = false, config = function() require("luasnip.loaders.from_vscode").lazy_load() end }, -- https://github.com/L3MON4D3/LuaSnip
+            { "L3MON4D3/LuaSnip", name = "nvim-luasnip", lazy = true, event = "InsertEnter", config = function() require("luasnip.loaders.from_vscode").lazy_load() end }, -- https://github.com/L3MON4D3/LuaSnip
 
             -- LuaSnip completion source (https://github.com/saadparwaiz1/cmp_luasnip)
             -- :help cmp_luasnip
-            { "saadparwaiz1/cmp_luasnip", lazy = false },
+            { "saadparwaiz1/cmp_luasnip", name = "nvim-cmp-luasnip", lazy = true, event = "InsertEnter", },
 
             -- Adds a number of user-friendly snippets
-            { "rafamadriz/friendly-snippets", lazy = false }, -- https://github.com/rafamadriz/friendly-snippets
+            { "rafamadriz/friendly-snippets", name = "nvim-friendly-snippets", lazy = true, event = "InsertEnter",}, -- https://github.com/rafamadriz/friendly-snippets
 
             -- other recommended dependencies
-            { "hrsh7th/cmp-nvim-lsp", lazy = false }, -- LSP completion capabilities (https://github.com/hrsh7th/cmp-nvim-lsp)
-            { "hrsh7th/cmp-buffer", lazy = false }, -- Buffer words (https://github.com/hrsh7th/cmp-buffer)
-            { "hrsh7th/cmp-path", lazy = false }, -- System paths (https://github.com/hrsh7th/cmp-path)
-            { "hrsh7th/cmp-cmdline", lazy = false }, -- Search (/) and command (:) (https://github.com/hrsh7th/cmp-buffer)
+            { "hrsh7th/cmp-nvim-lsp", name = "nvim-cmp-nvim-lsp", lazy = true, event = "InsertEnter" }, -- LSP completion capabilities (https://github.com/hrsh7th/cmp-nvim-lsp)
+            { "hrsh7th/cmp-buffer", name = "nvim-cmp-buffer", lazy = false, event = "InsertEnter" }, -- Buffer words (https://github.com/hrsh7th/cmp-buffer)
+            { "hrsh7th/cmp-path", name = "nvim-cmp-path", lazy = true, event = "InsertEnter" }, -- System paths (https://github.com/hrsh7th/cmp-path)
+            { "hrsh7th/cmp-cmdline", name = "nvim-cmp-cmdline", lazy = true, event = "InsertEnter" }, -- Search (/) and command (:) (https://github.com/hrsh7th/cmp-buffer)
 
             -- Auto complete rule: Sort underscores last (https://github.com/lukas-reineke/cmp-under-comparator)
-            { "lukas-reineke/cmp-under-comparator", lazy = false},
+            { "lukas-reineke/cmp-under-comparator", name = "nvim-cmp-under-comparator", lazy = true, event = "InsertEnter" },
         },
     },
 })
 -- ----------------------------------------------
 -- End of Lazy loading
 -- ----------------------------------------------
-
--- ----------------------------------------------
---  Telescope
--- :help telescope
--- :help telescope.setup()
--- ----------------------------------------------
-require("telescope").setup {
-    extensions = {
-        fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = "smart_case",
-        },
-        harpoon = {},
-    },
-    defaults = {
-        mappings = {
-            i = {
-                ["<C-u>"] = false,
-                ["<C-d>"] = false,
-            },
-        },
-    },
-}
 
 -- load extensions
 require("telescope").load_extension("fzf")

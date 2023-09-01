@@ -5,7 +5,10 @@
 vim.api.nvim_create_user_command(
     "ColorizerToggle",
     function()
-        if vim.g.colorizer_attached == nil then vim.g.colorizer_attached = false end
+        if vim.g.colorizer_attached == nil then
+            vim.g.colorizer_attached = false
+            vim.cmd.Lazy("load nvim-colorizer")
+        end
 
         local switch = not vim.g.colorizer_attached
         local msg = switch and "disabled" or "enabled"

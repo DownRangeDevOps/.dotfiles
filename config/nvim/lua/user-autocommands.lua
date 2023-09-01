@@ -35,6 +35,7 @@ vim.api.nvim_create_autocmd( { "BufWinEnter" }, { group = ui,
             vim.api.nvim_buf_set_option(bufnr, "buflisted", false)
             vim.api.nvim_buf_set_option(bufnr, "bufhidden", "delete")
             vim.wo.list = false
+            vim.opt.colorcolumn = ""
         end
     end
 })
