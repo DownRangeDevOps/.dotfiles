@@ -4,3 +4,6 @@
 [submodule "external/docopts"]
 	path = external/docopts
 	url = git@github.com:docopt/docopts.git
+[submodule "external/gitignore"]
+	path = external/gitignore
+	url = git@github.com:github/gitignore.git
