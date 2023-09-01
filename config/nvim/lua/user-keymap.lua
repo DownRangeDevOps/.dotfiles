@@ -197,12 +197,12 @@ map("n", "<leader>mx", function()
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
+map("n", "<leader>ht", function() require("harpoon.ui").toggle_quick_menu() end, { desc = desc("file", "view live well") })
 map("n", "<leader>hf", function() require("harpoon.mark").toggle_file() end, { desc = desc("file", "harpoon/release") })
 map("n", "<leader>j", function() require("harpoon.ui").nav_file(1) end, { desc = desc("file", "first harpoon") })
 map("n", "<leader>k", function() require("harpoon.ui").nav_file(2) end, { desc = desc("file", "second harpoon") })
 map("n", "<leader>l", function() require("harpoon.ui").nav_file(3) end, { desc = desc("file", "third harpoon") })
 map("n", "<leader>;", function() require("harpoon.ui").nav_file(4) end, { desc = desc("file", "fourth harpoon") })
-map("n", "<leader>ho", function() require("harpoon.ui").toggle_quick_menu() end, { desc = desc("file", "view live well") })
 map("n", "<C-j>", function() require("harpoon.ui").nav_prev() end, { desc = desc("file", "<< harpoon") })
 map("n", "<C-k>", function() require("harpoon.ui").nav_next() end, { desc = desc("file", "harpoon >>") })
 map("n", "<leader>hc", function() require("harpoon.mark").clear_all() end, { desc = desc("file", "release all harpoons") })

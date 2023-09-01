@@ -24,7 +24,9 @@ vim.opt.rtp:prepend(lazypath)
 -- :help lazy.nvim-lazy.nvim-plugin-spec
 -- ----------------------------------------------
 require("lazy").setup({
+    -- ----------------------------------------------
     -- Vim user sovereign rights
+    -- ----------------------------------------------
     { "ThePrimeagen/harpoon", lazy = false }, -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
     { "mbbill/undotree", lazy = false }, -- Browse undo-tree (https://github.com/mbbill/undotree.git)
     { "tpope/vim-fugitive" }, -- Git manager (https://github.com/tpope/vim-fugitive)
@@ -36,12 +38,7 @@ require("lazy").setup({
     { "tpope/vim-unimpaired", lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
     { "windwp/nvim-autopairs", lazy = true, event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
     { "zhimsel/vim-stay", lazy = false }, --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
-
     { "nathom/filetype.nvim", lazy = true }, -- Replacement for slow filetype.vim builtin (https://github.com/nathom/filetype.nvim)
-
-    -- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
-    -- :help catppuccin.txt
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000, lazy = false }, -- setup called later in file
 
     -- vim-rooter: cd to project root (https://github.com/airblade/vim-rooter)
     -- :help vim-rooter
@@ -56,74 +53,11 @@ require("lazy").setup({
     },
 
     -- ----------------------------------------------
-    -- mini.nvim plugins (https://github.com/echasnovski/mini.nvim)
+    -- UI
     -- ----------------------------------------------
-    -- align/columns (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
-    -- :help mini-align
-    { "echasnovski/mini.align", lazy = true, event = "InsertEnter", version = "*", config = true, },
-
-    -- comment/un-comment (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.comment)
-    -- :help mini.comment
-    { "echasnovski/mini.comment", lazy = false, version = "*", config = true, },
-
-    -- mini-starter: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.starter)
-    -- :help mini-starter
-    {
-        "echasnovski/mini.starter",
-        lazy = false,
-        version = "*",
-        opts = {
-            autoopen = true,
-            evaluate_single = false,
-
-            -- Items to be displayed. Should be an array with the following elements:
-            --     Item: table with <action>, <name>, and <section> keys.
-            --     Function: should return one of these three categories.
-            --     Array: elements of these three types (i.e. item, array, function).
-            -- If `nil` (default), default items will be used (see |mini.starter|).
-            items = nil,
-            header = ""
-            .. '"If you look for truth, you may find comfort in the end; if you look for\n'
-            .. 'comfort you will not get either comfort or truth only soft soap and wishful\n'
-            .. 'thinking to begin, and in the end, despair."\n'
-            .. '                                         – C. S. Lewis\n'
-            .. '\n'
-            .. '"Everybody has a plan until they get punched in the mouth."\n'
-            .. '                                         – Mike Tyson\n'
-            .. '\n',
-
-            -- Footer to be displayed after items. Converted to single string via
-            -- `tostring` (use `\n` to display several lines). If function, it is
-            -- evaluated first. If `nil` (default), default usage help will be shown.
-            footer = nil,
-
-            -- Array  of functions to be applied consecutively to initial content.
-            -- Each function should take and return content for "Starter" buffer (see
-            -- |mini.starter| and |MiniStarter.content| for more details).
-            content_hooks = nil,
-
-            -- Characters to update query. Each character will have special buffer
-            -- mapping overriding your global ones. Be careful to not add `:` as it
-            -- allows you to go into command mode.
-            query_updaters = "abcdefghijklmnopqrstuvwxyz0123456789_-.",
-
-            -- Whether to disable showing non-error feedback
-            silent = false,
-        },
-        config = true,
-    },
-
-    -- mini-trailspace: delete trailing whitespace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
-    -- :help mini-trailspace
-    { "echasnovski/mini.trailspace", lazy = false, config = true, },
-
-    -- bullet formatting (https://github.io/dkarter/bullets.vim)
-    -- :help bullets
-    { "dkarter/bullets.vim", lazy = true, event = "FileType " .. vim.g.bullets_enabled_file_types },
-
-    -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
-    -- :help taboo
-    { "gcmt/taboo.vim", lazy = true, event = "CmdlineEnter" },
+    -- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
+    -- :help catppuccin.txt
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000, lazy = false }, -- setup called later in file
 
     -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
     -- :help nvim-ufo
@@ -137,6 +71,92 @@ require("lazy").setup({
             close_fold_kinds = {}
         },
         dependencies = "kevinhwang91/promise-async"
+    },
+
+    -- LuaLine
+    -- :help lualine.txt
+    {
+        "nvim-lualine/lualine.nvim", -- https://github.com/nvim-lualine/lualine.nvim
+        lazy = false,
+        opts = {
+            options = {
+                icons_enabled = false,
+                theme = "catppuccin",
+                component_separators = "⁞",
+                section_separators = { left = "", right = ""},
+                disabled_filetypes = {
+                    statusline = {},
+                    winbar = {},
+                },
+            },
+        },
+    },
+
+    -- Indentation guides (https://github.com/lukas-reineke/indent-blankline.nvim)
+    -- :help indent_blankline.txt
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        lazy = false,
+        opts = {
+            char = "┊",
+            context_char = "┊",
+            context_char_blankline = "┊",
+            show_current_context = true,
+            show_current_context_start = false,
+            show_current_context_start_on_current_line = false,
+            show_end_of_line = false,
+            show_first_indent_level = false,
+            show_trailing_blankline_indent = true,
+            space_char = "•",
+            space_char_blankline = " ",
+            use_treesitter = true,
+            use_treesitter_scope = true,
+            viewport_buffer = 80,
+            buftype_exclude = {
+                "terminal",
+                "nofile",
+                "quickfix",
+                "prompt",
+            },
+            filetype_exclude = {
+                "lspinfo",
+                "packer",
+                "checkhealth",
+                "help",
+                "man",
+                "qf",
+                "",
+            },
+            context_patterns = {
+                "class",
+                "^func",
+                "method",
+                "^if",
+                "while",
+                "for",
+                "with",
+                "try",
+                "except",
+                "match",
+                "arguments",
+                "argument_list",
+                "object",
+                "dictionary",
+                "element",
+                "table",
+                "tuple",
+                "do_block",
+                "Block",
+                "InitList",
+                "FnCallArguments",
+                "IfStatement",
+                "ContainerDecl",
+                "SwitchExpr",
+                "IfExpr",
+                "ParamDeclList",
+                "unless",
+            }
+        },
     },
 
     -- nvim-colorizer: (https://github.com/NvChad/nvim-colorizer.lua)
@@ -249,106 +269,96 @@ require("lazy").setup({
         },
     },
 
-    -- Treesitter: Syntax and code navigation (https://github.com/nvim-treesitter/nvim-treesitter)
-    -- :help treesitter.txtt i
+    -- gitsigns (https://github.com/lewis6991/gitsigns.nvim)
+    -- :help gitsigns.txt
     {
-        "nvim-treesitter/nvim-treesitter",
-        lazy = false,
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter-textobjects", -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-        },
-        build = ":TSUpdate",
-    },
-
-    -- LuaLine
-    -- :help lualine.txt
-    {
-        "nvim-lualine/lualine.nvim", -- https://github.com/nvim-lualine/lualine.nvim
+        "lewis6991/gitsigns.nvim",
         lazy = false,
         opts = {
-            options = {
-                icons_enabled = false,
-                theme = "catppuccin",
-                component_separators = "⁞",
-                section_separators = { left = "", right = ""},
-                disabled_filetypes = {
-                    statusline = {},
-                    winbar = {},
-                },
+            signs = {
+                add = { text = "+" },
+                change = { text = "~" },
+                changedelete = { text = "~" },
+                delete = { text = "_" },
+                topdelete = { text = "‾" },
+                untracked    = { text = "┆" },
             },
-        },
-    },
-
-    -- Indentation guides (https://github.com/lukas-reineke/indent-blankline.nvim)
-    -- :help indent_blankline.txt
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        lazy = false,
-        opts = {
-            char = "┊",
-            context_char = "┊",
-            context_char_blankline = "┊",
-            show_current_context = true,
-            show_current_context_start = false,
-            show_current_context_start_on_current_line = false,
-            show_end_of_line = false,
-            show_first_indent_level = false,
-            show_trailing_blankline_indent = true,
-            space_char = "•",
-            space_char_blankline = " ",
-            use_treesitter = true,
-            use_treesitter_scope = true,
-            viewport_buffer = 80,
-            buftype_exclude = {
-                "terminal",
-                "nofile",
-                "quickfix",
-                "prompt",
-            },
-            filetype_exclude = {
-                "lspinfo",
-                "packer",
-                "checkhealth",
-                "help",
-                "man",
-                "qf",
-                "",
-            },
-            context_patterns = {
-                "class",
-                "^func",
-                "method",
-                "^if",
-                "while",
-                "for",
-                "with",
-                "try",
-                "except",
-                "match",
-                "arguments",
-                "argument_list",
-                "object",
-                "dictionary",
-                "element",
-                "table",
-                "tuple",
-                "do_block",
-                "Block",
-                "InitList",
-                "FnCallArguments",
-                "IfStatement",
-                "ContainerDecl",
-                "SwitchExpr",
-                "IfExpr",
-                "ParamDeclList",
-                "unless",
-            }
+            on_attach = function(bufnr)
+                vim.keymap.set("n", "<leader>p", require("gitsigns").prev_hunk, { buffer = bufnr, desc = "go prev hunk" })
+                vim.keymap.set("n", "<leader>nh", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
+                vim.keymap.set("n", "<leader>hp", require("gitsigns").preview_hunk, { buffer = bufnr, desc = "preview hunk" })
+                vim.keymap.set("n", "<leader>hu", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
+                vim.keymap.set("n", "<leader>ha", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
+            end,
         },
     },
 
     -- ----------------------------------------------
-    --  Utils
+    -- Utils
     -- ----------------------------------------------
+    -- align/columns (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
+    -- :help mini-align
+    { "echasnovski/mini.align", lazy = true, event = "InsertEnter", version = "*", config = true, },
+
+    -- mini-starter: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini.starter)
+    -- :help mini-starter
+    {
+        "echasnovski/mini.starter",
+        lazy = false,
+        version = "*",
+        opts = {
+            autoopen = true,
+            evaluate_single = false,
+
+            -- Items to be displayed. Should be an array with the following elements:
+            --     Item: table with <action>, <name>, and <section> keys.
+            --     Function: should return one of these three categories.
+            --     Array: elements of these three types (i.e. item, array, function).
+            -- If `nil` (default), default items will be used (see |mini.starter|).
+            items = nil,
+            header = ""
+            .. '"If you look for truth, you may find comfort in the end; if you look for\n'
+            .. 'comfort you will not get either comfort or truth only soft soap and wishful\n'
+            .. 'thinking to begin, and in the end, despair."\n'
+            .. '                                         – C. S. Lewis\n'
+            .. '\n'
+            .. '"Everybody has a plan until they get punched in the mouth."\n'
+            .. '                                         – Mike Tyson\n'
+            .. '\n',
+
+            -- Footer to be displayed after items. Converted to single string via
+            -- `tostring` (use `\n` to display several lines). If function, it is
+            -- evaluated first. If `nil` (default), default usage help will be shown.
+            footer = nil,
+
+            -- Array  of functions to be applied consecutively to initial content.
+            -- Each function should take and return content for "Starter" buffer (see
+            -- |mini.starter| and |MiniStarter.content| for more details).
+            content_hooks = nil,
+
+            -- Characters to update query. Each character will have special buffer
+            -- mapping overriding your global ones. Be careful to not add `:` as it
+            -- allows you to go into command mode.
+            query_updaters = "abcdefghijklmnopqrstuvwxyz0123456789_-.",
+
+            -- Whether to disable showing non-error feedback
+            silent = false,
+        },
+        config = true,
+    },
+
+    -- mini-trailspace: delete trailing whitespace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
+    -- :help mini-trailspace
+    { "echasnovski/mini.trailspace", lazy = false, config = true, },
+
+    -- bullet formatting (https://github.io/dkarter/bullets.vim)
+    -- :help bullets
+    { "dkarter/bullets.vim", lazy = true, event = "FileType " .. vim.g.bullets_enabled_file_types },
+
+    -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
+    -- :help taboo
+    { "gcmt/taboo.vim", lazy = true, event = "CmdlineEnter" },
+
     -- Which-Key (https://github.com/folke/which-key.nvim)
     -- :help which-key.nvim.txt
     {
@@ -424,7 +434,7 @@ require("lazy").setup({
                 "g'",
 
                 -- registers
-                """,
+                '"',
                 "<c-r>",
 
                 -- spelling
@@ -439,76 +449,6 @@ require("lazy").setup({
                 filetypes = {},
             },
         }
-    },
-
-    -- gitsigns (https://github.com/lewis6991/gitsigns.nvim)
-    -- :help gitsigns.txt
-    {
-        "lewis6991/gitsigns.nvim",
-        lazy = false,
-        opts = {
-            signs = {
-                add = { text = "+" },
-                change = { text = "~" },
-                changedelete = { text = "~" },
-                delete = { text = "_" },
-                topdelete = { text = "‾" },
-                untracked    = { text = "┆" },
-            },
-            on_attach = function(bufnr)
-                vim.keymap.set("n", "<leader>p", require("gitsigns").prev_hunk, { buffer = bufnr, desc = "go prev hunk" })
-                vim.keymap.set("n", "<leader>nh", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
-                vim.keymap.set("n", "<leader>hp", require("gitsigns").preview_hunk, { buffer = bufnr, desc = "preview hunk" })
-                vim.keymap.set("n", "<leader>hu", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
-                vim.keymap.set("n", "<leader>ha", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
-            end,
-        },
-    },
-
-    -- ----------------------------------------------
-    -- LSP Configuration & Plugins
-    -- ----------------------------------------------
-    {
-        "neovim/nvim-lspconfig", -- https://github.com/neovim/nvim-lspconfig
-        lazy = false,
-        dependencies = {
-            -- Automatically install LSPs to stdpath for neovim
-            { "williamboman/mason.nvim", config = true },  -- https://github.com/williamboman/mason.nvim
-            "williamboman/mason-lspconfig.nvim", -- https://github.com/williamboman/mason-lspconfig.nvim
-
-            -- Useful status updates for LSP
-            { "j-hui/fidget.nvim", tag = "legacy", opts = {} }, -- https://github.com/j-hui/fidget.nvim
-
-            -- Additional lua configuration, makes nvim stuff amazing!
-            { "folke/neodev.nvim", lazy = true } -- https://github.com/folke/neodev.nvim
-        },
-    },
-
-    -- ----------------------------------------------
-    -- CMP (https://github.com/hrsh7th/nvim-cmp)
-    -- ----------------------------------------------
-    {
-        "hrsh7th/nvim-cmp",
-        lazy = false,
-        version = "2.*",
-        build = "make install_jsregexp",
-        dependencies = {
-            -- Snippet Engine & its associated nvim-cmp source
-            "L3MON4D3/LuaSnip", -- https://github.com/L3MON4D3/LuaSnip
-            "saadparwaiz1/cmp_luasnip", -- https://github.com/saadparwaiz1/cmp_luasnip
-
-            -- Adds a number of user-friendly snippets
-            "rafamadriz/friendly-snippets", -- https://github.com/rafamadriz/friendly-snippets
-
-            -- other recomended dependencies
-            "hrsh7th/cmp-nvim-lsp", -- LSP completion capabilities (https://github.com/hrsh7th/cmp-nvim-lsp)
-            "hrsh7th/cmp-buffer", -- Buffer words (https://github.com/hrsh7th/cmp-buffer)
-            "hrsh7th/cmp-path", -- System paths (https://github.com/hrsh7th/cmp-buffer)
-            "hrsh7th/cmp-cmdline", -- Search (/) and command (:) (https://github.com/hrsh7th/cmp-buffer)
-
-            -- Auto complete rule: Underscores last (/) and command (:) (https://github.com/lukas-reineke/cmp-under-comparator)
-            "lukas-reineke/cmp-under-comparator",
-        },
     },
 
     -- Fuzzy Finder
@@ -562,22 +502,151 @@ require("lazy").setup({
             },
         },
     },
+
+    -- ----------------------------------------------
+    -- Syntax/LSP
+    -- ----------------------------------------------
+    -- Treesitter: Syntax and code navigation (https://github.com/nvim-treesitter/nvim-treesitter)
+    -- :help treesitter.txtt i
+    {
+        "nvim-treesitter/nvim-treesitter",
+        lazy = false,
+        opts = {
+            sync_install = false,
+            ignore_install = { "cpp" },
+            modules = {},
+            auto_install = true, -- Autoinstall languages that are not installed
+            ensure_installed = { -- Add languages to be installed here that you want installed for treesitter
+                "bash",
+                "c",
+                "cmake",
+                "css",
+                "diff",
+                "dockerfile",
+                "git_config",
+                "git_rebase",
+                "gitattributes",
+                "gitcommit",
+                "gitignore",
+                "go",
+                "hcl",
+                "html",
+                "ini",
+                "javascript",
+                "jq",
+                "json",
+                "lua",
+                "make",
+                "markdown",
+                "markdown_inline",
+                "passwd",
+                "python",
+                "query",
+                "regex",
+                "ruby",
+                "rust",
+                "scss",
+                "sql",
+                "terraform",
+                "toml",
+                "tsx",
+                "typescript",
+                "vim",
+                "vimdoc",
+                "yaml",
+            },
+            highlight = {
+                enable = true,
+                additional_vim_regex_highlighting = false,
+            },
+            indent = { enable = true },
+            incremental_selection = {
+                enable = true,
+                disable = { "c" },
+                keymaps = keymap.treesitter_km.incremental_selection
+            },
+            textobjects = {
+                select = {
+                    keymaps = keymap.treesitter_km.textobjects
+                },
+                move = {
+                    enable = true,
+                    set_jumps = true, -- whether to set jumps in the jumplist
+                    goto_next_start = keymap.treesitter_km.move.goto_next_start,
+                    goto_next_end = keymap.treesitter_km.move.goto_next_end,
+                    goto_previous_start = keymap.treesitter_km.move.goto_previous_start,
+                    goto_previous_end = keymap.treesitter_km.move.goto_previous_end,
+                },
+                swap = {
+                    enable = true,
+                    swap_next = keymap.swap_next,
+                    swap_previous = keymap.swap_previous,
+                },
+            },
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter-textobjects", -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+            },
+            build = ":TSUpdate",
+        },
+    },
+
+    -- nvim-lspconfig: user contributed configs for the LSP (https://github.com/neovim/nvim-lspconfig)
+    -- :help lspconfig.txt
+    {
+        "neovim/nvim-lspconfig",
+        lazy = false,
+        dependencies = {
+            -- Mason: LSP and related plugin manager (https://github.com/williamboman/mason.nvim)
+            -- :help mason.nvim
+            { "williamboman/mason.nvim", lazy = false, config = true },
+
+            -- Mason helper for LSP configs/plugins (https://github.com/williamboman/mason-lspconfig.nvim)
+            -- :help mason-lspconfig.nvim
+            { "williamboman/mason-lspconfig.nvim", lazy = false, config = true },
+
+            -- NeoDev: lua-ls configuration for nvim runtime and api (https://github.com/folke/neodev.nvim)
+            -- :help neodev.nvim.txt
+            { "folke/neodev.nvim", lazy = false, config = true },
+
+            -- Fidget: LSP status updates (https://github.com/j-hui/fidget.nvim)
+            -- :help fidget.txt
+            { "j-hui/fidget.nvim", tag = "legacy", lazy = true, event = "LspAttach" },
+        },
+    },
+
+    -- nvim-cmp: completion manager (https://github.com/hrsh7th/nvim-cmp)
+    -- :help cmp
+    {
+        "hrsh7th/nvim-cmp",
+        lazy = false,
+        version = "2.*",
+        build = "make install_jsregexp",
+        dependencies = {
+            --  LuaSnip: snippets manager (https://github.com/L3MON4D3/LuaSnip)
+            -- :help luasnip.txt
+            { "L3MON4D3/LuaSnip", lazy = false, config = function() require("luasnip.loaders.from_vscode").lazy_load() end }, -- https://github.com/L3MON4D3/LuaSnip
+
+            -- LuaSnip completion source (https://github.com/saadparwaiz1/cmp_luasnip)
+            -- :help cmp_luasnip
+            { "saadparwaiz1/cmp_luasnip", lazy = false },
+
+            -- Adds a number of user-friendly snippets
+            { "rafamadriz/friendly-snippets", lazy = false }, -- https://github.com/rafamadriz/friendly-snippets
+
+            -- other recommended dependencies
+            { "hrsh7th/cmp-nvim-lsp", lazy = false }, -- LSP completion capabilities (https://github.com/hrsh7th/cmp-nvim-lsp)
+            { "hrsh7th/cmp-buffer", lazy = false }, -- Buffer words (https://github.com/hrsh7th/cmp-buffer)
+            { "hrsh7th/cmp-path", lazy = false }, -- System paths (https://github.com/hrsh7th/cmp-path)
+            { "hrsh7th/cmp-cmdline", lazy = false }, -- Search (/) and command (:) (https://github.com/hrsh7th/cmp-buffer)
+
+            -- Auto complete rule: Sort underscores last (https://github.com/lukas-reineke/cmp-under-comparator)
+            { "lukas-reineke/cmp-under-comparator", lazy = false},
+        },
+    },
 })
 -- ----------------------------------------------
 -- End of Lazy loading
 -- ----------------------------------------------
-
--- ----------------------------------------------
---  LuaSnip
--- ----------------------------------------------
-local luasnip = require("luasnip")
-require("luasnip.loaders.from_vscode").lazy_load()
-luasnip.config.setup {}
-
--- ----------------------------------------------
---  Neodev  (neovim lua help and completion)
--- ----------------------------------------------
-require("neodev").setup()
 
 -- ----------------------------------------------
 --  Telescope
@@ -597,103 +666,32 @@ require("telescope").setup {
 
 -- extensions
 pcall(require("telescope").load_extension, "fzf") -- Enable telescope fzf native, if installed
--- require("telescope").load_extension("harpoon")
+require("telescope").load_extension("harpoon")
 
 -- ----------------------------------------------
---  Treesitter
+-- Treesitter
 -- :help nvim-treesitter
 -- ----------------------------------------------
 require("nvim-treesitter.install").prefer_git = true
-require("nvim-treesitter.configs").setup {
-    sync_install = false,
-    ignore_install = { "cpp" },
-    modules = {},
-    auto_install = true, -- Autoinstall languages that are not installed
-    ensure_installed = { -- Add languages to be installed here that you want installed for treesitter
-        "bash",
-        "c",
-        "cmake",
-        "css",
-        "diff",
-        "dockerfile",
-        "git_config",
-        "git_rebase",
-        "gitattributes",
-        "gitcommit",
-        "gitignore",
-        "go",
-        "hcl",
-        "html",
-        "ini",
-        "javascript",
-        "jq",
-        "json",
-        "lua",
-        "make",
-        "markdown",
-        "markdown_inline",
-        "passwd",
-        "python",
-        "query",
-        "regex",
-        "ruby",
-        "rust",
-        "scss",
-        "sql",
-        "terraform",
-        "toml",
-        "tsx",
-        "typescript",
-        "vim",
-        "vimdoc",
-        "yaml",
-    },
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    },
-    indent = { enable = true },
-    incremental_selection = {
-        enable = true,
-        disable = { "c" },
-        keymaps = keymap.treesitter_km.incremental_selection
-    },
-    textobjects = {
-        select = {
-            keymaps = keymap.treesitter_km.textobjects
-        },
-        move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = keymap.treesitter_km.move.goto_next_start,
-            goto_next_end = keymap.treesitter_km.move.goto_next_end,
-            goto_previous_start = keymap.treesitter_km.move.goto_previous_start,
-            goto_previous_end = keymap.treesitter_km.move.goto_previous_end,
-        },
-        swap = {
-            enable = true,
-            swap_next = keymap.swap_next,
-            swap_previous = keymap.swap_previous,
-        },
-    },
-}
 
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+-- ----------------------------------------------
+-- nvim-cmp: broadcast additional completion capabilities to lsp
+-- ----------------------------------------------
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 -- ----------------------------------------------
---  Mason
+-- Mason: lsp configuration
 -- :help mason
 -- ----------------------------------------------
-local mason_lspconfig = require "mason-lspconfig"
+local mason_lspconfig = require("mason-lspconfig")
 
--- Enable the following language servers
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
+-- Enable the following language servers:
+--   Add any additional override configuration in the following tables. They will be passed to
+--   the `settings` field of the server config. You must look up that documentation yourself.
 --
---  If you want to override the default filetypes that your language server will attach to you can
---  define the property "filetypes" to the map in question.
+--   If you want to override the default filetypes that your language server will attach to you can
+--   define the property "filetypes" to the map in question.
 local servers = {
     lua_ls = {
         Lua = {
@@ -742,12 +740,15 @@ mason_lspconfig.setup_handlers {
 }
 
 -- ----------------------------------------------
--- [[ nvim-cmp ]]
+-- nvim-cmp: setup (https://github.com/hrsh7th/nvim-cmp)
 -- :help cmp
 -- ----------------------------------------------
 local cmp = require("cmp")
 local cmp_default = require("cmp.config.default")
 local cmp_compare = require("cmp.config.compare")
+local luasnip = require("luasnip")
+
+luasnip.config.setup {}
 
 keymap.cmp = cmp.setup {
     revision = 0,
@@ -788,6 +789,9 @@ keymap.cmp = cmp.setup {
     sources = {
         { name = "nvim_lsp" },
         { name = "luasnip" },
+        { name = "buffer" },
+        { name = "path" },
+        { name = "path" },
     },
 
     -- Key mappings
@@ -824,8 +828,38 @@ keymap.cmp = cmp.setup {
     },
 }
 
--- colorscheme/theme (https://github.com/catppuccin/nvim/tree/main)
+-- `/` cmdline setup.
+---@diagnostic disable
+-- either lua_ls isn't recognizing optional params, or they're not annotated correctly
+cmp.setup.cmdline('/', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = 'buffer' }
+    }
+})
+
+-- `:` cmdline setup.
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    },
+        {
+            {
+                name = 'cmdline',
+                option = {
+                    ignore_cmds = { 'Man', '!' }
+                }
+            }
+        }
+    )
+})
+---@diagnostic enable
+
+-- ----------------------------------------------
+-- Catppuccin colorscheme: setup (https://github.com/catppuccin/nvim/tree/main)
 -- :help catppuccin.txt
+-- ----------------------------------------------
 require("catppuccin").setup({
     dim_inactive = { enabled = false },
     highlight_overrides = {
