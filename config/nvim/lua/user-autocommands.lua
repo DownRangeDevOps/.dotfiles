@@ -106,13 +106,25 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
             vim.wo.numberwidth = 5
             vim.wo.relativenumber = true
             vim.wo.spell = true
-            vim.wo.listchars = "tab:⇢•,precedes:«,extends:»,trail:•,nbsp:•,multispace:•"
+            vim.wo.listchars = table.concat({
+                "tab:⇢•",
+                "precedes:«",
+                "extends:»",
+                "trail:•",
+                "nbsp:•",
+            }, ",")
         end
 
         -- set file specific ui
         if tab_filetypes[filetype] then
-            vim.wo.listchars = "tab:⇢ ,precedes:«,extends:»,trail:•,nbsp:•,multispace:•"
             vim.bo.expandtab = false
+            vim.wo.listchars = table.concat({
+                "tab:⇢•",
+                "precedes:«",
+                "extends:»",
+                "trail:•",
+                "nbsp:•",
+            }, ",")
         end
     end
 })

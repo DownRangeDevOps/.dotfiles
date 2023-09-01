@@ -134,12 +134,15 @@ vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
 vim.opt.splitbelow = true
 vim.opt.splitright = true
-vim.opt.listchars = table.concat({
-    "tab:»·",
-    "trail:·",
-    "nbsp:·",
-}, ",")
 vim.opt.list = true
+
+vim.opt.listchars = table.concat({
+    "tab:⇢•",
+    "precedes:«",
+    "extends:»",
+    "trail:•",
+    "nbsp:•",
+}, ",")
 
 -- Line wrapping
 vim.opt.showbreak = "↳ " -- show wrapped lines
