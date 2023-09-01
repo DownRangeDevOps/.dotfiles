@@ -42,24 +42,26 @@ function __get_virtualenv_name() {
     fi
 }
 
-# Initalize pyenv (https://github.com/pyenv/pyenv)
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
-export PYENV_ROOT="$HOME/.pyenv"
-export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-export WORKON_HOME="${HOME}/.virtualenvs"
-export PROJECT_HOME="${HOME}/dev"
-export VIRTUALENVWRAPPER_WORKON_CD=1
-
-set +u
-eval "$(pyenv init -)"
-add_to_path "prepend" "$(pyenv prefix)" # pyenv
-set -u
-
 function pyenv_init() {
-    local last_cmd
+    # local last_cmd
     last_cmd=$(fc -l | tail -1 | cut -d ' ' -f 2-)
 
-    printf_warning "pyenv-virtualenv has not been initialized, initializing now..." >&2
+    # Initalize pyenv (https://github.com/pyenv/pyenv)
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+    export WORKON_HOME="${HOME}/.virtualenvs"
+    export PROJECT_HOME="${HOME}/dev"
+    export VIRTUALENVWRAPPER_WORKON_CD=1
+
+    set +u
+    eval "$(pyenv init -)"
+    add_to_path "prepend" "$(pyenv prefix)" # pyenv
+    set -u
+
+    # pyenv_alias remove
+
+    # printf_warning "pyenv-virtualenv has not been initialized, initializing now..." >&2
 
     # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing virtualenv..."
@@ -71,8 +73,9 @@ function pyenv_init() {
     pyenv virtualenvwrapper_lazy
     set -u
 
-    $last_cmd
+    # $last_cmd
 }
+pyenv_init
 
 function pyenv_alias() {
     local virtualenv_cmds
@@ -116,11 +119,11 @@ EOF
 }
 
 # Alias virtualenv lazy loader
-if [[ -z ${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION:-} ]]; then
-    pyenv_alias create
-else
-    pyenv_alias remove
-fi
+# if [[ -z ${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION:-} ]]; then
+#     pyenv_alias create
+# else
+#     pyenv_alias remove
+# fi
 
 # Megalinter helper
 function run_mega_linter_python() {
