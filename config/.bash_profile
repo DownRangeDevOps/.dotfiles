@@ -4,6 +4,8 @@
 # - We should ensure pipelines fail if commands within them fail
 set -uo pipefail
 
+set -a # Export all functions to make them available in sub-shells
+
 if [[ ${DEBUG:-} -eq 1 ]]; then
     source "${HOME}/.dotfiles/lib/log.sh"
 else
@@ -48,6 +50,6 @@ source "${BASH_D_PATH}/lib.sh"
 source "${BASH_D_PATH}/path.sh"
 source "${BASH_D_PATH}/bash.sh"
 
-set +u
+set +ua
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done, .bash_profile loaded."

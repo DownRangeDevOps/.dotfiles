@@ -9,12 +9,6 @@ export BITBUCKET_SSH_KEY="${HOME}/.ssh/id_rsa"
 [[ -n ${ORG_NAME:-} ]] && export DEVOPS_REPO="${HOME}/dev/${ORG_NAME}/src/devops"
 
 # ------------------------------------------------
-#  alises
-# ------------------------------------------------
-# Ansible vault shortcuts
-alias aav='ansible-vault view'
-
-# ------------------------------------------------
 #  helpers
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."

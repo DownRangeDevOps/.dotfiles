@@ -14,14 +14,6 @@ export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 eval "$(register-python-argcomplete pipx)"
 
 # ------------------------------------------------
-#  aliases
-# ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading alises..."
-
-# alias rmlp=run_mega_linter_python
-# alias gpt=generate_python_module_ctags
-
-# ------------------------------------------------
 #  overloads
 # ------------------------------------------------
 # function ptpython() {
@@ -41,89 +33,6 @@ function __get_virtualenv_name() {
         printf "%s\n" ""
     fi
 }
-
-function pyenv_init() {
-    # local last_cmd
-    last_cmd=$(fc -l | tail -1 | cut -d ' ' -f 2-)
-
-    # Initalize pyenv (https://github.com/pyenv/pyenv)
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-    export WORKON_HOME="${HOME}/.virtualenvs"
-    export PROJECT_HOME="${HOME}/dev"
-    export VIRTUALENVWRAPPER_WORKON_CD=1
-
-    set +u
-    eval "$(pyenv init -)"
-    add_to_path "prepend" "$(pyenv prefix)" # pyenv
-    set -u
-
-    # pyenv_alias remove
-
-    # printf_warning "pyenv-virtualenv has not been initialized, initializing now..." >&2
-
-    # pyenv-virtualenv (https://github.com/pyenv/pyenv-virtualenv)
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing virtualenv..."
-    set +u
-    eval "$(pyenv virtualenv-init -)"
-
-    # pyenv-virtualenvwrapper (https://github.com/pyenv/pyenv-virtualenvwrapper)
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing virtualenvwrapper..."
-    pyenv virtualenvwrapper_lazy
-    set -u
-
-    # $last_cmd
-}
-pyenv_init
-
-function pyenv_alias() {
-    local virtualenv_cmds
-    mapfile -t virtualenv_cmds <<EOF
-add2virtualenv
-allvirtualenv
-cdproject
-cdsitepackages
-cdvirtualenv
-cpvirtualenv
-lssitepackages
-lsvirtualenv
-mkproject
-mktmpenv
-mkvirtualenv
-rmvirtualenv
-setvirtualenvproject
-showvirtualenv
-toggleglobalsitepackages
-wipeenv
-workon
-EOF
-
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: ==> Managing aliases to pyenv_init"
-
-    for cmd in "${virtualenv_cmds[@]}"; do
-        if [[ ${1:-} == "create" ]]; then
-            log debug "[$(basename "${BASH_SOURCE[0]}")]: Aliasing ${cmd} to pyenv_init"
-
-            # shellcheck disable=SC2139
-            alias "${cmd}=pyenv_init"
-        elif [[ ${1:-} == "remove" ]]; then
-            log debug "[$(basename "${BASH_SOURCE[0]}")]: Unaliasing ${virtualenv_cmds[*]}"
-
-            # shellcheck disable=SC2139
-            unalias "${virtualenv_cmds[@]}" 2>/dev/null
-        else
-            printf_error "pyenv_alias: unknown argument $1"
-        fi
-    done
-}
-
-# Alias virtualenv lazy loader
-# if [[ -z ${PYENV_VIRTUALENVWRAPPER_PYENV_VERSION:-} ]]; then
-#     pyenv_alias create
-# else
-#     pyenv_alias remove
-# fi
 
 # Megalinter helper
 function run_mega_linter_python() {
@@ -180,3 +89,16 @@ function lpy() {
     printf_callout "Running black with '${BLACK[*]}'..."
     black "${BLACK[@]}" . | indent_output
 }
+
+# ------------------------------------------------
+# Initialize pyenv (https://github.com/pyenv/pyenv)
+# ------------------------------------------------
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
+export PYENV_ROOT="$HOME/.pyenv"
+export PIPENV_SHELL_EXPLICIT="${BREW_PREFIX}/bin/bash"
+
+set +u
+eval "$(pyenv init -)"
+set -u
+
+add_to_path "prepend" "$(pyenv prefix)"
