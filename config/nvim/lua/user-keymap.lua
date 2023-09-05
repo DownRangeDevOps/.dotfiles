@@ -285,10 +285,10 @@ map("n", "<leader>~", function()
 end, { silent = true, desc = desc("gen", ":split term") })
 
 -- Split navigation and sizing
-map({ "i", "v", "n" }, "<C-h>", "<C-w>h", { desc = desc("nav", "left window") })
-map({ "i", "v", "n" }, "<C-j>", "<C-w>j", { desc = desc("nav", "down window") })
-map({ "i", "v", "n" }, "<C-k>", "<C-w>k", { desc = desc("nav", "up window") })
-map({ "i", "v", "n" }, "<C-l>", "<C-w>l", { desc = desc("nav", "right window") })
+map({ "n" }, "<C-h>", "<C-w>h", { desc = desc("nav", "left window") })
+map({ "n" }, "<C-j>", "<C-w>j", { desc = desc("nav", "down window") })
+map({ "n" }, "<C-k>", "<C-w>k", { desc = desc("nav", "up window") })
+map({ "n" }, "<C-l>", "<C-w>l", { desc = desc("nav", "right window") })
 
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = desc("nav", "left window") })
 map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = desc("nav", "down window") })

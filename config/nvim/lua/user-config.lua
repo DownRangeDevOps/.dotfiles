@@ -184,4 +184,23 @@ local script_path = function()
 end
 M.script_path = script_path()
 
+-- ----------------------------------------------
+-- Plugins
+-- ----------------------------------------------
+-- indent blankline
+local indet_blankline_session_opts = { "tabpages", "globals" }
+for _, i in ipairs(indet_blankline_session_opts) do
+    if not vim.opt.sessionoptions[i] then
+        table.insert(vim.opt.sessionoptions, i)
+    end
+end
+
+-- Configure dkarter/bullets.vim (https://github.com/dkarter/bullets.vim)
+vim.g.bullets_set_mappings = 0
+vim.g.bullets_renumber_on_change = 1
+vim.g.bullets_outline_levels = { "num", "std*" }
+vim.g.bullets_checkbox_markers = " ⁃✔︎"
+vim.g.bullets_enabled_file_types = "markdown,text,gitcommit,scratch"
+vim.g.bullets_enabled_file_types_tbl = { markdown = true, text = true, gitcommit = true, scratch = true }
+
 return M

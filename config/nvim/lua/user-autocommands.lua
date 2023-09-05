@@ -7,6 +7,7 @@ local keymap = require("user-keymap")
 local nvim = vim.api.nvim_create_augroup("NVIM", { clear = true })
 local ui = vim.api.nvim_create_augroup("UI", { clear = true })
 local user = vim.api.nvim_create_augroup("USER", { clear = true })
+local plugin = vim.api.nvim_create_augroup("PLUGIN", { clear = true })
 
 -- ----------------------------------------------
 -- Neovim
@@ -210,5 +211,16 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
         if bufnr then
             keymap.thanos_snap(bufnr)
         end
+    end
+})
+
+-- ----------------------------------------------
+-- Plugins
+-- ----------------------------------------------
+vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "TextChanged" }, {
+    group = plugin,
+    pattern = { "*.lua", "*.sh", "*.py" },
+    callback = function()
+        require('lint').try_lint()
     end
 })
