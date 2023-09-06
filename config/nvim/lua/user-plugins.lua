@@ -319,6 +319,10 @@ require("lazy").setup({
     -- :help mini-align
     { "echasnovski/mini.align", lazy = true, event = "InsertEnter", version = "*", config = true, },
 
+    -- Diffview (https://github.com/sindrets/diffview.nvim#usage)
+    -- :help diffview.nvim
+    { "sindrets/diffview.nvim", lazy = true, cmd = { "DiffviewOpen", "DiffviewTogglefiles", "DiffviewFileHistory" } },
+
     -- mini-comment: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-comment)
     -- :help mini-comment
     { "echasnovski/mini.comment", lazy = false, version = "*", config = true },
@@ -709,10 +713,10 @@ require("lazy").setup({
             { "rafamadriz/friendly-snippets", name = "nvim-friendly-snippets", lazy = true, event = "InsertEnter",}, -- https://github.com/rafamadriz/friendly-snippets
 
             -- other recommended dependencies
-            { "hrsh7th/cmp-nvim-lsp", name = "nvim-cmp-nvim-lsp", lazy = true, event = "InsertEnter" }, -- LSP completion capabilities (https://github.com/hrsh7th/cmp-nvim-lsp)
-            { "hrsh7th/cmp-buffer", name = "nvim-cmp-buffer", lazy = false, event = "InsertEnter" }, -- Buffer words (https://github.com/hrsh7th/cmp-buffer)
-            { "hrsh7th/cmp-path", name = "nvim-cmp-path", lazy = true, event = "CmdlineEnter" }, -- System paths (https://github.com/hrsh7th/cmp-path)
-            { "hrsh7th/cmp-cmdline", name = "nvim-cmp-cmdline", lazy = true, event = "CmdlineEnter" }, -- Search (/) and command (:) (https://github.com/hrsh7th/cmp-buffer)
+            { "hrsh7th/cmp-nvim-lsp", name = "nvim-cmp-nvim-lsp", lazy = false }, -- LSP completion capabilities (https://github.com/hrsh7th/cmp-nvim-lsp)
+            { "hrsh7th/cmp-buffer", name = "nvim-cmp-buffer", lazy = false }, -- Buffer words (https://github.com/hrsh7th/cmp-buffer)
+            { "hrsh7th/cmp-path", name = "nvim-cmp-path", lazy = false }, -- System paths (https://github.com/hrsh7th/cmp-path)
+            { "hrsh7th/cmp-cmdline", name = "nvim-cmp-cmdline", lazy = false }, -- Search (/) and command (:) (https://github.com/hrsh7th/cmp-buffer)
 
             -- Auto complete rule: Sort underscores last (https://github.com/lukas-reineke/cmp-under-comparator)
             { "lukas-reineke/cmp-under-comparator", name = "nvim-cmp-under-comparator", lazy = true, event = "InsertEnter" },
