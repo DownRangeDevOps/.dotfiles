@@ -4,11 +4,5 @@ log debug "==> [${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# ------------------------------------------------
-#  aliases
-# ------------------------------------------------
-# Avoid linking against any shims
-NO_SHIMS_PATH=$(printf "%s" "${PATH}" | sed -E 's,.*shims[^:]*:,,g')
-alias brew='env PATH=${NO_SHIMS_PATH} brew'
+export HOMEBREW_API_AUTO_UPDATE_SECS=$(( 60 * 60 * 24 * 7 )) # Only auto-update once a week
+export HOMEBREW_AUTO_UPDATE_SECS=$(( 60 * 60 * 24 * 7 )) # Only auto-update once a week

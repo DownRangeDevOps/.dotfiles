@@ -7,6 +7,7 @@ local keymap = require("user-keymap")
 local nvim = vim.api.nvim_create_augroup("NVIM", { clear = true })
 local ui = vim.api.nvim_create_augroup("UI", { clear = true })
 local user = vim.api.nvim_create_augroup("USER", { clear = true })
+local plugin = vim.api.nvim_create_augroup("PLUGIN", { clear = true })
 
 -- ----------------------------------------------
 -- Neovim
@@ -34,6 +35,8 @@ vim.api.nvim_create_autocmd( { "BufWinEnter" }, { group = ui,
             vim.opt.relativenumber = true
             vim.api.nvim_buf_set_option(bufnr, "buflisted", false)
             vim.api.nvim_buf_set_option(bufnr, "bufhidden", "delete")
+            vim.wo.list = false
+            vim.opt.colorcolumn = ""
         end
     end
 })
@@ -105,13 +108,25 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
             vim.wo.numberwidth = 5
             vim.wo.relativenumber = true
             vim.wo.spell = true
-            vim.wo.listchars = "tab:⇢•,precedes:«,extends:»,trail:•,nbsp:•,multispace:•"
+            vim.wo.listchars = table.concat({
+                "tab:⇢•",
+                "precedes:«",
+                "extends:»",
+                "trail:•",
+                "nbsp:•",
+            }, ",")
         end
 
         -- set file specific ui
         if tab_filetypes[filetype] then
-            vim.wo.listchars = "tab:⇢ ,precedes:«,extends:»,trail:•,nbsp:•,multispace:•"
             vim.bo.expandtab = false
+            vim.wo.listchars = table.concat({
+                "tab:⇢•",
+                "precedes:«",
+                "extends:»",
+                "trail:•",
+                "nbsp:•",
+            }, ",")
         end
     end
 })
@@ -179,7 +194,9 @@ vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave" }, {
     group = user,
     pattern = "*",
     callback = function()
-        if vim.api.nvim_buf_get_option(0, "modifiable") then
+        local is_diffview = vim.fn.expand("%"):find("^diffview")
+
+        if vim.api.nvim_buf_get_option(0, "modifiable") and not is_diffview then
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
         end
@@ -199,23 +216,13 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
     end
 })
 
--- Protect large files from sourcing and other overhead
--- Files become read only
--- vim.api.nvim_create_autocmd({ "BufReadPre" }, {
---     group = user,
---     pattern = "*",
---     callback = function()
---         local large_file = 1024 * 1024 * 10
---         local file = vim.fn.expand("<afile>")
---         local file_type = vim.fn.getftype(file)
---
---         if vim.fn.getfsize(file) > large_file then
---             vim.opt.eventignore:append(file_type)
---             vim.bo.noswapfile  = true
---             vim.bo.bufhidden = "unload"
---             vim.bo.buftype = "nowrite"
---             vim.opt.undolevels:remove(1)
---         else
---             vim.opt.eventignore:remove(file_type)
---         end
--- end, })
+-- ----------------------------------------------
+-- Plugins
+-- ----------------------------------------------
+vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "TextChanged" }, {
+    group = plugin,
+    pattern = { "*.lua", "*.sh", "*.py" },
+    callback = function()
+        require('lint').try_lint()
+    end
+})

@@ -14,19 +14,6 @@ export AWS_VAULT_BACKEND=file
 export AWS_SESSION_TOKEN_TTL=12h
 
 # ------------------------------------------------
-#  alises
-# ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aliases..."
-
-alias av="aws-vault"
-alias ave="aws-vault exec"
-alias avr="aws-vault exec msr-root --"
-alias ava="aws-vault exec msr-amzn --"
-alias avs="aws-vault exec msr-staging --"
-alias avo="aws-vault exec msr-ops-sbx --"
-alias avsci="aws-vault exec msr-sci-sbx --"
-
-# ------------------------------------------------
 #  helpers
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."

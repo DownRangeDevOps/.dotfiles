@@ -3,56 +3,9 @@ log debug ""
 log debug "==> [${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
-#  aliases
-# ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating aliases..."
-
-# auto on yubiswitch
-alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
-alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
-
-alias c="clear"
-alias ebash='nvim ${HOME}/.bash_profile'
-alias ec=ebash
-alias genpasswd="openssl rand -base64 32"
-alias myip="curl icanhazip.com"
-alias sb='source ${HOME}/.bash_profile'
-alias vim="nvim"
-
-# safety
-alias rm="rm -i"
-alias mv="mv -i"
-alias cp="cp -i"
-set -o noclobber
-
-# tmux & tmuxinator
-alias tmux='tmux -2'              # Force 256 colors in tmux
-alias tks='tmux kill-session -t ' # easy kill tmux session
-alias rc='reattach-to-user-namespace pbcopy'
-
-# Info
-alias ls="list_dir_cont"
-alias ll="list_dir_cont --long"
-
-# Navigation
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias ......="cd ../../../../.."
-alias .......="cd ../../../../../.."
-alias ..r="cd \$(__git_project_root)"
-alias ..~="cd \${HOME}"
-alias ctags="\${BREW_PREFIX}/bin/ctags"
-
-# Squeltch egrep warnings
-alias egrep="grep -E"
-
-# ------------------------------------------------
 #  config
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring enviornment..."
-
 
 # llvm
 export LDFLAGS="-L${BREW_PREFIX}/opt/llvm/lib && -L${BREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${BREW_PREFIX}/opt/llvm/lib/c++"
@@ -129,9 +82,9 @@ function mysqlpw() {
 }
 
 # ------------------------------------------------
-# bash.d sourcing
+# bash.d
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading gcloud ..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring gcloud completions..."
 
 # overwrites PS1 so do it first
 set +u
@@ -155,12 +108,13 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
 }
 
 # jump around
-# Z_SH="${BREW_PREFIX}/etc/profile.d/z.sh"
-# if [[ -f "${Z_SH}" ]]; then
-#     set +u
-#     source "${Z_SH}"
-#     set -u
-# fi
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing z..."
+Z_SH="${BREW_PREFIX}/etc/profile.d/z.sh"
+if [[ -f "${Z_SH}" ]]; then
+    set +u
+    source "${Z_SH}"
+    set -u
+fi
 
 # .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then

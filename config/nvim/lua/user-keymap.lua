@@ -104,7 +104,7 @@ vim.on_key(
     function(char)
         if vim.fn.mode() == "n" then
             local new_hlsearch = vim.tbl_contains(
-                { "n", "N", "*", "?", "/", "v" },
+            {"v", "n", "N", "", "", "", "", "*", "?", "/" },
                 vim.fn.keytrans(char)
             )
 
@@ -160,16 +160,14 @@ map("", "X", '"_X', { desc = desc("txt", "delete -> eol") })
 map("", "<leader>x", "x", { desc = desc("txt", "yank-cut")})
 map("", "<leader>X", "X", { desc = desc("txt", "yank-cut -> eol")})
 
--- Manipulate lines, maintain cursor pos
-map("v", "J", function () vim.cmd.move("'>+1") vim.cmd.normal("gv=gv") end, { desc = desc("txt", "move lines up") })
-map("v", "K", function () vim.cmd.move("'<-2") vim.cmd.normal("gv=gv") end, { desc = desc("txt", "move lines down") })
+-- maintain cursor pos
 map("n", "J", "mzJ`z", { desc = desc("txt", "join w/o hop") })
 map("n", "<C-u>", "<C-u>zz", { desc = desc("gen", "pgup") })
 map("n", "<C-d>", "<C-d>zz", { desc = desc("gen", "pgdn") })
 map("n", "n", "nzzzv", { desc = desc("next search") })
 map("n", "N", "Nzzzv", { desc = desc("prev search") })
 
--- File/buffer management (auto-save, browser)
+-- file/buffer management (auto-save, browser)
 map("n", "<leader>w", function()
     local modifiable  = vim.api.nvim_buf_get_option(0, "modifiable")
     if modifiable then vim.cmd.write() end
@@ -287,10 +285,10 @@ map("n", "<leader>~", function()
 end, { silent = true, desc = desc("gen", ":split term") })
 
 -- Split navigation and sizing
-map({ "i", "v", "n" }, "<C-h>", "<C-w>h", { desc = desc("nav", "left window") })
-map({ "i", "v", "n" }, "<C-j>", "<C-w>j", { desc = desc("nav", "down window") })
-map({ "i", "v", "n" }, "<C-k>", "<C-w>k", { desc = desc("nav", "up window") })
-map({ "i", "v", "n" }, "<C-l>", "<C-w>l", { desc = desc("nav", "right window") })
+map({ "n" }, "<C-h>", "<C-w>h", { desc = desc("nav", "left window") })
+map({ "n" }, "<C-j>", "<C-w>j", { desc = desc("nav", "down window") })
+map({ "n" }, "<C-k>", "<C-w>k", { desc = desc("nav", "up window") })
+map({ "n" }, "<C-l>", "<C-w>l", { desc = desc("nav", "right window") })
 
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = desc("nav", "left window") })
 map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = desc("nav", "down window") })
@@ -319,6 +317,8 @@ map("n", "zm", function() require("ufo").closeFoldsWith() end, { desc = desc("ui
 
 -- Telescope
 -- :help telescope.builtin
+
+-- files
 map("n", "<C-p>", function()
     if is_git_repo() then
         vim.print("Running Telescope git_files in " .. vim.cmd.pwd())
@@ -327,32 +327,32 @@ map("n", "<C-p>", function()
         vim.print("Running Telescope find_files in " .. vim.cmd.pwd())
         require("telescope.builtin").find_files()
     end
-end, { desc = desc("ts", "find git files") })
-map("n", "<leader>ff", function() require("telescope.builtin").find_files() end, { desc = desc("ts", "find files") })
-map("n", "<leader>fw", function() require("telescope.builtin").grep_string() end, { desc = desc("ts", "find word") })
+end, { desc = desc("ts", "fuzzy git files") })
+map("n", "<leader>ff", function() require("telescope.builtin").find_files() end, { desc = desc("ts", "fuzzy files") })
+map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { desc = desc("ts", "fuzzy recent files") })
+map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { desc = desc("ts", "fuzzy help") })
+map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { desc = desc("ts", "fuzzy manpage") })
+map("n", "<leader>rg", function() require("telescope.builtin").live_grep() end, { desc = desc("ts", "ripgrep") })
 
-map("n", "<leader><space>", function() require("telescope.builtin").buffers() end, { desc = desc("ts", "find buffers") })
-map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { desc = desc("ts", "find recent files") })
-map("n", '<leader>f"', function() require("telescope.builtin").marks() end, { desc = desc("ts", "find marks") })
-map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { desc = desc("ts", "find help") })
-map("n", "<leader>fk", function() require("telescope.builtin").keymaps() end, { desc = desc("ts", "find keymaps") })
-map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { desc = desc("ts", "find manpage") })
-map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions() end, { desc = desc("ts", "goto deffinition") })
-map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { desc = desc("ts", "goto implementation") })
-map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { desc = desc("ts", "find quickfix") })
-map("n", "<leader>rg", function() require("telescope.builtin").live_grep() end, { desc = desc("ts", "rg current dir") })
-map("n", "<leader>/", function()
-    require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
-        winblend = 10,
-        previewer = false,
-    })
-end, { desc = desc("ts", "find in current buffer") })
+-- strings
+map("n", "<leader>fw", function() require("telescope.builtin").grep_string() end, { desc = desc("ts", "fuzzy word") })
 
-map("n", "<leader>fe", function() require("telescope.builtin").diagnostics() end, { desc = desc("ts", "find errors") })
+-- diagnostics
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = desc("diag", "show errors") })
 map("n", "<leader>E", vim.diagnostic.setloclist, { desc = desc("diag", "open error list") })
 map("n", "[d", vim.diagnostic.goto_prev, { desc = desc("diag", "previous message") })
 map("n", "]d", vim.diagnostic.goto_next, { desc = desc("diag", "next message") })
+
+-- others
+map("n", "<leader><space>", function() require("telescope.builtin").buffers() end, { desc = desc("ts", "fuzzy buffers") })
+map("n", '<leader>f"', function() require("telescope.builtin").marks() end, { desc = desc("ts", "fuzzy marks") })
+map("n", "<leader>gh", function() vim.print("not implemented") end, { desc = desc("ts", "fuzzy help") })
+map("n", "<leader>fk", function() require("telescope.builtin").keymaps() end, { desc = desc("ts", "fuzzy keymaps") })
+map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions() end, { desc = desc("ts", "goto definition") })
+map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { desc = desc("ts", "goto implementation") })
+map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { desc = desc("ts", "fuzzy quickfix") })
+map("n", "<leader>/", function() require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown { winblend = 10, previewer = false, }) end, { desc = desc("ts", "fuzzy in current buffer") })
+map("n", "<leader>fe", function() require("telescope.builtin").diagnostics() end, { desc = desc("ts", "fuzzy errors") })
 
 -- LSP key maps
 M.lsp_on_attach = function(_, bufnr)
@@ -363,30 +363,26 @@ M.lsp_on_attach = function(_, bufnr)
     -- goto
     map("n", "gd", vim.lsp.buf.definition, { desc = desc("lsp", "goto definition") })
     map("n", "gr", function() require("telescope.builtin").lsp_references() end, { desc = desc("lsp", "goto references") })
-    map("n", "gI", vim.lsp.buf.implementation, { desc = desc("lsp", "goto implementation") })
+    map("n", "gi", vim.lsp.buf.implementation, { desc = desc("lsp", "goto implementation") })
 
     -- Open manpages/help
     map("n", "K", vim.lsp.buf.hover, { desc = desc("lsp", "show symbol info") })
     map("n", "<C-n>", vim.lsp.buf.signature_help, { desc = desc("lsp", "show signature info") })
 
 
-    map("n", "<leader>D", vim.lsp.buf.type_definition, { desc = desc("lsp", "type definition") })
-    map("n", "<leader>ds", function() require("telescope.builtin").lsp_document_symbols() end, { desc = desc("lsp", "document symbols") })
+    map("n", "<leader>gtd", vim.lsp.buf.type_definition, { desc = desc("lsp", "type definition") })
+    map("n", "<leader>S", function() require("telescope.builtin").lsp_document_symbols() end, { desc = desc("lsp", "document symbols") })
     map("n", "<leader>ws", function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, { desc = desc("lsp", "workspace symbols") })
 
     -- Lesser used LSP functionality
     map("n", "gD", vim.lsp.buf.declaration, { desc = desc("lsp", "goto declaration") })
     map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { desc = desc("lsp", "workspace add folder") })
     map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { desc = desc("lsp", "workspace remove folder") })
-    map("n", "<leader>wl", function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, { desc = desc("lsp", "Workspace list folders") })
+    map("n", "<leader>wl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, { desc = desc("lsp", "workspace list folders") })
 
     -- Create a command `:Format` local to the LSP buffer and map it
-    vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-        vim.lsp.buf.format()
-    end, { desc = desc("lsp", "format current buffer") })
-    map("n", "<leader>=", ":Format" .. fk.enter, { desc = desc("lsp", "format current buffer") })
+    vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_) vim.lsp.buf.format() end, { desc = desc("lsp", "format current buffer") })
+    map("n", "<leader>=", function() vim.cmd.Format() end, { desc = desc("lsp", "format current buffer") })
 end
 
 M.treesitter_km = {

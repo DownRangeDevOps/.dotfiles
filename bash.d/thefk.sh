@@ -11,7 +11,7 @@ else
 fi
 
 function tf_init() {
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing thefuck..."
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing thefuck..."
     unalias fuck=tf_init
 
     set +u

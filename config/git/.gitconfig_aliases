@@ -1,37 +1,3 @@
-; vim: set ft=gitconfig:
 [alias]
-    lg = !"git lg1"
-    lg1 = !"git lg1-specific --all"
-    lg2 = !"git lg2-specific --all"
-    lg3 = !"git lg3-specific --all"
 
-    pmerge = "!git log origin/master.. &&\
-      git diff --stat origin/master"
-
-    mp = "!git checkout master &&\
-      git pull --rebase"
-
-    ffm = "!git merge --ff-only $1 && :"
-
-    nuke = "!git push --delete $1 $2 ;\
-      git branch -D $2 && :"
-
-    nukethis = "!BRANCH=$(git rev-parse --abbrev-ref HEAD) &&\
-      git checkout master &&\
-      git nuke $BRANCH"
-
-    mergenuke = "!BRANCH=$(git rev-parse --abbrev-ref HEAD) &&\
-      confirm 'Merge then delete $BRANCH into $1, and update ORIGIN? [y/N]' &&\
-      git push --force-with-lease origin $BRANCH &&\
-      git checkout $1 && : &&\
-      git ffm $BRANCH &&\
-      git push origin $1 &&\
-      git nuke $BRANCH"
-
-    f = "fetch -p"
-    p = "!git fetch --prune && git pull --rebase"
-    rb = "!git rebase --interactive $1 && :"
-    rbm = "!git rb origin/master"
-    rbd = "!git rb origin/develop"
-    rbc = "!git rebase --continue"
-    fpo = "push --force-with-lease origin HEAD"
+; vim: set ft=gitconfig:
