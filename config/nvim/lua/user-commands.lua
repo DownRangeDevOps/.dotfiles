@@ -85,8 +85,15 @@ vim.api.nvim_create_user_command(
 vim.api.nvim_create_user_command("Ca", "WipeAllBuffers", { desc = "Close all hidden buffers" })
 vim.api.nvim_create_user_command("CloseAll", "WipeAllBuffers", { desc = "Close all hidden buffers" })
 
+-- ----------------------------------------------
 -- Typos
+-- ----------------------------------------------
 vim.api.nvim_create_user_command("W", function() vim.cmd.write() end, { desc = "write"})
 vim.api.nvim_create_user_command("Wa", function() vim.cmd.wall() end, { desc = "wall"})
 vim.api.nvim_create_user_command("Wqa", function() vim.cmd.wqall() end, { desc = "wqall"})
 vim.api.nvim_create_user_command("Qa", function() vim.cmd.wqall() end, { desc = "qall"})
+
+-- ----------------------------------------------
+-- Info
+-- ----------------------------------------------
+vim.api.nvim_create_user_command("SynAttr", function() vim.fun.SynAttr() end, { desc = "show syntax applied at cursor"})

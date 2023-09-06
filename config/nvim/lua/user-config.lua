@@ -125,6 +125,7 @@ vim.opt.autoindent = true
 vim.opt.backspace = "indent,eol,start" -- Make backspace behave in a sane manner.
 vim.opt.colorcolumn = "80"
 vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
 vim.opt.hidden = true
 vim.opt.hlsearch = true
 vim.opt.incsearch = true

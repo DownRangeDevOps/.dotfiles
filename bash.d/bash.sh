@@ -7,7 +7,6 @@ log debug "==> [${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring enviornment..."
 
-
 # llvm
 export LDFLAGS="-L${BREW_PREFIX}/opt/llvm/lib && -L${BREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${BREW_PREFIX}/opt/llvm/lib/c++"
 export CPPFLAGS="-I${BREW_PREFIX}/opt/llvm/include && -I${BREW_PREFIX}/opt/llvm/include/c++/v1/"
@@ -83,9 +82,9 @@ function mysqlpw() {
 }
 
 # ------------------------------------------------
-# bash.d sourcing
+# bash.d
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading gcloud ..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring gcloud completions..."
 
 # overwrites PS1 so do it first
 set +u
@@ -109,12 +108,13 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
 }
 
 # jump around
-# Z_SH="${BREW_PREFIX}/etc/profile.d/z.sh"
-# if [[ -f "${Z_SH}" ]]; then
-#     set +u
-#     source "${Z_SH}"
-#     set -u
-# fi
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing z..."
+Z_SH="${BREW_PREFIX}/etc/profile.d/z.sh"
+if [[ -f "${Z_SH}" ]]; then
+    set +u
+    source "${Z_SH}"
+    set -u
+fi
 
 # .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then

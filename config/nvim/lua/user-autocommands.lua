@@ -194,7 +194,9 @@ vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave" }, {
     group = user,
     pattern = "*",
     callback = function()
-        if vim.api.nvim_buf_get_option(0, "modifiable") then
+        local is_diffview = vim.fn.expand("%"):find("^diffview")
+
+        if vim.api.nvim_buf_get_option(0, "modifiable") and not is_diffview then
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
         end

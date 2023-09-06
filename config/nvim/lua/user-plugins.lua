@@ -60,6 +60,10 @@ require("lazy").setup({
     -- :help catppuccin.txt
     { "catppuccin/nvim", name = "nvim-catppuccin", priority = 1000, lazy = false }, -- setup called later in file
 
+    -- show syntax at cursor (https://github.com/vim-scripts/SyntaxAttr.vim)
+    -- :help syntaxattr
+    { "vim-scripts/SyntaxAttr.vim", name = "vim-syntaxattr", lazy = false },
+
     -- nvim-ufo folds (https://github.com/kevinhwang91/nvim-ufo)
     -- :help nvim-ufo
     {
@@ -315,17 +319,16 @@ require("lazy").setup({
     -- ----------------------------------------------
     -- Utils
     -- ----------------------------------------------
-    -- align/columns (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
-    -- :help mini-align
-    { "echasnovski/mini.align", lazy = true, event = "InsertEnter", version = "*", config = true, },
+    { "echasnovski/mini.align", lazy = true, event = "InsertEnter", version = "*", config = true, }, -- align/columns (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
+    { "echasnovski/mini.comment", lazy = false, version = "*", config = true }, -- mini-comment: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-comment)
+    { "echasnovski/mini.trailspace", lazy = false, version = "*", config = true }, -- mini-trailspace: delete trailing whitespace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
+    { "sindrets/diffview.nvim", lazy = true, cmd = { "DiffviewOpen", "DiffviewTogglefiles", "DiffviewFileHistory" } }, -- Diffview (https://github.com/sindrets/diffview.nvim#usage)
+    { "dkarter/bullets.vim", name = "vim-bullets", lazy = true, event = "InsertEnter" }, -- bullet formatting (https://github.io/dkarter/bullets.vim)
+    { "gcmt/taboo.vim", name = "vim-taboo", lazy = true, event = "CmdlineEnter", }, -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
 
-    -- Diffview (https://github.com/sindrets/diffview.nvim#usage)
-    -- :help diffview.nvim
-    { "sindrets/diffview.nvim", lazy = true, cmd = { "DiffviewOpen", "DiffviewTogglefiles", "DiffviewFileHistory" } },
-
-    -- mini-comment: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-comment)
-    -- :help mini-comment
-    { "echasnovski/mini.comment", lazy = false, version = "*", config = true },
+    -- nvim-lint (https://github.com/mfussenegger/nvim-lint)
+    -- :help nvim-lint
+    { "mfussenegger/nvim-lint", lazy = true, event = "BufWritePost" },
 
     -- mini-move: (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-move)
     -- :help mini-move
@@ -400,22 +403,6 @@ require("lazy").setup({
             silent = false,
         },
     },
-
-    -- mini-trailspace: delete trailing whitespace (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-trailspace.md)
-    -- :help mini-trailspace
-    { "echasnovski/mini.trailspace", lazy = false, version = "*", config = true },
-
-    -- bullet formatting (https://github.io/dkarter/bullets.vim)
-    -- :help bullets
-    { "dkarter/bullets.vim", name = "vim-bullets", lazy = true, event = "InsertEnter" },
-
-    -- taboo.vim: tab management (https://github.com/gcmt/taboo.vim)
-    -- :help taboo
-    { "gcmt/taboo.vim", name = "vim-taboo", lazy = true, event = "CmdlineEnter", },
-
-    -- nvim-lint (https://github.com/mfussenegger/nvim-lint)
-    -- :help nvim-lint
-    { "mfussenegger/nvim-lint", lazy = true, event = "BufWritePost", },
 
     -- Which-Key (https://github.com/folke/which-key.nvim)
     -- :help which-key.nvim.txt
@@ -593,10 +580,14 @@ require("lazy").setup({
             modules = {},
             auto_install = true, -- Autoinstall languages that are not installed
             ensure_installed = { -- Add languages to be installed here that you want installed for treesitter
+                "awk",
                 "bash",
                 "c",
                 "cmake",
+                "comment",
+                "cpp",
                 "css",
+                "csv",
                 "diff",
                 "dockerfile",
                 "git_config",
@@ -605,17 +596,27 @@ require("lazy").setup({
                 "gitcommit",
                 "gitignore",
                 "go",
+                "gpg",
+                "groovy",
                 "hcl",
                 "html",
                 "ini",
                 "javascript",
                 "jq",
                 "json",
+                "llvm",
                 "lua",
+                "luadoc",
+                "luapatterns",
                 "make",
                 "markdown",
                 "markdown_inline",
+                "ninja",
+                "ocamel",
+                "ocamel_interface",
+                "ocamllex",
                 "passwd",
+                "pip requirements",
                 "python",
                 "query",
                 "regex",
@@ -625,11 +626,13 @@ require("lazy").setup({
                 "sql",
                 "terraform",
                 "toml",
+                "tsv",
                 "tsx",
                 "typescript",
                 "vim",
                 "vimdoc",
                 "yaml",
+                "zig",
             },
             highlight = {
                 enable = true,
