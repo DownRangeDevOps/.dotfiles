@@ -115,6 +115,28 @@ local function map(modes, lhs, rhs, opts)
 end
 M.map = map
 
+-- Mapping
+-- TODO: remove when I figure out how to fix which-key import
+M.map = function(mode, lhs, rhs, opts)
+    --- Shortcut for vim.keymap.set
+    --
+    -- @param mode :string|table ("n"|"i"|"v"|"c"|"t")
+    -- @param keys :string
+    -- @param func :string|func
+    -- @param opts :table|nil
+    assert(tostring(mode), "invalid argument: mode :string required")
+    assert(tostring(lhs), "invalid argument: lhs :string required")
+    assert(tostring(rhs), "invalid argument: rhs :string required")
+
+    if opts then
+        if opts.group then opts.group = nil end
+        vim.keymap.set(mode, lhs, rhs, opts)
+    else
+        vim.keymap.set(mode, lhs, rhs)
+    end
+end
+local map = M.map
+
 -- You should have gone for the head...
 local function thanos_snap(bufnr)
     local modifiable = vim.api.nvim_buf_get_option(bufnr, "modifiable")
