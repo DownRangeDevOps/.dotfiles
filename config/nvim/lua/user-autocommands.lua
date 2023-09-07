@@ -167,19 +167,20 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     pattern = "*",
     callback = function()
         local bullets_mappings = {
-            promote    = { mode = "i",  lhs = "<C-d>",     rhs = function() vim.cmd("BulletPromote") end,       opts = { desc = keymap.desc("txt", "bullets promote") } },
-            demote     = { mode = "i",  lhs = "<C-t>",     rhs = function() vim.cmd("BulletDemote") end,        opts = { desc = keymap.desc("txt", "bullets demote") } },
-            vpromote   = { mode = "v", lhs  = "<C-d>",     rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { desc = keymap.desc("txt", "bullets promote") } },
-            vdemote    = { mode = "v", lhs  = "<C-t>",     rhs = function() vim.cmd("BulletDemoteVisual") end,  opts = { desc = keymap.desc("txt", "bullets demote") } },
-            enter      = { mode = "i",  lhs = "<CR>",      rhs = function() vim.cmd("InsertNewBullet") end,     opts = { desc = keymap.desc("txt", "bullets newline") } },
-            checkbliox = { mode = "n",  lhs = "<leader>x", rhs = function() vim.cmd("ToggleCheckbox") end,      opts = { desc = keymap.desc("txt", "bullets toggle checkbox") } },
-            openline   = { mode = "n",  lhs = "o",         rhs = function() vim.cmd("InsertNewBullet") end,     opts = { desc = keymap.desc("txt", "bullets newline") } },
-            renumber   = { mode = "n",  lhs = "gN",        rhs = function() vim.cmd("RenumberList") end,        opts = { desc = keymap.desc("txt", "bullets renumber") } },
-            vrenumber  = { mode = "v", lhs  = "gN",        rhs = function() vim.cmd("RenumberSelection") end,   opts = { desc = keymap.desc("txt", "bullets renumber") } },
+            promote    = { mode = "i", lhs = "<C-d>",     rhs = function() vim.cmd("BulletPromote") end,       opts = { group = "list", desc = "bullets promote" } },
+            demote     = { mode = "i", lhs = "<C-t>",     rhs = function() vim.cmd("BulletDemote") end,        opts = { group = "list", desc = "bullets demote" } },
+            vpromote   = { mode = "v", lhs  = "<C-d>",    rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },
+            vdemote    = { mode = "v", lhs  = "<C-t>",    rhs = function() vim.cmd("BulletDemoteVisual") end,  opts = { group = "list", desc = "bullets demote" } },
+            enter      = { mode = "i", lhs = "<CR>",      rhs = function() vim.cmd("InsertNewBullet") end,     opts = { group = "list", desc = "bullets newline" } },
+            checkbliox = { mode = "n", lhs = "<leader>x", rhs = function() vim.cmd("ToggleCheckbox") end,      opts = { group = "list", desc = "bullets toggle checkbox" } },
+            openline   = { mode = "n", lhs = "o",         rhs = function() vim.cmd("InsertNewBullet") end,     opts = { group = "list", desc = "bullets newline" } },
+            renumber   = { mode = "n", lhs = "gN",        rhs = function() vim.cmd("RenumberList") end,        opts = { group = "list", desc = "bullets renumber" } },
+            vrenumber  = { mode = "v", lhs  = "gN",       rhs = function() vim.cmd("RenumberSelection") end,   opts = { group = "list", desc = "bullets renumber" } },
         }
+
         if vim.g.bullets_enabled_file_types_tbl[vim.api.nvim_buf_get_option(0, "filetype")] then
             for _, value in pairs(bullets_mappings) do
-                vim.keymap.set(value["mode"], value["lhs"], value["rhs"], value["opts"])
+                vim.keymap.set(value["mode"], value["lhs"], value["rhs"], value["opts.desc"])
             end
         else
             for _, value in pairs(bullets_mappings) do

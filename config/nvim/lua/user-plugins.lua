@@ -1,4 +1,3 @@
-local M = {}
 local keymap = require("user-keymap")
 
 -- ----------------------------------------------
@@ -17,6 +16,8 @@ if not vim.loop.fs_stat(lazypath) then
         lazypath,
     }
 end
+
+-- Add Lazy.nvim to rtp
 vim.opt.rtp:prepend(lazypath)
 
 -- ----------------------------------------------
@@ -78,7 +79,7 @@ require("lazy").setup({
         },
         dependencies = {
             { "kevinhwang91/promise-async", name = "nvim-promise-async", lazy = true }
-    }
+        }
     },
 
     -- LuaLine
@@ -404,12 +405,13 @@ require("lazy").setup({
         },
     },
 
-    -- Which-Key (https://github.com/folke/which-key.nvim)
+    -- which-key (https://github.com/folke/which-key.nvim)
     -- :help which-key.nvim.txt
     {
         "folke/which-key.nvim",
         name = "nvim-which-key",
         lazy = false,
+        config = true,
         init = function()
             vim.opt.timeout = true
             vim.opt.timeoutlen = 500
@@ -580,151 +582,187 @@ require("lazy").setup({
             modules = {},
             auto_install = true, -- Autoinstall languages that are not installed
             ensure_installed = { -- Add languages to be installed here that you want installed for treesitter
-                "awk",
-                "bash",
-                "c",
-                "cmake",
-                "comment",
-                "cpp",
-                "css",
-                "csv",
-                "diff",
-                "dockerfile",
-                "git_config",
-                "git_rebase",
-                "gitattributes",
-                "gitcommit",
-                "gitignore",
-                "go",
-                "gpg",
-                "groovy",
-                "hcl",
-                "html",
-                "ini",
-                "javascript",
-                "jq",
-                "json",
-                "llvm",
-                "lua",
-                "luadoc",
-                "luapatterns",
-                "make",
-                "markdown",
-                "markdown_inline",
-                "ninja",
-                "ocamel",
-                "ocamel_interface",
-                "ocamllex",
-                "passwd",
-                "pip requirements",
-                "python",
-                "query",
-                "regex",
-                "ruby",
-                "rust",
-                "scss",
-                "sql",
-                "terraform",
-                "toml",
-                "tsv",
-                "tsx",
-                "typescript",
-                "vim",
-                "vimdoc",
-                "yaml",
-                "zig",
-            },
-            highlight = {
-                enable = true,
-                additional_vim_regex_highlighting = false,
-            },
-            indent = { enable = true },
-            incremental_selection = {
-                enable = true,
-                disable = { "c" },
-                keymaps = keymap.treesitter_km.incremental_selection
-            },
-            textobjects = {
-                select = {
-                    keymaps = keymap.treesitter_km.textobjects
-                },
-                move = {
-                    enable = true,
-                    set_jumps = true, -- whether to set jumps in the jumplist
-                    goto_next_start = keymap.treesitter_km.move.goto_next_start,
-                    goto_next_end = keymap.treesitter_km.move.goto_next_end,
-                    goto_previous_start = keymap.treesitter_km.move.goto_previous_start,
-                    goto_previous_end = keymap.treesitter_km.move.goto_previous_end,
-                },
-                swap = {
-                    enable = true,
-                    swap_next = keymap.swap_next,
-                    swap_previous = keymap.swap_previous,
-                },
-            },
-            dependencies = {
-                "nvim-treesitter/nvim-treesitter-textobjects", -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-            },
-            build = ":TSUpdate",
+            "awk",
+            "bash",
+            "c",
+            "cmake",
+            "comment",
+            "cpp",
+            "css",
+            "csv",
+            "diff",
+            "dockerfile",
+            "git_config",
+            "git_rebase",
+            "gitattributes",
+            "gitcommit",
+            "gitignore",
+            "go",
+            "gpg",
+            "groovy",
+            "hcl",
+            "html",
+            "ini",
+            "javascript",
+            "jq",
+            "json",
+            "llvm",
+            "lua",
+            "luadoc",
+            "luapatterns",
+            "make",
+            "markdown",
+            "markdown_inline",
+            "ninja",
+            "ocamel",
+            "ocamel_interface",
+            "ocamllex",
+            "passwd",
+            "pip requirements",
+            "python",
+            "query",
+            "regex",
+            "ruby",
+            "rust",
+            "scss",
+            "sql",
+            "terraform",
+            "toml",
+            "tsv",
+            "tsx",
+            "typescript",
+            "vim",
+            "vimdoc",
+            "yaml",
+            "zig",
         },
-    },
-
-    -- nvim-lspconfig: user contributed configs for the LSP (https://github.com/neovim/nvim-lspconfig)
-    -- :help lspconfig.txt
-    {
-        "neovim/nvim-lspconfig",
-        name = "nvim-lspconfig",
-        lazy = false,
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = false,
+        },
+        indent = { enable = true },
+        incremental_selection = {
+            enable = true,
+            disable = { "c" },
+            keymaps = keymap.treesitter_keymap.incremental_selection
+        },
+        textobjects = {
+            select = {
+                keymaps = keymap.treesitter_keymap.textobjects
+            },
+            move = {
+                enable = true,
+                set_jumps = true, -- whether to set jumps in the jumplist
+                goto_next_start = keymap.treesitter_keymap.move.goto_next_start,
+                goto_next_end = keymap.treesitter_keymap.move.goto_next_end,
+                goto_previous_start = keymap.treesitter_keymap.move.goto_previous_start,
+                goto_previous_end = keymap.treesitter_keymap.move.goto_previous_end,
+            },
+            swap = {
+                enable = true,
+                swap_next = keymap.swap_next,
+                swap_previous = keymap.swap_previous,
+            },
+        },
         dependencies = {
-            -- Mason: LSP and related plugin manager (https://github.com/williamboman/mason.nvim)
-            -- :help mason.nvim
+                "nvim-treesitter/nvim-treesitter-textobjects", -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+        },
+        build = ":TSUpdate",
+    },
+},
+
+-- nvim-lspconfig: user contributed configs for the LSP (https://github.com/neovim/nvim-lspconfig)
+-- :help lspconfig.txt
+{
+    "neovim/nvim-lspconfig",
+        name = "nvim-lspconfig",
+    lazy = false,
+    dependencies = {
+        -- Mason: LSP and related plugin manager (https://github.com/williamboman/mason.nvim)
+        -- :help mason.nvim
             { "williamboman/mason.nvim", name = "nvim-mason", lazy = false, config = true },
 
-            -- Mason helper for LSP configs/plugins (https://github.com/williamboman/mason-lspconfig.nvim)
-            -- :help mason-lspconfig.nvim
+        -- Mason helper for LSP configs/plugins (https://github.com/williamboman/mason-lspconfig.nvim)
+        -- :help mason-lspconfig.nvim
             { "williamboman/mason-lspconfig.nvim", name = "nvim-mason-lspconfig", lazy = false, config = true },
 
-            -- NeoDev: lua-ls configuration for nvim runtime and api (https://github.com/folke/neodev.nvim)
-            -- :help neodev.nvim.txt
+        -- NeoDev: lua-ls configuration for nvim runtime and api (https://github.com/folke/neodev.nvim)
+        -- :help neodev.nvim.txt
             { "folke/neodev.nvim", name = "nvim-neodev", lazy = true, ft = "lua", config = true },
 
-            -- Fidget: LSP status updates (https://github.com/j-hui/fidget.nvim)
-            -- :help fidget.txt
+        -- Fidget: LSP status updates (https://github.com/j-hui/fidget.nvim)
+        -- :help fidget.txt
             { "j-hui/fidget.nvim", name = "nvim-fidget", tag = "legacy", lazy = true, event = "LspAttach" },
-        },
     },
+},
 
-    -- nvim-cmp: completion manager (https://github.com/hrsh7th/nvim-cmp)
-    -- :help cmp
-    {
-        "hrsh7th/nvim-cmp",
+-- nvim-cmp: completion manager (https://github.com/hrsh7th/nvim-cmp)
+-- :help cmp
+{
+    "hrsh7th/nvim-cmp",
         name = "nvim-cmp",
-        lazy = true,
-        event = "InsertEnter,CmdlineEnter",
-        version = "2.*",
-        build = "make install_jsregexp",
-        dependencies = {
-            --  LuaSnip: snippets manager (https://github.com/L3MON4D3/LuaSnip)
-            -- :help luasnip.txt
+    lazy = true,
+    event = "InsertEnter,CmdlineEnter",
+    version = "2.*",
+    build = "make install_jsregexp",
+    dependencies = {
+        --  LuaSnip: snippets manager (https://github.com/L3MON4D3/LuaSnip)
+        -- :help luasnip.txt
             { "L3MON4D3/LuaSnip", name = "nvim-luasnip", lazy = true, event = "InsertEnter", config = function() require("luasnip.loaders.from_vscode").lazy_load() end }, -- https://github.com/L3MON4D3/LuaSnip
 
-            -- LuaSnip completion source (https://github.com/saadparwaiz1/cmp_luasnip)
-            -- :help cmp_luasnip
+        -- LuaSnip completion source (https://github.com/saadparwaiz1/cmp_luasnip)
+        -- :help cmp_luasnip
             { "saadparwaiz1/cmp_luasnip", name = "nvim-cmp-luasnip", lazy = true, event = "InsertEnter", },
 
-            -- Adds a number of user-friendly snippets
+        -- Adds a number of user-friendly snippets
             { "rafamadriz/friendly-snippets", name = "nvim-friendly-snippets", lazy = true, event = "InsertEnter",}, -- https://github.com/rafamadriz/friendly-snippets
 
-            -- other recommended dependencies
+        -- other recommended dependencies
             { "hrsh7th/cmp-nvim-lsp", name = "nvim-cmp-nvim-lsp", lazy = false }, -- LSP completion capabilities (https://github.com/hrsh7th/cmp-nvim-lsp)
             { "hrsh7th/cmp-buffer", name = "nvim-cmp-buffer", lazy = false }, -- Buffer words (https://github.com/hrsh7th/cmp-buffer)
             { "hrsh7th/cmp-path", name = "nvim-cmp-path", lazy = false }, -- System paths (https://github.com/hrsh7th/cmp-path)
             { "hrsh7th/cmp-cmdline", name = "nvim-cmp-cmdline", lazy = false }, -- Search (/) and command (:) (https://github.com/hrsh7th/cmp-buffer)
 
-            -- Auto complete rule: Sort underscores last (https://github.com/lukas-reineke/cmp-under-comparator)
+        -- Auto complete rule: Sort underscores last (https://github.com/lukas-reineke/cmp-under-comparator)
             { "lukas-reineke/cmp-under-comparator", name = "nvim-cmp-under-comparator", lazy = true, event = "InsertEnter" },
-        },
     },
+},
+}, {
+    install = {
+        missing = true,
+        colorscheme = { "catppuccin" }
+    },
+    diff = { cmd = "diffview.nvim" },
+    checker = {
+        enabled = true,
+        concurrency = nil,
+        notify = true,
+        frequency = 60 * 60 * 24,
+    },
+    performance = {
+        cache = { enabled = true },
+        reset_packpath = true,
+        rtp = {
+            reset = true,
+            paths = {},
+            disabled_plugins = {
+                "2html_plugin",
+                "getscript",
+                "getscriptPlugin",
+                "gzip",
+                "logipat",
+                "matchit",
+                "matchparen",
+                "tar",
+                "tarPlugin",
+                "rrhelper",
+                "vimball",
+                "vimballPlugin",
+                "zip",
+                "zipPlugin",
+            }
+        }
+    }
 })
 -- ----------------------------------------------
 -- End of Lazy loading
@@ -893,14 +931,14 @@ cmp.setup.cmdline(":", {
     sources = cmp.config.sources({
         { name = "path" }
     },
+    {
         {
-            {
-                name = "cmdline",
-                option = {
-                    ignore_cmds = { "Man", "!" }
-                }
+            name = "cmdline",
+            option = {
+                ignore_cmds = { "Man", "!" }
             }
         }
+    }
     )
 })
 ---@diagnostic enable
@@ -966,5 +1004,3 @@ require("catppuccin").setup({
         },
     }
 })
-
-return M
