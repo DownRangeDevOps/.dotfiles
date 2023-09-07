@@ -212,7 +212,7 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
         local bufnr = vim.fn.bufnr()
 
         if bufnr then
-            keymap.thanos_snap(bufnr)
+            keymap.snap(bufnr)
         end
     end
 })

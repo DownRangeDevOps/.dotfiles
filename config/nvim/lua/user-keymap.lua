@@ -252,7 +252,7 @@ map("n", "<C-j>", function() require("harpoon.ui").nav_prev() end, { group = "fi
 map("n", "<C-k>", function() require("harpoon.ui").nav_next() end, { group = "file", desc = "harpoon >>" })
 map("n", "<leader>hc", function() require("harpoon.mark").clear_all() end, { group = "file", desc = "release all harpoons" })
 
--- Git
+-- git (fugitive, gitsigns, diffview)
 -- :help Git
 map("n", "<leader>gl", function()
     vim.cmd.TermExec("size=15 direction=horizontal cmd=gl")
@@ -279,6 +279,16 @@ map("n", "<leader>do", function() vim.cmd("DiffviewOpen") end, { group = "git", 
 map("n", "<leader>df", function() vim.cmd("DiffviewFileHistory") end, { group = "git", desc = "diffview log"})
 map("n", "<leader>dtf", function() vim.cmd("DiffviewToggleFiles") end, { group = "git", desc = "diffview file browser"})
 map("n", "<leader>dr", function() vim.cmd("DiffviewRefresh") end, { group = "git", desc = "diffview refresh"})
+
+-- gitsigns
+local gitsigns_maps = function(bufnr)
+    vim.keymap.set("n", "<leader>p", require("gitsigns").prev_hunk, { buffer = bufnr, desc = "go prev hunk" })
+    vim.keymap.set("n", "<leader>nh", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
+    vim.keymap.set("n", "<leader>hp", require("gitsigns").preview_hunk, { buffer = bufnr, desc = "preview hunk" })
+    vim.keymap.set("n", "<leader>hu", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
+    vim.keymap.set("n", "<leader>ha", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
+end
+M.gitsigns_maps = gitsigns_maps
 
 -- use magic when searching
 local use_magic = function(key, prefix)
@@ -400,8 +410,8 @@ map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, {
 map("n", "<leader>/", function() require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown { winblend = 10, previewer = false, }) end, { group = "ts", desc = "fuzzy in current buffer" })
 map("n", "<leader>fe", function() require("telescope.builtin").diagnostics() end, { group = "ts", desc = "fuzzy errors" })
 
--- LSP key maps
-M.lsp_on_attach = function(_, bufnr)
+-- LSP keymaps
+local lsp_maps = function(_, bufnr)
     -- Format buffer with LSP
     vim.api.nvim_buf_create_user_command(
         bufnr,
@@ -433,8 +443,10 @@ M.lsp_on_attach = function(_, bufnr)
     map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { group = "lsp", desc = "workspace remove folder" })
     map("n", "<leader>wl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, { group = "lsp", desc = "workspace list folders" })
 end
+M.lsp_maps = lsp_maps
 
-M.treesitter_keymap = {
+-- Treesitter keymaps
+local treesitter_maps = {
     incremental_selection = {
         init_selection = "<c-space>",
         node_incremental = "<c-space>",
@@ -477,6 +489,20 @@ M.treesitter_keymap = {
         },
     }
 }
+M.treesitter_maps = treesitter_maps
+
+-- nvim-cmp keymaps
+local cmp_maps = {
+    select_next_item = "<C-j>",
+    select_prev_item = "<C-k>",
+    scroll_docs_up = "<C-u>",
+    scroll_docs_down = "<C-f>",
+    complete = "<C-Space>",
+    confirm = "<CR>",
+    tab = "<Tab>",
+    shift_tab = "<S-Tab>",
+}
+M.cmp_maps = cmp_maps
 
 -- Unmap annoying maps forced by plugin authors
 local unimpaired = { "<s", ">s", "=s", "<p", ">p", "<P", ">P" }
@@ -490,53 +516,43 @@ local function get_off_my_lawn(args)
     end
 end
 
-M.cmp_keys = {
-    select_next_item = "<C-j>",
-    select_prev_item = "<C-k>",
-    scroll_docs_up = "<C-u>",
-    scroll_docs_down = "<C-f>",
-    complete = "<C-Space>",
-    confirm = "<CR>",
-    tab = "<Tab>",
-    shift_tab = "<S-Tab>",
-}
-
 pcall(get_off_my_lawn, { unimpaired, bullets })
 
-local function which_key_register(groups)
-    local wk = require("which-key")
-
-    for group, modes in pairs(groups) do
-        for mode, mappings in pairs(modes) do
-            for key, cfg in pairs(mappings) do
-                cfg.opts.mode = mode
-
-                if key == cfg.lhs then
-                    if cfg.opts["prefix"] then
-                        wk.register({
-                            [cfg.opts.prefix] = {
-                                name = group,
-                                [cfg.lhs] = { cfg.rhs, cfg.desc },
-                            },
-                            cfg.opts
-                        })
-                    else
-                        vim.keymap.set(mode, cfg.lhs, cfg.rhs, { desc = cfg.desc })
-                    end
-                else
-                    wk.register({
-                        [key] = {
-                            name = group,
-                            [cfg.lhs] = { cfg.rhs, cfg.desc },
-                        },
-                        cfg.opts
-                    })
-                end
-            end
-        end
-    end
-end
-
-which_key_register(which_key_groups)
+-- Register keys and documentation with which-key
+-- local function which_key_register(groups)
+--     local wk = require("which-key")
+--
+--     for group, modes in pairs(groups) do
+--         for mode, mappings in pairs(modes) do
+--             for key, cfg in pairs(mappings) do
+--                 cfg.opts.mode = mode
+--
+--                 if key == cfg.lhs then
+--                     if cfg.opts["prefix"] then
+--                         wk.register({
+--                             [cfg.opts.prefix] = {
+--                                 name = group,
+--                                 [cfg.lhs] = { cfg.rhs, cfg.desc },
+--                             },
+--                             cfg.opts
+--                         })
+--                     else
+--                         vim.keymap.set(mode, cfg.lhs, cfg.rhs, { desc = cfg.desc })
+--                     end
+--                 else
+--                     wk.register({
+--                         [key] = {
+--                             name = group,
+--                             [cfg.lhs] = { cfg.rhs, cfg.desc },
+--                         },
+--                         cfg.opts
+--                     })
+--                 end
+--             end
+--         end
+--     end
+-- end
+--
+-- which_key_register(which_key_groups)
 
 return M
