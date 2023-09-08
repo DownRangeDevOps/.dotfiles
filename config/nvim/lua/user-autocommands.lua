@@ -10,6 +10,18 @@ local user = vim.api.nvim_create_augroup("USER", { clear = true })
 local plugin = vim.api.nvim_create_augroup("PLUGIN", { clear = true })
 
 -- ----------------------------------------------
+-- Plugins
+-- ----------------------------------------------
+-- setup nested comments on attach
+vim.api.nvim_create_autocmd("BufEnter", {
+    group = plugin,
+    pattern = "*",
+    callback = function()
+        pcall(require('mini.misc').use_nested_comments)
+    end,
+})
+
+-- ----------------------------------------------
 -- Neovim
 -- ----------------------------------------------
 vim.api.nvim_create_autocmd("VimEnter", {

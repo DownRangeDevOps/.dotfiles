@@ -267,7 +267,7 @@ map("n", "<leader>mx", function()
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
-map("n", "<leader>ht", function() require("harpoon.ui").toggle_quick_menu() end, { group = "file", desc = "view live well" })
+map("n", "<leader>hh", function() require("harpoon.ui").toggle_quick_menu() end, { group = "file", desc = "view live well" })
 map("n", "<leader>hf", function() require("harpoon.mark").toggle_file() end, { group = "file", desc = "harpoon/release" })
 map("n", "<leader>j", function() require("harpoon.ui").nav_file(1) end, { group = "file", desc = "first harpoon" })
 map("n", "<leader>k", function() require("harpoon.ui").nav_file(2) end, { group = "file", desc = "second harpoon" })
@@ -336,6 +336,7 @@ map("c", "%%", function() use_magic("%%", "s/\\v\\c") end, { group = "gen", desc
 map("n", "<leader>rw", ":%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>", { group = "txt", desc = "replace current word"})
 
 -- Split management
+map("n", "<leader>z", function() require("mini.misc").zoom() end, { silent = true, group = "gen", desc = "toggle zoom" })
 map("n", "<leader>\\", function() vim.cmd("vsplit") end, { silent = true, group = "gen", desc = "vsplit" })
 map("n", "<leader>-", function() vim.cmd("split") end, { silent = true, group = "gen", desc = "split" })
 map("n", "<leader>q", function()

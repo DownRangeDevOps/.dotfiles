@@ -314,7 +314,7 @@ function git_delete_merged_branches() {
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
         printf_callout "Merged branches have been deleted..."
-        printf_callout 'Everyone should run `git fetch --prune` to sync with this remote.'
+        printf_callout "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
         printf_callout "No merged branches to delete."
     fi
@@ -327,7 +327,7 @@ git_rebase_merge_and_push() {
     local merge_commit_option
 
     source_branch="$(__git_get_cur_branch_name)"
-    main_branch="$(__git_master_or_main)"
+    main_branch="origin/$(__git_master_or_main)"
     merge_commit_option="--no-ff"
 
     if [[ ${1:-} == "--ff-only" ]]; then
@@ -337,10 +337,16 @@ git_rebase_merge_and_push() {
 
     if [[ -z ${1:-} ]]; then
         target_branch="${main_branch}"
+    else
+        target_branch="$1"
+
+        if git ls-remote --exit-code --quiet --heads origin "${target_branch}"; then
+            target_branch="origin/$1"
+        fi
     fi
 
     if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
-        print "%s\n" \
+        printf "%s\n" \
             "Usage: gm [--ff-only] [<TARGET_BRANCH>]" \
             "" \
             "DESCRIPTION" \
@@ -357,9 +363,9 @@ git_rebase_merge_and_push() {
         git checkout "${source_branch}" >/dev/null 2>&1
 
         printf_callout "Changes to be merged into ${target_branch}:"
-        git log --color --oneline "origin/${target_branch}..HEAD" | indent_output
+        git log --color --oneline "${target_branch}..HEAD" | indent_output
         printf "\n"
-        git diff --color --stat "origin/${target_branch}" | indent_output
+        git diff --color --stat "${target_branch}" | indent_output
         printf "\n"
 
         # prompt user
@@ -374,10 +380,11 @@ git_rebase_merge_and_push() {
         printf_callout "Rebasing onto ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
         git pull -r >/dev/null 2>&1
-        git rebase "origin/${target_branch}" >/dev/null 2>&1
+        git rebase "${target_branch}" >/dev/null 2>&1
 
         printf_callout "Merging to ${target_branch} and deleting ${source_branch}..."
         printf "    "
+        git checkout "${target_branch}" >/dev/null 2>&1
         if git merge --no-stat "${merge_commit_option}" "${source_branch}" 2>&1 | indent_output; then
             git push origin --delete "${source_branch}" 2>/dev/null | indent_output
             git branch --delete "${source_branch}" 2>&1 | indent_output
