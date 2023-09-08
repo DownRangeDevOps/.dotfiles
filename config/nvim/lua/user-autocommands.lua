@@ -96,6 +96,8 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
             quickfix = true,
             terminal = true,
             prompt = true,
+            starter = true,
+            Trouble = true,
         }
 
         local tab_filetypes = { gitconfig = true }
@@ -120,19 +122,19 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
             vim.wo.relativenumber = false
             vim.wo.spell = false
         else
-            vim.wo.colorcolumn = "80"
-            vim.wo.list = true
-            vim.wo.number = true
-            vim.wo.numberwidth = 5
-            vim.wo.relativenumber = true
-            vim.wo.spell = true
-            vim.wo.listchars = table.concat({
-                "tab:⇢•",
-                "precedes:«",
-                "extends:»",
-                "trail:•",
-                "nbsp:•",
-            }, ",")
+            -- vim.wo.colorcolumn = "80"
+            -- vim.wo.list = true
+            -- vim.wo.number = true
+            -- vim.wo.numberwidth = 5
+            -- vim.wo.relativenumber = true
+            -- vim.wo.spell = true
+            -- vim.wo.listchars = table.concat({
+            --     "tab:⇢•",
+            --     "precedes:«",
+            --     "extends:»",
+            --     "trail:•",
+            --     "nbsp:•",
+            -- }, ",")
         end
 
         -- set file specific ui
@@ -171,7 +173,8 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
     callback = function()
         if vim.g.auto_save
             and vim.api.nvim_buf_get_option(0, "buftype") == ""
-            and vim.api.nvim_buf_get_option(0, "modifiable") then
+            and vim.api.nvim_buf_get_option(0, "modifiable")
+            and vim.fn.expand("%") ~= "" then
 
             vim.cmd.write()
             vim.fn.timer_start(1000, function() vim.cmd.echon("''") end)
@@ -213,9 +216,10 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     group = user,
     pattern = "*",
     callback = function()
-        local is_diffview = vim.fn.expand("%"):find("^diffview")
+        local file_name = vim.fn.expand("%")
+        local is_diffview = file_name:find("^diffview")
 
-        if vim.api.nvim_buf_get_option(0, "modifiable") and not is_diffview then
+        if file_name ~= "" and vim.api.nvim_buf_get_option(0, "modifiable") and not is_diffview then
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
         end

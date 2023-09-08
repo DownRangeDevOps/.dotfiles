@@ -4,7 +4,7 @@
 -- ----------------------------------------------
 return {
     "folke/which-key.nvim",
-    name = "nvim-which-key",
+    priority = 999,
     lazy = false,
     config = true,
     init = function()

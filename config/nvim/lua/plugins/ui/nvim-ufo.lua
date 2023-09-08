@@ -4,7 +4,6 @@
 -- ----------------------------------------------
 return {
     "kevinhwang91/nvim-ufo",
-    name = "nvim-ufo",
     lazy = false,
     enabled = true,
     config = true,

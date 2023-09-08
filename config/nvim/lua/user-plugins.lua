@@ -7,14 +7,14 @@ local keymap = require("user-keymap")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system {
+    vim.fn.system({
         "git",
         "clone",
         "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
+        "git@github.com:folke/lazy.nvim.git",
         "--branch=stable", -- latest stable release
         lazypath,
-    }
+    })
 end
 
 -- Add Lazy.nvim to rtp
@@ -33,7 +33,7 @@ require("lazy").setup({
 }, {
     install = {
         missing = true,
-        colorscheme = { "catppuccin" }
+        colorscheme = { "habamax" }
     },
     diff = { cmd = "diffview.nvim" },
     change_detection = { -- reload ui on config file changes
@@ -71,6 +71,11 @@ require("lazy").setup({
         }
     }
 })
+
+-- ----------------------------------------------
+-- Set colorscheme after it's setup
+-- ----------------------------------------------
+vim.cmd.colorscheme("catppuccin")
 
 -- ----------------------------------------------
 -- Telescope: load extensions (https://github.com/nvim-telescope/telescope.nvim#extensions)
@@ -244,7 +249,7 @@ mason_lspconfig.setup_handlers {
     function(server_name)
         require("lspconfig")[server_name].setup {
             capabilities = capabilities,
-            on_attach = keymap.lsp_on_attach,
+            on_attach = keymap.lsp_maps,
             settings = mason_lsp_servers[server_name],
             filetypes = (mason_lsp_servers[server_name] or {}).filetypes,
         }

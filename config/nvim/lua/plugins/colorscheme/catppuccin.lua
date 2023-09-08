@@ -4,7 +4,7 @@
 -- ----------------------------------------------
 return {
     "catppuccin/nvim",
-    name = "catppuccin",
+    name = "catppuccin", -- required because of /nvim
     priority = 1000,
     lazy = false,
     opts = {

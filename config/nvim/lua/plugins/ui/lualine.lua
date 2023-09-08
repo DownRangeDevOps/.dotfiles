@@ -4,7 +4,6 @@
 -- ----------------------------------------------
 return {
     "nvim-lualine/lualine.nvim",
-    name = "lualine",
     lazy = false,
     config = true,
     opts = {

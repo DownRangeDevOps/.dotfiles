@@ -4,7 +4,6 @@
 -- ----------------------------------------------
 return {
     "NvChad/nvim-colorizer.lua",
-    name = "colorizer",
     lazy = true,
     cmd = "ColorizerToggle",
     config = true,

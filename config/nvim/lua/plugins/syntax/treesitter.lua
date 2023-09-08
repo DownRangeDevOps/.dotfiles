@@ -6,7 +6,6 @@ local keymap = require("user-keymap")
 
 return {
     "nvim-treesitter/nvim-treesitter",
-    name = "nvim-treesitter",
     lazy = false,
     opts = {
         sync_install = false,

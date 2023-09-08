@@ -4,8 +4,16 @@
 -- ----------------------------------------------
 return {
     "lukas-reineke/indent-blankline.nvim",
-    name = "indent-blankline",
     lazy = false,
+    init = function()
+        local indet_blankline_session_opts = { "tabpages", "globals" }
+
+        for _, i in ipairs(indet_blankline_session_opts) do
+            if not vim.opt.sessionoptions[i] then
+                table.insert(vim.opt.sessionoptions, i)
+            end
+        end
+    end,
     opts = {
         char = "┊",
         char_blankline = "┊",

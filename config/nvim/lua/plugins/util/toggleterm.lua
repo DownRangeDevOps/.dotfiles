@@ -4,14 +4,13 @@
 -- ----------------------------------------------
 return {
     "akinsho/toggleterm.nvim",
-    name = "vim-toggleterm",
     lazy = true,
     cmd = "ToggleTerm",
     version = "*",
     opts = {
         hide_numbers = true,
         shade_terminals = false,
-        start_in_insert = true,
+        start_in_insert = false,
         insert_mappings = false,
         terminal_mappings = false,
         presist_size = true,

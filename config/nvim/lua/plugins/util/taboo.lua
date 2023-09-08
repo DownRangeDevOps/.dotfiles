@@ -4,7 +4,6 @@
 -- ----------------------------------------------
 return {
     "gcmt/taboo.vim",
-    name = "vim-taboo",
     lazy = true,
     event = "CmdlineEnter"
 }

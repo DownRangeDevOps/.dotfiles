@@ -4,7 +4,6 @@
 -- ----------------------------------------------
 return {
     "nvim-neo-tree/neo-tree.nvim",
-    name = "neotree",
     lazy = true,
     cmd = "Neotree",
     branch = "v3.x",

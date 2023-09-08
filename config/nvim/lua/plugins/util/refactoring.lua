@@ -4,7 +4,6 @@
 -- ----------------------------------------------
 return {
     "ThePrimeagen/refactoring.nvim",
-    name = "refactoring",
     lazy = true,
     event = "InsertEnter",
     dependencies = {

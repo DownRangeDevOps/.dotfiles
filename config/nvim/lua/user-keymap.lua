@@ -71,7 +71,7 @@ local function parse_lhs(lhs)
 end
 
 -- populate with info needed to register keys with `which-key`
-local which_key_groups = {}
+local which_key_register_keys = {}
 
 --- map generates a table used to register keys with `which-key`
 --
@@ -108,7 +108,7 @@ local function map(modes, lhs, rhs, opts)
     if type(modes) == "string" then modes = { modes } end
 
     for _, mode in ipairs(modes) do
-        extend_tbl(which_key_groups, { group, mode, lhs_pieces.head }, {
+        extend_tbl(which_key_register_keys, { group, mode, lhs_pieces.head }, {
             lhs = lhs_pieces.tail,
             rhs = rhs,
             desc = desc,
@@ -116,7 +116,7 @@ local function map(modes, lhs, rhs, opts)
         })
     end
 end
-M.map = map
+-- M.map = map
 
 -- Shortcut for vim.keymap.set
 --
@@ -124,7 +124,7 @@ M.map = map
 ---@param lhs string
 ---@param rhs string|function
 ---@param opts table|nil
-M.map = function(mode, lhs, rhs, opts)
+local map = function(mode, lhs, rhs, opts)
     -- TODO: remove when I figure out how to fix which-key import
 
     assert(tostring(mode), "invalid argument: mode :string required")
@@ -138,7 +138,7 @@ M.map = function(mode, lhs, rhs, opts)
         vim.keymap.set(mode, lhs, rhs)
     end
 end
-local map = M.map
+M.map = map
 
 -- You should have gone for the head...
 local function thanos_snap(bufnr)
@@ -450,7 +450,7 @@ local lsp_maps = function(_, bufnr)
         bufnr,
         "Format",
         function(_) vim.lsp.buf.format() end,
-        { group = "lsp", desc = "format current buffer" }
+        { desc = "format current buffer" }
     )
     map("n", "<leader>=", function() vim.cmd.Format() end, { group = "lsp", desc = "format current buffer" })
 
@@ -616,6 +616,6 @@ pcall(get_off_my_lawn, { unimpaired, bullets })
 --     end
 -- end
 --
--- which_key_register(which_key_groups)
+-- which_key_register(which_key_register_keys)
 
 return M

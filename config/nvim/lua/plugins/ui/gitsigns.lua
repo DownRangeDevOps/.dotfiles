@@ -6,7 +6,6 @@ local keymap = require("user-keymap")
 
 return {
     "lewis6991/gitsigns.nvim",
-    name = "gitsigns",
     lazy = false,
     config = true,
     opts = {
