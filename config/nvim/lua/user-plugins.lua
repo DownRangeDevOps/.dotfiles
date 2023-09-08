@@ -26,15 +26,20 @@ vim.opt.rtp:prepend(lazypath)
 -- ----------------------------------------------
 require("lazy").setup({
     { import = "plugins.core" },
-    { import = "plugins.ui" },
     { import = "plugins.util" },
     { import = "plugins.syntax" },
+    { import = "plugins.ui" },
+    { import = "plugins.colorscheme" },
 }, {
     install = {
         missing = true,
         colorscheme = { "catppuccin" }
     },
     diff = { cmd = "diffview.nvim" },
+    change_detection = { -- reload ui on config file changes
+        enabled = false,
+        notify = false,
+    },
     checker = {
         enabled = true,
         concurrency = nil,
@@ -198,7 +203,7 @@ local mason_lspconfig = require("mason-lspconfig")
 local mason_lsp_servers = {
     -- Enable the following language servers:
     --   `filetypes` = default filetypes the language server will attach to
-    lua_ls = {
+    lua_ls = { -- https://github.com/LuaLS/lua-language-server/wiki/Diagnostics
         Lua = {
             filetypes = "lua",
             workspace = { checkThirdParty = false },

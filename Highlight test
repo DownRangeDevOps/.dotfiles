@@ -1,0 +1,1082 @@
+Highlighting groups for various occasions
+-----------------------------------------
+EndOfBuffer	EndOfBuffer
+
+Syntax highlighting groups
+--------------------------
+lua4	lua4           xxx cleared
+TermCursor	TermCursor
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+NonText	NonText
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Directory	Directory
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+ErrorMsg	ErrorMsg
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+IncSearch	IncSearch
+lua4	lua4           xxx cleared
+Search	Search
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+CurSearch	CurSearch
+MoreMsg	MoreMsg
+ModeMsg	ModeMsg
+LineNr	LineNr
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+CursorLineNr	CursorLineNr
+Question	Question
+StatusLine	StatusLine
+lua4	lua4           xxx cleared
+StatusLineNC	StatusLineNC
+VertSplit	VertSplit
+lua4	lua4           xxx cleared
+Title	Title
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Visual	Visual
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+WarningMsg	WarningMsg
+lua4	lua4           xxx cleared
+WildMenu	WildMenu
+Folded	Folded
+lua4	lua4           xxx cleared
+FoldColumn	FoldColumn
+lua4	lua4           xxx cleared
+DiffAdd	DiffAdd
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+DiffChange	DiffChange
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+DiffDelete	DiffDelete
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+DiffText	DiffText
+SignColumn	SignColumn
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Conceal	Conceal
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+SpellBad	SpellBad
+SpellCap	SpellCap
+SpellRare	SpellRare
+SpellLocal	SpellLocal
+Pmenu	Pmenu
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+PmenuSel	PmenuSel
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+PmenuSbar	PmenuSbar
+lua4	lua4           xxx cleared
+PmenuThumb	PmenuThumb
+lua4	lua4           xxx cleared
+TabLine	TabLine
+lua4	lua4           xxx cleared
+TabLineSel	TabLineSel
+lua4	lua4           xxx cleared
+CursorColumn	CursorColumn
+CursorLine	CursorLine
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+ColorColumn	ColorColumn
+QuickFixLine	QuickFixLine
+Whitespace	Whitespace
+NormalNC	NormalNC
+NormalFloat	NormalFloat
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+MsgArea	MsgArea
+lua4	lua4           xxx cleared
+FloatBorder	FloatBorder
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+WinBar	WinBar
+lua4	lua4           xxx cleared
+Cursor	Cursor
+FloatTitle	FloatTitle
+lua4	lua4           xxx cleared
+lCursor	lCursor
+Normal	Normal
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Substitute	Substitute
+FloatShadow	FloatShadow
+FloatShadowThrough	FloatShadowThrough
+RedrawDebugNormal	RedrawDebugNormal
+RedrawDebugClear	RedrawDebugClear
+RedrawDebugComposed	RedrawDebugComposed
+RedrawDebugRecompose	RedrawDebugRecompose
+Error	Error
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Todo	Todo
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+String	String
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Constant	Constant
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Character	Character
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Number	Number
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Boolean	Boolean
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Function	Function
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Identifier	Identifier
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+Conditional	Conditional
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+Statement	Statement lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Repeat	Repeat
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Label	Label
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Operator	Operator
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Keyword	Keyword
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+Exception	Exception lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Include	Include
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+PreProc	PreProc lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+Macro	Macro lua4	lua4           xxx cleared
+StorageClass	StorageClass lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Type	Type
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+Structure	Structure lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Tag	Tag
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+Special	Special lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared Delimiter	Delimiter
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+DiagnosticError	DiagnosticError DiagnosticWarn	DiagnosticWarn
+lua4	lua4           xxx cleared DiagnosticInfo	DiagnosticInfo
+DiagnosticHint	DiagnosticHint DiagnosticOk	DiagnosticOk
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared DiagnosticUnderlineError	DiagnosticUnderlineError
+DiagnosticUnderlineWarn	DiagnosticUnderlineWarn DiagnosticUnderlineInfo	DiagnosticUnderlineInfo
+DiagnosticUnderlineHint	DiagnosticUnderlineHint DiagnosticUnderlineOk	DiagnosticUnderlineOk
+DiagnosticVirtualTextError	DiagnosticVirtualTextError DiagnosticVirtualTextWarn	DiagnosticVirtualTextWarn
+DiagnosticVirtualTextInfo	DiagnosticVirtualTextInfo DiagnosticVirtualTextHint	DiagnosticVirtualTextHint
+DiagnosticFloatingError	DiagnosticFloatingError DiagnosticFloatingWarn	DiagnosticFloatingWarn
+DiagnosticFloatingInfo	DiagnosticFloatingInfo DiagnosticFloatingHint	DiagnosticFloatingHint
+DiagnosticSignError	DiagnosticSignError DiagnosticSignWarn	DiagnosticSignWarn
+DiagnosticSignInfo	DiagnosticSignInfo DiagnosticSignHint	DiagnosticSignHint
+DiagnosticDeprecated	DiagnosticDeprecated Comment	Comment
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared @text	@text
+@text.literal	@text.literal @text.title	@text.title
+@text.uri	@text.uri Underlined	Underlined
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+@text.todo	@text.todo @constant.builtin	@constant.builtin
+@string.escape	@string.escape @function.builtin	@function.builtin
+@function.macro	@function.macro lua4	lua4           xxx cleared
+@parameter	@parameter @field	@field
+@property	@property @constructor	@constructor
+@variable	@variable @namespace	@namespace
+@tag	@tag @lsp.type.interface	@lsp.type.interface
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+MatchParen	MatchParen Ignore	Ignore
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+NvimInternalError	NvimInternalError lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+NormalSB	NormalSB SignColumnSB	SignColumnSB
+CursorIM	CursorIM CmpItemKindCopilot	CmpItemKindCopilot
+CmpItemKindTypeParameter	CmpItemKindTypeParameter CmpItemKindOperator	CmpItemKindOperator
+CmpItemKindEvent	CmpItemKindEvent CmpItemKindValue	CmpItemKindValue
+CmpItemKindStruct	CmpItemKindStruct CmpItemKindReference	CmpItemKindReference
+CmpItemKindColor	CmpItemKindColor CmpItemKindInterface	CmpItemKindInterface
+CmpItemKindFile	CmpItemKindFile CmpItemKindVariable	CmpItemKindVariable
+CmpItemKindClass	CmpItemKindClass CmpItemKindUnit	CmpItemKindUnit
+CmpItemKindEnum	CmpItemKindEnum CmpItemKindProperty	CmpItemKindProperty
+CmpItemKindField	CmpItemKindField CmpItemKindConstant	CmpItemKindConstant
+CmpItemKindModule	CmpItemKindModule CmpItemKindFolder	CmpItemKindFolder
+CmpItemKindFunction	CmpItemKindFunction CmpItemKindConstructor	CmpItemKindConstructor
+CmpItemKindMethod	CmpItemKindMethod CmpItemKindText	CmpItemKindText
+CmpItemKindKeyword	CmpItemKindKeyword CmpItemAbbrMatchFuzzy	CmpItemAbbrMatchFuzzy
+CmpItemAbbrMatch	CmpItemAbbrMatch CmpItemMenu	CmpItemMenu
+CmpItemKind	CmpItemKind lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+CmpItemAbbrDeprecated	CmpItemAbbrDeprecated CmpItemAbbr	CmpItemAbbr
+DropBarKindWhileStatement	DropBarKindWhileStatement DropBarKindVariable	DropBarKindVariable
+DropBarKindValue	DropBarKindValue DropBarKindUnit	DropBarKindUnit
+DropBarKindTypeParameter	DropBarKindTypeParameter DropBarKindType	DropBarKindType
+DropBarKindSwitchStatement	DropBarKindSwitchStatement DropBarKindStruct	DropBarKindStruct
+DropBarKindString	DropBarKindString DropBarKindStatement	DropBarKindStatement
+DropBarKindSpecifier	DropBarKindSpecifier DropBarKindScope	DropBarKindScope
+DropBarKindRepeat	DropBarKindRepeat DropBarKindReference	DropBarKindReference
+FlashCurrent	FlashCurrent FlashMatch	FlashMatch
+FlashLabel	FlashLabel FlashBackdrop	FlashBackdrop
+NeogitNotificationInfo	NeogitNotificationInfo NeogitRebasing	NeogitRebasing
+NeogitStashes	NeogitStashes NeogitStagedchanges	NeogitStagedchanges
+NeogitRecentcommits	NeogitRecentcommits NeogitUnpulledchanges	NeogitUnpulledchanges
+NeogitUnmergedchanges	NeogitUnmergedchanges NeogitUntrackedfiles	NeogitUntrackedfiles
+NeogitChangeNewFile	NeogitChangeNewFile NeogitChangeBothModified	NeogitChangeBothModified
+NeogitChangeCopied	NeogitChangeCopied NeogitChangeUpdated	NeogitChangeUpdated
+NeogitChangeRenamed	NeogitChangeRenamed NeogitChangeAdded	NeogitChangeAdded
+NeogitChangeModified	NeogitChangeModified NeogitCommitViewHeader	NeogitCommitViewHeader
+FidgetTitle	FidgetTitle FidgetTask	FidgetTask
+NeogitDiffAddHighlight	NeogitDiffAddHighlight NeogitDiffDeleteHighlight	NeogitDiffDeleteHighlight
+NeogitDiffContextHighlight	NeogitDiffContextHighlight NeogitHunkHeaderHighlight	NeogitHunkHeaderHighlight
+NeogitHunkHeader	NeogitHunkHeader NeogitRemote	NeogitRemote
+NeogitBranch	NeogitBranch Bold	Bold
+lua4	lua4           xxx cleared GitSignsCurrentLineBlame	GitSignsCurrentLineBlame
+GitSignsDelete	GitSignsDelete lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared GitSignsChange	GitSignsChange
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+@variable.builtin	@variable.builtin @type.builtin	@type.builtin
+RainbowDelimiterGreen	RainbowDelimiterGreen RainbowDelimiterBlue	RainbowDelimiterBlue
+TelescopeSelectionCaret	TelescopeSelectionCaret TelescopeSelection	TelescopeSelection
+CmpBorder	CmpBorder TelescopeMatching	TelescopeMatching
+gitcommitSummary	gitcommitSummary @type.builtin.cpp	@type.builtin.cpp
+@property.cpp	@property.cpp @type.builtin.c	@type.builtin.c
+@symbol	@symbol @symbol.ruby	@symbol.ruby
+@field.yaml	@field.yaml MiniTestFail	MiniTestFail
+@constructor.tsx	@constructor.tsx @constructor.typescript	@constructor.typescript
+@property.typescript	@property.typescript @constructor.lua	@constructor.lua
+@label.json	@label.json lua4	lua4           xxx cleared
+@property.toml	@property.toml @number.css	@number.css
+lua4	lua4           xxx cleared @string.plain.css	@string.plain.css
+MiniTablineCurrent	MiniTablineCurrent MiniSurround	MiniSurround
+MiniStatuslineModeVisual	MiniStatuslineModeVisual MiniStatuslineModeReplace	MiniStatuslineModeReplace
+MiniStatuslineModeOther	MiniStatuslineModeOther MiniStatuslineModeNormal	MiniStatuslineModeNormal
+MiniStatuslineModeInsert	MiniStatuslineModeInsert rainbow5	rainbow5
+lua4	lua4           xxx cleared MiniStatuslineInactive	MiniStatuslineInactive
+MiniStatuslineFilename	MiniStatuslineFilename MiniStatuslineFileinfo	MiniStatuslineFileinfo
+MiniStatuslineDevinfo	MiniStatuslineDevinfo MiniStarterQuery	MiniStarterQuery
+@tag.delimiter	@tag.delimiter MiniStarterItemPrefix	MiniStarterItemPrefix
+MiniStarterItemBullet	MiniStarterItemBullet MiniStarterItem	MiniStarterItem
+MiniStarterInactive	MiniStarterInactive MiniStarterHeader	MiniStarterHeader
+MiniStarterFooter	MiniStarterFooter MiniJump2dSpot	MiniJump2dSpot
+MiniJump	MiniJump MiniIndentscopePrefix	MiniIndentscopePrefix
+MiniIndentscopeSymbol	MiniIndentscopeSymbol MiniCursorwordCurrent	MiniCursorwordCurrent
+MiniCursorword	MiniCursorword @text.strike	@text.strike
+@text.emphasis	@text.emphasis @text.strong	@text.strong
+WhichKeyValue	WhichKeyValue WhichKeyDesc	WhichKeyDesc
+WhichKeySeparator	WhichKeySeparator WhichKeyGroup	WhichKeyGroup
+@string.regex	@string.regex lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared @punctuation.bracket	@punctuation.bracket
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared IndentBlanklineChar	IndentBlanklineChar
+MasonHeading	MasonHeading MasonError	MasonError
+MasonMutedBlockBold	MasonMutedBlockBold MasonMutedBlock	MasonMutedBlock
+MasonMuted	MasonMuted MasonHighlightBlockBoldSecondary	MasonHighlightBlockBoldSecondary
+MasonHighlightBlockSecondary	MasonHighlightBlockSecondary MasonHighlightSecondary	MasonHighlightSecondary
+MasonHighlightBlockBold	MasonHighlightBlockBold MasonHighlightBlock	MasonHighlightBlock
+MasonHighlight	MasonHighlight MasonHeaderSecondary	MasonHeaderSecondary
+MasonHeader	MasonHeader DashboardHeader	DashboardHeader
+DashboardShortCut	DashboardShortCut HarpoonBorder	HarpoonBorder
+HarpoonWindow	HarpoonWindow LspInlayHint	LspInlayHint
+LspCodeLens	LspCodeLens LspDiagnosticsUnderlineHint	LspDiagnosticsUnderlineHint
+LspDiagnosticsUnderlineInformation	LspDiagnosticsUnderlineInformation LspDiagnosticsUnderlineWarning	LspDiagnosticsUnderlineWarning
+DropBarKindProperty	DropBarKindProperty DropBarKindPackage	DropBarKindPackage
+DropBarKindOperator	DropBarKindOperator DropBarKindObject	DropBarKindObject
+DropBarKindNumber	DropBarKindNumber DropBarKindNull	DropBarKindNull
+DropBarKindNamespace	DropBarKindNamespace DropBarKindModule	DropBarKindModule
+DropBarKindMethod	DropBarKindMethod DropBarKindMarkdownH6	DropBarKindMarkdownH6
+DropBarKindMarkdownH5	DropBarKindMarkdownH5 DropBarKindMarkdownH4	DropBarKindMarkdownH4
+DropBarKindMarkdownH3	DropBarKindMarkdownH3 DropBarKindMarkdownH2	DropBarKindMarkdownH2
+DropBarKindMarkdownH1	DropBarKindMarkdownH1 DropBarKindMacro	DropBarKindMacro
+DropBarKindList	DropBarKindList DropBarKindKeyword	DropBarKindKeyword
+DropBarKindInterface	DropBarKindInterface DropBarKindIfStatement	DropBarKindIfStatement
+DropBarKindIdentifier	DropBarKindIdentifier DropBarKindFunction	DropBarKindFunction
+DropBarKindForStatement	DropBarKindForStatement DropBarKindFolder	DropBarKindFolder
+DropBarKindFile	DropBarKindFile DropBarKindField	DropBarKindField
+DropBarKindEvent	DropBarKindEvent DropBarKindEnumMember	DropBarKindEnumMember
+DropBarKindEnum	DropBarKindEnum DropBarKindElseStatement	DropBarKindElseStatement
+DropBarKindDoStatement	DropBarKindDoStatement DropBarKindDelete	DropBarKindDelete
+DropBarKindDeclaration	DropBarKindDeclaration DropBarKindContinueStatement	DropBarKindContinueStatement
+DropBarKindConstructor	DropBarKindConstructor DropBarKindConstant	DropBarKindConstant
+AlphaFooter	AlphaFooter AlphaButtons	AlphaButtons
+DropBarKindCaseStatement	DropBarKindCaseStatement AlphaHeader	AlphaHeader
+DropBarKindCall	DropBarKindCall DropBarKindBreakStatement	DropBarKindBreakStatement
+DropBarKindBoolean	DropBarKindBoolean DropBarKindArray	DropBarKindArray
+DropBarIconUISeparator	DropBarIconUISeparator DropBarMenuHoverSymbol	DropBarMenuHoverSymbol
+DropBarMenuHoverIcon	DropBarMenuHoverIcon NeoTreeStatusLineNC	NeoTreeStatusLineNC
+NeoTreeVertSplit	NeoTreeVertSplit NeoTreeTabSeparatorInactive	NeoTreeTabSeparatorInactive
+NeoTreeTabSeparatorActive	NeoTreeTabSeparatorActive NeoTreeTabInactive	NeoTreeTabInactive
+NeoTreeTabActive	NeoTreeTabActive NeoTreeFilterTerm	NeoTreeFilterTerm
+NeoTreeFileNameOpened	NeoTreeFileNameOpened NeoTreeGitStaged	NeoTreeGitStaged
+NeoTreeGitUntracked	NeoTreeGitUntracked NeoTreeGitUnstaged	NeoTreeGitUnstaged
+NeoTreeGitModified	NeoTreeGitModified lua4	lua4           xxx cleared
+NeoTreeGitIgnored	NeoTreeGitIgnored NeoTreeGitDeleted	NeoTreeGitDeleted
+NeoTreeGitConflict	NeoTreeGitConflict NeoTreeGitAdded	NeoTreeGitAdded
+NeoTreeSymbolicLinkTarget	NeoTreeSymbolicLinkTarget NeoTreeRootName	NeoTreeRootName
+NeoTreeIndentMarker	NeoTreeIndentMarker NeoTreeExpander	NeoTreeExpander
+NeoTreeNormalNC	NeoTreeNormalNC NeoTreeNormal	NeoTreeNormal
+NeoTreeDirectoryIcon	NeoTreeDirectoryIcon lua4	lua4           xxx cleared
+NeoTreeDirectoryName	NeoTreeDirectoryName LspDiagnosticsUnderlineError	LspDiagnosticsUnderlineError
+LspDiagnosticsVirtualTextHint	LspDiagnosticsVirtualTextHint LspDiagnosticsVirtualTextInformation	LspDiagnosticsVirtualTextInformation
+LspDiagnosticsVirtualTextWarning	LspDiagnosticsVirtualTextWarning LspDiagnosticsVirtualTextError	LspDiagnosticsVirtualTextError
+LspDiagnosticsHint	LspDiagnosticsHint rainbow6	rainbow6
+lua4	lua4           xxx cleared rainbow4	rainbow4
+lua4	lua4           xxx cleared rainbow3	rainbow3
+lua4	lua4           xxx cleared rainbow2	rainbow2
+lua4	lua4           xxx cleared rainbow1	rainbow1
+lua4	lua4           xxx cleared IlluminatedWordText	IlluminatedWordText
+LspDiagnosticsDefaultError	LspDiagnosticsDefaultError LspReferenceWrite	LspReferenceWrite
+LspReferenceRead	LspReferenceRead LspReferenceText	LspReferenceText
+healthError	healthError diffIndexLine	diffIndexLine
+diffLine	diffLine diffFile	diffFile
+diffNewFile	diffNewFile diffOldFile	diffOldFile
+diffChanged	diffChanged diffRemoved	diffRemoved
+diffAdded	diffAdded illuminatedCurWord	illuminatedCurWord
+illuminatedWord	illuminatedWord debugBreakpoint	debugBreakpoint
+debugPC	debugPC mkdCodeEnd	mkdCodeEnd
+mkdCodeStart	mkdCodeStart mkdCodeDelimiter	mkdCodeDelimiter
+htmlH2	htmlH2 lua4	lua4           xxx cleared
+htmlH1	htmlH1 qfFileName	qfFileName
+qfLineNr	qfLineNr NvimTreeOpenedFile	NvimTreeOpenedFile
+markdownLinkText	markdownLinkText markdownCodeBlock	markdownCodeBlock
+markdownCode	markdownCode VisualNOS	VisualNOS
+Italic	Italic lua4	lua4           xxx cleared
+healthSuccess	healthSuccess healthWarning	healthWarning
+GlyphPalette1	GlyphPalette1 GlyphPalette2	GlyphPalette2
+GlyphPalette3	GlyphPalette3 GlyphPalette4	GlyphPalette4
+GlyphPalette6	GlyphPalette6 GlyphPalette7	GlyphPalette7
+GlyphPalette9	GlyphPalette9 RainbowDelimiterViolet	RainbowDelimiterViolet
+NvimTreeNormal	NvimTreeNormal NvimTreeRootFolder	NvimTreeRootFolder
+RainbowDelimiterRed	RainbowDelimiterRed NeogitNotificationError	NeogitNotificationError
+NeogitNotificationWarning	NeogitNotificationWarning LspDiagnosticsDefaultHint	LspDiagnosticsDefaultHint
+LspDiagnosticsDefaultInformation	LspDiagnosticsDefaultInformation AlphaHeaderLabel	AlphaHeaderLabel
+IlluminatedWordWrite	IlluminatedWordWrite DashboardCenter	DashboardCenter
+DashboardFooter	DashboardFooter DashboardMruTitle	DashboardMruTitle
+DashboardProjectTitle	DashboardProjectTitle DashboardFiles	DashboardFiles
+UfoFoldedFg	UfoFoldedFg @keyword.function	@keyword.function
+@keyword.operator	@keyword.operator lua4	lua4           xxx cleared
+@keyword.return	@keyword.return @keyword.export	@keyword.export
+lua4	lua4           xxx cleared MiniStatuslineModeCommand	MiniStatuslineModeCommand
+MiniCompletionActiveParameter	MiniCompletionActiveParameter @text.math	@text.math
+@text.environment	@text.environment @text.environment.name	@text.environment.name
+@text.todo.checked	@text.todo.checked @text.todo.unchecked	@text.todo.unchecked
+@text.note	@text.note @text.warning	@text.warning
+@text.danger	@text.danger lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared @tag.attribute	@tag.attribute
+MiniStarterSection	MiniStarterSection @function.builtin.bash	@function.builtin.bash
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+@constant.java	@constant.java lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared @property.css	@property.css
+@property.id.css	@property.id.css @property.class.css	@property.class.css
+@type.css	@type.css @type.tag.css	@type.tag.css
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared MiniTablineFill	MiniTablineFill
+MiniTablineHidden	MiniTablineHidden MiniTablineModifiedCurrent	MiniTablineModifiedCurrent
+MiniTablineModifiedHidden	MiniTablineModifiedHidden MiniTablineModifiedVisible	MiniTablineModifiedVisible
+MiniTablineTabpagesection	MiniTablineTabpagesection MiniTestEmphasis	MiniTestEmphasis
+@tag.attribute.tsx	@tag.attribute.tsx lua4	lua4           xxx cleared
+MiniTestPass	MiniTestPass MiniTrailspace	MiniTrailspace
+UfoFoldedEllipsis	UfoFoldedEllipsis UfoFoldedBg	UfoFoldedBg
+lua4	lua4           xxx cleared IndentBlanklineContextStart	IndentBlanklineContextStart
+IndentBlanklineContextSpaceChar	IndentBlanklineContextSpaceChar IndentBlanklineContextChar	IndentBlanklineContextChar
+RainbowDelimiterYellow	RainbowDelimiterYellow RainbowDelimiterCyan	RainbowDelimiterCyan
+NvimTreeFolderName	NvimTreeFolderName GitSignsAdd	GitSignsAdd
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+NvimTreeEmptyFolderName	NvimTreeEmptyFolderName NvimTreeIndentMarker	NvimTreeIndentMarker
+NvimTreeWinSeparator	NvimTreeWinSeparator NvimTreeSymlink	NvimTreeSymlink
+NvimTreeStatuslineNc	NvimTreeStatuslineNc NvimTreeGitDirty	NvimTreeGitDirty
+NvimTreeGitNew	NvimTreeGitNew NvimTreeGitDeleted	NvimTreeGitDeleted
+NvimTreeSpecialFile	NvimTreeSpecialFile NvimTreeImageFile	NvimTreeImageFile
+NeogitDiffDelete	NeogitDiffDelete LspDiagnosticsDefaultWarning	LspDiagnosticsDefaultWarning
+IlluminatedWordRead	IlluminatedWordRead LspSignatureActiveParameter	LspSignatureActiveParameter
+LspDiagnosticsError	LspDiagnosticsError NeogitUnstagedchanges	NeogitUnstagedchanges
+NeoTreeDimText	NeoTreeDimText RainbowDelimiterOrange	RainbowDelimiterOrange
+CmpItemKindSnippet	CmpItemKindSnippet AlphaShortcut	AlphaShortcut
+CmpItemKindEnumMember	CmpItemKindEnumMember markdownHeadingDelimiter	markdownHeadingDelimiter
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+NeogitDiffAdd	NeogitDiffAdd DropBarKindClass	DropBarKindClass
+LspDiagnosticsInformation	LspDiagnosticsInformation LspDiagnosticsWarning	LspDiagnosticsWarning
+NvimTreeOpenedFolderName	NvimTreeOpenedFolderName NvimTreeFolderIcon	NvimTreeFolderIcon
+IndentBlanklineSpaceCharBlankline	IndentBlanklineSpaceCharBlankline IndentBlanklineSpaceChar	IndentBlanklineSpaceChar
+lualine_b_insert	lualine_b_insert lualine_a_insert	lualine_a_insert
+lualine_b_replace	lualine_b_replace lualine_a_replace	lualine_a_replace
+lualine_b_terminal	lualine_b_terminal lualine_a_terminal	lualine_a_terminal
+lualine_b_command	lualine_b_command lualine_a_command	lualine_a_command
+lualine_b_visual	lualine_b_visual lualine_a_visual	lualine_a_visual
+lualine_c_normal	lualine_c_normal lualine_b_normal	lualine_b_normal
+lualine_a_normal	lualine_a_normal lualine_c_inactive	lualine_c_inactive
+lualine_b_inactive	lualine_b_inactive lualine_a_inactive	lualine_a_inactive
+lualine_b_diff_added_normal	lualine_b_diff_added_normal lualine_b_diff_added_insert	lualine_b_diff_added_insert
+lualine_b_diff_added_visual	lualine_b_diff_added_visual lualine_b_diff_added_replace	lualine_b_diff_added_replace
+lualine_b_diff_added_command	lualine_b_diff_added_command lualine_b_diff_added_terminal	lualine_b_diff_added_terminal
+lualine_b_diff_added_inactive	lualine_b_diff_added_inactive lualine_b_diff_modified_normal	lualine_b_diff_modified_normal
+lualine_b_diff_modified_insert	lualine_b_diff_modified_insert lualine_b_diff_modified_visual	lualine_b_diff_modified_visual
+lualine_b_diff_modified_replace	lualine_b_diff_modified_replace lualine_b_diff_modified_command	lualine_b_diff_modified_command
+lualine_b_diff_modified_terminal	lualine_b_diff_modified_terminal lualine_b_diff_modified_inactive	lualine_b_diff_modified_inactive
+lualine_b_diff_removed_normal	lualine_b_diff_removed_normal lualine_b_diff_removed_insert	lualine_b_diff_removed_insert
+lualine_b_diff_removed_visual	lualine_b_diff_removed_visual lualine_b_diff_removed_replace	lualine_b_diff_removed_replace
+lualine_b_diff_removed_command	lualine_b_diff_removed_command lualine_b_diff_removed_terminal	lualine_b_diff_removed_terminal
+lualine_b_diff_removed_inactive	lualine_b_diff_removed_inactive lualine_b_diagnostics_error_normal	lualine_b_diagnostics_error_normal
+lualine_b_diagnostics_error_insert	lualine_b_diagnostics_error_insert lualine_b_diagnostics_error_visual	lualine_b_diagnostics_error_visual
+lualine_b_diagnostics_error_replace	lualine_b_diagnostics_error_replace lualine_b_diagnostics_error_command	lualine_b_diagnostics_error_command
+lualine_b_diagnostics_error_terminal	lualine_b_diagnostics_error_terminal lualine_b_diagnostics_error_inactive	lualine_b_diagnostics_error_inactive
+lualine_b_diagnostics_warn_normal	lualine_b_diagnostics_warn_normal lualine_b_diagnostics_warn_insert	lualine_b_diagnostics_warn_insert
+lualine_b_diagnostics_warn_visual	lualine_b_diagnostics_warn_visual lualine_b_diagnostics_warn_replace	lualine_b_diagnostics_warn_replace
+lualine_b_diagnostics_warn_command	lualine_b_diagnostics_warn_command lualine_b_diagnostics_warn_terminal	lualine_b_diagnostics_warn_terminal
+lualine_b_diagnostics_warn_inactive	lualine_b_diagnostics_warn_inactive lualine_b_diagnostics_info_normal	lualine_b_diagnostics_info_normal
+lualine_b_diagnostics_info_insert	lualine_b_diagnostics_info_insert lualine_b_diagnostics_info_visual	lualine_b_diagnostics_info_visual
+lualine_b_diagnostics_info_replace	lualine_b_diagnostics_info_replace lualine_b_diagnostics_info_command	lualine_b_diagnostics_info_command
+lualine_b_diagnostics_info_terminal	lualine_b_diagnostics_info_terminal lualine_b_diagnostics_info_inactive	lualine_b_diagnostics_info_inactive
+lualine_b_diagnostics_hint_normal	lualine_b_diagnostics_hint_normal lualine_b_diagnostics_hint_insert	lualine_b_diagnostics_hint_insert
+lualine_b_diagnostics_hint_visual	lualine_b_diagnostics_hint_visual lualine_b_diagnostics_hint_replace	lualine_b_diagnostics_hint_replace
+lualine_b_diagnostics_hint_command	lualine_b_diagnostics_hint_command lualine_b_diagnostics_hint_terminal	lualine_b_diagnostics_hint_terminal
+lualine_b_diagnostics_hint_inactive	lualine_b_diagnostics_hint_inactive CmpItemAbbrDefault	CmpItemAbbrDefault
+CmpItemAbbrDeprecatedDefault	CmpItemAbbrDeprecatedDefault CmpItemAbbrMatchDefault	CmpItemAbbrMatchDefault
+CmpItemAbbrMatchFuzzyDefault	CmpItemAbbrMatchFuzzyDefault CmpItemKindDefault	CmpItemKindDefault
+CmpItemMenuDefault	CmpItemMenuDefault htmlStrike	htmlStrike
+lua4	lua4           xxx cleared htmlBoldUnderline	htmlBoldUnderline
+lua4	lua4           xxx cleared htmlBoldItalic	htmlBoldItalic
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+htmlBold	htmlBold lua4	lua4           xxx cleared
+htmlBoldUnderlineItalic	htmlBoldUnderlineItalic lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+htmlUnderlineItalic	htmlUnderlineItalic lua4	lua4           xxx cleared
+htmlUnderline	htmlUnderline htmlItalic	htmlItalic
+lua4	lua4           xxx cleared GitSignsStagedAdd	GitSignsStagedAdd
+GitSignsStagedChange	GitSignsStagedChange GitSignsStagedDelete	GitSignsStagedDelete
+GitSignsStagedChangedelete	GitSignsStagedChangedelete GitSignsStagedTopdelete	GitSignsStagedTopdelete
+GitSignsStagedAddNr	GitSignsStagedAddNr GitSignsStagedChangeNr	GitSignsStagedChangeNr
+GitSignsStagedDeleteNr	GitSignsStagedDeleteNr GitSignsStagedChangedeleteNr	GitSignsStagedChangedeleteNr
+GitSignsStagedTopdeleteNr	GitSignsStagedTopdeleteNr GitSignsStagedAddLn	GitSignsStagedAddLn
+GitSignsStagedChangeLn	GitSignsStagedChangeLn GitSignsStagedChangedeleteLn	GitSignsStagedChangedeleteLn
+NeoTreeTitleBar	NeoTreeTitleBar NeoTreeMessage	NeoTreeMessage
+NeoTreeFadeText1	NeoTreeFadeText1 NeoTreeFadeText2	NeoTreeFadeText2
+NeoTreeDotfile	NeoTreeDotfile lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared NeoTreeModified	NeoTreeModified
+NeoTreeFileStats	NeoTreeFileStats NeoTreeFileStatsHeader	NeoTreeFileStatsHeader
+NeoTreeDirectoryName_68	NeoTreeDirectoryName_68 NeoTreeDirectoryName_60	NeoTreeDirectoryName_60
+NeoTreeDirectoryName_35	NeoTreeDirectoryName_35 DevIconTcl	DevIconTcl
+DevIconFs	DevIconFs DevIconGraphQL	DevIconGraphQL
+DevIconSwift	DevIconSwift DevIconBzl	DevIconBzl
+DevIconDump	DevIconDump DevIconDart	DevIconDart
+DevIconTor	DevIconTor DevIconPhp	DevIconPhp
+DevIconOrgMode	DevIconOrgMode DevIconTextResource	DevIconTextResource
+DevIconTextScene	DevIconTextScene DevIconMotoko	DevIconMotoko
+DevIconFsx	DevIconFsx DevIconScala	DevIconScala
+DevIconRb	DevIconRb DevIconSolidity	DevIconSolidity
+DevIconSml	DevIconSml DevIconNix	DevIconNix
+DevIconSln	DevIconSln DevIconR	DevIconR
+DevIconDesktopEntry	DevIconDesktopEntry DevIconScheme	DevIconScheme
+DevIconsbt	DevIconsbt DevIconJsx	DevIconJsx
+DevIconLuau	DevIconLuau DevIconRs	DevIconRs
+DevIconRake	DevIconRake DevIconGemspec	DevIconGemspec
+DevIconRmd	DevIconRmd DevIconSystemVerilog	DevIconSystemVerilog
+DevIconTex	DevIconTex DevIconMd	DevIconMd
+DevIconPrisma	DevIconPrisma DevIconGitIgnore	DevIconGitIgnore
+DevIconGitAttributes	DevIconGitAttributes DevIconGitModules	DevIconGitModules
+DevIconGitConfig	DevIconGitConfig DevIconSvelte	DevIconSvelte
+DevIconBash	DevIconBash DevIconJson5	DevIconJson5
+DevIconVHDL	DevIconVHDL DevIconMixLock	DevIconMixLock
+DevIconEditorConfig	DevIconEditorConfig DevIconLhs	DevIconLhs
+DevIconEnv	DevIconEnv DevIconNPMrc	DevIconNPMrc
+DevIconVerilog	DevIconVerilog DevIconLock	DevIconLock
+DevIconHxx	DevIconHxx DevIconCrystal	DevIconCrystal
+DevIconJavaScriptReactTest	DevIconJavaScriptReactTest DevIconFortran	DevIconFortran
+DevIconKotlin	DevIconKotlin DevIconSpecJs	DevIconSpecJs
+DevIconReScript	DevIconReScript DevIconTestJs	DevIconTestJs
+DevIconCsh	DevIconCsh DevIconClojureDart	DevIconClojureDart
+DevIconEdn	DevIconEdn DevIconFsi	DevIconFsi
+DevIconMaterial	DevIconMaterial DevIconOPUS	DevIconOPUS
+DevIconLicense	DevIconLicense DevIconEjs	DevIconEjs
+DevIconPng	DevIconPng DevIconKsh	DevIconKsh
+DevIconSig	DevIconSig DevIconBinaryGLTF	DevIconBinaryGLTF
+DevIconJpg	DevIconJpg DevIconGitCommit	DevIconGitCommit
+DevIconTxt	DevIconTxt DevIconHs	DevIconHs
+DevIconSql	DevIconSql DevIconStyl	DevIconStyl
+DevIconSuo	DevIconSuo DevIconFsharp	DevIconFsharp
+DevIconMdx	DevIconMdx DevIconD	DevIconD
+DevIconTerminal	DevIconTerminal DevIconXlsx	DevIconXlsx
+DevIconGodotProject	DevIconGodotProject DevIconGif	DevIconGif
+DevIconTerraform	DevIconTerraform DevIconFavicon	DevIconFavicon
+DevIconDrools	DevIconDrools DevIconCobol	DevIconCobol
+DevIconZshrc	DevIconZshrc DevIconZshprofile	DevIconZshprofile
+DevIconGemfile	DevIconGemfile DevIconZshenv	DevIconZshenv
+DevIconWasm	DevIconWasm DevIconDocx	DevIconDocx
+DevIconBrewfile	DevIconBrewfile DevIconCson	DevIconCson
+DevIconVimrc	DevIconVimrc DevIconMakefile	DevIconMakefile
+DevIconGvimrc	DevIconGvimrc DevIconCp	DevIconCp
+DevIconCoffee	DevIconCoffee DevIconTs	DevIconTs
+DevIconDockerfile	DevIconDockerfile DevIconEex	DevIconEex
+DevIconLua	DevIconLua DevIconPyc	DevIconPyc
+DevIconCMake	DevIconCMake DevIconCss	DevIconCss
+DevIconProcfile	DevIconProcfile DevIconWebpack	DevIconWebpack
+DevIconPpt	DevIconPpt DevIconGruntfile	DevIconGruntfile
+DevIconPackedResource	DevIconPackedResource DevIconOpenTypeFont	DevIconOpenTypeFont
+DevIconMustache	DevIconMustache DevIconHtm	DevIconHtm
+DevIconIni	DevIconIni DevIconGitlabCI	DevIconGitlabCI
+DevIconEslintrc	DevIconEslintrc DevIconBabelrc	DevIconBabelrc
+DevIconMli	DevIconMli DevIconMl	DevIconMl
+DevIconQuery	DevIconQuery DevIconDsStore	DevIconDsStore
+DevIconScss	DevIconScss DevIconHaml	DevIconHaml
+DevIconClojure	DevIconClojure DevIconClojureC	DevIconClojureC
+DevIconClojureJS	DevIconClojureJS DevIconYaml	DevIconYaml
+DevIconZig	DevIconZig DevIconPdf	DevIconPdf
+DevIconLiquid	DevIconLiquid DevIconHh	DevIconHh
+DevIconTFVars	DevIconTFVars DevIconLess	DevIconLess
+DevIconAi	DevIconAi DevIconConf	DevIconConf
+DevIconPsManifestfile	DevIconPsManifestfile DevIconPsScriptfile	DevIconPsScriptfile
+DevIconPsScriptModulefile	DevIconPsScriptModulefile DevIconKotlinScript	DevIconKotlinScript
+DevIconJl	DevIconJl DevIconWebmanifest	DevIconWebmanifest
+DevIconPy	DevIconPy DevIconImportConfiguration	DevIconImportConfiguration
+DevIconCjs	DevIconCjs DevIconMjs	DevIconMjs
+DevIconReScriptInterface	DevIconReScriptInterface DevIconVlang	DevIconVlang
+DevIconSass	DevIconSass DevIconGDScript	DevIconGDScript
+DevIconTypeScriptReactSpec	DevIconTypeScriptReactSpec DevIconBashProfile	DevIconBashProfile
+DevIconTypeScriptReactTest	DevIconTypeScriptReactTest DevIconXml	DevIconXml
+DevIconSpecTs	DevIconSpecTs DevIconTestTs	DevIconTestTs
+DevIconNim	DevIconNim DevIconVue	DevIconVue
+DevIconVala	DevIconVala DevIconGo	DevIconGo
+DevIconRss	DevIconRss DevIconDefault	DevIconDefault
+DevIconHtml	DevIconHtml DevIconConfiguration	DevIconConfiguration
+DevIconCPlusPlus	DevIconCPlusPlus DevIconProlog	DevIconProlog
+DevIconPsb	DevIconPsb DevIconPsd	DevIconPsd
+DevIconEpp	DevIconEpp DevIconGulpfile	DevIconGulpfile
+DevIconTsx	DevIconTsx DevIconPyd	DevIconPyd
+DevIconPyo	DevIconPyo DevIconBmp	DevIconBmp
+DevIconRlib	DevIconRlib DevIconRproj	DevIconRproj
+DevIconCs	DevIconCs DevIconYml	DevIconYml
+DevIconElm	DevIconElm DevIconBat	DevIconBat
+DevIconWebp	DevIconWebp DevIconXcPlayground	DevIconXcPlayground
+DevIconPm	DevIconPm DevIconDropbox	DevIconDropbox
+DevIconVim	DevIconVim DevIconXul	DevIconXul
+DevIconJson	DevIconJson DevIconHbs	DevIconHbs
+DevIconC	DevIconC DevIconFsscript	DevIconFsscript
+DevIconFish	DevIconFish DevIconLeex	DevIconLeex
+DevIconBazelWorkspace	DevIconBazelWorkspace DevIconJpeg	DevIconJpeg
+DevIconMarkdown	DevIconMarkdown DevIconPp	DevIconPp
+DevIconIco	DevIconIco DevIconSlim	DevIconSlim
+DevIconDiff	DevIconDiff DevIconErl	DevIconErl
+DevIconHrl	DevIconHrl DevIconErb	DevIconErb
+DevIconAwk	DevIconAwk DevIconMint	DevIconMint
+DevIconZsh	DevIconZsh DevIconJs	DevIconJs
+DevIconFennel	DevIconFennel DevIconConfigRu	DevIconConfigRu
+DevIconSettingsJson	DevIconSettingsJson DevIconSvelteConfig	DevIconSvelteConfig
+DevIconBazelBuild	DevIconBazelBuild DevIconJavaScriptReactSpec	DevIconJavaScriptReactSpec
+DevIconCMakeLists	DevIconCMakeLists DevIconHeex	DevIconHeex
+DevIconLog	DevIconLog DevIconPackageLockJson	DevIconPackageLockJson
+DevIconBashrc	DevIconBashrc DevIconTwig	DevIconTwig
+DevIconPackageJson	DevIconPackageJson DevIconNodeModules	DevIconNodeModules
+DevIconXls	DevIconXls DevIconJsonc	DevIconJsonc
+DevIconExs	DevIconExs DevIconRakefile	DevIconRakefile
+DevIconSh	DevIconSh DevIconVagrantfile	DevIconVagrantfile
+DevIconSvg	DevIconSvg DevIconBazel	DevIconBazel
+DevIconNPMIgnore	DevIconNPMIgnore DevIconGitLogo	DevIconGitLogo
+DevIconH	DevIconH DevIconCpp	DevIconCpp
+DevIconJava	DevIconJava DevIconHpp	DevIconHpp
+DevIconCxx	DevIconCxx DevIconCsv	DevIconCsv
+DevIconDoc	DevIconDoc DevIconPl	DevIconPl
+DevIconEx	DevIconEx DevIconToml	DevIconToml
+DevIconDb	DevIconDb NeoTreeFileName_68	NeoTreeFileName_68
+NeoTreeFileName_60	NeoTreeFileName_60 NeoTreeFileName_35	NeoTreeFileName_35
+NeoTreeGitModified_68	NeoTreeGitModified_68 NeoTreeGitModified_60	NeoTreeGitModified_60
+NeoTreeGitModified_35	NeoTreeGitModified_35 NeoTreeGitUntracked_68	NeoTreeGitUntracked_68
+NeoTreeGitUntracked_60	NeoTreeGitUntracked_60 NeoTreeGitUntracked_35	NeoTreeGitUntracked_35
+ToggleTerm1FloatBorder	ToggleTerm1FloatBorder ToggleTerm1StatusLineNC	ToggleTerm1StatusLineNC
+ToggleTerm1NormalFloat	ToggleTerm1NormalFloat ToggleTerm1Normal	ToggleTerm1Normal
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared
+lua4	lua4           xxx cleared lua4	lua4           xxx cleared

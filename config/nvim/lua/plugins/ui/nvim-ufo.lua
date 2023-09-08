@@ -6,11 +6,11 @@ return {
     "kevinhwang91/nvim-ufo",
     name = "nvim-ufo",
     lazy = false,
-    enabled = false, -- until I figure out why folds keep auto-closing
+    enabled = true,
     config = true,
     opts = {
         provider_selector = function() return { "treesitter", "indent" } end,
-        close_fold_kinds = {}
+        close_fold_kinds = { "imports", "comments" },
     },
     dependencies = {
         { "kevinhwang91/promise-async", name = "nvim-promise-async", lazy = true }

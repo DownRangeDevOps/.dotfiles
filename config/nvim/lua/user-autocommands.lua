@@ -94,6 +94,12 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
         filetype = filetype or "nofiletype"
         buftype = buftype or "nobuftype"
 
+        -- keep other plugins from changing nvim-ufo fold settings
+        vim.opt.foldcolumn = "1"
+        vim.opt.foldlevel = 99
+        vim.opt.foldlevelstart = 99
+        vim.opt.foldenable = false
+
         -- set overall ui
         if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
             vim.wo.colorcolumn = false
@@ -191,7 +197,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
 })
 
 -- Trim trailing white-space/lines
-vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave" }, {
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     group = user,
     pattern = "*",
     callback = function()

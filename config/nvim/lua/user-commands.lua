@@ -1,33 +1,4 @@
 -- ----------------------------------------------
--- Plugins
--- Listed here as a reminder/easy access
--- ----------------------------------------------
-vim.api.nvim_create_user_command(
-    "ColorizerToggle",
-    function()
-        if vim.g.colorizer_attached == nil then
-            vim.g.colorizer_attached = false
-            vim.cmd.Lazy("load nvim-colorizer")
-        end
-
-        local switch = not vim.g.colorizer_attached
-        local msg = switch and "disabled" or "enabled"
-
-        if switch then
-            require("colorizer").detach_from_buffer(0)
-        else
-            require("colorizer").attach_to_buffer(0)
-        end
-
-        vim.g.colorizer_attached = switch
-
-        vim.cmd.echon("'Colorizer " .. msg .. "'")
-        -- vim.fn.timer_start(1000, function() vim.cmd.echon("""") end)
-    end,
-    { desc = "Toggle colorizer"}
-)
-
--- ----------------------------------------------
 -- Helpers
 -- ----------------------------------------------
 -- Toggle auto-save
@@ -96,4 +67,29 @@ vim.api.nvim_create_user_command("Qa", function() vim.cmd.wqall() end, { desc = 
 -- ----------------------------------------------
 -- Info
 -- ----------------------------------------------
-vim.api.nvim_create_user_command("SynAttr", function() vim.fun.SynAttr() end, { desc = "show syntax applied at cursor"})
+vim.api.nvim_create_user_command(
+    "SynGroup",
+    function()
+        local line = vim.fn.line('.')
+        local col = vim.fn.col('.')
+        -- local cur_synstack = vim.fn.synstack(cur_line, cur_col)
+        local id = vim.fn.synID(line, col, 1)
+        local name = vim.fn.synIDattr(id, "name")
+        local link = vim.fn.synIDattr(vim.fn.synIDtrans(id), "name")
+
+        if name == "" and link == "" then
+            vim.cmd.echohl("WarningMsg")
+            vim.cmd.echom("'No syntax groups found'")
+            vim.cmd.echohl("None")
+        else
+            vim.cmd.echohl(name)
+            vim.cmd.echon("'" .. name .. "'")
+            vim.cmd.echohl("None")
+            vim.cmd.echon("' -> '")
+            vim.cmd.echohl(link)
+            vim.cmd.echon("'" .. link .. "'")
+            vim.cmd.echohl("None")
+        end
+    end,
+    { desc = "Show syntax highlighting under cursor" }
+)

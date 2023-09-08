@@ -70,13 +70,16 @@ local function parse_lhs(lhs)
     return { head = head, tail = tail, prefix = prefix }
 end
 
--- use which-key to generate key mappings
+-- populate with info needed to register keys with `which-key`
 local which_key_groups = {}
+
+--- map generates a table used to register keys with `which-key`
+--
+--- @param modes string|table ("n": normal|"i": insert|"v": visual|"c": command|"t": terminal)
+--- @param lhs string
+--- @param rhs string|function
+--- @param opts table|nil
 local function map(modes, lhs, rhs, opts)
-    -- @param mode :string|table ("n": normal|"i": insert|"v": visual|"c": command|"t": terminal)
-    -- @param keys :string
-    -- @param func :string|func
-    -- @param opts :table|nil
 
     assert(tostring(modes), "argument(s) missing: mode :string|table required")
     assert(tostring(lhs), "argument(s) missing: lhs :string required")
@@ -115,15 +118,15 @@ local function map(modes, lhs, rhs, opts)
 end
 M.map = map
 
--- Mapping
--- TODO: remove when I figure out how to fix which-key import
+-- Shortcut for vim.keymap.set
+--
+---@param mode string|table ("n"|"i"|"v"|"c"|"t")
+---@param lhs string
+---@param rhs string|function
+---@param opts table|nil
 M.map = function(mode, lhs, rhs, opts)
-    --- Shortcut for vim.keymap.set
-    --
-    -- @param mode :string|table ("n"|"i"|"v"|"c"|"t")
-    -- @param keys :string
-    -- @param func :string|func
-    -- @param opts :table|nil
+    -- TODO: remove when I figure out how to fix which-key import
+
     assert(tostring(mode), "invalid argument: mode :string required")
     assert(tostring(lhs), "invalid argument: lhs :string required")
     assert(tostring(rhs), "invalid argument: rhs :string required")
@@ -297,12 +300,14 @@ map("n", "<leader>gs", function() vim.cmd("Git") end, { group = "git", desc = "g
 map("n", "<leader>gb", function() vim.cmd("Git_blame") end, { group = "git", desc = "git blame"})
 
 -- git diff
+-- :help diffview
 map("n", "<leader>do", function() vim.cmd("DiffviewOpen") end, { group = "git", desc = "diffview open"})
 map("n", "<leader>df", function() vim.cmd("DiffviewFileHistory") end, { group = "git", desc = "diffview log"})
 map("n", "<leader>dtf", function() vim.cmd("DiffviewToggleFiles") end, { group = "git", desc = "diffview file browser"})
 map("n", "<leader>dr", function() vim.cmd("DiffviewRefresh") end, { group = "git", desc = "diffview refresh"})
 
 -- gitsigns
+-- :help gitsigns.txt
 local gitsigns_maps = function(bufnr)
     vim.keymap.set("n", "<leader>p", require("gitsigns").prev_hunk, { buffer = bufnr, desc = "go prev hunk" })
     vim.keymap.set("n", "<leader>nh", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
@@ -313,6 +318,7 @@ end
 M.gitsigns_maps = gitsigns_maps
 
 -- use magic when searching
+-- :help magic
 local use_magic = function(key, prefix)
     local pos = vim.fn.getcmdpos()
 
@@ -421,6 +427,10 @@ map("n", "<leader>E", vim.diagnostic.setloclist, { group = "diag", desc = "open 
 map("n", "[d", vim.diagnostic.goto_prev, { group = "diag", desc = "previous message" })
 map("n", "]d", vim.diagnostic.goto_next, { group = "diag", desc = "next message" })
 
+-- trouble
+-- :help trouble.nvim.txt
+map("n", "<leader>tt", function() vim.cmd.TroubleToggle() end, { group = "lsp", desc = "toggle trouble" })
+
 -- others
 map("n", "<leader><space>", function() require("telescope.builtin").buffers() end, { group = "ts", desc = "fuzzy buffers" })
 map("n", '<leader>f"', function() require("telescope.builtin").marks() end, { group = "ts", desc = "fuzzy marks" })
@@ -526,10 +536,40 @@ local cmp_maps = {
 }
 M.cmp_maps = cmp_maps
 
+-- trouble.nvim keymaps
+local trouble_maps = { -- key mappings for actions in the trouble list
+    -- map to {} to remove a mapping, for example:
+    -- close = {},
+    close = "q", -- close the list
+    cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+    refresh = "r", -- manually refresh
+    jump = { "<cr>", "<tab>", "<2-leftmouse>" }, -- jump to the diagnostic or open / close folds
+    open_split = { "<c-x>" }, -- open buffer in new split
+    open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+    open_tab = { "<c-t>" }, -- open buffer in new tab
+    jump_close = {"o"}, -- jump to the diagnostic and close the list
+    toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+    switch_severity = "s", -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
+    toggle_preview = "P", -- toggle auto_preview
+    hover = "K", -- opens a small popup with the full multiline message
+    preview = "p", -- preview the diagnostic location
+    open_code_href = "c", -- if present, open a URI with more information about the diagnostic error
+    close_folds = {"zM", "zm"}, -- close all folds
+    open_folds = {"zR", "zr"}, -- open all folds
+    toggle_fold = {"zA", "za"}, -- toggle fold of current file
+    previous = "k", -- previous item
+    next = "j", -- next item
+    help = "?", -- help menu
+}
+M.trouble_maps = trouble_maps
+
 -- Unmap annoying maps forced by plugin authors
 local unimpaired = { "<s", ">s", "=s", "<p", ">p", "<P", ">P" }
 local bullets = { "<<", "<", ">", ">>"}
 
+--- get_off_my_lawn delete keymaps
+--
+--- @param args table[list(string), ...]
 local function get_off_my_lawn(args)
     for _, tbl in ipairs(args) do
         for _, v in ipairs(tbl) do

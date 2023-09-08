@@ -13,5 +13,5 @@ return {
     { "tpope/vim-surround",    name = "vim-surround",   lazy = false }, -- Surround text (https://github.com/tpope/vim-surround)
     { "tpope/vim-unimpaired",  name = "vim-unimpaired", lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
     { "windwp/nvim-autopairs", name = "nvim-autopairs", lazy = true,    event  = "InsertEnter",   opts = {} },     -- auto-pairs (https://github.com/windwp/nvim-autopairs)
-    { "zhimsel/vim-stay",      name = "vim-stay",       lazy = false }, --  Stay in your lane,    vim! (https://github.com/zhimsel/vim-stay)
+    { "zhimsel/vim-stay",      name = "vim-stay",       lazy = false }, --  Stay in your lane, vim! (https://github.com/zhimsel/vim-stay)
 }

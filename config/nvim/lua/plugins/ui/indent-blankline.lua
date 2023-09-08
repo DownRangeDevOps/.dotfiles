@@ -8,21 +8,26 @@ return {
     lazy = false,
     opts = {
         char = "┊",
+        char_blankline = "┊",
         context_char = "┊",
         context_char_blankline = "┊",
+        disable_with_nolist = true,
+        indent_level = 6,
         show_current_context = true,
         show_current_context_start = false,
-        show_current_context_start_on_current_line = false,
+        show_current_context_start_on_current_line = true,
+        max_indent_increase = 1,
+        enabled = true,
         show_end_of_line = false,
-        show_first_indent_level = true,
+        show_first_indent_level = false,
         show_trailing_blankline_indent = true,
-        disable_with_nolist = true,
         space_char = " ",
-        strict_tabs = true,
         space_char_blankline = " ",
+        strict_tabs = true,
         use_treesitter = true,
         use_treesitter_scope = true,
         viewport_buffer = 50,
+
         buftype_exclude = {
             "terminal",
             "nofile",
@@ -39,6 +44,7 @@ return {
             "packer",
             "qf",
         },
+
         context_patterns = {
             "class",
             "^func",
@@ -67,6 +73,6 @@ return {
             "IfExpr",
             "ParamDeclList",
             "unless",
-        }
+        },
     },
 }

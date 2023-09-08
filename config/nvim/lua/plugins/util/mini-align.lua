@@ -3,11 +3,9 @@
 -- :help mini.align
 -- ----------------------------------------------
 return {
-    {
-        "echasnovski/mini.align",
-        lazy = true,
-        event = "InsertEnter",
-        version = "*",
-        config = true,
-    }
+    "echasnovski/mini.align",
+    lazy = true,
+    event = "InsertEnter",
+    version = "*",
+    config = true,
 }

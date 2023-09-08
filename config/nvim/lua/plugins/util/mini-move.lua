@@ -21,8 +21,8 @@ return {
                 line_down = "",
                 line_up = "",
             },
-            options = {
-                reindent_linewise = true, -- re-indent selection during vertical move
-            },
-        }
+        options = {
+            reindent_linewise = true, -- re-indent selection during vertical move
+        },
+    },
 }

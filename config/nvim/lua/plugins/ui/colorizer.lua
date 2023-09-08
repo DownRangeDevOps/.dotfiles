@@ -6,12 +6,14 @@ return {
     "NvChad/nvim-colorizer.lua",
     name = "colorizer",
     lazy = true,
+    cmd = "ColorizerToggle",
+    config = true,
     opts = {
         filetypes = { "*" },
         user_default_options = {
             RGB = true, -- #RGB
             RRGGBB = true, -- #RRGGBB
-            names = true, -- Blue or blue
+            names = false, -- Blue or blue
             RRGGBBAA = true, -- #RRGGBBAA
             AARRGGBB = true, -- 0xAARRGGBB
             rgb_fn = true, -- CSS rgb() and rgba()

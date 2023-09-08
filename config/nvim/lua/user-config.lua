@@ -114,7 +114,6 @@ vim.opt.scrolloff = 8
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.list = true
-
 vim.opt.listchars = table.concat({
     "tab:⇢•",
     "precedes:«",
@@ -166,7 +165,7 @@ M.script_path = script_path()
 -- ----------------------------------------------
 -- Plugins
 -- ----------------------------------------------
--- indent blankline
+-- indent-blankline
 local indet_blankline_session_opts = { "tabpages", "globals" }
 for _, i in ipairs(indet_blankline_session_opts) do
     if not vim.opt.sessionoptions[i] then
@@ -174,12 +173,33 @@ for _, i in ipairs(indet_blankline_session_opts) do
     end
 end
 
--- Configure dkarter/bullets.vim (https://github.com/dkarter/bullets.vim)
+-- bullets.vim (https://github.com/dkarter/bullets.vim)
 vim.g.bullets_set_mappings = 0
 vim.g.bullets_renumber_on_change = 1
 vim.g.bullets_outline_levels = { "num", "std*" }
 vim.g.bullets_checkbox_markers = " ⁃✔︎"
 vim.g.bullets_enabled_file_types = "markdown,text,gitcommit,scratch"
 vim.g.bullets_enabled_file_types_tbl = { markdown = true, text = true, gitcommit = true, scratch = true }
+
+-- markdown-preview
+vim.g.mkdp_auto_close = 0
+vim.g.mkdp_echo_preview_url = 1
+vim.g.mkdp_page_title = function() vim.fn.expand("%:.") end
+vim.g.mkdp_theme = "dark"
+vim.g.mkdp_browserfunc = function(url) os.execute("open '" .. url .. "'") end
+vim.g.mkdp_preview_options = {
+    mkit = {},                     -- markdown-it options for render
+    katex = {},                    -- katex options for math
+    uml = {},                      -- markdown-it      -plantuml options
+    maid = {},                     -- mermaid options
+    disable_sync_scroll = 0,       -- disable sync scroll
+    sync_scroll_type = "relative", -- 'middle', 'top' or 'relative'
+    hide_yaml_meta = 1,            -- hide yaml metadata
+    sequence_diagrams = {},        -- js-sequence-diagrams options
+    flowchart_diagrams = {},
+    content_editable = false,      -- content editable for preview page
+    disable_filename = 1,          -- disable filename header for preview page
+    toc = {}
+}
 
 return M
