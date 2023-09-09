@@ -44,9 +44,9 @@ function print_error_msg() {
 }
 
 function create_symlinks() {
-    local gitignore_path="~/.dotfiles/config/git/.gitignore"
-    local init_vim_path="~/.config/nvim/init.vim"
-    local terminfo_path="~/.config/.terminfo"
+    local gitignore_path="${HOME}/.dotfiles/config/git/.gitignore"
+    local init_vim_path="${HOME}/.config/nvim/init.vim"
+    local terminfo_path="${HOME}/.config/.terminfo"
 
     printf_callout "Creating symlinks..."
 
