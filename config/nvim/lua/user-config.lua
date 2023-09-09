@@ -132,11 +132,12 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldenable = false
 
 -- Terminal
-vim.opt.termguicolors = true -- Use 24-bit colors
+-- :help guicursor
+vim.opt.termguicolors = true
 vim.opt.guicursor = table.concat({
-    "n-c-v-sm:block-Cursor/lCursor",
-    "i-ci-ve:ver25-Cursor/lCursor",
-    "r-cr-o:hor20-Cursor/lCursor",
+    "n-c-v-sm:block",
+    "i-ci-ve:ver25",
+    "r-cr-o:hor20",
     "a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor",
 }, ",")
 

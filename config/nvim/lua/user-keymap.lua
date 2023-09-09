@@ -15,6 +15,26 @@ local fk = {
 }
 M.fk = fk
 
+local function switch_toggle_state(id)
+    local toggle_states
+
+    if vim.g.toggle_states then
+        toggle_states = vim.g.toggle_states
+    else
+        toggle_states = {}
+    end
+
+    if toggle_states[id] then
+        toggle_states[id] = not toggle_states[id]
+    else
+        toggle_states[id] = true
+    end
+
+    vim.g.toggle_states = toggle_states
+
+    return toggle_states[id]
+end
+
 local function is_git_repo()
     if os.execute("git rev-parse") == 0 then
         return true
@@ -24,24 +44,24 @@ local function is_git_repo()
 end
 M.is_git_repo = is_git_repo
 
-local function extend_tbl(tbl, keys, value)
-  local last_key = keys[#keys]
+local function deep_merge(tbl, keys, value)
+    local last_key = keys[#keys]
 
-  for i = 1, #keys - 1 do
-    local key = keys[i]
+    for i = 1, #keys - 1 do
+        local key = keys[i]
 
-    if not tbl[key] then
-      tbl[key] = {}
+        if not tbl[key] then
+            tbl[key] = {}
+        end
+
+        tbl = tbl[key]
     end
 
-    tbl = tbl[key]
-  end
+    if not tbl[last_key] then
+        tbl[last_key] = {}
+    end
 
-  if not tbl[last_key] then
-    tbl[last_key] = {}
-  end
-
-  tbl[last_key] = value
+    tbl[last_key] = value
 end
 
 local function parse_lhs(lhs)
@@ -70,6 +90,42 @@ local function parse_lhs(lhs)
     return { head = head, tail = tail, prefix = prefix }
 end
 
+-- Register keys and documentation with which-key
+local function which_key_register(groups)
+    local wk = require("which-key")
+
+    for group, modes in pairs(groups) do
+        for mode, mappings in pairs(modes) do
+            for key, cfg in pairs(mappings) do
+                cfg.opts.mode = mode
+
+                if key == cfg.lhs then
+                    if cfg.opts["prefix"] then
+                        wk.register({
+                            [cfg.opts.prefix] = {
+                                name = group,
+                                [cfg.lhs] = { cfg.rhs, cfg.desc },
+                            },
+                            cfg.opts
+                        })
+                    else
+                        vim.keymap.set(mode, cfg.lhs, cfg.rhs,
+                            { desc = cfg.desc })
+                    end
+                else
+                    wk.register({
+                        [key] = {
+                            name = group,
+                            [cfg.lhs] = { cfg.rhs, cfg.desc },
+                        },
+                        cfg.opts
+                    })
+                end
+            end
+        end
+    end
+end
+
 -- populate with info needed to register keys with `which-key`
 local which_key_register_keys = {}
 
@@ -80,7 +136,6 @@ local which_key_register_keys = {}
 --- @param rhs string|function
 --- @param opts table|nil
 local function map(modes, lhs, rhs, opts)
-
     assert(tostring(modes), "argument(s) missing: mode :string|table required")
     assert(tostring(lhs), "argument(s) missing: lhs :string required")
     assert(tostring(rhs), "argument(s) missing: rhs :string required")
@@ -108,7 +163,7 @@ local function map(modes, lhs, rhs, opts)
     if type(modes) == "string" then modes = { modes } end
 
     for _, mode in ipairs(modes) do
-        extend_tbl(which_key_register_keys, { group, mode, lhs_pieces.head }, {
+        deep_merge(which_key_register_keys, { group, mode, lhs_pieces.head }, {
             lhs = lhs_pieces.tail,
             rhs = rhs,
             desc = desc,
@@ -124,9 +179,8 @@ end
 ---@param lhs string
 ---@param rhs string|function
 ---@param opts table|nil
-local map = function(mode, lhs, rhs, opts)
+local function map(mode, lhs, rhs, opts)
     -- TODO: remove when I figure out how to fix which-key import
-
     assert(tostring(mode), "invalid argument: mode :string required")
     assert(tostring(lhs), "invalid argument: lhs :string required")
     assert(tostring(rhs), "invalid argument: rhs :string required")
@@ -146,11 +200,27 @@ local function thanos_snap(bufnr)
     local readonly = vim.api.nvim_buf_get_option(bufnr, "readonly")
     local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
     local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
-    local the_unfortunate = { "help", "qf", "man", "checkhouth", "lspinfo", "checkhealth" } -- file types
-    local the_disgraced = { "quickfix", "prompt", "nofile" } -- buf types
 
-    local snap_while_wearing_a_gauntlet = function ()
-        map("n", "q", ":quit", { buffer = bufnr, group = "gui", desc = "don't @ me" })
+    -- file types
+    local the_unfortunate = {
+        "help",
+        "qf",
+        "man",
+        "checkhouth",
+        "lspinfo",
+        "checkhealth"
+    }
+
+    -- buf types
+    local the_disgraced = {
+        "quickfix",
+        "prompt",
+        "nofile"
+    }
+
+    local snap_while_wearing_a_gauntlet = function()
+        map("n", "q", ":quit",
+            { buffer = bufnr, group = "gui", desc = "don't @ me" })
     end
 
     if bufnr then
@@ -173,10 +243,7 @@ M.snap = thanos_snap
 vim.on_key(
     function(char)
         if vim.fn.mode() == "n" then
-            local new_hlsearch = vim.tbl_contains(
-            {"v", "n", "N", "*", "?", "/" },
-                vim.fn.keytrans(char)
-            )
+            local new_hlsearch = vim.tbl_contains({ "v", "n", "N", "*", "?", "/" }, vim.fn.keytrans(char))
 
             if vim.opt.hlsearch:get() ~= new_hlsearch then
                 vim.opt.hlsearch = new_hlsearch
@@ -188,8 +255,8 @@ vim.on_key(
 
 -- QOL
 map("i", "jj", fk.escape, { group = "gen", desc = "Escape" })
-map("n", "gl", "gu") -- err "go lower" sure makes sense to me...
-map("n", "gL", "gu") -- err "go lower" sure makes sense to me...
+map("n", "gl", "gu")    -- err "go lower" sure makes sense to me...
+map("n", "gL", "gu")    -- err "go lower" sure makes sense to me...
 map("n", "gQ", "<nop>") -- reeeeeee (use :Ex-mode if you really need it, which will be never)
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -223,14 +290,14 @@ map("n", "<leader>D", "D", { group = "txt", desc = "yank-delete -> eol" })
 -- change (c/D)
 map("", "c", '"_c', { group = "txt", desc = "change" })
 map("", "C", '"_C', { group = "txt", desc = "change -> eol" })
-map("", "<leader>c", "c", { group = "txt", desc = "yank-change"})
-map("", "<leader>C", "C", { group = "txt", desc = "yank-change -> eol"})
+map("", "<leader>c", "c", { group = "txt", desc = "yank-change" })
+map("", "<leader>C", "C", { group = "txt", desc = "yank-change -> eol" })
 
--- cut (x/X)
+-- delete (x/X)
 map("", "x", '"_x', { group = "txt", desc = "delete" })
-map("", "X", '"_X', { group = "txt", desc = "delete -> eol" })
-map("", "<leader>x", "d", { group = "txt", desc = "yank-cut"})
-map("", "<leader>X", "D", { group = "txt", desc = "yank-cut -> eol"})
+map("", "X", '"_X', { group = "txt", desc = "delete back" })
+map("", "<leader>x", "x", { group = "txt", desc = "delete cut" })
+map("", "<leader>X", "X", { group = "txt", desc = "delete back & cut" })
 
 -- maintain cursor pos
 map("n", "J", "mzJ`z", { group = "txt", desc = "join w/o hop" })
@@ -241,29 +308,33 @@ map("n", "N", "Nzzzv", { desc = "prev search" })
 
 -- file/buffer management (auto-save, browser)
 map("n", "<leader>w", function()
-    local modifiable  = vim.api.nvim_buf_get_option(0, "modifiable")
+    local modifiable = vim.bo.modifiable
     if modifiable then vim.cmd.write() end
 end, { silent = true, group = "file", desc = "write to file" })
-map("n", "<leader>u", vim.cmd.UndotreeToggle, { group = "file", desc = "open undo-tree"  })
-map("n", "<leader>1", function() vim.cmd(
-    "Neotree action=focus source=filesystem position=current toggle reveal") end,
-    { silent = true, group = "file", desc = "open browser" })
-map("n", "<leader>2", function() vim.cmd(
-    "Neotree action=show source=filesystem position=left toggle reveal") end,
-    { silent = true, group = "file", desc = "open sidebar browser" })
+map("n", "<leader>u", vim.cmd.UndotreeToggle, { group = "file", desc = "open undo-tree" })
+map("n", "<leader>1", function()
+    vim.cmd("Neotree action=focus source=filesystem position=current toggle reveal")
+end, { silent = true, group = "file", desc = "open browser" })
+map("n", "<leader>2", function()
+    vim.cmd("Neotree action=show source=filesystem position=left toggle reveal")
+end, { silent = true, group = "file", desc = "open sidebar browser" })
 map({ "n", "v" }, "-", function()
     if vim.api.nvim_buf_get_option(0, "filetype") == "neo-tree" then
-        vim.fn.feedkeys("<BS>") else vim.fn.feedkeys("-") end
+        vim.fn.feedkeys("<BS>")
+    else
+        vim.fn.feedkeys("-")
+    end
 end, { group = "file", desc = "navigate up a dir" })
 map("n", "<leader>mx", function()
     local file = vim.fn.shellescape(vim.fn.expand("%"))
+
     if os.execute("[[ -f " .. file .. " ]]") == 0 then
         os.execute("chmod +x " .. file)
         vim.cmd.echomsg('"' .. vim.fn.expand("%") .. ' +x"')
     else
         vim.cmd.echoerr('"' .. vim.fn.expand("%") .. ' is not a file"')
     end
- end, { group = "file", desc = "make file +x" })
+end, { group = "file", desc = "make file +x" })
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
@@ -279,32 +350,21 @@ map("n", "<leader>hc", function() require("harpoon.mark").clear_all() end, { gro
 
 -- git (fugitive, gitsigns, diffview)
 -- :help Git
-map("n", "<leader>gl", function()
-    vim.cmd.TermExec("size=15 direction=horizontal cmd=gl")
-end, { group = "git", desc = "git log this branch"})
---
-map("n", "<leader>gl-", function()
-    vim.cmd.TermExec("size=15 direction=horizontal cmd=gl-")
-end, { group = "git", desc = "git log this branch, full msg"})
---
-map("n", "<leader>gL", function()
-    vim.cmd.TermExec("size=15 direction=horizontal cmd=gL-")
-end, { group = "git", desc = "git log all branches"})
---
-map("n", "<leader>gL-", function()
-    vim.cmd.TermExec("size=15 direction=horizontal cmd=gL-")
-end, { group = "git", desc = "git log all branches, full msg"})
+map("n", "<leader>gl", function() vim.cmd.TermExec("size=15 direction=horizontal cmd=gl") end, { group = "git", desc = "git log this branch" })
+map("n", "<leader>gl-", function() vim.cmd.TermExec("size=15 direction=horizontal cmd=gl-") end, { group = "git", desc = "git log this branch, full msg" })
+map("n", "<leader>gL", function() vim.cmd.TermExec("size=15 direction=horizontal cmd=gL-") end, { group = "git", desc = "git log all branches" })
+map("n", "<leader>gL-", function() vim.cmd.TermExec("size=15 direction=horizontal cmd=gL-") end, { group = "git", desc = "git log all branches, full msg" })
 
 -- git status/blame
-map("n", "<leader>gs", function() vim.cmd("Git") end, { group = "git", desc = "git status"})
-map("n", "<leader>gb", function() vim.cmd("Git_blame") end, { group = "git", desc = "git blame"})
+map("n", "<leader>gs", function() vim.cmd("Git") end, { group = "git", desc = "git status" })
+map("n", "<leader>gb", function() vim.cmd("Git_blame") end, { group = "git", desc = "git blame" })
 
 -- git diff
 -- :help diffview
-map("n", "<leader>do", function() vim.cmd("DiffviewOpen") end, { group = "git", desc = "diffview open"})
-map("n", "<leader>df", function() vim.cmd("DiffviewFileHistory") end, { group = "git", desc = "diffview log"})
-map("n", "<leader>dtf", function() vim.cmd("DiffviewToggleFiles") end, { group = "git", desc = "diffview file browser"})
-map("n", "<leader>dr", function() vim.cmd("DiffviewRefresh") end, { group = "git", desc = "diffview refresh"})
+map("n", "<leader>do", function() vim.cmd("DiffviewOpen") end, { group = "git", desc = "diffview open" })
+map("n", "<leader>df", function() vim.cmd("DiffviewFileHistory") end, { group = "git", desc = "diffview log" })
+map("n", "<leader>dtf", function() vim.cmd("DiffviewToggleFiles") end, { group = "git", desc = "diffview file browser" })
+map("n", "<leader>dr", function() vim.cmd("DiffviewRefresh") end, { group = "git", desc = "diffview refresh" })
 
 -- gitsigns
 -- :help gitsigns.txt
@@ -329,14 +389,22 @@ local use_magic = function(key, prefix)
     end
 end
 
-map("n", "*", "*N", { group = "gen", desc = "find word at cur"})
+map("n", "*", "*N", { group = "gen", desc = "find word at cur" })
 map("n", "/", "/\\v\\c", { group = "gen", desc = "regex search" })
 map("c", "%", function() use_magic("%", "%s/\\v\\c") end, { group = "gen", desc = "regex replace" })
 map("c", "%%", function() use_magic("%%", "s/\\v\\c") end, { group = "gen", desc = "regex replace visual" })
-map("n", "<leader>rw", ":%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>", { group = "txt", desc = "replace current word"})
+map("n", "<leader>rw", ":%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>", { group = "txt", desc = "replace current word" })
 
 -- Split management
-map("n", "<leader>z", function() require("mini.misc").zoom() end, { silent = true, group = "gen", desc = "toggle zoom" })
+map("n", "<leader>z", function()
+    local toggle_state = switch_toggle_state("zoom_bufnr_" .. vim.fn.bufnr(0))
+
+    require("mini.misc").zoom()
+
+    if toggle_state then
+        vim.api.nvim_win_set_config(0, { height = vim.fn.winheight(0) - 2 })
+    end
+end, { silent = true, group = "gen", desc = "toggle zoom" })
 map("n", "<leader>\\", function() vim.cmd("vsplit") end, { silent = true, group = "gen", desc = "vsplit" })
 map("n", "<leader>-", function() vim.cmd("split") end, { silent = true, group = "gen", desc = "split" })
 map("n", "<leader>q", function()
@@ -348,26 +416,26 @@ map("n", "<leader>q", function()
         vim.cmd.startinsert()
     end
 end, { silent = true, group = "gen", desc = "close" })
-map("n", "<leader>Q", function() vim.cmd("quit!") end, { silent = true, group = "gen", desc = "quit" })
-map("n", "<leader>tc", function() vim.cmd.tabclose() end, { group = "gen", desc = "close tab"})
+map("n", "<leader>Q", function() vim.cmd("quit!") end,
+    { silent = true, group = "gen", desc = "quit" })
+map("n", "<leader>tc", function() vim.cmd.tabclose() end,
+    { group = "gen", desc = "close tab" })
 
 -- Terminal split management
-map("n", "`", function()
+map("n", "<leader>`", function()
     vim.cmd("ToggleTerm size=15 direction=horizontal")
 
     if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
         vim.cmd.startinsert()
     end
-end, { group = "gen", desc = "bottom terminal"})
-map("n", "<leader>`", function()
-    vim.cmd.vsplit("term://" .. bin.bash)
-    vim.cmd.startinsert()
-end, { silent = true, group = "gen", desc = ":vsplit term" })
-
+end, { group = "gen", desc = "bottom term" })
 map("n", "<leader>~", function()
-    vim.cmd.split("term://" .. bin.bash)
-    vim.cmd.startinser()
-end, { silent = true, group = "gen", desc = ":split term" })
+    vim.cmd("ToggleTerm size=100 direction=vertical")
+
+    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
+        vim.cmd.startinsert()
+    end
+end, { group = "gen", desc = "vertical term" })
 
 -- Split navigation and sizing
 map({ "n" }, "<C-h>", "<C-w>h", { group = "nav", desc = "left window" })
@@ -402,12 +470,11 @@ map("n", "zm", function() require("ufo").closeFoldsWith() end, { group = "ui", d
 
 -- Telescope
 -- :help telescope.builtin
-
 -- files
 map("n", "<C-p>", function()
     if is_git_repo() then
         vim.print("Running Telescope git_files in " .. vim.cmd.pwd())
-        require("telescope.builtin").git_files({show_untracked = true})
+        require("telescope.builtin").git_files({ show_untracked = true })
     else
         vim.print("Running Telescope find_files in " .. vim.cmd.pwd())
         require("telescope.builtin").find_files()
@@ -440,7 +507,10 @@ map("n", "<leader>fk", function() require("telescope.builtin").keymaps() end, { 
 map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions() end, { group = "ts", desc = "goto definition" })
 map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { group = "ts", desc = "goto implementation" })
 map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { group = "ts", desc = "fuzzy quickfix" })
-map("n", "<leader>/", function() require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown { winblend = 10, previewer = false, }) end, { group = "ts", desc = "fuzzy in current buffer" })
+map("n", "<leader>/", function()
+    require("telescope.builtin").current_buffer_fuzzy_find(
+        require("telescope.themes").get_dropdown { winblend = 10, previewer = false, })
+end, { group = "ts", desc = "fuzzy in current buffer" })
 map("n", "<leader>fe", function() require("telescope.builtin").diagnostics() end, { group = "ts", desc = "fuzzy errors" })
 
 -- LSP keymaps
@@ -468,13 +538,19 @@ local lsp_maps = function(_, bufnr)
     map("n", "K", vim.lsp.buf.hover, { group = "lsp", desc = "show symbol info" })
     map("n", "<C-s>", vim.lsp.buf.signature_help, { group = "lsp", desc = "show signature info" })
     map("n", "<leader>td", vim.lsp.buf.type_definition, { group = "lsp", desc = "type definition" })
-    map("n", "<leader>S", function() require("telescope.builtin").lsp_document_symbols() end, { group = "lsp", desc = "document symbols" })
-    map("n", "<leader>ws", function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, { group = "lsp", desc = "workspace symbols" })
+    map("n", "<leader>S", function()
+        require("telescope.builtin").lsp_document_symbols()
+    end, { group = "lsp", desc = "document symbols" })
+    map("n", "<leader>ws", function()
+        require("telescope.builtin").lsp_dynamic_workspace_symbols()
+    end, { group = "lsp", desc = "workspace symbols" })
 
     -- workspace
     map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { group = "lsp", desc = "workspace add folder" })
     map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { group = "lsp", desc = "workspace remove folder" })
-    map("n", "<leader>wl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, { group = "lsp", desc = "workspace list folders" })
+    map("n", "<leader>wl", function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, { group = "lsp", desc = "workspace list folders" })
 end
 M.lsp_maps = lsp_maps
 
@@ -541,32 +617,32 @@ M.cmp_maps = cmp_maps
 local trouble_maps = { -- key mappings for actions in the trouble list
     -- map to {} to remove a mapping, for example:
     -- close = {},
-    close = "q", -- close the list
-    cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-    refresh = "r", -- manually refresh
+    close = "q",                                 -- close the list
+    cancel = "<esc>",                            -- cancel the preview and get back to your last window / buffer / cursor
+    refresh = "r",                               -- manually refresh
     jump = { "<cr>", "<tab>", "<2-leftmouse>" }, -- jump to the diagnostic or open / close folds
-    open_split = { "<c-x>" }, -- open buffer in new split
-    open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-    open_tab = { "<c-t>" }, -- open buffer in new tab
-    jump_close = {"o"}, -- jump to the diagnostic and close the list
-    toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-    switch_severity = "s", -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
-    toggle_preview = "P", -- toggle auto_preview
-    hover = "K", -- opens a small popup with the full multiline message
-    preview = "p", -- preview the diagnostic location
-    open_code_href = "c", -- if present, open a URI with more information about the diagnostic error
-    close_folds = {"zM", "zm"}, -- close all folds
-    open_folds = {"zR", "zr"}, -- open all folds
-    toggle_fold = {"zA", "za"}, -- toggle fold of current file
-    previous = "k", -- previous item
-    next = "j", -- next item
-    help = "?", -- help menu
+    open_split = { "<c-x>" },                    -- open buffer in new split
+    open_vsplit = { "<c-v>" },                   -- open buffer in new vsplit
+    open_tab = { "<c-t>" },                      -- open buffer in new tab
+    jump_close = { "o" },                        -- jump to the diagnostic and close the list
+    toggle_mode = "m",                           -- toggle between "workspace" and "document" diagnostics mode
+    switch_severity = "s",                       -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
+    toggle_preview = "P",                        -- toggle auto_preview
+    hover = "K",                                 -- opens a small popup with the full multiline message
+    preview = "p",                               -- preview the diagnostic location
+    open_code_href = "c",                        -- if present, open a URI with more information about the diagnostic error
+    close_folds = { "zM", "zm" },                -- close all folds
+    open_folds = { "zR", "zr" },                 -- open all folds
+    toggle_fold = { "zA", "za" },                -- toggle fold of current file
+    previous = "k",                              -- previous item
+    next = "j",                                  -- next item
+    help = "?",                                  -- help menu
 }
 M.trouble_maps = trouble_maps
 
 -- Unmap annoying maps forced by plugin authors
 local unimpaired = { "<s", ">s", "=s", "<p", ">p", "<P", ">P" }
-local bullets = { "<<", "<", ">", ">>"}
+local bullets = { "<<", "<", ">", ">>" }
 
 --- get_off_my_lawn delete keymaps
 --
@@ -580,42 +656,5 @@ local function get_off_my_lawn(args)
 end
 
 pcall(get_off_my_lawn, { unimpaired, bullets })
-
--- Register keys and documentation with which-key
--- local function which_key_register(groups)
---     local wk = require("which-key")
---
---     for group, modes in pairs(groups) do
---         for mode, mappings in pairs(modes) do
---             for key, cfg in pairs(mappings) do
---                 cfg.opts.mode = mode
---
---                 if key == cfg.lhs then
---                     if cfg.opts["prefix"] then
---                         wk.register({
---                             [cfg.opts.prefix] = {
---                                 name = group,
---                                 [cfg.lhs] = { cfg.rhs, cfg.desc },
---                             },
---                             cfg.opts
---                         })
---                     else
---                         vim.keymap.set(mode, cfg.lhs, cfg.rhs, { desc = cfg.desc })
---                     end
---                 else
---                     wk.register({
---                         [key] = {
---                             name = group,
---                             [cfg.lhs] = { cfg.rhs, cfg.desc },
---                         },
---                         cfg.opts
---                     })
---                 end
---             end
---         end
---     end
--- end
---
--- which_key_register(which_key_register_keys)
 
 return M

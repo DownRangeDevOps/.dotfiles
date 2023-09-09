@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinScrolled", "VimResized" }, {
 })
 
 -- Set options for specific file and buffer types
-vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
+vim.api.nvim_create_autocmd({ "TermEnter", "BufEnter", "TabEnter", "WinEnter" }, {
     group = ui,
     pattern = "*",
     callback = function()
@@ -100,7 +100,10 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
             Trouble = true,
         }
 
-        local tab_filetypes = { gitconfig = true }
+        local tab_filetypes = {
+            gitconfig = true,
+            terminfo = true,
+        }
 
         local filetype = vim.bo.filetype
         local buftype = vim.bo.buftype
@@ -114,30 +117,20 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
         vim.opt.foldlevelstart = 99
         vim.opt.foldenable = false
 
-        -- set overall ui
+        -- disable ui elements in view-only type buffers
         if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
             vim.wo.colorcolumn = false
+            vim.wo.cursorline = false
+            vim.wo.foldcolumn = "auto"
             vim.wo.list = false
             vim.wo.number = false
             vim.wo.relativenumber = false
+            vim.wo.signcolumn = "auto"
             vim.wo.spell = false
-        else
-            -- vim.wo.colorcolumn = "80"
-            -- vim.wo.list = true
-            -- vim.wo.number = true
-            -- vim.wo.numberwidth = 5
-            -- vim.wo.relativenumber = true
-            -- vim.wo.spell = true
-            -- vim.wo.listchars = table.concat({
-            --     "tab:⇢•",
-            --     "precedes:«",
-            --     "extends:»",
-            --     "trail:•",
-            --     "nbsp:•",
-            -- }, ",")
+            vim.wo.statuscolumn = ""
         end
 
-        -- set file specific ui
+        -- use tabs in specific files
         if tab_filetypes[filetype] then
             vim.bo.expandtab = false
             vim.wo.listchars = table.concat({
@@ -177,7 +170,8 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
             and vim.fn.expand("%") ~= "" then
 
             vim.cmd.write()
-            vim.fn.timer_start(1000, function() vim.cmd.echon("''") end)
+            pcall(vim.cmd.write)
+            vim.fn.defer_fn(function() vim.cmd.echon("''") end, 500)
         end
     end
 })
