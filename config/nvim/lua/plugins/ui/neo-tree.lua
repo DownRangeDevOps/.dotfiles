@@ -19,25 +19,27 @@ return {
             nowait = true,
         },
         filesystem = {
-            -- window = {
-            --     mappings = {
-            --         ["-"] = "navigate_up",
-            --         ["<CR>"] = function(state)
-            --             local node = state.tree:get_node()
-            --             vim.cmd.keepalt(vim.cmd.edit(node))
-            --         end
-            --     },
-            -- },
-        },
-        filtered_items = {
-            hide_dotfiles = false,
-            hide_gitignored = false,
-            follow_current_file = {
-                enabled = true,
-                leave_dirs_open = false,
-                hijack_netrw_behavior = "open_current",
-                use_libuv_file_watcher = true,
-            }
+            window = {
+                mappings = {
+                    ["-"] = "navigate_up",
+                    ["<CR>"] =  function(state)
+                        local origin_file = vim.fn.getreg("#")
+
+                        state.commands["open"](state)
+                        vim.fn.setreg("#", origin_file)
+                    end,
+                },
+            },
+            filtered_items = {
+                hide_dotfiles = false,
+                hide_gitignored = false,
+                follow_current_file = {
+                    enabled = true,
+                    leave_dirs_open = false,
+                    hijack_netrw_behavior = "open_current",
+                    use_libuv_file_watcher = true,
+                }
+            },
         },
     },
 }

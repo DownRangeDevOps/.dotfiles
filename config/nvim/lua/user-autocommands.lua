@@ -37,22 +37,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
--- Enable relative line numbers in neo-tree and exclude from file/jump list
-vim.api.nvim_create_autocmd( { "BufWinEnter" }, { group = ui,
-    pattern = "*",
-    callback = function()
-        if vim.api.nvim_buf_get_option(0, "filetype") == "neo-tree" then
-            local bufnr = vim.api.nvim_get_current_buf()
-
-            vim.opt.relativenumber = true
-            vim.api.nvim_buf_set_option(bufnr, "buflisted", false)
-            vim.api.nvim_buf_set_option(bufnr, "bufhidden", "delete")
-            vim.wo.list = false
-            vim.opt.colorcolumn = ""
-        end
-    end
-})
-
 -- Set cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ "CursorMoved" }, {
     group = ui,
@@ -67,7 +51,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 })
 
 -- Set scroll distance for <C-u> and <C-d>
-vim.api.nvim_create_autocmd({ "BufEnter", "WinScrolled", "VimResized" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "TermEnter", "WinEnter", "TabEnter", "WinScrolled", "VimResized" }, {
     group = ui,
     pattern = "*",
     callback = function()
@@ -77,7 +61,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinScrolled", "VimResized" }, {
 })
 
 -- Set options for specific file and buffer types
-vim.api.nvim_create_autocmd({ "TermEnter", "BufEnter", "TabEnter", "WinEnter" }, {
+vim.api.nvim_create_autocmd({ "BufWinEnter", "TermEnter", "BufEnter", "TabEnter", "WinEnter" }, {
     group = ui,
     pattern = "*",
     callback = function()
@@ -130,6 +114,15 @@ vim.api.nvim_create_autocmd({ "TermEnter", "BufEnter", "TabEnter", "WinEnter" },
             vim.wo.statuscolumn = ""
         end
 
+        -- force neo-tree ui settings
+        if vim.bo.filetype == "neo-tree" then
+            -- vim.api.nvim_buf_set_option(0, "bufhidden", "delete")
+            -- vim.api.nvim_buf_set_option(0, "buflisted", false)
+            vim.wo.colorcolumn = false
+            vim.wo.number = true
+            vim.wo.relativenumber = true
+        end
+
         -- use tabs in specific files
         if tab_filetypes[filetype] then
             vim.bo.expandtab = false
@@ -171,7 +164,7 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
 
             vim.cmd.write()
             pcall(vim.cmd.write)
-            vim.fn.defer_fn(function() vim.cmd.echon("''") end, 500)
+            vim.defer_fn(function() vim.cmd.echon("''") end, 500)
         end
     end
 })

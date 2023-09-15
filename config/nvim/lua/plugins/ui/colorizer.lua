@@ -21,9 +21,11 @@ return {
             css_fn = true, -- rgb_fn, hsl_fn
             mode = "virtualtext", -- foreground, background,  virtualtext
             tailwind = false, -- false, true/normal, lsp, both
+
             -- parsers can contain values used in |user_default_options|
             sass = { enable = false, parsers = { "css" }, }, -- Enable sass colors
             virtualtext = "●",
+
             -- update color values even if buffer is not focused
             -- example use: cmp_menu, cmp_docs
             always_update = false
