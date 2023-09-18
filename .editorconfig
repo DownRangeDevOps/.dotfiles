@@ -12,6 +12,10 @@ insert_final_newline = true
 max_line_length = 80
 trim_trailing_whitespace = true
 
+[COMMIT_EDITMSG]
+indent_size = 2
+max_line_length = 72
+
 [.gitconfig,*.terminfo]
 indent_size = 1
 indent_style = tab

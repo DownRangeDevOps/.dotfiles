@@ -109,8 +109,6 @@ function __git_master_or_main() {
         printf_error "This repository does not have a 'master' or 'main' branch!" >&2
         return 6
     fi
-
-    printf "%s" "${main_branch}"
 }
 
 function __git_get_cur_branch_name() {
@@ -327,7 +325,7 @@ git_rebase_merge_and_push() {
     local merge_commit_option
 
     source_branch="$(__git_get_cur_branch_name)"
-    main_branch="origin/$(__git_master_or_main)"
+    main_branch="$(__git_master_or_main)"
     merge_commit_option="--no-ff"
 
     if [[ ${1:-} == "--ff-only" ]]; then
@@ -337,12 +335,6 @@ git_rebase_merge_and_push() {
 
     if [[ -z ${1:-} ]]; then
         target_branch="${main_branch}"
-    else
-        target_branch="$1"
-
-        if git ls-remote --exit-code --quiet --heads origin "${target_branch}"; then
-            target_branch="origin/$1"
-        fi
     fi
 
     if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
@@ -358,7 +350,6 @@ git_rebase_merge_and_push() {
     else
         printf_callout "Updating ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
-        git fetch --prune >/dev/null 2>&1
         git pull --rebase >/dev/null 2>&1
         git checkout "${source_branch}" >/dev/null 2>&1
 
@@ -374,16 +365,11 @@ git_rebase_merge_and_push() {
             return 6
         fi
 
-        printf_callout "Updating from origin..."
-        git fetch -p >/dev/null 2>&1
-
         printf_callout "Rebasing onto ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
-        git pull -r >/dev/null 2>&1
         git rebase "${target_branch}" >/dev/null 2>&1
 
-        printf_callout "Merging to ${target_branch} and deleting ${source_branch}..."
-        printf "    "
+        printf_callout "Rebasing onto ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
         if git merge --no-stat "${merge_commit_option}" "${source_branch}" 2>&1 | indent_output; then
             git push origin --delete "${source_branch}" 2>/dev/null | indent_output

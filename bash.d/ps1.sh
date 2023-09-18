@@ -39,10 +39,10 @@ function __ps1_prompt() {
         git_root="${YELLOW}git@${PWD/${git_parent_path}\//}${RESET}"
         git_branch_with_state="${MAGENTA}$(__git_show_branch_state)${RESET}"
 
-        printf "\n%s\n" "${git_root} on ${git_branch_with_state}"
+        printf "%s\n" "${git_root} on ${git_branch_with_state}"
     else
         # `~` prints the path to $HOME
-        printf "\n%s\n" "${YELLOW}${PWD/~/\~}${RESET}"
+        printf "%s\n" "${YELLOW}${PWD/~/\~}${RESET}"
     fi
 
     time="$(date +%R) "
