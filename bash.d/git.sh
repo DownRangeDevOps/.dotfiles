@@ -362,7 +362,6 @@ git_rebase_merge_and_push() {
         git diff --color --stat "origin/${target_branch}" | indent_output
         printf "\n"
 
-        # prompt user
         if ! prompt_to_continue "Merge to ${target_branch} using ${merge_commit_option}?"; then
             git checkout "${source_branch}" >/dev/null 2>&1
             return 6
@@ -377,17 +376,13 @@ git_rebase_merge_and_push() {
         git rebase "origin/${target_branch}" >/dev/null 2>&1
 
         printf_callout "Merging to ${target_branch} and deleting ${source_branch}..."
-        if git merge --no-stat "${merge_commit_option}" "${source_branch}" 2>&1 | indent_output; then
-            git push origin --delete "${source_branch}" 2>/dev/null | indent_output
-            git branch --delete "${source_branch}" 2>&1 | indent_output
-        else
+        if ! git merge --no-stat "${merge_commit_option}" "${source_branch}" 2>&1 | indent_output; then
             printf_error "ERROR: merge failed, exiting."
             git checkout "${source_branch}" 2>&1 | indent_output
             return 6
         fi
         printf "\n"
 
-        # prompt user
         if ! prompt_to_continue "Push to origin?"; then
             git checkout "${source_branch}" 2>&1 | indent_output
             return 6
@@ -396,6 +391,16 @@ git_rebase_merge_and_push() {
         printf_callout "Pushing ${target_branch}..."
         git push --progress origin HEAD 2>&1 | indent_output
         printf "\n"
+
+        if ! prompt_to_continue "Delete ${source_branch}?"; then
+            git checkout "${source_branch}" 2>&1 | indent_output
+            return 6
+        fi
+
+        git push origin --delete "${source_branch}" 2>/dev/null | indent_output
+        git branch --delete "${source_branch}" 2>&1 | indent_output
+        printf "\n"
+
     fi
 }
 
