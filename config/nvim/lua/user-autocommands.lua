@@ -10,6 +10,18 @@ local user = vim.api.nvim_create_augroup("USER", { clear = true })
 local plugin = vim.api.nvim_create_augroup("PLUGIN", { clear = true })
 
 -- ----------------------------------------------
+-- Plugins
+-- ----------------------------------------------
+-- setup nested comments on attach
+vim.api.nvim_create_autocmd("BufEnter", {
+    group = plugin,
+    pattern = "*",
+    callback = function()
+        pcall(require('mini.misc').use_nested_comments)
+    end,
+})
+
+-- ----------------------------------------------
 -- Neovim
 -- ----------------------------------------------
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -25,22 +37,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
--- Enable relative line numbers in neo-tree and exclude from file/jump list
-vim.api.nvim_create_autocmd( { "BufWinEnter" }, { group = ui,
-    pattern = "*",
-    callback = function()
-        if vim.api.nvim_buf_get_option(0, "filetype") == "neo-tree" then
-            local bufnr = vim.api.nvim_get_current_buf()
-
-            vim.opt.relativenumber = true
-            vim.api.nvim_buf_set_option(bufnr, "buflisted", false)
-            vim.api.nvim_buf_set_option(bufnr, "bufhidden", "delete")
-            vim.wo.list = false
-            vim.opt.colorcolumn = ""
-        end
-    end
-})
-
 -- Set cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ "CursorMoved" }, {
     group = ui,
@@ -55,7 +51,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 })
 
 -- Set scroll distance for <C-u> and <C-d>
-vim.api.nvim_create_autocmd({ "BufEnter", "WinScrolled", "VimResized" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "TermEnter", "WinEnter", "TabEnter", "WinScrolled", "VimResized" }, {
     group = ui,
     pattern = "*",
     callback = function()
@@ -65,7 +61,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinScrolled", "VimResized" }, {
 })
 
 -- Set options for specific file and buffer types
-vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
+vim.api.nvim_create_autocmd({ "BufWinEnter", "TermEnter", "BufEnter", "TabEnter", "WinEnter" }, {
     group = ui,
     pattern = "*",
     callback = function()
@@ -84,9 +80,14 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
             quickfix = true,
             terminal = true,
             prompt = true,
+            starter = true,
+            Trouble = true,
         }
 
-        local tab_filetypes = { gitconfig = true }
+        local tab_filetypes = {
+            gitconfig = true,
+            terminfo = true,
+        }
 
         local filetype = vim.bo.filetype
         local buftype = vim.bo.buftype
@@ -94,30 +95,35 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "TabEnter", "BufNew" }, {
         filetype = filetype or "nofiletype"
         buftype = buftype or "nobuftype"
 
-        -- set overall ui
+        -- keep other plugins from changing nvim-ufo fold settings
+        vim.opt.foldcolumn = "1"
+        vim.opt.foldlevel = 99
+        vim.opt.foldlevelstart = 99
+        vim.opt.foldenable = false
+
+        -- disable ui elements in view-only type buffers
         if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
             vim.wo.colorcolumn = false
+            vim.wo.cursorline = false
+            vim.wo.foldcolumn = "auto"
             vim.wo.list = false
             vim.wo.number = false
             vim.wo.relativenumber = false
+            vim.wo.signcolumn = "auto"
             vim.wo.spell = false
-        else
-            vim.wo.colorcolumn = "80"
-            vim.wo.list = true
-            vim.wo.number = true
-            vim.wo.numberwidth = 5
-            vim.wo.relativenumber = true
-            vim.wo.spell = true
-            vim.wo.listchars = table.concat({
-                "tab:⇢•",
-                "precedes:«",
-                "extends:»",
-                "trail:•",
-                "nbsp:•",
-            }, ",")
+            vim.wo.statuscolumn = ""
         end
 
-        -- set file specific ui
+        -- force neo-tree ui settings
+        if vim.bo.filetype == "neo-tree" then
+            -- vim.api.nvim_buf_set_option(0, "bufhidden", "delete")
+            -- vim.api.nvim_buf_set_option(0, "buflisted", false)
+            vim.wo.colorcolumn = false
+            vim.wo.number = true
+            vim.wo.relativenumber = true
+        end
+
+        -- use tabs in specific files
         if tab_filetypes[filetype] then
             vim.bo.expandtab = false
             vim.wo.listchars = table.concat({
@@ -153,10 +159,12 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
     callback = function()
         if vim.g.auto_save
             and vim.api.nvim_buf_get_option(0, "buftype") == ""
-            and vim.api.nvim_buf_get_option(0, "modifiable") then
+            and vim.api.nvim_buf_get_option(0, "modifiable")
+            and vim.fn.expand("%") ~= "" then
 
             vim.cmd.write()
-            vim.fn.timer_start(1000, function() vim.cmd.echon("''") end)
+            pcall(vim.cmd.write)
+            vim.defer_fn(function() vim.cmd.echon("''") end, 500)
         end
     end
 })
@@ -167,19 +175,20 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     pattern = "*",
     callback = function()
         local bullets_mappings = {
-            promote    = { mode = "i",  lhs = "<C-d>",     rhs = function() vim.cmd("BulletPromote") end,       opts = { desc = keymap.desc("txt", "bullets promote") } },
-            demote     = { mode = "i",  lhs = "<C-t>",     rhs = function() vim.cmd("BulletDemote") end,        opts = { desc = keymap.desc("txt", "bullets demote") } },
-            vpromote   = { mode = "v", lhs  = "<C-d>",     rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { desc = keymap.desc("txt", "bullets promote") } },
-            vdemote    = { mode = "v", lhs  = "<C-t>",     rhs = function() vim.cmd("BulletDemoteVisual") end,  opts = { desc = keymap.desc("txt", "bullets demote") } },
-            enter      = { mode = "i",  lhs = "<CR>",      rhs = function() vim.cmd("InsertNewBullet") end,     opts = { desc = keymap.desc("txt", "bullets newline") } },
-            checkbliox = { mode = "n",  lhs = "<leader>x", rhs = function() vim.cmd("ToggleCheckbox") end,      opts = { desc = keymap.desc("txt", "bullets toggle checkbox") } },
-            openline   = { mode = "n",  lhs = "o",         rhs = function() vim.cmd("InsertNewBullet") end,     opts = { desc = keymap.desc("txt", "bullets newline") } },
-            renumber   = { mode = "n",  lhs = "gN",        rhs = function() vim.cmd("RenumberList") end,        opts = { desc = keymap.desc("txt", "bullets renumber") } },
-            vrenumber  = { mode = "v", lhs  = "gN",        rhs = function() vim.cmd("RenumberSelection") end,   opts = { desc = keymap.desc("txt", "bullets renumber") } },
+            promote    = { mode = "i", lhs = "<C-d>",     rhs = function() vim.cmd("BulletPromote") end,       opts = { group = "list", desc = "bullets promote" } },
+            demote     = { mode = "i", lhs = "<C-t>",     rhs = function() vim.cmd("BulletDemote") end,        opts = { group = "list", desc = "bullets demote" } },
+            vpromote   = { mode = "v", lhs  = "<C-d>",    rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },
+            vdemote    = { mode = "v", lhs  = "<C-t>",    rhs = function() vim.cmd("BulletDemoteVisual") end,  opts = { group = "list", desc = "bullets demote" } },
+            enter      = { mode = "i", lhs = "<CR>",      rhs = function() vim.cmd("InsertNewBullet") end,     opts = { group = "list", desc = "bullets newline" } },
+            checkbliox = { mode = "n", lhs = "<leader>x", rhs = function() vim.cmd("ToggleCheckbox") end,      opts = { group = "list", desc = "bullets toggle checkbox" } },
+            openline   = { mode = "n", lhs = "o",         rhs = function() vim.cmd("InsertNewBullet") end,     opts = { group = "list", desc = "bullets newline" } },
+            renumber   = { mode = "n", lhs = "gN",        rhs = function() vim.cmd("RenumberList") end,        opts = { group = "list", desc = "bullets renumber" } },
+            vrenumber  = { mode = "v", lhs  = "gN",       rhs = function() vim.cmd("RenumberSelection") end,   opts = { group = "list", desc = "bullets renumber" } },
         }
+
         if vim.g.bullets_enabled_file_types_tbl[vim.api.nvim_buf_get_option(0, "filetype")] then
             for _, value in pairs(bullets_mappings) do
-                vim.keymap.set(value["mode"], value["lhs"], value["rhs"], value["opts"])
+                vim.keymap.set(value["mode"], value["lhs"], value["rhs"], value["opts.desc"])
             end
         else
             for _, value in pairs(bullets_mappings) do
@@ -190,13 +199,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
 })
 
 -- Trim trailing white-space/lines
-vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave" }, {
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     group = user,
     pattern = "*",
     callback = function()
-        local is_diffview = vim.fn.expand("%"):find("^diffview")
+        local file_name = vim.fn.expand("%")
+        local is_diffview = file_name:find("^diffview")
 
-        if vim.api.nvim_buf_get_option(0, "modifiable") and not is_diffview then
+        if file_name ~= "" and vim.api.nvim_buf_get_option(0, "modifiable") and not is_diffview then
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
         end
@@ -211,7 +221,7 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
         local bufnr = vim.fn.bufnr()
 
         if bufnr then
-            keymap.thanos_snap(bufnr)
+            keymap.snap(bufnr)
         end
     end
 })

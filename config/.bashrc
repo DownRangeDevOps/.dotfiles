@@ -149,10 +149,14 @@ alias gbn="__git_get_cur_branch_name"
 alias gco="__git_checkout"
 alias gcod="git checkout develop"
 alias gcom="git checkout \$(__git_master_or_main)"
-alias gd="__git_diff_so_fancy_with_less"
-alias gd1="__git_diff_so_fancy_with_less HEAD~"
-alias gdd="__git_diff_so_fancy_with_less origin/develop..."
-alias gdm="__git_diff_so_fancy_with_less origin/\$(__git_master_or_main)..."
+alias gd="git diff"
+alias gd1="git diff HEAD~"
+alias gdd="git diff origin/develop..."
+alias gdm="git diff origin/\$(__git_master_or_main)..."
+# alias gd="__git_diff_so_fancy_with_less"
+# alias gd1="__git_diff_so_fancy_with_less HEAD~"
+# alias gdd="__git_diff_so_fancy_with_less origin/develop..."
+# alias gdm="__git_diff_so_fancy_with_less origin/\$(__git_master_or_main)..."
 alias gdmb="git_delete_merged_branches"
 alias gf="git fetch --prune"
 alias gfu="git_fixup"
@@ -172,8 +176,9 @@ alias gstatd="__git_status_vs_develop"
 alias ga.="__git_add --all"
 alias ga="__git_add"
 alias gab="git_absorb"
-alias gac="pre-commit run --all-files && __git_add --update && git commit --no-verify --gpg-sign"
 alias gc="git commit --gpg-sign"
+alias gac="pre-commit run --all-files && __git_add --update && git commit --no-verify --gpg-sign"
+alias gcpu="git_commit_and_push"
 alias gcp="git cherry-pick -x" # -x: add "cherry-picked from..." message
 alias gqf="ga --update && gc --amend --no-edit && gfpo"
 alias gst="git stash"
@@ -196,6 +201,10 @@ alias gfpo="git push --force-with-lease origin HEAD"
 
 # Repository info
 alias git-contributors="git shortlog --summary --email --numbered"
+
+# Helpers
+alias gcot="git_checkout_ticket"
+alias opr="git_open_pull_request"
 
 # ------------------------------------------------
 #  Homebrew

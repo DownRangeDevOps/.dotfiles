@@ -377,7 +377,6 @@ git_rebase_merge_and_push() {
         git rebase "origin/${target_branch}" >/dev/null 2>&1
 
         printf_callout "Merging to ${target_branch} and deleting ${source_branch}..."
-        printf "    "
         if git merge --no-stat "${merge_commit_option}" "${source_branch}" 2>&1 | indent_output; then
             git push origin --delete "${source_branch}" 2>/dev/null | indent_output
             git branch --delete "${source_branch}" 2>&1 | indent_output

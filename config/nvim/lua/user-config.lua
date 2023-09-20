@@ -3,7 +3,6 @@ local M = {}
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
-vim.cmd.colorscheme("catppuccin")
 vim.env.VISUAL = "nvr -cc split --remote-wait" -- Prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
@@ -96,28 +95,6 @@ vim.opt.wildignore = table.concat({
     "*/.fdb_latexmk",
 }, ",")
 
--- Disable unused builtin vim plugins
-local disabled_built_ins = {
-    "2html_plugin",
-    "getscript",
-    "getscriptPlugin",
-    "gzip",
-    "logipat",
-    "matchit",
-    "matchparen",
-    "tar",
-    "tarPlugin",
-    "rrhelper",
-    "vimball",
-    "vimballPlugin",
-    "zip",
-    "zipPlugin",
-}
-
-for _, plugin in pairs(disabled_built_ins) do
-  vim.g["loaded_" .. plugin] = 1
-end
-
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
@@ -136,7 +113,6 @@ vim.opt.scrolloff = 8
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.list = true
-
 vim.opt.listchars = table.concat({
     "tab:⇢•",
     "precedes:«",
@@ -156,11 +132,12 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldenable = false
 
 -- Terminal
-vim.opt.termguicolors = true -- Use 24-bit colors
+-- :help guicursor
+vim.opt.termguicolors = true
 vim.opt.guicursor = table.concat({
-    "n-c-v-sm:block-Cursor/lCursor",
-    "i-ci-ve:ver25-Cursor/lCursor",
-    "r-cr-o:hor20-Cursor/lCursor",
+    "n-c-v-sm:block",
+    "i-ci-ve:ver25",
+    "r-cr-o:hor20",
     "a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor",
 }, ",")
 
@@ -184,24 +161,5 @@ local script_path = function()
     return str:match("(.*/)")
 end
 M.script_path = script_path()
-
--- ----------------------------------------------
--- Plugins
--- ----------------------------------------------
--- indent blankline
-local indet_blankline_session_opts = { "tabpages", "globals" }
-for _, i in ipairs(indet_blankline_session_opts) do
-    if not vim.opt.sessionoptions[i] then
-        table.insert(vim.opt.sessionoptions, i)
-    end
-end
-
--- Configure dkarter/bullets.vim (https://github.com/dkarter/bullets.vim)
-vim.g.bullets_set_mappings = 0
-vim.g.bullets_renumber_on_change = 1
-vim.g.bullets_outline_levels = { "num", "std*" }
-vim.g.bullets_checkbox_markers = " ⁃✔︎"
-vim.g.bullets_enabled_file_types = "markdown,text,gitcommit,scratch"
-vim.g.bullets_enabled_file_types_tbl = { markdown = true, text = true, gitcommit = true, scratch = true }
 
 return M

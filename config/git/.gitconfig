@@ -14,18 +14,27 @@
 	autocrlf = input
 	editor = nvim
 	ignorecase = false
-	pager = less -JRS
+	pager = delta # less -JRS
 [cleanup]
 	strip = true
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true # navigate sections with n/N
+	light = false
+	line-numbers = true
+	side-by-side = true
+	diff-so-fancy = true
 [diff]
 	tool = vim-fugitive
 	algorithm = histogram
+	colorMoved = default
 	context = 6
 [difftool "vim-fugitive"]
 	cmd = 'nvim -f -c "Gvdiff" "$MERGED"'
 [merge]
-	; conflictstyle = diff3
-	tool = pycharm
+	conflictstyle = diff3
+	tool = nvim
 [mergetool "pycharm"]
 	cmd = /usr/local/bin/charm-ce merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 	trustExitCode = true
