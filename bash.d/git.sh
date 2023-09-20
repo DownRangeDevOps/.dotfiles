@@ -365,9 +365,8 @@ git_rebase_merge_and_push() {
             return 6
         fi
 
-        printf_callout "Rebasing onto ${target_branch}..."
-        git checkout "${target_branch}" >/dev/null 2>&1
-        git rebase "${target_branch}" >/dev/null 2>&1
+        printf_callout "Updating from origin..."
+        git fetch -p >/dev/null 2>&1
 
         printf_callout "Rebasing onto ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
