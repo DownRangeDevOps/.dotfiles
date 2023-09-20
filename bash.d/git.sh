@@ -8,22 +8,13 @@ function __git_add_completion_to_aliases() {
     # Add git completion to aliases
     if declare -f -F __git_complete >/dev/null; then
         # checkout
-        __git_complete __git_checkout _git_checkout
-        __git_complete gcod _git_checkout
-        __git_complete gcom _git_checkout
+        __git_complete git_fuzzy_checkout _git_checkout
 
         # add
-        __git_complete ga _git_add
+        __git_complete git_add _git_add
 
         # branch
-        __git_complete gb _git_branch
         __git_complete git_branch _git_branch
-
-        # stash
-        __git_complete gst _git_stash
-
-        #rebase
-        __git_complete grb _git_rebase
     fi
 }
 __git_add_completion_to_aliases
@@ -50,23 +41,6 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 #  Private
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
-
-# Extend git cmds
-function __git_add() {
-    git_root="$(__git_project_root)"
-
-    (
-        cd "${git_root}" || exit 1
-        git add "$@"
-
-        local changed_files
-        changed_files="$(git status --short --no-renames | cut -d ' ' -f 3-)"
-
-        fix_missing_newline "${changed_files}"
-
-        git add "$@"
-    )
-}
 
 # Repository information
 function __git_is_repo() {
@@ -113,7 +87,7 @@ function __git_master_or_main() {
     printf "%s" "${main_branch}"
 }
 
-function __git_get_cur_branch_name() {
+function git_get_cur_branch_name() {
     git rev-parse --abbrev-ref HEAD
 }
 
@@ -232,9 +206,26 @@ function __git_get_merged_branches() {
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
 
+function git_add() {
+    git_root="$(__git_project_root)"
+
+    (
+        cd "${git_root}" || exit 1
+        git add "$@"
+
+        local changed_files
+        changed_files="$(git status --short --no-renames | cut -d ' ' -f 3-)"
+
+        fix_missing_newline "${changed_files}"
+
+        git add "$@"
+    )
+}
+
+
 # Committing
 function git_absorb() {
-    __git_add -u
+    git_add -u
     git absorb --and-rebase "$@"
 }
 
@@ -242,7 +233,7 @@ function git_fixup() {
     local merge_base
     merge_base="$(git merge-base "$(__git_master_or_main)" HEAD)"
 
-    __git_add --update
+    git_add --update
     git log -n 50 --pretty=format:"%h %s" --no-merges |
         fzf |
         awk '{print $1}' |
@@ -250,7 +241,6 @@ function git_fixup() {
     git rebase --interactive "${merge_base}"
 }
 
-# Branching
 function git_branch() {
     case ${1:-} in
     -D | -m)
@@ -262,7 +252,7 @@ function git_branch() {
     esac
 }
 
-function __git_checkout() {
+function git_fuzzy_checkout() {
     if [[ ${1:-} ]]; then
         git checkout "${@}"
     else
@@ -320,13 +310,14 @@ function git_delete_merged_branches() {
     fi
 }
 
-git_rebase_merge_and_push() {
+# merging
+function git_rebase_merge_and_push() {
     local main_branch
     local source_branch
     local target_branch
     local merge_commit_option
 
-    source_branch="$(__git_get_cur_branch_name)"
+    source_branch="$(git_get_cur_branch_name)"
     main_branch="$(__git_master_or_main)"
     merge_commit_option="--no-ff"
 
@@ -404,8 +395,7 @@ git_rebase_merge_and_push() {
     fi
 }
 
-gcpu() {
-    # git commit and push
+function git_commit_push() {
     if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
         echo "Usage: gacp [-a] [-m <message>]"
@@ -416,7 +406,7 @@ gcpu() {
     COMMAND=""
 
     if [[ ${1:-} == "-a" ]]; then
-        COMMAND="__git_add --all && "
+        COMMAND="git_add --all && "
         shift
     fi
 
@@ -431,7 +421,7 @@ gcpu() {
     $COMMAND
 }
 
-gnuke() {
+function git_nuke_branch() {
     # delete local and remote branch
     if [[ $# -eq 0 || ${1:-} == "help" || ${1:-} == "--help" ]]; then
         echo "Usage: gnuke <branch>"
@@ -442,7 +432,7 @@ gnuke() {
     git branch -D "$@" 2>/dev/null
 }
 
-gnukethis() {
+function git_nuke_cur_branch() {
     # delete current branch and it's remote
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
@@ -450,7 +440,7 @@ gnukethis() {
     git branch -D "${BRANCH}"
 }
 
-glc() {
+function git_log_copy() {
     # git log copy - copy the git log for this branch to the clipboard
     # shellcheck disable=SC2046
     LOG="$(git log \"origin/$(__git_master_or_main)..HEAD\")"
@@ -463,7 +453,7 @@ ${LOG}
 EOF
 }
 
-gcot() {
+function git_checkout_ticket() {
     TICKET=$(echo "${@}" |
         tr -t "${@}" 50 |
         sed "s/^[\.\/]//" |
@@ -474,7 +464,7 @@ gcot() {
     __git_checkout -b "${TICKET}"
 }
 
-opr() {
+function git_open_pull_request() {
     # [o]pen [p]ull [r]equest - open a pull request for the current branch
     # Real URL example: https://gitlab.com/${ORG_NAME}/${PROJECT_NAME}/${REPO_NAME}/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4597--docker-add-health-check
 

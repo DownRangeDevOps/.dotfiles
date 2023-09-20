@@ -141,12 +141,12 @@ alias dc="docker compose"
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating git aliases..."
 
-# main
+# general
 alias g="git"
 alias gb="git_branch"
 alias gba="git branch --all"
-alias gbn="__git_get_cur_branch_name"
-alias gco="__git_checkout"
+alias gbn="git_get_cur_branch_name"
+alias gco="git_fuzzy_checkout"
 alias gcod="git checkout develop"
 alias gcom="git checkout \$(__git_master_or_main)"
 alias gd="git diff"
@@ -173,8 +173,8 @@ alias gstat="__git_status_vs_master"
 alias gstatd="__git_status_vs_develop"
 
 # committing
-alias ga.="__git_add --all"
-alias ga="__git_add"
+alias ga.="git_add --all"
+alias ga="git_add"
 alias gab="git_absorb"
 alias gc="git commit --gpg-sign"
 alias gac="pre-commit run --all-files && __git_add --update && git commit --no-verify --gpg-sign"
@@ -193,7 +193,7 @@ alias grbs="gf && git rebase --interactive --autosquash \$(git merge-base HEAD o
 
 # Merging
 alias gm="git_rebase_merge_and_push"
-alias gmerged="__git_get_merged_branches"
+alias gmerged="git_get_merged_branches"
 
 # Pushing
 alias gpu="git push --set-upstream \$(git remote) HEAD"
@@ -204,6 +204,10 @@ alias git-contributors="git shortlog --summary --email --numbered"
 
 # Helpers
 alias gcot="git_checkout_ticket"
+alias gcpu="git_commit_push"
+alias glc="git_log_copy"
+alias gnuke="git_nuke_branch"
+alias gnukethis="git_nuke_cur_branch"
 alias opr="git_open_pull_request"
 
 # ------------------------------------------------
