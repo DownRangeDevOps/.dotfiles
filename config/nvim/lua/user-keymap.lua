@@ -306,6 +306,11 @@ map("n", "<C-d>", "<C-d>zz", { group = "gen", desc = "pgdn" })
 map("n", "n", "nzzzv", { desc = "next search" })
 map("n", "N", "Nzzzv", { desc = "prev search" })
 
+-- Copy line info
+map("n", "gcl", function()
+    vim.fn.setreg("+", vim.fn.expand('%:.') .. ":" .. vim.fn.line("."))
+end, { group = "txt", desc = "copy path to cur line" })
+
 -- file/buffer management (auto-save, browser)
 map("n", "<leader>w", function()
     local modifiable = vim.bo.modifiable
@@ -359,7 +364,7 @@ map("n", "<leader>gL-", function() vim.cmd.TermExec("size=15 direction=horizonta
 map("n", "<leader>gs", function() vim.cmd("Git") end, { group = "git", desc = "git status" })
 map("n", "<leader>gb", function() vim.cmd("Git_blame") end, { group = "git", desc = "git blame" })
 
--- git diff
+-- git diffview
 -- :help diffview
 map("n", "<leader>do", function() vim.cmd("DiffviewOpen") end, { group = "git", desc = "diffview open" })
 map("n", "<leader>df", function() vim.cmd("DiffviewFileHistory") end, { group = "git", desc = "diffview log" })
@@ -368,6 +373,7 @@ map("n", "<leader>dr", function() vim.cmd("DiffviewRefresh") end, { group = "git
 
 -- gitsigns
 -- :help gitsigns.txt
+map("n", "<C-e>", "5<C-e>", { group = "nav", desc = "scroll down 5 lines" })
 local gitsigns_maps = function(bufnr)
     vim.keymap.set("n", "<leader>p", require("gitsigns").prev_hunk, { buffer = bufnr, desc = "go prev hunk" })
     vim.keymap.set("n", "<leader>nh", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
@@ -430,7 +436,7 @@ map("n", "<leader>`", function()
     end
 end, { group = "gen", desc = "bottom term" })
 map("n", "<leader>~", function()
-    vim.cmd("ToggleTerm size=100 direction=vertical")
+    vim.cmd("ToggleTerm size=120 direction=vertical")
 
     if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
         vim.cmd.startinsert()
@@ -457,6 +463,10 @@ map("n", "¬", function() vim.cmd("vertical resize -2") end, { group = "nav", de
 -- Tab navigation
 map("", "<leader>˙", function() vim.cmd.tabprevious() end, { group = "nav", desc = "prev window" })
 map("", "<leader>¬", function() vim.cmd.tabnext() end, { group = "nav", desc = "next window" })
+
+-- Window scrolling
+map("n", "<C-y>", "4<C-y>", { group = "nav", desc = "scroll up 4 lines" })
+map("n", "<C-e>", "4<C-e>", { group = "nav", desc = "scroll down 4 lines" })
 
 -- ----------------------------------------------
 -- Plugin Keymaps
