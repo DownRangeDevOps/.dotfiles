@@ -119,7 +119,7 @@ function __git_project_root() {
     printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)"
 }
 
-function __git_status_vs_master() {
+function git_status_vs_master() {
     printf "%s\n" \
         "==> Log: " \
         "$(indent_output "$(git log "$(__git_master_or_main)..")")" \
@@ -128,7 +128,7 @@ function __git_status_vs_master() {
         "$(indent_output "$(git diff --stat "$(__git_master_or_main)")")"
 }
 
-function __git_status_vs_develop() {
+function git_status_vs_develop() {
     if git show-ref --verify --quiet "refs/heads/$(__git_master_or_main)"; then
         printf "%s\n" \
             "==> Log: " \
@@ -145,54 +145,6 @@ function __git_status_vs_develop() {
 # diffing
 function __git_diff_so_fancy_with_less() {
     git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
-}
-
-# logging
-function __git_log_branch() {
-    git log \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" |
-        LESS -SFX -R
-}
-
-function __git_log_branch_no_trunc_msg() {
-    git log \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" |
-        LESS -SFX -R
-}
-
-function __git_log_branch_only_msg() {
-    git log --color --format=format:'• %C(yellow)%s%C(reset)' "$@" | LESS -SFX -R
-}
-
-function __git_log_all_branches() {
-    git log \
-        --branches \
-        --remotes \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" |
-        LESS -SFX -R
-}
-
-function __git_log_all_branches_no_trunc_msg() {
-    git log \
-        --branches \
-        --remotes \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' |
-        LESS -SFX -R
 }
 
 function __git_get_merged_branches() {
@@ -222,6 +174,53 @@ function git_add() {
     )
 }
 
+# logging
+function git_log_branch() {
+    git log \
+        --graph \
+        --color \
+        --decorate=short \
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
+        "$@" |
+        LESS -SFX -R
+}
+
+function git_log_branch_no_trunc_msg() {
+    git log \
+        --graph \
+        --color \
+        --decorate=short \
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
+        "$@" |
+        LESS -SFX -R
+}
+
+function git_log_branch_only_msg() {
+    git log --color --format=format:'• %C(yellow)%s%C(reset)' "$@" | LESS -SFX -R
+}
+
+function git_log_all_branches() {
+    git log \
+        --branches \
+        --remotes \
+        --graph \
+        --color \
+        --decorate=short \
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
+        "$@" |
+        LESS -SFX -R
+}
+
+function git_log_all_branches_no_trunc_msg() {
+    git log \
+        --branches \
+        --remotes \
+        --graph \
+        --color \
+        --decorate=short \
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' |
+        LESS -SFX -R
+}
 
 # Committing
 function git_absorb() {
