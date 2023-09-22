@@ -206,11 +206,10 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 -- ----------------------------------------------
 local mason_lspconfig = require("mason-lspconfig")
 local mason_lsp_servers = {
-    -- Enable the following language servers:
-    --   `filetypes` = default filetypes the language server will attach to
+    -- Ensure these language servers are installed:
     lua_ls = { -- https://github.com/LuaLS/lua-language-server/wiki/Diagnostics
         Lua = {
-            filetypes = "lua",
+            filetypes = "lua", -- filetypes the language server will attach to
             workspace = { checkThirdParty = false },
             telemetry = { enable = false },
             diagnostics = {
@@ -218,29 +217,6 @@ local mason_lsp_servers = {
             },
         },
     },
-    pyre = { filetypes = "python" }, -- https://github.com/facebook/pyre-check
-    bashls = { filetypes = "sh" },
-    -- docker_compose_language_server = {},
-    -- -- https://github.com/microsoft/vscode-json-languageservice
-    -- jsonls = {},
-    -- dockerls = {},
-    -- nginx_language_server = { -- https://github.com/pappasam/nginx-language-server
-    --     languageserver = {
-    --         nginx_language_server = {
-    --             command = "nginx-language-server",
-    --             filetypes = { "nginx" },
-    --             rootPatterns = { "nginx.conf", ".git" }
-    --         }
-    --     }
-    -- },
-    -- terraformls = {}, -- https://github.com/hashicorp/terraform-lsp
-    -- -- https://github.com/terraform-linters/tflint
-    -- -- plugin "terraform" {
-    -- --    enabled = true
-    -- --    preset  = "recommended"
-    -- -- }
-    -- tflint = {},
-    -- yaml_language_server = {}, -- https://github.com/redhat-developer/yaml-language-server
 }
 
 mason_lspconfig.setup({ ensure_installed = mason_lsp_servers, })

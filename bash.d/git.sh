@@ -51,27 +51,38 @@ function __git_is_repo() {
     fi
 }
 
-function __git_project_name() {
-    local git_first_remote
+function __git_is_worktree() {
     local git_dir
     local git_common_dir
-    local git_toplevel
-    local worktree_prefix
-
-    git_dir=$(git rev-parse --git-dir)
-    git_common_dir=$(git rev-parse --git-common-dir)
-    git_toplevel=$(git rev-parse --show-toplevel 2>/dev/null)
-    git_first_remote=$(git remote show -n | head -n 1)
+    git_dir=$(realpath "$(git rev-parse --git-dir)")
+    git_common_dir=$(realpath "$(git rev-parse --git-common-dir)")
 
     if [[ ${git_dir} != "${git_common_dir}" ]]; then
-        worktree_prefix="$(basename "$(dirname "${git_toplevel}")")/"
+        return 0
+    else
+        return 1
+    fi
+}
+
+function __git_project_path() {
+    local git_toplevel
+    local git_toplevel_basename
+    local git_intra_repo_path
+
+    if __git_is_worktree; then
+        git_toplevel="$(git rev-parse --git-common-dir)"
+    else
+        git_toplevel="$(git rev-parse --show-toplevel 2>/dev/null)"
     fi
 
-    if [[ -n ${git_first_remote} ]]; then
-        printf "%s" "$(git remote get-url "${git_first_remote}")"
-    else
-        printf "%s" "git@local:${worktree_prefix}$(basename "${git_toplevel}").git"
+    if [[ -z ${git_toplevel} ]]; then
+        git_toplevel=${PWD}
     fi
+
+    git_toplevel_basename=$(basename "${git_toplevel}")
+    git_intra_repo_path=${PWD/"${git_toplevel}"/}
+
+    printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
 }
 
 function __git_master_or_main() {
@@ -182,12 +193,33 @@ function __git_get_merged_branches() {
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
 
 function git_init() {
-    git init "$@"
-    cp --force --interactive ${HOME}/.dotfiles/config/git/.git-template/{.gitignore,.mailmap,.pre-commit-config.yaml} .
-    git checkout -b init
-    git add --all
-    git commit --message "Init repository"
-    gh repo create
+    local git_remote_name
+
+    if [[ -z ${1:-} ]]; then
+        printf "%s\n" "Usage: git_init <path>"
+        return 1
+    fi
+
+    mkdir -p "$1/.bare"
+    (
+        cd "$1/.bare" || return 1
+        git init --bare
+    )
+
+    printf "%s\n" "gitdir: .bare" > .git
+
+    git worktree add main
+
+    (
+        cd main || return 1
+        cp --force --interactive "${HOME}"/.dotfiles/config/git/.git-template/{.gitignore,.mailmap,.pre-commit-config.yaml} .
+        git add --all
+        git commit --message "Init"
+        gh repo create
+    )
+
+    git_remote_name=$(git -C main remote show)
+    git config "remote.${git_remote_name}.fetch" "+refs/heads/*:refs/remotes/origin/*"
 }
 
 function git_add() {

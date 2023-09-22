@@ -33,8 +33,8 @@ alias tks='tmux kill-session -t ' # easy kill tmux session
 alias rc='reattach-to-user-namespace pbcopy'
 
 # Info
-alias ls="list_dir_cont"
-alias ll="list_dir_cont --long"
+alias ls="list_dir"
+alias ll="list_dir --long"
 
 # Navigation
 alias ..="cd .."
@@ -201,6 +201,7 @@ alias git-contributors="git shortlog --summary --email --numbered"
 # Helpers
 alias gcot="git_checkout_ticket"
 alias gcpu="git_commit_push"
+alias ginit="git_init"
 alias glc="git_log_copy"
 alias gnuke="git_nuke_branch"
 alias gnukethis="git_nuke_cur_branch"

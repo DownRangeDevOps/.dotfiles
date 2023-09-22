@@ -35,7 +35,7 @@ function __ps1_prompt() {
     fi
 
     if __git_is_repo; then
-        git_project_identifier="${YELLOW}$(__git_project_name)${RESET}"
+        git_project_identifier="${YELLOW}$(__git_project_path)${RESET}"
         git_branch_with_state="${MAGENTA}$(__git_show_branch_state)${RESET}"
 
         printf "%s\n" "${git_project_identifier} on ${git_branch_with_state}"
