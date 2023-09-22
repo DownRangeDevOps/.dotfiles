@@ -43,7 +43,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
-alias ..r="cd \$(__git_project_root)"
+alias ..r="cd \$()"
 alias ..~="cd \${HOME}"
 alias ctags="\${BREW_PREFIX}/bin/ctags"
 

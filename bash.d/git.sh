@@ -51,6 +51,29 @@ function __git_is_repo() {
     fi
 }
 
+function __git_project_name() {
+    local git_first_remote
+    local git_dir
+    local git_common_dir
+    local git_toplevel
+    local worktree_prefix
+
+    git_dir=$(git rev-parse --git-dir)
+    git_common_dir=$(git rev-parse --git-common-dir)
+    git_toplevel=$(git rev-parse --show-toplevel 2>/dev/null)
+    git_first_remote=$(git remote show -n | head -n 1)
+
+    if [[ ${git_dir} != "${git_common_dir}" ]]; then
+        worktree_prefix="$(basename "$(dirname "${git_toplevel}")")/"
+    fi
+
+    if [[ -n ${git_first_remote} ]]; then
+        printf "%s" "$(git remote get-url "${git_first_remote}")"
+    else
+        printf "%s" "git@local:${worktree_prefix}$(basename "${git_toplevel}").git"
+    fi
+}
+
 function __git_master_or_main() {
     local master_exists
     local main_exists
@@ -157,6 +180,15 @@ function __git_get_merged_branches() {
 #  Public
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
+
+function git_init() {
+    git init "$@"
+    cp --force --interactive ${HOME}/.dotfiles/config/git/.git-template/{.gitignore,.mailmap,.pre-commit-config.yaml} .
+    git checkout -b init
+    git add --all
+    git commit --message "Init repository"
+    gh repo create
+}
 
 function git_add() {
     git_root="$(__git_project_root)"
