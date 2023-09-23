@@ -69,7 +69,7 @@ function __git_project_path() {
     local git_intra_repo_path
 
     if __git_is_worktree; then
-        git_toplevel="$(git rev-parse --git-common-dir)"
+        git_toplevel=$(dirname "$(git rev-parse --git-common-dir)")
     else
         git_toplevel="$(git rev-parse --show-toplevel 2>/dev/null)"
     fi
@@ -128,8 +128,12 @@ function __git_show_branch_state() {
     local branch
     local icon
 
-    branch="$(git rev-parse --abbrev-ref HEAD)"
-    icon="$(__git_parse_dirty)"
+    if [[ $(git rev-parse --is-bare-repository) == "true" ]]; then
+        branch="bare"
+    else
+        branch="$(git rev-parse --abbrev-ref HEAD)"
+        icon="$(__git_parse_dirty)"
+    fi
 
     printf "%s" "${branch}${icon}"
 }
