@@ -33,8 +33,8 @@ alias tks='tmux kill-session -t ' # easy kill tmux session
 alias rc='reattach-to-user-namespace pbcopy'
 
 # Info
-alias ls="list_dir_cont"
-alias ll="list_dir_cont --long"
+alias ls="list_dir"
+alias ll="list_dir --long"
 
 # Navigation
 alias ..="cd .."
@@ -43,7 +43,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
-alias ..r="cd \$(__git_project_root)"
+alias ..r="cd \$()"
 alias ..~="cd \${HOME}"
 alias ctags="\${BREW_PREFIX}/bin/ctags"
 
@@ -141,45 +141,43 @@ alias dc="docker compose"
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating git aliases..."
 
-# main
+# general
 alias g="git"
-alias gb="git_branch"
-alias gba="git branch --all"
-alias gbn="__git_get_cur_branch_name"
-alias gco="__git_checkout"
-alias gcod="git checkout develop"
-alias gcom="git checkout \$(__git_master_or_main)"
-alias gd="git diff"
-alias gd1="git diff HEAD~"
-alias gdd="git diff origin/develop..."
-alias gdm="git diff origin/\$(__git_master_or_main)..."
-# alias gd="__git_diff_so_fancy_with_less"
-# alias gd1="__git_diff_so_fancy_with_less HEAD~"
-# alias gdd="__git_diff_so_fancy_with_less origin/develop..."
-# alias gdm="__git_diff_so_fancy_with_less origin/\$(__git_master_or_main)..."
-alias gdmb="git_delete_merged_branches"
 alias gf="git fetch --prune"
-alias gfu="git_fixup"
 alias gp="gf && git pull --rebase"
 alias gs="git status"
 
+# branch actions
+alias gb="git_branch"
+alias gba="git branch --all"
+alias gbn="git_get_cur_branch_name"
+alias gco="git_fuzzy_checkout"
+alias gcod="git checkout develop"
+alias gcom="git checkout \$(__git_master_or_main)"
+alias gd1="git diff HEAD~"
+alias gd="git diff"
+alias gdd="git diff origin/develop..."
+alias gdm="git diff origin/\$(__git_master_or_main)..."
+alias gdmb="git_delete_merged_branches"
+
 # logging
-alias gl="__git_log_branch"
-alias gl-="__git_log_branch_no_trunc_msg"
-alias glm="__git_log_branch_only_msg"
-alias gL="__git_log_all_branches"
-alias gL-="__git_log_all_branches_no_trunc_msg"
-alias gstat="__git_status_vs_master"
-alias gstatd="__git_status_vs_develop"
+alias gL-="git_log_all_branches_no_trunc_msg"
+alias gL="git_log_all_branches"
+alias gl-="git_log_branch_no_trunc_msg"
+alias gl="git_log_branch"
+alias glm="git_log_branch_only_msg"
+alias gstat="git_status_vs_master"
+alias gstatd="git_status_vs_develop"
 
 # committing
-alias ga.="__git_add --all"
-alias ga="__git_add"
+alias ga.="git_add --all"
+alias ga="git_add"
 alias gab="git_absorb"
-alias gc="git commit --gpg-sign"
 alias gac="pre-commit run --all-files && __git_add --update && git commit --no-verify --gpg-sign"
-alias gcpu="git_commit_and_push"
+alias gc="git commit --gpg-sign"
 alias gcp="git cherry-pick -x" # -x: add "cherry-picked from..." message
+alias gcpu="git_commit_and_push"
+alias gfu="git_fixup"
 alias gqf="ga --update && gc --amend --no-edit && gfpo"
 alias gst="git stash"
 
@@ -193,7 +191,7 @@ alias grbs="gf && git rebase --interactive --autosquash \$(git merge-base HEAD o
 
 # Merging
 alias gm="git_rebase_merge_and_push"
-alias gmerged="__git_get_merged_branches"
+alias gmerged="git_get_merged_branches"
 
 # Pushing
 alias gpu="git push --set-upstream \$(git remote) HEAD"
@@ -204,6 +202,11 @@ alias git-contributors="git shortlog --summary --email --numbered"
 
 # Helpers
 alias gcot="git_checkout_ticket"
+alias gcpu="git_commit_push"
+alias ginit="git_init"
+alias glc="git_log_copy"
+alias gnuke="git_nuke_branch"
+alias gnukethis="git_nuke_cur_branch"
 alias opr="git_open_pull_request"
 
 # ------------------------------------------------
