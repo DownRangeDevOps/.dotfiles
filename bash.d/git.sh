@@ -5,28 +5,27 @@ log debug "==> [${BASH_SOURCE[0]}]"
 #  Completion
 # ------------------------------------------------
 function __git_add_completion_to_aliases() {
-    # Add git completion to aliases
     if declare -f -F __git_complete >/dev/null; then
-        # checkout
-        __git_complete git_fuzzy_checkout _git_checkout
-
         # add
+        __git_complete ga _git_add
         __git_complete git_add _git_add
 
         # branch
+        __git_complete gb _git_branch
         __git_complete git_branch _git_branch
+        __git_complete gnuke _git_branch
+        __git_complete git_nuke_branch _git_branch
+
+        # checkout
+        __git_complete gco _git_checkout
+        __git_complete git_fuzzy_checkout _git_checkout
+
+        # merge
+        __git_complete gm _git_merge
+        __git_complete git_rebase_merge_and_push _git_merge
     fi
 }
 __git_add_completion_to_aliases
-
-function __git_wrap_gffm() {
-    # add git merge completion
-    declare -f -F __git_func_wrap >/dev/null
-    if [[ -n $? ]]; then
-        __git_func_wrap _git_merge
-    fi
-}
-complete -o bashdefault -o default -o nospace -F __git_wrap_gffm gffm
 
 function __git_wrap_gnuke() {
     # add git checkout completion

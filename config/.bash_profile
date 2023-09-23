@@ -1,5 +1,8 @@
 # shellcheck disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
 
+# load bash completions before setting -u
+source "/usr/local/etc/profile.d/bash_completion.sh"
+
 # - We should not use unbound variables
 # - We should ensure pipelines fail if commands within them fail
 set -uo pipefail
