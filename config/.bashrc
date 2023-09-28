@@ -1,6 +1,4 @@
-# vim: set ft=sh:
 # .bashrc
-
 log debug ""
 log debug "==> [${BASH_SOURCE[0]}]"
 
@@ -148,7 +146,7 @@ alias gp="gf && git pull --rebase"
 alias gs="git status"
 
 # branch actions
-alias gb="git_branch"
+alias gb="git branch"
 alias gba="git branch --all"
 alias gbn="git_get_cur_branch_name"
 alias gco="git_fuzzy_checkout"
@@ -284,3 +282,5 @@ alias tfw="terraform workspace"
 
 alias tfia=init_all_modules
 alias tfva=validate_all_modules
+
+# vi: ft=sh:

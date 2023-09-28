@@ -1,14 +1,15 @@
 # shellcheck disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
 
-# load bash completions before setting -u
-source "/usr/local/etc/profile.d/bash_completion.sh"
-
-# - We should not use unbound variables
-# - We should ensure pipelines fail if commands within them fail
+# -u: We should not use unbound variables
+# -o pipefile: We should ensure pipelines fail if commands within them fail
 set -uo pipefail
 
-set -a # Export all functions to make them available in sub-shells
+# Export all functions to make them available in sub-shells
+# NOTE: unset with +a before sourcing third party libaries
+#       or they will export functions that will cause errors
+set -a
 
+set +ua
 if [[ ${DEBUG:-} -eq 1 ]]; then
     source "${HOME}/.dotfiles/lib/log.sh"
 else
@@ -16,12 +17,24 @@ else
         true
     }
 fi
+set -ua
+
+# Make my bins available while loading dotfiles
+export PATH="${HOME}/.dotfiles/bin:${PATH}"
 
 log debug ""
 log debug "[${BASH_SOURCE[0]}]"
 
 # Globals
-BREW_PREFIX="$(brew --prefix)" && export BREW_PREFIX
+if [[ $(uname -m) == "arm64" ]]; then
+    BREW_PREFIX="$(/opt/homebrew/bin/brew --prefix)" && export BREW_PREFIX
+else
+    BREW_PREFIX="$(/usr/local/bin/brew --prefix)" && export BREW_PREFIX
+fi
+
+# Put brew bins first in path
+export PATH="${BREW_PREFIX}/bin:${PATH}"
+
 export DOTFILES_PREFIX="${HOME}/.dotfiles"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 
@@ -49,10 +62,13 @@ stty -ixon
 
 # Load everything else
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+
 source "${BASH_D_PATH}/lib.sh"
 source "${BASH_D_PATH}/path.sh"
 source "${BASH_D_PATH}/bash.sh"
 
+# +u: Allow unbound variables
+# +a: Don't export functions to sub-sells
 set +ua
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done, .bash_profile loaded."

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+indent_size=4
+indent_levels=1
+
+if [[ ${1:-} =~ ^[1-9]+ ]]; then
+    indent_levels=$1
+    shift
+fi
+
+pr -t -o $((indent_levels * indent_size)) # -t: --omit-header, -o: --indent
+
+# vi: ft=sh

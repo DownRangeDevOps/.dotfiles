@@ -2,3 +2,5 @@
 
 # trim and compress whitespace
 awk '{$1=$1;print}'
+
+# vi: ft=sh

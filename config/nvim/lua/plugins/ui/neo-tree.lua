@@ -21,6 +21,10 @@ return {
         filesystem = {
             window = {
                 mappings = {
+                    ["a"] = { "add", config = { show_path = "relative" } },
+                    ["A"] = { "add_directory", config = { show_path = "relative" } },
+                    ["c"] = { "add", config = { show_path = "relative" } },
+                    ["m"] = { "add", config = { show_path = "relative" } },
                     ["-"] = "navigate_up",
                     ["<CR>"] =  function(state)
                         local origin_file = vim.fn.getreg("#")

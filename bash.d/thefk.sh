@@ -14,9 +14,9 @@ function tf_init() {
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing thefuck..."
     unalias fuck=tf_init
 
-    set +u
+    set +au
     eval "$(thefuck --alias)"
-    set -u
+    set -au
 
     fuck "$@"
 }

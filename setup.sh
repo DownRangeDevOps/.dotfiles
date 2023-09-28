@@ -7,17 +7,31 @@
 #     --debug        Output debug information
 #     -v, --version  Show version
 #     -h, --help     Show this help message and exit
+export PATH=./bin:${PATH}
+
+if [[ ${BASH_VERSION:0:1} -lt 4 ]]; then
+    printf "%b\n" "$(tput setaf 1)ERROR: Bash 4+ is required for these dotfiles$(tput sgr0)"
+    printf "%s\n" "Bash version: ${BASH_VERSION}"
+    printf "%s\n" "Bash major version: ${BASH_VERSION:0:1}"
+    printf "%s\n" "Bash path: ${BASH}"
+    printf "\n"
+    printf "%s\n" "Please install Bash 4+ (brew install bash) and re-run setup."
+    exit 0
+fi
+
 set -uo pipefail;
 
 # defaults
 debug=false
 dry_run=false
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-source bash-helpers/lib.sh
+source "${SCRIPT_DIR}/bash.d/lib.sh"
 
 if command -v docopts; then
-    PATH="${PATH}:./bin"
+    set +u
     source docopts.sh
+    set -u
 
     HELP=$(docopt_get_help_string "$0")
     VERSION="0.1.0"
@@ -26,15 +40,11 @@ if command -v docopts; then
     eval "${OPTIONS}"
 fi
 
-
 function print_error_msg() {
     if [[ -n ${1:-} ]]; then
         case $1 in
             not_repo)
-                printf_error "${HOME}/.dotfiles exists and is not a git repo"
-                ;;
-            changes)
-                printf_error "${HOME}/.dotfiles has uncommitted changes, stash or commit them then re-run setup."
+                printf_error "${SCRIPT_DIR} exists and is not a git repo"
                 ;;
             *)
                 printf_error "ERROR: ${*}"
@@ -46,24 +56,48 @@ function print_error_msg() {
 }
 
 function symlink_config_dirs() {
+    printf_callout "Creating config symlinks..."
+
     (cd "${HOME}" || exit 1
-        ln -sfvr "${HOME}/.config/nvim" nvim
-        ln -sfvr "${HOME}/.config/.terminfo" .terminfo
+        ln -sfv "${SCRIPT_DIR}/config/nvim" "${HOME}/.config/nvim" | indent_output
+        ln -sfv "${SCRIPT_DIR}/config/.terminfo" "${HOME}/.config/.terminfo" | indent_output
     )
+
+    printf "\n"
 }
 
 function symlink_dotfiles() {
     local dotfile_paths
+    local dotfiles_dir="${SCRIPT_DIR}/config"
 
-    dotfile_paths=$(find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -iname ".*")
+    dotfile_paths=$(find "${dotfiles_dir}" -maxdepth 1 -type f -iname ".*" -print)
 
-    printf_callout "Creating symlinks..."
+    printf_callout "Creating dotfile symlinks..."
 
     for file in ${dotfile_paths}; do
         if ${dry_run}; then
-            printf "%s\n" "${HOME}/$(basename "${file}") -> ${PWD}/${file}" | indent_output
+            printf "%s\n" "${HOME}/$(basename "${file}") -> ${dotfiles_dir}/${file}" | indent_output
         else
-            ln -sfvr "${file}" "${HOME}/$(basename "${file}")" | indent_output
+            ln -sfv "${file}" "${HOME}/$(basename "${file}")" | indent_output
+        fi
+    done
+
+    printf "\n"
+}
+
+function symlink_bins() {
+    local bin_paths
+    local bin_dir="${SCRIPT_DIR}/bin"
+
+    bin_paths=$(find "${bin_dir}" -maxdepth 1 -type f -print)
+
+    printf_callout "Creating bin symlinks..."
+
+    for file in ${bin_paths}; do
+        if ${dry_run}; then
+            printf "%s\n" "${HOME}/.local/bin/$(basename "${file}") -> ${bin_dir}/${file}" | indent_output
+        else
+            ln -sfv "${file}" "${HOME}/.local/bin/$(basename "${file}")" | indent_output
         fi
     done
 
@@ -71,15 +105,15 @@ function symlink_dotfiles() {
 }
 
 function init() {
-    local init_cmd="source ${HOME}/.bash_profile"
+    local init_file="${HOME}/.bash_profile"
 
     printf_callout "Initalizing shell..."
 
     if $dry_run; then
-        printf "%s\n" "${init_cmd}" | indent_output
+        printf "%s\n" "source ${init_file}" | indent_output
     else
-        printf "%s\n" "${init_cmd}" | indent_output
-        source "${init_cmd}"
+        printf "%s\n" "source ${init_file}" | indent_output
+        source "${init_file}"
     fi
 
     printf "\n"
@@ -87,25 +121,23 @@ function init() {
 
 function setup() {
     if $dry_run; then
-        printf_callout "Running in 'dry-run' mode..."
+        printf "\n"
+        printf_warning "Running in 'dry-run' mode..."
         printf "\n"
     fi
 
-    if ! git -C "${HOME}/.dotfiles" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    if ! git -C "${SCRIPT_DIR}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         print_error_msg not_repo
         return 1
     fi
 
+    printf "\n"
     printf_callout "Installing dotfiles..."
 
-    if [[ -z "$(git diff --name-only)" ]]; then
-        symlink_config_dirs
-        symlink_dotfiles
-        init
-    else
-        print_error_msg changes
-        return 1
-    fi
+    symlink_dotfiles
+    symlink_config_dirs
+    symlink_bins
+    init
 }
 
 if ${debug}; then

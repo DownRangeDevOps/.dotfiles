@@ -5410,7 +5410,7 @@ Password Manager</string>
 			<key>Screen</key>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
-			<integer>2000</integer>
+			<integer>10000</integer>
 			<key>Scrollback With Status Bar</key>
 			<false/>
 			<key>Scrollback in Alternate Screen</key>
@@ -6797,7 +6797,7 @@ Password Manager</string>
 				<key>Has Toolbelt</key>
 				<false/>
 				<key>Height</key>
-				<real>1415</real>
+				<real>1025</real>
 				<key>Hide After Opening</key>
 				<false/>
 				<key>Hiding Toolbelt Should Resize Window</key>
@@ -6809,11 +6809,11 @@ Password Manager</string>
 				<key>Saved Window Type</key>
 				<integer>13</integer>
 				<key>Screen</key>
-				<integer>2</integer>
+				<integer>0</integer>
 				<key>Scroller Width</key>
 				<real>0.0</real>
 				<key>Selected Tab Index</key>
-				<integer>3</integer>
+				<integer>4</integer>
 				<key>Tabs</key>
 				<array>
 					<dict>
@@ -7206,7 +7206,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>E92B1DD3-E602-4240-961A-2B8CC3A14E6D</string>
+											<string>8259C46F-E37F-4521-BFDE-7E293BBA9781</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -7563,7 +7563,7 @@ Password Manager</string>
 											<key>Screen</key>
 											<integer>-1</integer>
 											<key>Scrollback Lines</key>
-											<integer>2000</integer>
+											<integer>10000</integer>
 											<key>Scrollback With Status Bar</key>
 											<false/>
 											<key>Scrollback in Alternate Screen</key>
@@ -7921,7 +7921,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>238</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -7960,7 +7960,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>38</integer>
 										<key>Session GUID</key>
 										<string>2C8E913C-BB10-4B12-B82B-0898C2A4F28D</string>
 										<key>Short Lived Single Use</key>
@@ -7984,9 +7984,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>966</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>1680</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -7999,9 +7999,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>966</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>1680</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -8403,7 +8403,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>F9027414-90CD-4663-867A-941A3310FE84</string>
+											<string>6F2A4652-110A-489B-8499-FA3B8D711590</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -8760,7 +8760,7 @@ Password Manager</string>
 											<key>Screen</key>
 											<integer>-1</integer>
 											<key>Scrollback Lines</key>
-											<integer>2000</integer>
+											<integer>10000</integer>
 											<key>Scrollback With Status Bar</key>
 											<false/>
 											<key>Scrollback in Alternate Screen</key>
@@ -9118,7 +9118,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>238</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -9157,7 +9157,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>38</integer>
 										<key>Session GUID</key>
 										<string>56F8071D-9699-4A03-BE8A-DD44D1A94417</string>
 										<key>Short Lived Single Use</key>
@@ -9181,9 +9181,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>966</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>1680</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -9196,9 +9196,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>966</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>1680</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -9600,7 +9600,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>CB74BAB5-BD1B-4727-AA2B-BB7AF666FF1E</string>
+											<string>0638B792-3B0B-45F4-90FC-B098CD6A1F1D</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -9957,7 +9957,7 @@ Password Manager</string>
 											<key>Screen</key>
 											<integer>-1</integer>
 											<key>Scrollback Lines</key>
-											<integer>2000</integer>
+											<integer>10000</integer>
 											<key>Scrollback With Status Bar</key>
 											<false/>
 											<key>Scrollback in Alternate Screen</key>
@@ -10315,7 +10315,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>238</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -10356,7 +10356,7 @@ Password Manager</string>
 											<string>Command</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>38</integer>
 										<key>Session GUID</key>
 										<string>2A4D9EA0-C377-40E3-80F3-3A618DC83AA5</string>
 										<key>Short Lived Single Use</key>
@@ -10371,7 +10371,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/ryanfisher/dev/career/companies/beezwax-datatools/project/src/beezwax-ops</string>
+										<string>/</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -10380,9 +10380,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>966</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>1680</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -10395,9 +10395,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>966</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>1680</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -10733,13 +10733,13 @@ Password Manager</string>
 												<key>Alpha Component</key>
 												<real>1</real>
 												<key>Blue Component</key>
-												<real>0.95686274766921997</real>
+												<real>0.92549020051956177</real>
 												<key>Color Space</key>
 												<string>sRGB</string>
 												<key>Green Component</key>
-												<real>0.83921569585800171</real>
+												<real>0.78039216995239258</real>
 												<key>Red Component</key>
-												<real>0.80392163991928101</real>
+												<real>0.45490199327468872</real>
 											</dict>
 											<key>Cursor Guide Color</key>
 											<dict>
@@ -10799,7 +10799,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>20C53D23-E72C-4DE5-8312-8E90F4752CC5</string>
+											<string>B82F57CC-B3B0-46E0-889A-62A971CBF92B</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11156,7 +11156,7 @@ Password Manager</string>
 											<key>Screen</key>
 											<integer>-1</integer>
 											<key>Scrollback Lines</key>
-											<integer>2000</integer>
+											<integer>10000</integer>
 											<key>Scrollback With Status Bar</key>
 											<false/>
 											<key>Scrollback in Alternate Screen</key>
@@ -11514,7 +11514,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>238</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -11555,7 +11555,7 @@ Password Manager</string>
 											<string>Command</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>38</integer>
 										<key>Session GUID</key>
 										<string>4BC65F74-B0D0-4520-83A4-2AEA624B081B</string>
 										<key>Short Lived Single Use</key>
@@ -11579,9 +11579,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>966</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>1680</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -11594,9 +11594,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>966</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>1680</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -11612,7 +11612,7 @@ Password Manager</string>
 						<key>Root</key>
 						<dict>
 							<key>Splitter ID</key>
-							<string>0E9AC64F-45E9-40C5-B665-650F93A14DAB</string>
+							<string>E496194E-C22E-4BE5-B694-807596A915E3</string>
 							<key>Subviews</key>
 							<array>
 								<dict>
@@ -11932,13 +11932,13 @@ Password Manager</string>
 												<key>Alpha Component</key>
 												<real>1</real>
 												<key>Blue Component</key>
-												<real>0.95686274766921997</real>
+												<real>0.83529412746429443</real>
 												<key>Color Space</key>
 												<string>sRGB</string>
 												<key>Green Component</key>
-												<real>0.83921569585800171</real>
+												<real>0.88627451658248901</real>
 												<key>Red Component</key>
-												<real>0.80392163991928101</real>
+												<real>0.58039218187332153</real>
 											</dict>
 											<key>Cursor Guide Color</key>
 											<dict>
@@ -11998,7 +11998,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>C39B954B-3444-4361-8713-F4EBF1652F22</string>
+											<string>186F917E-23B3-4B19-AF94-95442A885294</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -12329,7 +12329,7 @@ Password Manager</string>
 											<key>Mouse Reporting</key>
 											<true/>
 											<key>Name</key>
-											<string>study</string>
+											<string>laptop</string>
 											<key>Non Ascii Font</key>
 											<string>ConsolasForPowerline 15</string>
 											<key>Non-ASCII Anti Aliased</key>
@@ -12355,7 +12355,7 @@ Password Manager</string>
 											<key>Screen</key>
 											<integer>-1</integer>
 											<key>Scrollback Lines</key>
-											<integer>2000</integer>
+											<integer>10000</integer>
 											<key>Scrollback With Status Bar</key>
 											<false/>
 											<key>Scrollback in Alternate Screen</key>
@@ -12713,7 +12713,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>238</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -12721,7 +12721,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/ryanfisher/dev/continuing-education</string>
+											<string>/Users/ryanfisher/.dotfiles</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -12744,7 +12744,6 @@ Password Manager</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
-											<string>Cursor Color</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -12754,9 +12753,9 @@ Password Manager</string>
 											<string>Command</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>38</integer>
 										<key>Session GUID</key>
-										<string>A9F5BD22-89FE-45EC-B31A-518C03889B4A</string>
+										<string>7FF3A71D-139F-4A1C-B9DE-9D6ABFC0A029</string>
 										<key>Short Lived Single Use</key>
 										<false/>
 										<key>Should Expect Current Dir Updates</key>
@@ -12769,7 +12768,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/ryanfisher/dev/continuing-education</string>
+										<string>/Users/ryanfisher/.dotfiles</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -12778,9 +12777,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>966</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>1680</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -12793,9 +12792,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>966</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>1680</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -12805,7 +12804,7 @@ Password Manager</string>
 							<false/>
 						</dict>
 						<key>Tab GUID</key>
-						<string>C314E0E6-471B-40F1-8156-6917417AEF22</string>
+						<string>00FC98CD-A537-47D9-9A42-38874033E70A</string>
 					</dict>
 				</array>
 				<key>TerminalGuid</key>
@@ -12838,13 +12837,13 @@ Password Manager</string>
 				<key>Use Transparency</key>
 				<true/>
 				<key>Width</key>
-				<real>2560</real>
+				<real>1680</real>
 				<key>Window Type</key>
 				<integer>13</integer>
 				<key>X Origin</key>
-				<real>779</real>
+				<real>0.0</real>
 				<key>Y Origin</key>
-				<real>900</real>
+				<real>0.0</real>
 			</dict>
 		</array>
 	</dict>

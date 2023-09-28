@@ -307,17 +307,6 @@ function git_fixup() {
     git rebase --interactive "${merge_base}"
 }
 
-function git_branch() {
-    case ${1:-} in
-    -D | -m)
-        git branch "${@}"
-        ;;
-    *)
-        git branch "${@}" | fzf
-        ;;
-    esac
-}
-
 function git_fuzzy_checkout() {
     if [[ ${1:-} ]]; then
         git checkout "${@}"

@@ -31,7 +31,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function list_dir() {
-    local gnu_ls=/usr/local/opt/coreutils/libexec/gnubin/ls
+    local gnu_ls="${BREW_PREFIX}/opt/coreutils/libexec/gnubin/ls"
     local lsopts=("--color=auto" "--almost-all")
 
     if [[ ${1:-} == "--long" ]]; then
@@ -84,13 +84,15 @@ function mysqlpw() {
 # ------------------------------------------------
 # bash.d
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring gcloud completions..."
+log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring bash completions..."
 
-# overwrites PS1 so do it first
-set +u
+set +ua
+source "${BREW_PREFIX}/etc/profile.d/bash_completion.sh"
+
+# NOTE: overwrites PS1, source it before setting custom PS1
 source "${BREW_PREFIX}/share/google-cloud-sdk/path.bash.inc"
 source "${BREW_PREFIX}/share/google-cloud-sdk/completion.bash.inc"
-set -u
+set -ua
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
 {
@@ -111,9 +113,9 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing z..."
 Z_SH="${BREW_PREFIX}/etc/profile.d/z.sh"
 if [[ -f "${Z_SH}" ]]; then
-    set +u
+    set +ua
     source "${Z_SH}"
-    set -u
+    set -ua
 fi
 
 # .bashrc

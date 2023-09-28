@@ -5,4 +5,6 @@ log debug "==> [${BASH_SOURCE[0]}]"
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing direnv..."
 
 # Add the direnv hook to PROMPT_COMMAND
+set +ua
 eval "$(direnv hook bash)"
+set -ua

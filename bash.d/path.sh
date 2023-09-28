@@ -3,13 +3,19 @@ log debug "==> [${BASH_SOURCE[0]}]"
 
 # Reset PATH then add bins
 function set_path() {
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Resetting PATH"
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Resetting \$PATH"
 
     local gnu_tools=("gnu-tar" "gnu-which" "gnu-sed" "grep" "coreutils" "findutils" "make")
     local compilers=("llvm/bin")
 
-    export PATH=""      # Reset
+    export PATH="" # Reset
+
+    set +ua
     source /etc/profile # Base
+    set -ua
+
+    # Make personal bins available first in case anything else uses them
+    add_to_path "prepend" "${HOME}/.dotfiles/bin"
 
     if [[ -n ${BREW_PREFIX} ]]; then
         add_to_path "prepend" "${BREW_PREFIX}/bin"     # Homebrew
@@ -20,7 +26,7 @@ function set_path() {
 
         for tool in "${gnu_tools[@]}"; do
             add_to_path "prepend" "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
-            add_to_path prepend "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
+            add_to_path prepend "${BREW_PREFIX}/opt/${tool}/libexec/gnubin"   # Homebrew gnu tools
         done
 
         for path in "${compilers[@]}"; do
@@ -28,8 +34,8 @@ function set_path() {
         done
     fi
 
-    add_to_path "prepend" "/opt/X11/bin"       # X11
-    add_to_path "append" "${HOME}/.local/bin"  # Ansible
-    add_to_path "append" "${HOME}/.cabal/bin/" # Haskell
+    add_to_path "append" "${HOME}/.local/bin" # Ansible
+    add_to_path "append" "${HOME}/.cargo/bin" # rust
 }
+
 set_path

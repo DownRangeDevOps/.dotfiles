@@ -1,4 +1,5 @@
 # shellcheck disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
+set +ua
 if [[ ${DEBUG:-} -eq 1 ]]; then
     source "${HOME}/.dotfiles/lib/log.sh"
 else
@@ -6,6 +7,7 @@ else
         true
     }
 fi
+set -ua
 
 log debug ""
 log debug "==> [${BASH_SOURCE[0]}]"
@@ -35,18 +37,6 @@ export CYAN
 export WHITE
 export BOLD
 export RESET
-
-# Output formatting
-function indent_output() {
-    local indent_size=4
-    local indent_levels=1
-
-    if [[ ${1:-} =~ ^[1-9]+ ]]; then
-        indent_levels=$1
-    fi
-
-    pr --omit-header --indent $((indent_levels * indent_size))
-}
 
 # Color printf
 alias bold=printf_bold
@@ -107,11 +97,10 @@ function add_to_path() {
     log debug "[$(basename "${BASH_SOURCE[0]}")]: add_to_path | args: $*"
 
     local position="${1:-}"
-    local new_path
-    new_path="$(printf "%s" "${2:-}" | trim)"
+    local new_path="${2:-}"
 
     if [[ ! -d ${new_path} ]]; then
-        printf_error "ERROR: ${new_path} is not a directory"
+        printf_error "WARNING: ${new_path} is not a directory, not adding it to \$PATH"
         [[ $0 == "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 

@@ -11,7 +11,10 @@ export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
 
 # Pipx
 export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
+
+set +ua
 eval "$(register-python-argcomplete pipx)"
+set -ua
 
 # ------------------------------------------------
 #  overloads
@@ -97,8 +100,8 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
 export PYENV_ROOT="$HOME/.pyenv"
 export PIPENV_SHELL_EXPLICIT="${BREW_PREFIX}/bin/bash"
 
-set +u
+set +au
 eval "$(pyenv init -)"
-set -u
+set -au
 
 add_to_path "prepend" "$(pyenv prefix)"
