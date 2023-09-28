@@ -10,7 +10,7 @@
 [include]
 	path = ~/.dotfiles/config/git/.gitconfig_aliases
 [core]
-	excludesfile = /Users/ryanfisher/.dotfiles/config/git/.gitignore_global
+	excludesfile = ~/.dotfiles/config/git/.gitignore_global
 	autocrlf = input
 	editor = nvim
 	ignorecase = false

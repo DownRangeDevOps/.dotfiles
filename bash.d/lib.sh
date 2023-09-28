@@ -10,7 +10,7 @@ fi
 # Declare this before usage
 function printf_callout() {
     if [[ -n "${1:-}" ]]; then
-        printf "%s\n" "$(tput bold)==> ${1}$(tput sgr0)"
+        printf "%s\n" "$(tput bold)$(tput setaf 4)==> $(tput srg0)$(tput bold)${1}$(tput srg0)"
     else
         printf "%b\n" "${BOLD}${YELLOW}No msg provided, args: ${*}${RESET}"
     fi
