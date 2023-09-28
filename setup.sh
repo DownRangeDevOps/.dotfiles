@@ -9,21 +9,23 @@
 #     -h, --help     Show this help message and exit
 set -uo pipefail;
 
-source bash-helpers/lib.sh
-
-# setup docopts
-PATH="${PATH}:./bin"
-source docopts.sh
-HELP=$(docopt_get_help_string "$0")
-VERSION="0.1.0"
-OPTIONS=$(docopts -h "${HELP}" -V "${VERSION}" : "$@")
-
-# dummy vars to please shellcheck
+# defaults
 debug=false
 dry_run=false
 
-# set docopts options
-eval "${OPTIONS}"
+source bash-helpers/lib.sh
+
+if command -v docopts; then
+    PATH="${PATH}:./bin"
+    source docopts.sh
+
+    HELP=$(docopt_get_help_string "$0")
+    VERSION="0.1.0"
+    OPTIONS=$(docopts -h "${HELP}" -V "${VERSION}" : "$@")
+
+    eval "${OPTIONS}"
+fi
+
 
 function print_error_msg() {
     if [[ -n ${1:-} ]]; then
@@ -43,103 +45,29 @@ function print_error_msg() {
     fi
 }
 
-function create_symlinks() {
-    local gitignore_path="${HOME}/.dotfiles/config/git/.gitignore"
-    local init_vim_path="${HOME}/.config/nvim/init.vim"
-    local terminfo_path="${HOME}/.config/.terminfo"
+function symlink_config_dirs() {
+    (cd "${HOME}" || exit 1
+        ln -sfvr "${HOME}/.config/nvim" nvim
+        ln -sfvr "${HOME}/.config/.terminfo" .terminfo
+    )
+}
+
+function symlink_dotfiles() {
+    local dotfile_paths
+
+    dotfile_paths=$(find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -iname ".*")
 
     printf_callout "Creating symlinks..."
 
-    if ${dry_run}; then
-        find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -exec bash -c \
-            'file="$1"; printf "%s\n" "\"${HOME}/$(basename ${file})\" -> \"${PWD}/${file}\""' \
-            shell {} \; | indent_output
-
-        printf "%s\n" \
-            "\"${HOME}/.gitignore\" -> \"${gitignore_path}\"" \
-            "\"${HOME}/.vimrc\" -> \"${init_vim_path}\"" \
-            | indent_output
-    else
-        find "${HOME}/.dotfiles/config" -maxdepth 1 -type f -iname ".*" -exec bash -c \
-            'file="$1"; ln -sfvr "${file}" "${HOME}/$(basename ${file})"' \
-            shell {} \; | indent_output
-
-            (cd "${HOME}" || exit 1
-                ln -sfvr ${gitignore_path} .gitignore
-                ln -sfvr ${init_vim_path} init.vim
-                ln -sfvr ${terminfo_path} .terminfo
-            )
-    fi
+    for file in ${dotfile_paths}; do
+        if ${dry_run}; then
+            printf "%s\n" "${HOME}/$(basename "${file}") -> ${PWD}/${file}" | indent_output
+        else
+            ln -sfvr "${file}" "${HOME}/$(basename "${file}")" | indent_output
+        fi
+    done
 
     printf "\n"
-}
-
-function install_docopts() {
-    local tmp_dir
-    tmp_dir="$(mktemp --directory --tmpdir)"
-
-    local docopts_install_cmd="
-        go install
-        github.com/docopt/docopt-go
-        github.com/docopt/docopts
-        "
-    local docopts_sh_install_cmd="
-        (cd ${tmp_dir} || exit 1 &&
-            (
-                curl -O https://raw.githubusercontent.com/docopt/docopts/master/docopts.sh;
-                chmod + x docopts.sh;
-                mv docopts.sh /usr/local/bin
-            )
-        )"
-
-    if [[ ! -f bin/docopts ]]; then
-        printf_callout "Installing docopts..."
-
-       if $dry_run; then
-            printf "%s\n" "${docopts_install_cmd}" | indent_output
-        else
-            (eval "${docopts_install_cmd}" | indent_output)
-        fi
-
-        printf "\n"
-    else
-        printf_callout "docopts already installed, skipping."
-        printf "\n"
-    fi
-
-    if [[ ! -f bin/docopts.sh ]]; then
-        printf_callout "Installing docopts.sh..."
-
-        if $dry_run; then
-            printf "%s\n" "${docopts_sh_install_cmd}" | indent_output
-        else
-            (eval "${docopts_sh_install_cmd}" | indent_output)
-        fi
-
-        printf "\n"
-    else
-        printf_callout "docopts.sh already installed, skipping."
-        printf "\n"
-    fi
-}
-
-function install_lazy_vim() {
-    local lazy_vim_install_cmd="git clone git@github.com:DownRangeDevOps/LazyVim.git ~/.config/nvim"
-
-    if [[ ! -d ~/.config/nvim ]]; then
-        printf_callout "Installing LazyVim..."
-
-        if $dry_run; then
-            printf "%s\n" "${lazy_vim_install_cmd}" | indent_output
-        else
-            (eval "${lazy_vim_install_cmd}" | indent_output)
-        fi
-
-        printf "\n"
-    else
-        printf_callout "LazyVim already installed, skipping."
-        printf "\n"
-    fi
 }
 
 function init() {
@@ -150,6 +78,7 @@ function init() {
     if $dry_run; then
         printf "%s\n" "${init_cmd}" | indent_output
     else
+        printf "%s\n" "${init_cmd}" | indent_output
         source "${init_cmd}"
     fi
 
@@ -170,20 +99,8 @@ function setup() {
     printf_callout "Installing dotfiles..."
 
     if [[ -z "$(git diff --name-only)" ]]; then
-        if $dry_run; then
-            printf "%s\n" "git -C ${HOME}/.dotfiles checkout main" | indent_output
-            printf "%s\n" "git -C ${HOME}/.dotfiles pull" | indent_output
-            printf "%s\n" "git -C ${HOME}/.dotfiles checkout -" | indent_output
-            printf "\n"
-        else
-            git -C "${HOME}/.dotfiles" checkout main | indent_output
-            git -C "${HOME}/.dotfiles" pull | indent_output
-            git -C "${HOME}/.dotfiles" checkout - | indent_output
-            printf "\n"
-        fi
-
-        create_symlinks
-        install_docopts
+        symlink_config_dirs
+        symlink_dotfiles
         init
     else
         print_error_msg changes

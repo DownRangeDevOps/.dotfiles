@@ -175,7 +175,10 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     pattern = "*",
     callback = function()
         local bullets_mappings = {
-            promote    = { mode = "i", lhs = "<C-d>",     rhs = function() vim.cmd("BulletPromote") end,       opts = { group = "list", desc = "bullets promote" } },
+            promote    = { mode = "i", lhs = "<C-d>",     rhs = function()
+                vim.cmd("BulletPromote")
+                vim.fn.feedkeys("<Esc>A")
+            end,       opts = { group = "list", desc = "bullets promote" } },
             demote     = { mode = "i", lhs = "<C-t>",     rhs = function() vim.cmd("BulletDemote") end,        opts = { group = "list", desc = "bullets demote" } },
             vpromote   = { mode = "v", lhs  = "<C-d>",    rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },
             vdemote    = { mode = "v", lhs  = "<C-t>",    rhs = function() vim.cmd("BulletDemoteVisual") end,  opts = { group = "list", desc = "bullets demote" } },
