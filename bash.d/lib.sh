@@ -7,15 +7,6 @@ else
     }
 fi
 
-# Declare this before usage
-function printf_callout() {
-    if [[ -n "${1:-}" ]]; then
-        printf "%s\n" "$(tput bold)$(tput setaf 4)==> $(tput srg0)$(tput bold)${1}$(tput srg0)"
-    else
-        printf "%b\n" "${BOLD}${YELLOW}No msg provided, args: ${*}${RESET}"
-    fi
-}
-
 log debug ""
 log debug "==> [${BASH_SOURCE[0]}]"
 
@@ -89,6 +80,14 @@ function printf_warning() {
 
 function printf_error() {
     printf "%b\n" "${BOLD}${RED}${*}${RESET}"
+}
+
+function printf_callout() {
+    if [[ -n "${1:-}" ]]; then
+        printf "%s\n" "${BOLD}${BLUE}==> ${RESET}${BOLD}${1}${RESET}"
+    else
+        printf_error "No msg provided, args: ${*}"
+    fi
 }
 
 # UI
