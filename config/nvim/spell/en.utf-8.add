@@ -48,3 +48,5 @@ config
 Ansible
 Golang
 dotfiles
+MacOS
+POSIX
