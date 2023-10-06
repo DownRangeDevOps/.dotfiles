@@ -13,6 +13,16 @@ return {
         { "MunifTanjim/nui.nvim", name = "nvim-nui", lazy = false },
     },
     opts = {
+        event_handlers = {
+            {
+                event = "neo_tree_buffer_enter",
+                handler = function(arg)
+                    vim.wo.colorcolumn = false
+                    vim.wo.number = true
+                    vim.wo.relativenumber = true
+                end,
+            }
+        },
         window = {
             position = "current",
             noremap = true,
@@ -21,22 +31,25 @@ return {
         filesystem = {
             window = {
                 mappings = {
-                    ["a"] = { "add", config = { show_path = "relative" } },
                     ["A"] = { "add_directory", config = { show_path = "relative" } },
-                    ["c"] = { "add", config = { show_path = "relative" } },
-                    ["m"] = { "add", config = { show_path = "relative" } },
+                    ["a"] = { "add", config = { show_path = "relative" } },
+                    ["c"] = { "copy", config = { show_path = "relative" } },
+                    ["m"] = { "move", config = { show_path = "relative" } },
                     ["-"] = "navigate_up",
                     ["<CR>"] =  function(state)
                         local origin_file = vim.fn.getreg("#")
 
                         state.commands["open"](state)
-                        vim.fn.setreg("#", origin_file)
+
+                        if origin_file ~= "" then
+                            vim.fn.setreg("#", origin_file)
+                        end
                     end,
                 },
             },
             filtered_items = {
                 hide_dotfiles = false,
-                hide_gitignored = false,
+                hide_gitignored = true,
                 follow_current_file = {
                     enabled = true,
                     leave_dirs_open = false,
