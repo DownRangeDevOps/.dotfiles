@@ -1,0 +1,30 @@
+[tool.yamlfix]
+# Comments
+comments_min_spaces_from_content = 2
+comments_require_starting_space = true
+
+# Document
+allow_duplicate_keys = false
+config_path = ""
+explicit_start = true
+line_length = 80
+none_representation = ""
+sequence_style = "block_style"
+
+# Indentation
+indent_mapping = 2
+indent_offset = 2
+indent_sequence = 4
+
+# Line spacing
+comments_whitelines = 1
+section_whitelines = 1
+whitelines = 1
+
+# Quoting
+preserve_quotes = false
+quote_basic_values = false
+quote_keys_and_basic_values = false
+quote_representation = "\""
+
+# vim: ft=toml

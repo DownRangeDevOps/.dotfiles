@@ -26,6 +26,11 @@ debug=false
 dry_run=false
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+# settings
+NVIM_CONF_DIR="${HOME}/.config/nvim"
+TERMINFO_CONF_DIR="${HOME}/.config/.terminfo"
+YAMLFMT_CONF_DIR="${HOME}/.config/yamlfmt"
+
 source "${SCRIPT_DIR}/bash.d/lib.sh"
 
 if command -v docopts; then
@@ -59,8 +64,9 @@ function symlink_config_dirs() {
     printf_callout "Creating config symlinks..."
 
     (cd "${HOME}" || exit 1
-        ln -sfv "${SCRIPT_DIR}/config/nvim" "${HOME}/.config/nvim" | indent_output
-        ln -sfv "${SCRIPT_DIR}/config/.terminfo" "${HOME}/.config/.terminfo" | indent_output
+        ln -sfv "${SCRIPT_DIR}/config/nvim" "${NVIM_CONF_DIR}" | indent_output
+        ln -sfv "${SCRIPT_DIR}/config/.terminfo" "${TERMINFO_CONF_DIR}" | indent_output
+        ln -sfv "${SCRIPT_DIR}/config/yamlfmt" "${YAMLFMT_CONF_DIR}" | indent_output
     )
 
     printf "\n"
@@ -104,7 +110,7 @@ function symlink_bins() {
     printf "\n"
 }
 
-function init() {
+function init_shell() {
     local init_file="${HOME}/.bash_profile"
 
     printf_callout "Initalizing shell..."
@@ -117,6 +123,17 @@ function init() {
     fi
 
     printf "\n"
+}
+
+function init_nvim() {
+    local session_dir="${NVIM_CONF_DIR}/sessions"
+
+    mkdir ${session_dir}
+}
+
+function init() {
+    init_nvim
+    init_shell
 }
 
 function setup() {
