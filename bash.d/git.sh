@@ -439,46 +439,51 @@ function git_fuzzy_checkout() {
 }
 
 function git_delete_merged_branches() {
-    REMOTES="${*:-origin}"
+    local remotes="${*:-origin}"
+    local cur_branch
+    local local_branches
+    local remote_branches
+
     printf_callout "Fetching updates..."
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
-    CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    LOCAL_BRANCHES=$(__git_get_merged_branches |
-        /usr/local/opt/grep/libexec/gnubin/grep -Ev "^\s*remotes/origin/" |
-        /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" |
-        awk '{print $1}')
-    REMOTE_BRANCHES=$(__git_get_merged_branches |
-        /usr/local/opt/grep/libexec/gnubin/grep -E "^\s*remotes/origin/" |
+    cur_branch=$(git rev-parse --abbrev-ref HEAD)
+    mapfile -t local_branches < <(__git_get_merged_branches |
+        grep -Ev "^\s*remotes/origin/" |
+        grep -Ev "${cur_branch}" |
+        tr "\n" " ")
+    mapfile -t remote_branches < <(__git_get_merged_branches |
+        grep -E "^\s*remotes/origin/" |
         sed -e "s/^\s*remotes\/origin\///g" |
-        awk '{print $1}')
+        tr "\n" " ")
 
-    if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
+    if [[ ${#local_branches[@]} -eq 0 || ${#remote_branches[@]} -eq 0 ]]; then
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
-        __git_get_merged_branches
+        __git_get_merged_branches | indent_output
 
         prompt_to_continue "Delete branches?" || return 6
         echo
 
-        if [[ -n ${LOCAL_BRANCHES} ]]; then
+        if [[ ${#local_branches[@]} -gt 0 ]]; then
             printf_callout "Deleting merged local branches..."
-            git branch --delete --force "${LOCAL_BRANCHES}"
+            git branch --delete --force "${local_branches[@]}" | indent_output
         fi
 
-        if [[ -n ${REMOTE_BRANCHES} ]]; then
-            for REMOTE in ${REMOTES}; do
-                printf_callout "Deleting merged remote branches from ${REMOTE}..."
-                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
+        if [[ ${#remote_branches[@]} -gt 0 ]]; then
+            for remote in ${remotes}; do
+                printf_callout "Deleting merged remote branches from ${remote}..."
+                git push --delete "${remote}" "${remote_branches[@]}" | indent_output
             done
         fi
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
+
         printf_callout "Merged branches have been deleted..."
-        printf_callout 'Everyone should run `git fetch --prune` to sync with this remote.'
+        printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        printf_callout "No merged branches to delete."
+        printf_warning "No merged branches to delete."
     fi
 }
 

@@ -53,12 +53,6 @@
 	template = ~/.dotfiles/config/git/.gitconfig_commit_tmpl
 [help]
 	autocorrect = 0
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [init]
 	templateDir = ~/.dotfiles/config/git/.git-template
 	defaultBranch = main
@@ -73,3 +67,6 @@
 	window = 0
 [advice]
 	ignoredHook = false
+[maintenance]
+	auto = true
+	strategy = incremental
