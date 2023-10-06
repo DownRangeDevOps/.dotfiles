@@ -9,7 +9,7 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing rbenv..."
 log debug "Initalizing goenv..."
 
 set +au
-eval "$(rbenv init -)"
+eval "$(rbenv init - bash)"
 set -au
 
 add_to_path "prepend" "$(rbenv prefix)/bin"

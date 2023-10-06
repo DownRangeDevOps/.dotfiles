@@ -3,7 +3,7 @@ local M = {}
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
-vim.env.VISUAL = "nvr -cc split --remote-wait" -- Prevent nested nvim instances
+vim.env.EDITOR='nvr --remote-wait-silent +"setlocal bufhidden=delete"' -- Prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
 
@@ -46,10 +46,10 @@ vim.opt.viewoptions = table.concat({
 }, ",")
 
 -- Providers
-vim.g.node_host_prog = "/usr/local/bin/neovim-node-host"
-vim.g.perl_host_prog = "/usr/local/bin/perl"
-vim.g.python3_host_prog = "/Users/ryanfisher/.pyenv/versions/3.11.4/bin/python"
-vim.g.ruby_host_prog = "/Users/ryanfisher/.rbenv/versions/3.0.3/bin/ruby"
+vim.g.node_host_prog = vim.env.BREW_PREFIX .. "/bin/neovim-node-host"
+vim.g.perl_host_prog = vim.env.BREW_PREFIX .. "/bin/perl"
+vim.g.python3_host_prog = vim.env.HOME .. "/.pyenv/shims/python"
+vim.g.ruby_host_prog = vim.env.HOME .. "/.rbenv/shims/neovim-ruby-host"
 
 -- Files
 vim.g.fileencoding = "ucs-bom,utf-8,latin1"

@@ -63,27 +63,6 @@ function __git_is_worktree() {
     fi
 }
 
-function __git_project_path() {
-    local git_toplevel
-    local git_toplevel_basename
-    local git_intra_repo_path
-
-    if __git_is_worktree; then
-        git_toplevel=$(dirname "$(git rev-parse --git-common-dir)")
-    else
-        git_toplevel="$(git rev-parse --show-toplevel 2>/dev/null)"
-    fi
-
-    if [[ -z ${git_toplevel} ]]; then
-        git_toplevel=${PWD}
-    fi
-
-    git_toplevel_basename=$(basename "${git_toplevel}")
-    git_intra_repo_path=${PWD/"${git_toplevel}"/}
-
-    printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
-}
-
 function __git_master_or_main() {
     local master_exists
     local main_exists
@@ -195,50 +174,30 @@ function __git_get_merged_branches() {
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
 
-function git_init() {
-    local git_remote_name
+# Info
+function git_project_path() {
+    local git_toplevel
+    local git_toplevel_basename
+    local git_intra_repo_path
 
-    if [[ -z ${1:-} ]]; then
-        printf "%s\n" "Usage: git_init <path>"
-        return 1
+    if __git_is_worktree; then
+        git_toplevel="$(dirname "$(git rev-parse --git-common-dir)")"
+    else
+        git_toplevel="$(git rev-parse --show-toplevel 2>/dev/null)"
     fi
 
-    mkdir -p "$1/.bare"
-    (
-        cd "$1/.bare" || return 1
-        git init --bare
-    )
+    if [[ -z ${git_toplevel} ]]; then
+        git_toplevel=${PWD}
+    fi
 
-    printf "%s\n" "gitdir: .bare" > .git
+    git_toplevel_basename="${git_toplevel##*/}"
+    git_intra_repo_path=${PWD##*"${git_toplevel_basename}"}
 
-    git worktree add main
-
-    (
-        cd main || return 1
-        cp --force --interactive "${HOME}"/.dotfiles/config/git/.git-template/{.gitignore,.mailmap,.pre-commit-config.yaml} .
-        git add --all
-        git commit --message "Init"
-        gh repo create
-    )
-
-    git_remote_name=$(git -C main remote show)
-    git config "remote.${git_remote_name}.fetch" "+refs/heads/*:refs/remotes/origin/*"
-}
-
-function git_add() {
-    git_root="$(__git_project_root)"
-
-    (
-        cd "${git_root}" || exit 1
-        git add "$@"
-
-        local changed_files
-        changed_files="$(git status --short --no-renames | cut -d ' ' -f 3-)"
-
-        fix_missing_newline "${changed_files}"
-
-        git add "$@"
-    )
+    if [[ ${1:-} == "--dirname" ]]; then
+        printf "%s" "${git_toplevel_basename}"
+    else
+        printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
+    fi
 }
 
 # logging
@@ -305,64 +264,6 @@ function git_fixup() {
         awk '{print $1}' |
         xargs -o hub commit --fixup
     git rebase --interactive "${merge_base}"
-}
-
-function git_fuzzy_checkout() {
-    if [[ ${1:-} ]]; then
-        git checkout "${@}"
-    else
-        git branch --all |
-            tr -d " " |
-            sed -e "s,^remotes/origin/,," |
-            sed -e "s,^HEAD.*,," |
-            sort -u |
-            fzf |
-            xargs git checkout
-    fi
-}
-
-function git_delete_merged_branches() {
-    REMOTES="${*:-origin}"
-    printf_callout "Fetching updates..."
-    git fetch --prune &>/dev/null
-    git remote prune origin &>/dev/null
-
-    CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    LOCAL_BRANCHES=$(__git_get_merged_branches |
-        /usr/local/opt/grep/libexec/gnubin/grep -Ev "^\s*remotes/origin/" |
-        /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" |
-        awk '{print $1}')
-    REMOTE_BRANCHES=$(__git_get_merged_branches |
-        /usr/local/opt/grep/libexec/gnubin/grep -E "^\s*remotes/origin/" |
-        sed -e "s/^\s*remotes\/origin\///g" |
-        awk '{print $1}')
-
-    if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
-        printf_callout "Branches that have been merged to $(__git_master_or_main):"
-        __git_get_merged_branches
-
-        prompt_to_continue "Delete branches?" || return 6
-        echo
-
-        if [[ -n ${LOCAL_BRANCHES} ]]; then
-            printf_callout "Deleting merged local branches..."
-            git branch --delete --force "${LOCAL_BRANCHES}"
-        fi
-
-        if [[ -n ${REMOTE_BRANCHES} ]]; then
-            for REMOTE in ${REMOTES}; do
-                printf_callout "Deleting merged remote branches from ${REMOTE}..."
-                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
-            done
-        fi
-
-        git fetch --prune &>/dev/null
-        git remote prune origin &>/dev/null
-        printf_callout "Merged branches have been deleted..."
-        printf_callout 'Everyone should run `git fetch --prune` to sync with this remote.'
-    else
-        printf_callout "No merged branches to delete."
-    fi
 }
 
 # merging
@@ -474,6 +375,111 @@ function git_commit_push() {
     COMMAND+="git push origin $BRANCH"
 
     $COMMAND
+}
+
+# Utils
+function git_init() {
+    local git_remote_name
+
+    if [[ -z ${1:-} ]]; then
+        printf "%s\n" "Usage: git_init <path>"
+        return 1
+    fi
+
+    mkdir -p "$1/.bare"
+    (
+        cd "$1/.bare" || return 1
+        git init --bare
+    )
+
+    printf "%s\n" "gitdir: .bare" > .git
+
+    git worktree add main
+
+    (
+        cd main || return 1
+        cp --force --interactive "${HOME}"/.dotfiles/config/git/.git-template/{.gitignore,.mailmap,.pre-commit-config.yaml} .
+        git add --all
+        git commit --message "Init"
+        gh repo create
+    )
+
+    git_remote_name=$(git -C main remote show)
+    git config "remote.${git_remote_name}.fetch" "+refs/heads/*:refs/remotes/origin/*"
+}
+
+function git_add() {
+    git_root="$(__git_project_root)"
+
+    (
+        cd "${git_root}" || exit 1
+        git add "$@"
+
+        local changed_files
+        changed_files="$(git status --short --no-renames | cut -d ' ' -f 3-)"
+
+        fix_missing_newline "${changed_files}"
+
+        git add "$@"
+    )
+}
+
+function git_fuzzy_checkout() {
+    if [[ ${1:-} ]]; then
+        git checkout "${@}"
+    else
+        git branch --all |
+            tr -d " " |
+            sed -e "s,^remotes/origin/,," |
+            sed -e "s,^HEAD.*,," |
+            sort -u |
+            fzf |
+            xargs git checkout
+    fi
+}
+
+function git_delete_merged_branches() {
+    REMOTES="${*:-origin}"
+    printf_callout "Fetching updates..."
+    git fetch --prune &>/dev/null
+    git remote prune origin &>/dev/null
+
+    CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    LOCAL_BRANCHES=$(__git_get_merged_branches |
+        /usr/local/opt/grep/libexec/gnubin/grep -Ev "^\s*remotes/origin/" |
+        /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" |
+        awk '{print $1}')
+    REMOTE_BRANCHES=$(__git_get_merged_branches |
+        /usr/local/opt/grep/libexec/gnubin/grep -E "^\s*remotes/origin/" |
+        sed -e "s/^\s*remotes\/origin\///g" |
+        awk '{print $1}')
+
+    if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
+        printf_callout "Branches that have been merged to $(__git_master_or_main):"
+        __git_get_merged_branches
+
+        prompt_to_continue "Delete branches?" || return 6
+        echo
+
+        if [[ -n ${LOCAL_BRANCHES} ]]; then
+            printf_callout "Deleting merged local branches..."
+            git branch --delete --force "${LOCAL_BRANCHES}"
+        fi
+
+        if [[ -n ${REMOTE_BRANCHES} ]]; then
+            for REMOTE in ${REMOTES}; do
+                printf_callout "Deleting merged remote branches from ${REMOTE}..."
+                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
+            done
+        fi
+
+        git fetch --prune &>/dev/null
+        git remote prune origin &>/dev/null
+        printf_callout "Merged branches have been deleted..."
+        printf_callout 'Everyone should run `git fetch --prune` to sync with this remote.'
+    else
+        printf_callout "No merged branches to delete."
+    fi
 }
 
 function git_nuke_branch() {

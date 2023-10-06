@@ -9,3 +9,7 @@ lazy-lock.json
 
 # Bin dependencies
 bin/docopts*
+
+# Neovim sessions
+config/nvim/sessions/**
+!config/nvim/sessions/.gitkeep

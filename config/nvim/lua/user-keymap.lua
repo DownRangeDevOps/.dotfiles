@@ -428,20 +428,8 @@ map("n", "<leader>tc", function() vim.cmd.tabclose() end,
     { group = "gen", desc = "close tab" })
 
 -- Terminal split management
-map("n", "<leader>`", function()
-    vim.cmd("ToggleTerm size=15 direction=horizontal")
-
-    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
-        vim.cmd.startinsert()
-    end
-end, { group = "gen", desc = "bottom term" })
-map("n", "<leader>~", function()
-    vim.cmd("ToggleTerm size=120 direction=vertical")
-
-    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
-        vim.cmd.startinsert()
-    end
-end, { group = "gen", desc = "vertical term" })
+map("n", "<leader>`", function() vim.cmd("ToggleTerm size=15 direction=horizontal") end, { group = "gen", desc = "bottom term" })
+map("n", "<leader>~", function() vim.cmd("ToggleTerm size=140 direction=vertical") end, { group = "gen", desc = "vertical term" })
 
 -- Split navigation and sizing
 map({ "n" }, "<C-h>", "<C-w>h", { group = "nav", desc = "left window" })
@@ -609,6 +597,21 @@ local treesitter_maps = {
     }
 }
 M.treesitter_maps = treesitter_maps
+
+-- Treesitter keymaps
+local treesitter_playground_maps = {
+    toggle_query_editor = 'o',
+    toggle_hl_groups = 'i',
+    toggle_injected_languages = 't',
+    toggle_anonymous_nodes = 'a',
+    toggle_language_display = 'I',
+    focus_language = 'f',
+    unfocus_language = 'F',
+    update = 'R',
+    goto_node = '<cr>',
+    show_help = '?',
+}
+M.treesitter_playground_maps = treesitter_playground_maps
 
 -- nvim-cmp keymaps
 local cmp_maps = {

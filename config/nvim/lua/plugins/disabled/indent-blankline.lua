@@ -4,6 +4,7 @@
 -- ----------------------------------------------
 return {
     "lukas-reineke/indent-blankline.nvim",
+    version = "2.20.8",
     lazy = false,
     init = function()
         local indet_blankline_session_opts = { "tabpages", "globals" }

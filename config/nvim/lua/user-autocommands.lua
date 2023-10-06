@@ -24,12 +24,18 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- ----------------------------------------------
 -- Neovim
 -- ----------------------------------------------
+vim.api.nvim_create_autocmd("CursorHold", {
+    group = nvim,
+    pattern = "*",
+    command = "checktime"
+})
+
 vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
     pattern = "*",
     callback = function()
         if vim.env.NVIM_SESSION_FILE_PATH then
-            vim.cmd.Obsession(vim.env.NVIM_SESSION_FILE_PATH) -- set by .envrc
+            vim.cmd("silent Obsession " .. vim.env.NVIM_SESSION_FILE_PATH) -- set by .envrc
         end
     end
 })
@@ -61,7 +67,15 @@ vim.api.nvim_create_autocmd({ "BufEnter", "TermEnter", "WinEnter", "TabEnter", "
 })
 
 -- Set options for specific file and buffer types
-vim.api.nvim_create_autocmd({ "BufWinEnter", "TermEnter", "BufEnter", "TabEnter", "WinEnter" }, {
+vim.api.nvim_create_autocmd({
+    "BufEnter",
+    "BufWinEnter",
+    "TabEnter",
+    "TabNew",
+    "TermEnter",
+    "TermOpen",
+    "WinEnter"
+}, {
     group = ui,
     pattern = "*",
     callback = function()
@@ -114,15 +128,6 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "TermEnter", "BufEnter", "TabEnter"
             vim.wo.statuscolumn = ""
         end
 
-        -- force neo-tree ui settings
-        if vim.bo.filetype == "neo-tree" then
-            -- vim.api.nvim_buf_set_option(0, "bufhidden", "delete")
-            -- vim.api.nvim_buf_set_option(0, "buflisted", false)
-            vim.wo.colorcolumn = false
-            vim.wo.number = true
-            vim.wo.relativenumber = true
-        end
-
         -- use tabs in specific files
         if tab_filetypes[filetype] then
             vim.bo.expandtab = false
@@ -162,8 +167,7 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
             and vim.api.nvim_buf_get_option(0, "modifiable")
             and vim.fn.expand("%") ~= "" then
 
-            vim.cmd.write()
-            pcall(vim.cmd.write)
+            vim.cmd("silent write")
             vim.defer_fn(function() vim.cmd.echon("''") end, 500)
         end
     end

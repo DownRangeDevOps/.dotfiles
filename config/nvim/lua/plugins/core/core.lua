@@ -31,11 +31,4 @@ return {
         event  = "InsertEnter",
         opts = {},
     },
-
-    -- Replacement for slow filetype.vim builtin (https://github.com/nathom/filetype.nvim)
-    {
-        "nathom/filetype.nvim",
-        name = "filetype",
-        lazy = true,
-    },
 }

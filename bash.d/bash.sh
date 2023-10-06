@@ -72,6 +72,10 @@ function rg() {
         "$@"
 }
 
+function yamlfix() {
+    command yamlfix -c ~/.yamlfix.toml "$@"
+}
+
 # Generate password hash for MySQL
 function mysqlpw() {
     $(pyenv which python) -c '
