@@ -3,7 +3,7 @@ log debug ""
 log debug "==> [${BASH_SOURCE[0]}]"
 
 # ------------------------------------------------
-#  BASH
+#  bash
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating BASH aliases..."
 
@@ -12,29 +12,29 @@ alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
 alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 
 alias c="clear"
-alias ebash='nvim ${HOME}/.bash_profile'
-alias ec=ebash
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
 alias sb='source ${HOME}/.bash_profile'
-alias vim="nvim"
 
 # safety
+alias chown="chown --preserve-root"
+alias chmod="chmod --preserve-root"
+alias chgrp="chgrp --preserve-root"
 alias rm="rm -i"
 alias mv="mv -i"
 alias cp="cp -i"
 set -o noclobber
 
 # tmux & tmuxinator
-alias tmux='tmux -2'              # Force 256 colors in tmux
+alias tmux='tmux -2'              # force 256 colors in tmux
 alias tks='tmux kill-session -t ' # easy kill tmux session
 alias rc='reattach-to-user-namespace pbcopy'
 
-# Info
+# info
 alias ls="list_dir"
 alias ll="list_dir --long"
 
-# Navigation
+# navigation
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -43,21 +43,31 @@ alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 alias ..r="cd \$()"
 alias ..~="cd \${HOME}"
-alias ctags="\${BREW_PREFIX}/bin/ctags"
 
-# Squeltch egrep warnings
+# squeltch egrep warnings
 alias egrep="grep -E"
 
+# helpers
+alias mkdir="mkdir -pv"
+alias j="jobs -l"
+alias now="date +'%T'"
+alias today="date +'%d-%m-%Y'"
+alias ping="ping -c 5"
+alias fping="ping -c 100 -s.2"
+alias header="curl -I"             # get server headers
+alias headerc="curl -I --compress" # does server support gzip / mod_deflate?
+alias wget="wget -c"               # resume downloads
+
 # ------------------------------------------------
-#  Ansible
+#  ansible
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Ansible aliases..."
 
-# Ansible vault shortcuts
-alias aav='ansible-vault view'
+# ansible vault shortcuts
+alias avv='ansible-vault view'
 
 # ------------------------------------------------
-#  AWS
+#  aws
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating AWS aliases..."
 
@@ -70,7 +80,7 @@ alias avo="aws-vault exec msr-ops-sbx --"
 alias avsci="aws-vault exec msr-sci-sbx --"
 
 # ------------------------------------------------
-#  Docker
+#  docker
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Docker aliases..."
 
@@ -119,30 +129,30 @@ alias dup="docker update"
 alias dv="docker volume"
 alias dw="docker wait"
 
-# docker kill
+# helpers
 alias dka='docker kill $(docker ps -q)'
 
-# docker volume
+# volume sub-commands
 alias dvls="docker volume ls"
 
-# docker system
+# system sub-commands
 alias dsdf="docker system df"
 alias dse="docker system envents"
 alias dsi="docker system info"
 alias dsp="docker system prune"
 
-# compose
+# docker compose
 alias dc="docker compose"
 
 # ------------------------------------------------
-#  Git
+#  git
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating git aliases..."
 
 # general
 alias g="git"
 alias gf="git fetch --prune"
-alias gp="gf && git pull --rebase"
+alias gp="git fetch --prune && git pull --rebase"
 alias gs="git status"
 
 # branch actions
@@ -187,18 +197,18 @@ alias grbd="gf && git rebase --interactive --autosquash origin/develop"
 alias grbm="gf && git rebase --interactive --autosquash origin/\$(__git_master_or_main)"
 alias grbs="gf && git rebase --interactive --autosquash \$(git merge-base HEAD origin/\$(__git_master_or_main))"
 
-# Merging
+# merging
 alias gm="git_rebase_merge_and_push"
 alias gmerged="git_get_merged_branches"
 
-# Pushing
+# pushing
 alias gpu="git push --set-upstream \$(git remote) HEAD"
 alias gfpo="git push --force-with-lease origin HEAD"
 
-# Repository info
+# repository info
 alias git-contributors="git shortlog --summary --email --numbered"
 
-# Helpers
+# helpers
 alias gcot="git_checkout_ticket"
 alias gcpu="git_commit_push"
 alias ginit="git_init"
@@ -208,23 +218,23 @@ alias gnukethis="git_nuke_cur_branch"
 alias opr="git_open_pull_request"
 
 # ------------------------------------------------
-#  Homebrew
+#  homebrew
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Homebrew alises..."
 
-# Avoid linking against any shims
+# avoid linking against any shims
 NO_SHIMS_PATH=$(printf "%s" "${PATH}" | sed -E 's,.*shims[^:]*:,,g')
 alias brew='env PATH=${NO_SHIMS_PATH} brew'
 
 # ------------------------------------------------
-#  Kubernetes
+#  kubernetes
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Kubernetes aliases..."
 
 alias k="kubectl"
 
 # ------------------------------------------------
-#  MacOS
+#  macos
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating MacOS aliases..."
 
@@ -232,18 +242,11 @@ alias flushdns='sudo killall -HUP mDNSResponder'
 alias showfiles='defaults write com.apple.finder AppleShowAllFiles true; killall Finder'
 alias hidefiles='defaults write com.apple.finder AppleShowAllFiles false; killall Finder'
 
-# Fix screen flash when audio process dies
+# fix screen flash when audio process dies
 alias fixflash='sudo killall coreaudiod'
 
 # ------------------------------------------------
-#  Python
-# ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Python aliases..."
-
-alias rmlp=run_mega_linter_python
-
-# ------------------------------------------------
-#  Terraform
+#  terraform
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Terraform aliases..."
 
@@ -273,7 +276,7 @@ alias tful="terraform force-unlock"
 alias tfv="terraform validate"
 alias tfw="terraform workspace"
 
-# Project naviation
+# project naviation
 # alias cdp="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|\")"
 # alias cds="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/staging/\2/|\")"
 # alias cdd="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/demo/\2/|\")"
@@ -283,4 +286,4 @@ alias tfw="terraform workspace"
 alias tfia=init_all_modules
 alias tfva=validate_all_modules
 
-# vi: ft=sh:
+# vi: ft=sh
