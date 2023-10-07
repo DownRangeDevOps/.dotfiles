@@ -30,6 +30,7 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 NVIM_CONF_DIR="${HOME}/.config/nvim"
 TERMINFO_CONF_DIR="${HOME}/.config/.terminfo"
 YAMLFMT_CONF_DIR="${HOME}/.config/yamlfmt"
+YAMLLINT_CONF_DIR="${HOME}/.config/yamllint"
 
 source "${SCRIPT_DIR}/bash.d/lib.sh"
 
@@ -63,11 +64,19 @@ function print_error_msg() {
 function symlink_config_dirs() {
     printf_callout "Creating config symlinks..."
 
-    (cd "${HOME}" || exit 1
-        ln -sfv "${SCRIPT_DIR}/config/nvim" "${NVIM_CONF_DIR}" | indent_output
-        ln -sfv "${SCRIPT_DIR}/config/.terminfo" "${TERMINFO_CONF_DIR}" | indent_output
-        ln -sfv "${SCRIPT_DIR}/config/yamlfmt" "${YAMLFMT_CONF_DIR}" | indent_output
-    )
+    if ${dry_run}; then
+        (cd "${HOME}" || exit 1
+            ln -sfv "${SCRIPT_DIR}/config/nvim" "${NVIM_CONF_DIR}" | indent_output
+            ln -sfv "${SCRIPT_DIR}/config/.terminfo" "${TERMINFO_CONF_DIR}" | indent_output
+            ln -sfv "${SCRIPT_DIR}/config/yamlfmt" "${YAMLFMT_CONF_DIR}" | indent_output
+            ln -sfv "${SCRIPT_DIR}/config/yamllint" "${YAMLLINT_CONF_DIR}" | indent_output
+        )
+    else
+        printf "%s\n" "${SCRIPT_DIR}/config/nvim -> ${NVIM_CONF_DIR}" | indent_output
+        printf "%s\n" "${SCRIPT_DIR}/config/.terminfo -> ${TERMINFO_CONF_DIR}" | indent_output
+        printf "%s\n" "${SCRIPT_DIR}/config/yamlfmt -> ${YAMLFMT_CONF_DIR}" | indent_output
+        printf "%s\n" "${SCRIPT_DIR}/config/yamllint -> ${YAMLLINT_CONF_DIR}" | indent_output
+    fi
 
     printf "\n"
 }
@@ -125,14 +134,7 @@ function init_shell() {
     printf "\n"
 }
 
-function init_nvim() {
-    local session_dir="${NVIM_CONF_DIR}/sessions"
-
-    mkdir ${session_dir}
-}
-
 function init() {
-    init_nvim
     init_shell
 }
 

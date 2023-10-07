@@ -1,5 +1,5 @@
 ---
-
+# docs: https://yamllint.readthedocs.io/en/stable/rules.html
 locale: en_US.UTF-8
 
 yaml-files:
@@ -8,73 +8,96 @@ yaml-files:
   - ".yamllint"
 
 rules:
+  # disallow use of undeclared aliases and anchor duplication (default)
+  anchors: enable
+
+  # disallow flow-styles
   braces:
     forbid: non-empty
   brackets:
     forbid: non-empty
+
+  # require correct punctuation spacing
   colons:
     max-spaces-before: 0
     max-spaces-after: 1
-
   commas:
     max-spaces-before: 0
     max-spaces-after: 1
     min-spaces-after: 1
 
+  # conform with PEP8 comment style
   comments:
-    level: warning
+    level: error
     require-starting-space: true
     ignore-shebangs: true
-    min-spaces-from-content: 1
+    min-spaces-from-content: 2
 
+  # require comments aligned with content
   comments-indentation:
     level: warning
 
+  # disallow document end (...), require document start (---)
   document-end: disable
   document-start:
-    level: warning
+    level: error
     present: true
 
+  # disallow leading, trailing, and multiple blank lines
   empty-lines:
-    max: 2
+    max: 1
     max-start: 0
     max-end: 0
 
-  empty-values:
-    forbid-in-block-mappings: false
-    forbid-in-flow-mappings: true
+  # disallow implicit null values
+  empty-values: enable
 
+  # disallow infinity, NaN, scientific notion, and implicit decimals
+  flow-values: enable
+
+  # disallow arbitrary leading spaces before list values
   hyphens:
     max-spaces-after: 1
 
+  # require consistent indentation, disallow flow-style multi-line strings
   indentation:
     spaces: consistent
     indent-sequences: consistent
-    check-multi-line-strings: false
+    check-multi-line-strings: true
 
+  # disallow duplicate keys, do not enforce list ordering
   key-duplicates: enable
   key-ordering: disable
+
+  # comply with PEP8 line length
   line-length:
     level: warning
     max: 88
     allow-non-breakable-words: true
     allow-non-breakable-inline-mappings: true
 
+  # enforce unix EOL standards
   new-line-at-end-of-file: enable
   new-lines:
     type: unix
 
+  # require quotation of octal values
   octal-values:
     forbid-implicit-octal: true
     forbid-explicit-octal: true
 
+  # disallow single quoted-strings
   quoted-strings:
     quote-type: double
     required: false
 
+  # disallow training white space
   trailing-spaces: enable
+
+
+  # disallow implicit boolean values
   truthy:
     allowed-values:
       - "true"
       - "false"
-    check-keys: true
+    check-keys: false

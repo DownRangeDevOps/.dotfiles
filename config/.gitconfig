@@ -12,7 +12,7 @@
 [core]
 	excludesfile = ~/.dotfiles/config/git/.gitignore_global
 	autocrlf = input
-	editor = nvr --remote-wait-silent +"setlocal bufhidden=delete"
+	editor = nvr -cc split --remote-wait-silent +'setlocal bufhidden=delete'
 	ignorecase = false
 	pager = delta # less -JRS
 [cleanup]

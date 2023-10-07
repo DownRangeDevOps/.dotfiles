@@ -3,7 +3,7 @@ local M = {}
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
-vim.env.EDITOR='nvr --remote-wait-silent +"setlocal bufhidden=delete"' -- Prevent nested nvim instances
+vim.env.EDITOR="nvr -cc split" -- prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
 
