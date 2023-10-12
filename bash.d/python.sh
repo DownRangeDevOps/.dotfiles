@@ -12,9 +12,15 @@ export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
 # Pipx
 export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 
-set +ua
-eval "$(register-python-argcomplete pipx)"
-set -ua
+function pipx() { # TODO: make lazy autocompletion loader
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing pipx completions..."
+
+    unset -f pipx
+
+    eval "$(register-python-argcomplete pipx)" # bash auto-completion
+
+    $(which pipx) "$@"
+}
 
 # ------------------------------------------------
 #  overloads
@@ -96,12 +102,17 @@ function lpy() {
 # ------------------------------------------------
 # Initialize pyenv (https://github.com/pyenv/pyenv)
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
-export PYENV_ROOT="$HOME/.pyenv"
-export PIPENV_SHELL_EXPLICIT="${BREW_PREFIX}/bin/bash"
+function pyenv() {
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
 
-set +au
-eval "$(pyenv init -)"
-set -au
+    unset -f pyenv
 
-add_to_path "prepend" "$(pyenv prefix)"
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PIPENV_SHELL_EXPLICIT="${BREW_PREFIX}/bin/bash"
+
+    eval "$(pyenv init -)"
+
+    add_to_path "prepend" "$(pyenv prefix)"
+
+    $(which pyenv) "$@"
+}

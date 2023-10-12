@@ -94,32 +94,21 @@ function prompt_to_continue() {
 
 # Utils
 function add_to_path() {
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: add_to_path | args: $*"
-
     local position="${1:-}"
     local new_path="${2:-}"
 
-    if [[ ! -d ${new_path} ]]; then
-        printf_error "WARNING: ${new_path} is not a directory, not adding it to \$PATH"
-        [[ $0 == "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-
-    if [[ ! ":${PATH}:" =~ :${new_path}: ]]; then
+    if [[ ! ":${PATH}:" =~ :${new_path}: && -d ${new_path} ]]; then
         case "${position}" in
         prepend)
-            log debug "[$(basename "${BASH_SOURCE[0]}")]: Prepending ${new_path} to ${PATH}..."
             export PATH="${new_path}:${PATH}"
             ;;
         append)
-            log debug "[$(basename "${BASH_SOURCE[0]}")]: Appending ${new_path} to ${PATH}..."
             export PATH="${PATH}:${new_path}"
             ;;
         *)
-            printf_error "ERROR: position argument missing" "USAGE: add_to_path <prepend|append> <path>"
+            true
             ;;
         esac
-    else
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: ${new_path} is already in PATH, skipping..."
     fi
 }
 

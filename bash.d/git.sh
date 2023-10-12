@@ -193,11 +193,17 @@ function git_project_path() {
     git_toplevel_basename="${git_toplevel##*/}"
     git_intra_repo_path=${PWD##*"${git_toplevel_basename}"}
 
-    if [[ ${1:-} == "--dirname" ]]; then
-        printf "%s" "${git_toplevel_basename}"
-    else
-        printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
-    fi
+    case ${1:-} in
+        "--dirname")
+            printf "%s" "${git_toplevel_basename}"
+            ;;
+        "--absolute")
+            printf "%s" "${git_toplevel}"
+            ;;
+        *)
+            printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
+            ;;
+    esac
 }
 
 # logging
@@ -424,6 +430,17 @@ function git_add() {
     )
 }
 
+# # WIP
+# function git_fuzzy_branch(){
+#     local fuzzy_args=("-d" "--delete" "-D")
+#
+#     if [[ $# -eq 1 && " ${fuzzy_args[*]} " =~ ${1:-} ]]; then
+#         git branch
+#     else
+#         git branch "$@"
+#     fi
+# }
+
 function git_fuzzy_checkout() {
     if [[ ${1:-} ]]; then
         git checkout "${@}"
@@ -473,7 +490,8 @@ function git_delete_merged_branches() {
         if [[ ${#remote_branches[@]} -gt 0 ]]; then
             for remote in ${remotes}; do
                 printf_callout "Deleting merged remote branches from ${remote}..."
-                git push --delete "${remote}" "${remote_branches[@]}" | indent_output
+                # shellcheck disable=SC2068  # word splitting is desired here
+                git push --delete "${remote}" ${remote_branches[@]} | indent_output
             done
         fi
 
@@ -507,16 +525,7 @@ function git_nuke_cur_branch() {
 }
 
 function git_log_copy() {
-    # git log copy - copy the git log for this branch to the clipboard
-    # shellcheck disable=SC2046
-    LOG="$(git log \"origin/$(__git_master_or_main)..HEAD\")"
-
-    pbcopy <<EOF
-
-\`\`\`
-${LOG}
-\`\`\`
-EOF
+    git log --format="## %s (%h)%n%n%b" "origin/$(__git_master_or_main)..HEAD" | cat -s | pbcopy
 }
 
 function git_checkout_ticket() {

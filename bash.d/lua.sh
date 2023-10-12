@@ -4,8 +4,11 @@ log debug "==> [${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 #  init
 # ------------------------------------------------
-log debug "Initializing lua..."
+function luaver() {
+    log debug "Initializing lua..."
 
-set +ua
-source "$(command -v luaver)"
-set -ua
+    unset -f luaver
+
+    # shellcheck disable=SC1090
+    source "$(which luaver)"
+}

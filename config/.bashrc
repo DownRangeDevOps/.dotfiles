@@ -41,7 +41,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
-alias ..r="cd \$()"
+alias ..r="cd \$(git_project_path --absolute)"
 alias ..~="cd \${HOME}"
 
 # squeltch egrep warnings

@@ -6,6 +6,8 @@ local M = {}
 vim.env.EDITOR="nvr -cc split" -- prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
+-- vim.g.do_filetype_lua = true -- Should be enabled by default? (https://github.com/nathom/filetype.nvim/issues/91)
+-- vim.g.did_load_filetypes = false
 
 vim.opt.lazyredraw = true
 vim.opt.mouse = "a"
@@ -133,7 +135,7 @@ vim.opt.foldenable = false
 
 -- Terminal
 -- :help guicursor
-vim.opt.shell = vim.env.SHELL .. " --login"
+-- vim.opt.shell = vim.env.SHELL .. " --login"
 vim.opt.termguicolors = true
 vim.opt.guicursor = table.concat({
     "n-c-v-sm:block",

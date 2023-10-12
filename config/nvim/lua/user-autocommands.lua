@@ -27,7 +27,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("CursorHold", {
     group = nvim,
     pattern = "*",
-    command = "checktime"
+    command = "checktime" -- auto-reload from disk
+})
+
+vim.api.nvim_create_autocmd("TermEnter", {
+    group = nvim,
+    pattern = "*",
+    command = "startinsert"
 })
 
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -66,9 +72,26 @@ vim.api.nvim_create_autocmd({ "BufEnter", "TermEnter", "WinEnter", "TabEnter", "
     end
 })
 
+-- Highlight on yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = user,
+    pattern = "*",
+    callback = function()
+        vim.highlight.on_yank({
+            higroup = "Question",
+            timeout = 250,
+        })
+    end,
+})
+
+-- ----------------------------------------------
+-- Filetype
+-- ----------------------------------------------
 -- Set options for specific file and buffer types
 vim.api.nvim_create_autocmd({
     "BufEnter",
+    "BufNewFile",
+    "BufRead",
     "BufWinEnter",
     "TabEnter",
     "TabNew",
@@ -109,11 +132,8 @@ vim.api.nvim_create_autocmd({
         filetype = filetype or "nofiletype"
         buftype = buftype or "nobuftype"
 
-        -- keep other plugins from changing nvim-ufo fold settings
-        vim.opt.foldcolumn = "1"
-        vim.opt.foldlevel = 99
-        vim.opt.foldlevelstart = 99
-        vim.opt.foldenable = false
+        -- set defaults
+        require("user-config")
 
         -- disable ui elements in view-only type buffers
         if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
@@ -140,18 +160,6 @@ vim.api.nvim_create_autocmd({
             }, ",")
         end
     end
-})
-
--- Highlight on yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-    group = user,
-    pattern = "*",
-    callback = function()
-        vim.highlight.on_yank({
-            higroup = "Question",
-            timeout = 250,
-        })
-    end,
 })
 
 -- ----------------------------------------------
@@ -240,6 +248,6 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "TextChanged" }, {
     group = plugin,
     pattern = { "*.lua", "*.sh", "*.py" },
     callback = function()
-        require('lint').try_lint()
+        if vim.bo.modifiable == 1 then require('lint').try_lint() end
     end
 })

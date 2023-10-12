@@ -113,15 +113,6 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
     shopt -u nullglob # reset
 }
 
-# jump around
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing z..."
-Z_SH="${BREW_PREFIX}/etc/profile.d/z.sh"
-if [[ -f "${Z_SH}" ]]; then
-    set +ua
-    source "${Z_SH}"
-    set -ua
-fi
-
 # .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."

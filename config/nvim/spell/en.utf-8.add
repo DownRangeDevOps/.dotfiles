@@ -51,3 +51,12 @@ dotfiles
 MacOS
 POSIX
 boolean
+Databricks
+actionlint
+EditorConfig
+Pre
+tfenv
+tfsec
+yamllint
+CLI
+pipx

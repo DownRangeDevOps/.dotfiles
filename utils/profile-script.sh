@@ -10,12 +10,20 @@ LOG_FILE="${SCRIPT_TO_PROFILE}.log"
 
 rm -rf /tmp/profile.log /tmp/profile.tim
 
+# Redirect stderr to &3
+#   - generate a timestamp for each line of &3 in .tim file
+#   - tee stderr output to .log file
 exec 3>&2 2> >(tee /tmp/profile.log |
     sed -u 's/^.*$/now/' |
     date -f - +%s.%N >/tmp/profile.tim)
 
-printf "\n\n" >| "./${LOG_FILE}"
 printf "%s\n" "***** PROFILING START *****" >> "./${LOG_FILE}"
+
+# for ((i=2; i--;))
+# do
+#     # shellcheck disable=SC1090
+#     source "${SCRIPT_TO_PROFILE}"
+# done
 
 # Start profiling
 set -x
@@ -26,15 +34,13 @@ do
 done
 
 
-for ((i=2; i--;))
-do
-    # shellcheck disable=SC1090
-    source "${SCRIPT_TO_PROFILE}"
-done
+# shellcheck disable=SC1090
+source "${SCRIPT_TO_PROFILE}"
 
 set +x
 exec 2>&3 3>&-
 
+# Unify .tim entries with .log entries
 paste <(
     while read -r tim ;do
         [ -z "$last" ] && last=${tim//.} && first=${tim//.}

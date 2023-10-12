@@ -1,18 +1,24 @@
 -- ----------------------------------------------
--- markdown-preview (https://github.com/davidgranstrom/nvim-markdown-preview)
+-- markdown-preview (https://github.com/iamcco/markdown-preview.nvim)
 -- :help markdown-preview
 -- ----------------------------------------------
+local mkdp_theme = "dark"
+
 return {
     "iamcco/markdown-preview.nvim",
-    lazy = true,
-    cmd = "MarkdownPreview",
-    config = function() vim.fn["mkdp#util#install"]() end,
-    init = function()
-        vim.g.mkdp_auto_close = 0
+    lazy = false,
+    -- cmd = { "MarkdownPreview", "MarkdownPreviewStop" },
+    -- ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+    config = function()
+        vim.g.mkdp_auto_close = 1 -- Close preview window when associated buffer is closed
         vim.g.mkdp_echo_preview_url = 1
-        vim.g.mkdp_page_title = function() vim.fn.expand("%:.") end
-        vim.g.mkdp_theme = "dark"
-        vim.g.mkdp_browserfunc = function(url) os.execute("open '" .. url .. "'") end
+        -- vim.g.mkdp_markdown_css = vim.env.HOME .. "/.dotfiles/external/github-markdown-css/github-markdown-" .. mkdp_theme .. ".css"
+        vim.g.mkdp_filetypes = { "markdown" } -- Attach MKDP commands to these filetypes
+        vim.g.mkdp_page_title = vim.fn.expand("%:.")
+        vim.g.mkdp_refresh_slow = 1
+        vim.g.mkdp_theme = mkdp_theme
+        -- vim.g.mkdp_browserfunc = function(url) os.execute("open '" .. url .. "'") end
         vim.g.mkdp_preview_options = {
             mkit = {},                     -- markdown-it options for render
             katex = {},                    -- katex options for math

@@ -2,11 +2,17 @@
 	name = Ryan Fisher
 	email = ryan@downrangedevops.com
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyfjN2C677gfJWdPPkmP9jMYaZMIRyB2qpJ4ykrHx46
+[includeIf "gitdir:/Users/xjxf277/"]
+	path = ~/.dotfiles/config/git/.gitconfig-grainger
+[includeIf "gitdir:/Users/ryanfisher/"]
+	path = ~/.dotfiles/config/git/.gitconfig-personal
 [gpg]
 	format = ssh
 [gpg "ssh"]
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-	allowedSignersFile = ~/.dotfiles/config/git/.gitconfig_ssh_signers
+[commit]
+	gpgsign = true
+	template = ~/.dotfiles/config/git/.gitconfig_commit_tmpl
 [include]
 	path = ~/.dotfiles/config/git/.gitconfig_aliases
 [core]
@@ -15,6 +21,10 @@
 	editor = nvr -cc split --remote-wait-silent +'setlocal bufhidden=delete'
 	ignorecase = false
 	pager = delta # less -JRS
+	fsmonitor = true
+[init]
+	templateDir = ~/.dotfiles/config/git/.git-template
+	defaultBranch = main
 [cleanup]
 	strip = true
 [interactive]
@@ -31,15 +41,13 @@
 	colorMoved = default
 	context = 6
 [difftool "diffview.nvim"]
-	cmd = 'nvim -f -c "DiffviewOpen"
+	cmd = nvr -cc DiffviewOpen --remote-tab-wait-silent
 [merge]
-	conflictstyle = diff3
+	conflictstyle = merge # merge/diff3
 	tool = diffview.nvim
 [mergetool "diffview.open"]
-	cmd = 'nvim -f -c "DiffviewOpen"
+	cmd = nvr -cc DiffviewOpen --remote-tab-wait-silent
 	trustExitCode = false
-	keepBackup = false
-[mergetool]
 	keepBackup = false
 [push]
 	default = simple
@@ -48,14 +56,8 @@
 	autoupdate = false
 [branch]
 	autosetuprebase = always
-[commit]
-	gpgsign = true
-	template = ~/.dotfiles/config/git/.gitconfig_commit_tmpl
 [help]
 	autocorrect = 0
-[init]
-	templateDir = ~/.dotfiles/config/git/.git-template
-	defaultBranch = main
 [color]
 	ui = auto
 [rebase]
@@ -70,3 +72,9 @@
 [maintenance]
 	auto = true
 	strategy = incremental
+[difftool "sourcetree"]
+	cmd = nvim -f -c DiffviewOpen
+	path = 
+[mergetool "sourcetree"]
+	cmd = nvim -f -c DiffviewOpen
+	trustExitCode = true
