@@ -58,7 +58,7 @@ set -o vi
 bind '"jj":vi-movement-mode'
 
 # Disable flow control commands (keeps C-s from freezing everything)
-stty -ixon
+stty -ixon 2> /dev/null
 
 # Load everything else
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
@@ -72,3 +72,5 @@ source "${BASH_D_PATH}/bash.sh"
 set +ua
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done, .bash_profile loaded."
+
+# vi: ft=sh

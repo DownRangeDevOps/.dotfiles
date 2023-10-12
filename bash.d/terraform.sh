@@ -6,7 +6,7 @@ log debug "==> [${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
 
-complete -C /usr/local/bin/terraform terraform
+complete -C "${BREW_PREFIX}/bin/terraform" terraform
 
 # ------------------------------------------------
 #  helpers

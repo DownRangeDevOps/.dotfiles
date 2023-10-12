@@ -4,12 +4,13 @@ log debug "==> [${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 #  init
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing rbenv..."
+function rbenv() {
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing rbenv..."
 
-log debug "Initalizing goenv..."
+    unset -f rbenv
+    eval "$(rbenv init - bash)"
 
-set +au
-eval "$(rbenv init - bash)"
-set -au
+    add_to_path "prepend" "$(rbenv prefix)/bin"
 
-add_to_path "prepend" "$(rbenv prefix)/bin"
+    $(which rbenv) "$@"
+}

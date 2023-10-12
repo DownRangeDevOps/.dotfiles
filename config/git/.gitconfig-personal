@@ -1,0 +1,8 @@
+[user]
+	name = Ryan Fisher
+	email = ryan@downrangedevops.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyfjN2C677gfJWdPPkmP9jMYaZMIRyB2qpJ4ykrHx46
+[gpg "ssh"]
+	allowedSignersFile = ~/.dotfiles/config/git/.gitconfig-signers-personal
+
+# vi: ft=gitconfig

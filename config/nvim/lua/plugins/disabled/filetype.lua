@@ -5,14 +5,14 @@
 return {
     "nathom/filetype.nvim",
     name = "filetype",
-    lazy = true,
+    lazy = false,
     opts = {
         overrides = {
             extensions = {
                 tf = "terraform",
                 tfvars = "terraform",
                 tfstate = "json",
-            }
+            },
         },
     },
 }

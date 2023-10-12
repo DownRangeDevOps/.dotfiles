@@ -3,7 +3,7 @@ set show-mode-in-prompt
 set vi-ins-mode-string "(+) "
 set vi-cmd-mode-string "(:) "
 
-# Search history with arrows
+# Search history with arrows, up: \e[A, down: \e[B
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 

@@ -4,3 +4,6 @@
 [submodule "external/bashlog"]
 	path = external/bashlog
 	url = https://github.com/Zordrak/bashlog.git
+[submodule "external/github-markdown-css"]
+	path = external/github-markdown-css
+	url = git@github.com:sindresorhus/github-markdown-css.git

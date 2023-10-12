@@ -4,12 +4,15 @@
 -- ----------------------------------------------
 local keymap = require("user-keymap")
 
+-- Prepend the Treesitter plugin dir so that parsers it manages are loaded first
+vim.opt.runtimepath:prepend(vim.env.HOME .. "/.local/share/nvim/lazy/nvim-treesitter")
+
 return {
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
     config = require("nvim-treesitter.configs").setup({
         sync_install = false,
-        ignore_install = { "cpp" },
+        ignore_install = {},
         modules = {},
         auto_install = true,
         ensure_installed = {

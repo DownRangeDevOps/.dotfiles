@@ -4,10 +4,13 @@ log debug "==> [${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 #  init
 # ------------------------------------------------
-log debug "Initializing goenv..."
+function goenv() {
+    log debug "Initializing goenv..."
 
-set +ua
-eval "$(goenv init -)"
-set -ua
+    unset -f goenv
 
-add_to_path "prepend" "$(goenv prefix)/bin" # Go binaries
+    eval "$(goenv init -)"
+    add_to_path "prepend" "$(goenv prefix)/bin" # Go binaries
+
+    command goenv "$@"
+}

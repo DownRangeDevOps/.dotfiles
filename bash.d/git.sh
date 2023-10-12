@@ -193,11 +193,17 @@ function git_project_path() {
     git_toplevel_basename="${git_toplevel##*/}"
     git_intra_repo_path=${PWD##*"${git_toplevel_basename}"}
 
-    if [[ ${1:-} == "--dirname" ]]; then
-        printf "%s" "${git_toplevel_basename}"
-    else
-        printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
-    fi
+    case ${1:-} in
+        "--dirname")
+            printf "%s" "${git_toplevel_basename}"
+            ;;
+        "--absolute")
+            printf "%s" "${git_toplevel}"
+            ;;
+        *)
+            printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
+            ;;
+    esac
 }
 
 # logging
@@ -424,6 +430,17 @@ function git_add() {
     )
 }
 
+# # WIP
+# function git_fuzzy_branch(){
+#     local fuzzy_args=("-d" "--delete" "-D")
+#
+#     if [[ $# -eq 1 && " ${fuzzy_args[*]} " =~ ${1:-} ]]; then
+#         git branch
+#     else
+#         git branch "$@"
+#     fi
+# }
+
 function git_fuzzy_checkout() {
     if [[ ${1:-} ]]; then
         git checkout "${@}"
@@ -439,46 +456,52 @@ function git_fuzzy_checkout() {
 }
 
 function git_delete_merged_branches() {
-    REMOTES="${*:-origin}"
+    local remotes="${*:-origin}"
+    local cur_branch
+    local local_branches
+    local remote_branches
+
     printf_callout "Fetching updates..."
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
-    CUR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    LOCAL_BRANCHES=$(__git_get_merged_branches |
-        /usr/local/opt/grep/libexec/gnubin/grep -Ev "^\s*remotes/origin/" |
-        /usr/local/opt/grep/libexec/gnubin/grep -Ev "${CUR_BRANCH}" |
-        awk '{print $1}')
-    REMOTE_BRANCHES=$(__git_get_merged_branches |
-        /usr/local/opt/grep/libexec/gnubin/grep -E "^\s*remotes/origin/" |
+    cur_branch=$(git rev-parse --abbrev-ref HEAD)
+    mapfile -t local_branches < <(__git_get_merged_branches |
+        grep -Ev "^\s*remotes/origin/" |
+        grep -Ev "${cur_branch}" |
+        tr "\n" " ")
+    mapfile -t remote_branches < <(__git_get_merged_branches |
+        grep -E "^\s*remotes/origin/" |
         sed -e "s/^\s*remotes\/origin\///g" |
-        awk '{print $1}')
+        tr "\n" " ")
 
-    if [[ -n ${LOCAL_BRANCHES} || -n ${REMOTE_BRANCHES} ]]; then
+    if [[ ${#local_branches[@]} -eq 0 || ${#remote_branches[@]} -eq 0 ]]; then
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
-        __git_get_merged_branches
+        __git_get_merged_branches | indent_output
 
         prompt_to_continue "Delete branches?" || return 6
         echo
 
-        if [[ -n ${LOCAL_BRANCHES} ]]; then
+        if [[ ${#local_branches[@]} -gt 0 ]]; then
             printf_callout "Deleting merged local branches..."
-            git branch --delete --force "${LOCAL_BRANCHES}"
+            git branch --delete --force "${local_branches[@]}" | indent_output
         fi
 
-        if [[ -n ${REMOTE_BRANCHES} ]]; then
-            for REMOTE in ${REMOTES}; do
-                printf_callout "Deleting merged remote branches from ${REMOTE}..."
-                git push --delete "${REMOTE}" "${REMOTE_BRANCHES}"
+        if [[ ${#remote_branches[@]} -gt 0 ]]; then
+            for remote in ${remotes}; do
+                printf_callout "Deleting merged remote branches from ${remote}..."
+                # shellcheck disable=SC2068  # word splitting is desired here
+                git push --delete "${remote}" ${remote_branches[@]} | indent_output
             done
         fi
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
+
         printf_callout "Merged branches have been deleted..."
-        printf_callout 'Everyone should run `git fetch --prune` to sync with this remote.'
+        printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        printf_callout "No merged branches to delete."
+        printf_warning "No merged branches to delete."
     fi
 }
 
@@ -502,16 +525,7 @@ function git_nuke_cur_branch() {
 }
 
 function git_log_copy() {
-    # git log copy - copy the git log for this branch to the clipboard
-    # shellcheck disable=SC2046
-    LOG="$(git log \"origin/$(__git_master_or_main)..HEAD\")"
-
-    pbcopy <<EOF
-
-\`\`\`
-${LOG}
-\`\`\`
-EOF
+    git log --format="## %s (%h)%n%n%b" "origin/$(__git_master_or_main)..HEAD" | cat -s | pbcopy
 }
 
 function git_checkout_ticket() {
