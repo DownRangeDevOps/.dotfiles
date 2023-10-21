@@ -1,3 +1,6 @@
+# direnv local
+.envrc
+
 # MacOS
 .DS_Store
 .AppleDouble

@@ -270,7 +270,7 @@ map("c", "q/", "?")
 -- Copy/paste to/from system clipboard
 map("v", "<LeftRelease>", '"+y<LeftRelease>', { group = "gen", desc = "copy on mouse select" })
 map({ "n", "v" }, "<leader>y", '"+y', { group = "gen", desc = "copy to system clipboard" })
-map("n", "<leader>Y", '"+Y', { group = "gen", desc = "copy -> eol to system clipboard" })
+map("n", "<leader>Y", '"+y$', { group = "gen", desc = "copy -> eol to system clipboard" })
 map("n", "<leader>yy", '"+yy', { group = "gen", desc = "copy line to system clipboard" })
 map("n", "<leader>p", '"+p', { group = "gen", desc = "paste system clipboard" })
 map("n", "<leader>P", '"+P', { group = "gen", desc = "paste system clipboard" })
@@ -289,7 +289,7 @@ map("n", "<leader>D", "D", { group = "txt", desc = "yank-delete -> eol" })
 
 -- change (c/D)
 map("", "c", '"_c', { group = "txt", desc = "change" })
-map("", "C", '"_C', { group = "txt", desc = "change -> eol" })
+map("", "C", '"_c$', { group = "txt", desc = "change -> eol" })
 map("", "<leader>c", "c", { group = "txt", desc = "yank-change" })
 map("", "<leader>C", "C", { group = "txt", desc = "yank-change -> eol" })
 
@@ -443,10 +443,10 @@ map("t", "<C-k>", "<C-\\><C-n><C-w>k", { group = "nav", desc = "up window" })
 map("t", "<C-l>", "<C-\\><C-n><C-w>l", { group = "nav", desc = "right window" })
 
 -- my iTerm is setup to send mac ⌥ (option) key instead of meta, which will look like gibberish to most
-map("n", "˚", function() vim.cmd.resize("+2") end, { group = "nav", desc = "increase win height" })
-map("n", "∆", function() vim.cmd.resize("-2") end, { group = "nav", desc = "decrease win height" })
-map("n", "˙", function() vim.cmd("vertical resize +2") end, { group = "nav", desc = "increase win width" })
-map("n", "¬", function() vim.cmd("vertical resize -2") end, { group = "nav", desc = "decrease win width" })
+map("n", "˚", function() vim.cmd.resize("+4") end, { group = "nav", desc = "increase win height" })
+map("n", "∆", function() vim.cmd.resize("-4") end, { group = "nav", desc = "decrease win height" })
+map("n", "˙", function() vim.cmd("vertical resize +4") end, { group = "nav", desc = "increase win width" })
+map("n", "¬", function() vim.cmd("vertical resize -4") end, { group = "nav", desc = "decrease win width" })
 
 -- Tab navigation
 map("", "<leader>˙", function() vim.cmd.tabprevious() end, { group = "nav", desc = "prev window" })

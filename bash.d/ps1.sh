@@ -6,47 +6,36 @@ log debug "==> [${BASH_SOURCE[0]}]"
 # ------------------------------------------------
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
-function __get_shell_lvl() {
-    LEVEL=1
-    [[ -n ${NVIM_LISTEN_ADDRESS:-} ]] && LEVEL=2
-    [[ ${SHLVL} -gt ${LEVEL} ]] && printf "%s" "${SHLVL}"
-}
-
 function __ps1_prompt() {
-    local info
+    local path_with_tilde=${PWD/~/\~} # `~` expands to user home dir
+
     local time
-    local git_project_identifier
-    local git_branch_with_state
-    local ps1
     local shell_lvl
     local aws_vault
     local virtualenv_name
     local tf_workspace
 
-    shell_lvl="$(__get_shell_lvl)"
+    time="$(date +%R) "
     aws_vault=" $(__get_aws_vault) "
     virtualenv_name=" $(__get_virtualenv_name) "
     tf_workspace=" $(__get_terraform_workspace) "
 
-    info="$(printf "%s" "${shell_lvl}${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
+
+    local info
+    info="$(printf "%s" "${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
 
     if [[ -n ${info} ]]; then
         info="(${info}) "
     fi
 
     if __git_is_repo; then
-        git_project_identifier="${YELLOW}$(git_project_path)${RESET}"
-        git_branch_with_state="${MAGENTA}$(__git_show_branch_state)${RESET}"
-
-        printf "%s\n" "${git_project_identifier} on ${git_branch_with_state}"
+        printf "%s\n" "${YELLOW}${path_with_tilde}${RESET} on ${MAGENTA}$(__git_show_branch_state)${RESET}"
     else
-        # `~` prints the path to $HOME
-        printf "%s\n" "${YELLOW}${PWD/~/\~}${RESET}"
+        printf "%s\n" "${YELLOW}${path_with_tilde}${RESET}"
     fi
 
-    time="$(date +%R) "
-    ps1="${time}${info}\[${CYAN}\]→ \[${RESET}\]"
-    PS1="${ps1}"
+
+    PS1="${time}${info}\[${CYAN}\]→ \[${RESET}\]"
 }
 
 if [[ ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then

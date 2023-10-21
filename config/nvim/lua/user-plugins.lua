@@ -206,8 +206,39 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 -- :help mason
 -- ----------------------------------------------
 local mason_lspconfig = require("mason-lspconfig")
-local mason_lsp_servers = {
-    -- Ensure these language servers are installed:
+
+-- Ensure these language servers are installed:
+local mason_lsp_required_servers = {
+    "ruby_ls",
+    "lua_ls",
+    "helm_ls",
+    "ansiblels",
+    "gopls",
+    "pylsp",
+    "cssls",
+    "terraformls",
+    "taplo",
+    "neocmake",
+    "marksman",
+    "bashls",
+    "vimls",
+    "sqlls",
+    "yamlls",
+    "lemminx",
+    "html",
+    "tflint",
+    "dockerls",
+    "jqls",
+    "pyre",
+    "docker_compose_language_service",
+    "rubocop",
+    "jsonls",
+}
+
+-- Language server customizations
+-- help: mason-lspconfig-automatic-server-setup
+-- help: mason-lspconfig.setup_handlers()
+local mason_lsp_server_configs = {
     lua_ls = { -- https://github.com/LuaLS/lua-language-server/wiki/Diagnostics
         Lua = {
             filetypes = "lua", -- filetypes the language server will attach to
@@ -220,15 +251,15 @@ local mason_lsp_servers = {
     },
 }
 
-mason_lspconfig.setup({ ensure_installed = mason_lsp_servers, })
+mason_lspconfig.setup({ ensure_installed = mason_lsp_required_servers, })
 
 mason_lspconfig.setup_handlers {
     function(server_name)
         require("lspconfig")[server_name].setup {
             capabilities = capabilities,
             on_attach = keymap.lsp_maps,
-            settings = mason_lsp_servers[server_name],
-            filetypes = (mason_lsp_servers[server_name] or {}).filetypes,
+            settings = mason_lsp_server_configs[server_name],
+            filetypes = (mason_lsp_server_configs[server_name] or {}).filetypes,
         }
     end
 }

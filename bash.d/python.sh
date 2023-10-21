@@ -37,9 +37,7 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function __get_virtualenv_name() {
     if [[ ${VIRTUAL_ENV:-} ]]; then
-        printf "%s\n" " $(basename "$VIRTUAL_ENV")"
-    else
-        printf "%s\n" ""
+        printf "%s\n" "$(basename "$VIRTUAL_ENV")"
     fi
 }
 

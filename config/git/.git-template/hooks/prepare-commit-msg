@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# USAGE: git commit
+#
+# SYNOPSIS:
+#       Parse the current git branch name and break it into parts on the
+#       delimiter "--". Use `envsubst` to replace the variables in SHELL_FORMAT
+#       contained in the current commit message template file
+#       (`commit.template`) and write the results to `$COMMIT_MSG_FILE`.
+#
+#       Branch name formats that will be parsed:
+#       <ISSUE_ID>--<SUBJECT>
+#       <ISSUE_ID>--<ISSUE_TYPE>--<SUBJECT>
+#       <ISSUE_ID>--<ISSUE_TYPE>--<ISSUE_SCOPE>--<SUBJECT>
+#
+#       Optionall, if `$PROJECT_TRACKER_URL` is set in the current envionrment
+#       a markdown reference link will be appended to the end of
+#       `$COMMIT_MSG_FILE`.
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+# SHA1=$3
+
+if [[ "${COMMIT_SOURCE}" == "template" && -n "$(command -v envsubst)" ]]; then
+    TEMPLATE_FILE=$(git config commit.template)
+    TEMPLATE_FILE="${TEMPLATE_FILE/#\~/$HOME}"
+    SUBJECT=""
+    REFERENCE=""
+
+    mapfile -t BRANCH_PARTS < <(awk NF=NF FS='--' OFS='\n' <(git branch --show-current))
+
+    ISSUE_ID="${BRANCH_PARTS[0]}"
+
+    case ${#BRANCH_PARTS[@]} in
+        2)
+            DESCRIPTION="${BRANCH_PARTS[1]//-/ }"
+            DESCRIPTION="${DESCRIPTION#"rf "}"
+            SUBJECT="${DESCRIPTION^}  [[${ISSUE_ID}]]"
+            ;;
+        3)
+            DESCRIPTION="${BRANCH_PARTS[2]//-/ }"
+            DESCRIPTION="${DESCRIPTION#"rf "}"
+            SUBJECT="${BRANCH_PARTS[1]}: ${DESCRIPTION^} [[${ISSUE_ID}]]"
+            ;;
+        4)
+            DESCRIPTION="${BRANCH_PARTS[3]//-/ }"
+            DESCRIPTION="${DESCRIPTION#"rf "}"
+            SUBJECT="${BRANCH_PARTS[1]}(${BRANCH_PARTS[2]}): ${DESCRIPTION^} [[${ISSUE_ID}]]"
+            ;;
+        *)
+            SUBJECT="${BRANCH_PARTS[*]}"
+            ;;
+    esac
+
+    export SUBJECT
+
+    if [[ -n "${PROJECT_TRACKER_URL:-}" && -n "${ISSUE_ID:-}" ]]; then
+        export REFERENCE="[${ISSUE_ID}]: ${PROJECT_TRACKER_URL}/${ISSUE_ID}"
+    fi
+
+    envsubst "\${SUBJECT} \${REFERENCE}" < "${TEMPLATE_FILE}" > "${COMMIT_MSG_FILE}"
+
+    unset SUBJECT
+    unset REFERENCE
+fi

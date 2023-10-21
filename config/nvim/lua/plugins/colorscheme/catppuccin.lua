@@ -63,6 +63,12 @@ return {
                     Folded = {fg = mocha.text, bg = mocha.base },
                     UfoFoldedBg = { bg = mocha.base },
                     UfoFoldedEllipsis = { fg = mocha.blue, bg = mocha.base },
+
+                    -- Diagnostics
+                    DiagnosticUnderlineError = { style = { "undercurl" } },
+                    DiagnosticUnderlineHint = { style = { "undercurl" } },
+                    DiagnosticUnderlineInfo = { style = { "undercurl" } },
+                    DiagnosticUnderlineWarn = { style = { "undercurl" } },
                 }
             end,
         },
