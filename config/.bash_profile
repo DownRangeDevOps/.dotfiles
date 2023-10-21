@@ -2,7 +2,11 @@
 
 # Load logger or overload with no-op
 if [[ ${DEBUG:-} -eq 1 ]]; then
+    set +ua
     source "${HOME}/.dotfiles/lib/log.sh"
+    set -ua
+    log debug ""
+    log debug "[${BASH_SOURCE[0]}]"
 else
     log_sh_args=( "info" "warn" "error" "debug" )
     function log() {
@@ -24,9 +28,6 @@ set -uao pipefail
 
 # Make my bins available while loading dotfiles
 export PATH="${HOME}/.dotfiles/bin:${PATH}"
-
-log debug ""
-log debug "[${BASH_SOURCE[0]}]"
 
 # Globals
 if [[ $(uname -m) == "arm64" ]]; then
