@@ -1,5 +1,6 @@
 # .bashrc
 if [[ -n ${DEBUG:-} ]]; then
+    source "${HOME}/.dotfiles/lib/log.sh"
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
 fi
@@ -308,4 +309,18 @@ alias tfw="terraform workspace"
 alias tfia=init_all_modules
 alias tfva=validate_all_modules
 
+# ------------------------------------------------
+#  direnv
+# ------------------------------------------------
+if [[ -n ${DEBUG:-} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing direnv..."
+fi
+
+set +ua
+eval "$(direnv hook bash)"
+set -ua
+
+if [[ -n ${DEBUG:-} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: .bashrc done..."
+fi
 # vi: ft=sh

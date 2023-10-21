@@ -1,11 +1,15 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  init
 # ------------------------------------------------
 function luaver() {
-    log debug "Initializing lua..."
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "Initializing lua..."
+    fi
 
     unset -f luaver
 

@@ -1,11 +1,15 @@
 # shellcheck disable=SC1090,SC1091
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring enviornment..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring enviornment..."
+fi
 
 # llvm
 export LDFLAGS="-L${BREW_PREFIX}/opt/llvm/lib && -L${BREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${BREW_PREFIX}/opt/llvm/lib/c++"
@@ -28,7 +32,21 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+fi
+
+function is_subsh() {
+    local shell_level="${SHLVL}"
+
+    if [[ -n "${NVIM_LOG_FILE:-}" ]]; then
+        shell_level="$(( SHLVL - 1 ))"
+    fi
+
+    if [[ "${shell_level}" -gt 1 ]]; then
+        printf "%s" "${shell_level}"
+    fi
+}
 
 function list_dir() {
     local gnu_ls="${BREW_PREFIX}/opt/coreutils/libexec/gnubin/ls"
@@ -50,7 +68,10 @@ function list_dir() {
 # ------------------------------------------------
 #  utils
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
+fi
+
 function nvim() {
     if [[ -w ${NVIM_SESSION_FILE_PATH:-} ]]; then
         command nvim -S "${NVIM_SESSION_FILE_PATH}" "$@"
@@ -88,7 +109,9 @@ function mysqlpw() {
 # ------------------------------------------------
 # bash.d
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring bash completions..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring bash completions..."
+fi
 
 set +ua
 source "${BREW_PREFIX}/etc/profile.d/bash_completion.sh"
@@ -98,13 +121,18 @@ source "${BREW_PREFIX}/share/google-cloud-sdk/path.bash.inc"
 source "${BREW_PREFIX}/share/google-cloud-sdk/completion.bash.inc"
 set -ua
 
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
+fi
+
 {
     shopt -s nullglob # protect against empty dir
 
     for file in "${BASH_D_PATH}"/*; do
         if [[ ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
-            log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading ${file} ..."
+            if [[ -n "${DEBUG:-}" ]]; then
+                log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading ${file} ..."
+            fi
 
             source "${file}"
         fi
@@ -115,9 +143,14 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
 
 # .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+    fi
 
     source "${HOME}/.bashrc"
 
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Done."
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Done."
+    fi
+
 fi

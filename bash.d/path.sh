@@ -1,10 +1,16 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # Reset PATH then add bins
 function set_path() {
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Resetting \$PATH"
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Resetting \$PATH"
+    fi
 
+    local prepend
+    local append
     local gnu_tools=("gnu-tar" "gnu-which" "gnu-sed" "grep" "coreutils" "findutils" "make")
     local compilers=("llvm/bin")
 
@@ -15,27 +21,30 @@ function set_path() {
     set -ua
 
     # Make personal bins available first in case anything else uses them
-    add_to_path "prepend" "${HOME}/.dotfiles/bin"
+    prepend="${HOME}/.dotfiles/bin"
 
     if [[ -n ${BREW_PREFIX} ]]; then
-        add_to_path "prepend" "${BREW_PREFIX}/bin"     # Homebrew
-        add_to_path "prepend" "${BREW_PREFIX}/lib"     # Homebrew
-        add_to_path "prepend" "${BREW_PREFIX}/include" # Homebrew
-        add_to_path "prepend" "${BREW_PREFIX}/opt"     # Homebrew
-        add_to_path "prepend" "${BREW_PREFIX}/sbin"    # Homebrew
+        prepend+=":${BREW_PREFIX}/bin"     # Homebrew
+        prepend+=":${BREW_PREFIX}/lib"     # Homebrew
+        prepend+=":${BREW_PREFIX}/include" # Homebrew
+        prepend+=":${BREW_PREFIX}/opt"     # Homebrew
+        prepend+=":${BREW_PREFIX}/sbin"    # Homebrew
 
         for tool in "${gnu_tools[@]}"; do
-            add_to_path "prepend" "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
-            add_to_path prepend "${BREW_PREFIX}/opt/${tool}/libexec/gnubin"   # Homebrew gnu tools
+            prepend+=":${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
+            prepend+=":${BREW_PREFIX}/opt/${tool}/libexec/gnubin" # Homebrew gnu tools
         done
 
         for path in "${compilers[@]}"; do
-            add_to_path prepend "${BREW_PREFIX}/opt/${path}" # llvm
+            prepend+=":${BREW_PREFIX}/opt/${path}" # llvm
         done
     fi
 
-    add_to_path "append" "${HOME}/.local/bin" # Ansible
-    add_to_path "append" "${HOME}/.cargo/bin" # rust
+    append="${HOME}/.local/bin"   # Ansible
+    append+=":${HOME}/.cargo/bin" # rust
+
+    add_to_path prepend "${prepend}"
+    add_to_path append "${append}"
 }
 
 set_path

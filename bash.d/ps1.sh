@@ -1,10 +1,14 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+fi
 
 function __ps1_prompt() {
     local path_with_tilde=${PWD/~/\~} # `~` expands to user home dir
@@ -19,10 +23,11 @@ function __ps1_prompt() {
     aws_vault=" $(__get_aws_vault) "
     virtualenv_name=" $(__get_virtualenv_name) "
     tf_workspace=" $(__get_terraform_workspace) "
+    shell_lvl=" $(is_subsh) "
 
 
     local info
-    info="$(printf "%s" "${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
+    info="$(printf "%s" "${shell_lvl}${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
 
     if [[ -n ${info} ]]; then
         info="(${info}) "

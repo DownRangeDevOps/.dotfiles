@@ -1,10 +1,14 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  aws
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aws config..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aws config..."
+fi
 
 export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
@@ -17,7 +21,9 @@ export AWS_SESSION_TOKEN_TTL=12h
 #  aws-vault (https://github.com/99designs/aws-vault)
 #  usage: https://github.com/99designs/aws-vault/blob/master/USAGE.md
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aws vault helpers..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading aws vault helpers..."
+fi
 
 function aws-vault() {
     unset -f aws-vault

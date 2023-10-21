@@ -1,5 +1,7 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  Completion
@@ -39,7 +41,9 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 # ------------------------------------------------
 #  Private
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
+fi
 
 # Repository information
 function __git_is_repo() {
@@ -174,7 +178,9 @@ function __git_get_merged_branches() {
 # ------------------------------------------------
 #  Public
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
+fi
 
 # Info
 function git_project_path() {
@@ -278,7 +284,7 @@ function git_fixup() {
 function git_rebase_merge_and_push() {
     local main_branch
     local source_branch
-    Local target_branch
+    local target_branch
     local merge_commit_option
 
     source_branch="$(git_get_cur_branch_name)"

@@ -1,11 +1,15 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  init
 # ------------------------------------------------
 function cargo() {
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+    fi
 
     unset -f cargo
 
