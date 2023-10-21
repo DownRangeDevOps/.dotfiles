@@ -93,6 +93,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile", "BufRead" }, {
     pattern = { "*.tf", "*.tfvars" },
     command = "set ft=terraform",
 })
+
+-- Auto-insert in new terminal
+vim.api.nvim_create_autocmd({ "TermOpen" }, {
+    group = ui,
+    pattern = "*",
+    command = "startinsert",
+})
+
 -- Set options for specific file and buffer types
 vim.api.nvim_create_autocmd({
     "BufEnter",

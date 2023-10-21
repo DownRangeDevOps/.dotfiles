@@ -1,42 +1,40 @@
 # shellcheck disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
 set +ua
-if [[ ${DEBUG:-} -eq 1 ]]; then
+if [[ -n "${DEBUG:-}" ]]; then
     source "${HOME}/.dotfiles/lib/log.sh"
-else
-    function log() {
-        true
-    }
 fi
 set -ua
 
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
-
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
+fi
 
 # Colors
-BLACK=$(tput setaf 0)
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-MAGENTA=$(tput setaf 5)
-CYAN=$(tput setaf 6)
-WHITE=$(tput setaf 7)
-BOLD=$(tput bold)
-REVERSE=$(tput rev)
-RESET=$(tput sgr0)
+# BLACK=$(tput setaf 0)
+# RED=$(tput setaf 1)
+# GREEN=$(tput setaf 2)
+# YELLOW=$(tput setaf 3)
+# BLUE=$(tput setaf 4)
+# MAGENTA=$(tput setaf 5)
+# CYAN=$(tput setaf 6)
+# WHITE=$(tput setaf 7)
+# BOLD=$(tput bold)
+# REVERSE=$(tput rev)
+# RESET=$(tput sgr0)
 
-export BLACK
-export RED
-export GREEN
-export YELLOW
-export BLUE
-export MAGENTA
-export CYAN
-export WHITE
-export BOLD
-export RESET
+export BLACK="[30m"
+export RED="[31m"
+export GREEN="[32m"
+export YELLOW="[33m"
+export BLUE="[34m"
+export MAGENTA="[35m"
+export CYAN="[36m"
+export WHITE="[37m"
+export BOLD="[1m"
+export REVERSE="[7m"
+export RESET="(B[m"
 
 # Color printf
 alias bold=printf_bold
@@ -97,19 +95,25 @@ function add_to_path() {
     local position="${1:-}"
     local new_path="${2:-}"
 
-    if [[ ! ":${PATH}:" =~ :${new_path}: && -d ${new_path} ]]; then
-        case "${position}" in
-        prepend)
+    case "${position}" in
+    prepend)
+        if [[ -n "${PATH:-}" ]]; then
             export PATH="${new_path}:${PATH}"
-            ;;
-        append)
+        else
+            export PATH="${new_path}"
+        fi
+        ;;
+    append)
+        if [[ -n "${PATH:-}" ]]; then
             export PATH="${PATH}:${new_path}"
-            ;;
-        *)
-            true
-            ;;
-        esac
-    fi
+        else
+            export PATH="${new_path}"
+        fi
+        ;;
+    *)
+        true
+        ;;
+    esac
 }
 
 function join() {

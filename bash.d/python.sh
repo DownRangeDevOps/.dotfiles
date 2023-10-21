@@ -1,10 +1,14 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+fi
 
 export BETTER_EXCEPTIONS=1 # python better exceptions
 export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
@@ -13,7 +17,9 @@ export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
 export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 
 function pipx() { # TODO: make lazy autocompletion loader
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing pipx completions..."
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing pipx completions..."
+    fi
 
     unset -f pipx
 
@@ -33,7 +39,9 @@ function pipx() { # TODO: make lazy autocompletion loader
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+fi
 
 function __get_virtualenv_name() {
     if [[ ${VIRTUAL_ENV:-} ]]; then
@@ -101,7 +109,9 @@ function lpy() {
 # Initialize pyenv (https://github.com/pyenv/pyenv)
 # ------------------------------------------------
 function pyenv() {
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
+    fi
 
     unset -f pyenv
 

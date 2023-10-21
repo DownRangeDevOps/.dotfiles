@@ -1,23 +1,26 @@
 # shellcheck disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
 
-# -u: We should not use unbound variables
-# -o pipefile: We should ensure pipelines fail if commands within them fail
-set -uo pipefail
-
-# Export all functions to make them available in sub-shells
-# NOTE: unset with +a before sourcing third party libaries
-#       or they will export functions that will cause errors
-set -a
-
-set +ua
+# Load logger or overload with no-op
 if [[ ${DEBUG:-} -eq 1 ]]; then
     source "${HOME}/.dotfiles/lib/log.sh"
 else
+    log_sh_args=( "info" "warn" "error" "debug" )
     function log() {
-        true
+        if [[ "${log_sh_args[*]}" =~ ${1:-} ]]; then
+            true
+        else
+            log "$@"
+        fi
     }
 fi
-set -ua
+
+# -a: Export all functions to make them available in sub-shells
+# -u: We should not use unbound variables
+# -o pipefile: We should ensure pipelines fail if commands within them fail
+#
+# WARNING: Unset with +a and +u before sourcing third party libraries or they
+# will export functions and throw errors
+set -uao pipefail
 
 # Make my bins available while loading dotfiles
 export PATH="${HOME}/.dotfiles/bin:${PATH}"
@@ -27,9 +30,9 @@ log debug "[${BASH_SOURCE[0]}]"
 
 # Globals
 if [[ $(uname -m) == "arm64" ]]; then
-    BREW_PREFIX="$(/opt/homebrew/bin/brew --prefix)" && export BREW_PREFIX
+    BREW_PREFIX="/opt/homebrew"
 else
-    BREW_PREFIX="$(/usr/local/bin/brew --prefix)" && export BREW_PREFIX
+    BREW_PREFIX="/usr/local"
 fi
 
 # Put brew bins first in path

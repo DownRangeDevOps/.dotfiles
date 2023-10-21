@@ -1,10 +1,14 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+fi
 
 function dvrm() {
     volumes=$(docker volume ls |

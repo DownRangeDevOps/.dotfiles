@@ -1,11 +1,15 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  init
 # ------------------------------------------------
 function goenv() {
-    log debug "Initializing goenv..."
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "Initializing goenv..."
+    fi
 
     unset -f goenv
 

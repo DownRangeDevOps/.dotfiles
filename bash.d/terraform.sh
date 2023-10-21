@@ -1,17 +1,23 @@
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+fi
 
 complete -C "${BREW_PREFIX}/bin/terraform" terraform
 
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+if [[ -n "${DEBUG:-}" ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+fi
 
 function __get_terraform_workspace() {
     if [[ -d .terraform ]]; then
