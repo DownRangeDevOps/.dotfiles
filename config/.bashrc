@@ -1,5 +1,5 @@
 # .bashrc
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
 fi
@@ -7,7 +7,7 @@ fi
 # ------------------------------------------------
 #  bash
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating BASH aliases..."
 fi
 
@@ -65,7 +65,7 @@ alias wget="wget -c"               # resume downloads
 # ------------------------------------------------
 #  ansible
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Ansible aliases..."
 fi
 
@@ -75,7 +75,7 @@ alias avv='ansible-vault view'
 # ------------------------------------------------
 #  aws vault
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating aws-vault aliases..."
 fi
 
@@ -85,7 +85,7 @@ alias ave="aws-vault exec"
 # ------------------------------------------------
 #  docker
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Docker aliases..."
 fi
 
@@ -152,7 +152,7 @@ alias dc="docker compose"
 # ------------------------------------------------
 #  git
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating git aliases..."
 fi
 
@@ -234,7 +234,7 @@ alias opr="git_open_pull_request"
 # ------------------------------------------------
 #  homebrew
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Homebrew alises..."
 fi
 
@@ -245,7 +245,7 @@ alias brew='env PATH=${NO_SHIMS_PATH} brew'
 # ------------------------------------------------
 #  kubernetes
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Kubernetes aliases..."
 fi
 
@@ -254,7 +254,7 @@ alias k="kubectl"
 # ------------------------------------------------
 #  macos
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating MacOS aliases..."
 fi
 
@@ -268,7 +268,7 @@ alias fixflash='sudo killall coreaudiod'
 # ------------------------------------------------
 #  terraform
 # ------------------------------------------------
-if [[ -n ${DEBUG} ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Terraform aliases..."
 fi
 
