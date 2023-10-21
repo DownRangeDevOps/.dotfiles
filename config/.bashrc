@@ -1,6 +1,9 @@
 # .bashrc
 if [[ -n ${DEBUG:-} ]]; then
+    set +ua
+    # shellcheck disable=SC1091
     source "${HOME}/.dotfiles/lib/log.sh"
+    set -ua
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
 fi

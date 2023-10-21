@@ -1,11 +1,8 @@
 # shellcheck disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
-set +ua
 if [[ -n "${DEBUG:-}" ]]; then
+    set +ua
     source "${HOME}/.dotfiles/lib/log.sh"
-fi
-set -ua
-
-if [[ -n "${DEBUG:-}" ]]; then
+    set -ua
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
@@ -32,6 +29,7 @@ export BLUE="[34m"
 export MAGENTA="[35m"
 export CYAN="[36m"
 export WHITE="[37m"
+export DEFAULT="[39m"
 export BOLD="[1m"
 export REVERSE="[7m"
 export RESET="(B[m"
@@ -72,7 +70,7 @@ function printf_error() {
 
 function printf_callout() {
     if [[ -n "${1:-}" ]]; then
-        printf "%s\n" "${BOLD}${BLUE}==> ${RESET}${BOLD}${1}${RESET}"
+        printf "%s\n" "${BOLD}${BLUE}==> ${DEFAULT}${1}${RESET}"
     else
         printf_error "No msg provided, args: ${*}"
     fi
