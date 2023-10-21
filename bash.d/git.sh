@@ -66,8 +66,6 @@ function __git_is_worktree() {
 function __git_master_or_main() {
     local master_exists
     local main_exists
-    local master_length
-    local main_length
     local main_branch
 
     if ! __git_is_repo "${PWD}"; then
@@ -75,18 +73,22 @@ function __git_master_or_main() {
         return 6
     fi
 
-    if git show-ref --verify --quiet refs/heads/master; then master_exists=true; fi
-    if git show-ref --verify --quiet refs/heads/main; then main_exists=true; fi
+    if git show-ref --verify --quiet refs/remotes/origin/master || git show-ref --verify --quiet refs/heads/master; then master_exists=true; fi
+    if git show-ref --verify --quiet refs/remotes/origin/main || git show-ref --verify --quiet refs/heads/main; then main_exists=true; fi
 
-    if [[ -n ${master_exists:-} && -n ${main_exists:-} ]]; then
-        master_length="$(git rev-list --count master)"
-        main_length="$(git rev-list --count main)"
+    if [[ -n "${master_exists:-}" && -n "${main_exists:-}" ]]; then
+        local longest_branch_len=0
+        local main_branch="main"
 
-        if [[ ${master_length} -gt ${main_length} ]]; then
-            main_branch="main"
-        else
-            main_branch="master"
-        fi
+        for ref in "origin/main" "origin/master" "main" "master"; do
+            branch_len=$(git rev-list --count "${ref}" 2> /dev/null || printf "0")
+
+            if [[ ${branch_len} -gt ${longest_branch_len} ]]; then
+                main_branch="${ref##*"/"}"
+                longest_branch_len="${branch_len}"
+            fi
+        done
+
     elif [[ -n ${main_exists:-} ]]; then
         main_branch="main"
     elif [[ -n ${master_exists:-} ]]; then
@@ -276,7 +278,7 @@ function git_fixup() {
 function git_rebase_merge_and_push() {
     local main_branch
     local source_branch
-    local target_branch
+    Local target_branch
     local merge_commit_option
 
     source_branch="$(git_get_cur_branch_name)"
@@ -484,7 +486,8 @@ function git_delete_merged_branches() {
 
         if [[ ${#local_branches[@]} -gt 0 ]]; then
             printf_callout "Deleting merged local branches..."
-            git branch --delete --force "${local_branches[@]}" | indent_output
+            # shellcheck disable=SC2068  # word splitting is desired here
+            git branch --delete --force ${local_branches[@]} | indent_output
         fi
 
         if [[ ${#remote_branches[@]} -gt 0 ]]; then

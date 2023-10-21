@@ -14,7 +14,14 @@ complete -C "${BREW_PREFIX}/bin/terraform" terraform
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
 function __get_terraform_workspace() {
-    [[ -d .terraform ]] && printf "%s" " $(terraform workspace show 2>/dev/null)"
+    if [[ -d .terraform ]]; then
+        local workspace
+        workspace="$(terraform workspace show 2>/dev/null)"
+
+        if [[ "${workspace}" != "default" ]]; then
+            printf "%s" "tf:${workspace}"
+        fi
+    fi
 }
 
 function init_all_modules() {

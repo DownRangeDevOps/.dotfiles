@@ -1,3 +1,7 @@
-Subject [${ISSUE_ID}]
+${SUBJECT}
 
-[${ISSUE_ID}]: ${TICKET_URL_BASE}${ISSUE_ID}
+${REFERENCE}
+
+# Git commit message references:
+#    * Conventional commits: https://www.conventionalcommits.org/en/v1.0.0/#summary
+#    * A note about git commit messages: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

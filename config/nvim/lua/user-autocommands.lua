@@ -87,6 +87,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- ----------------------------------------------
 -- Filetype
 -- ----------------------------------------------
+-- Force "terraform" filetype for tfvars
+vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile", "BufRead" }, {
+    group = ui,
+    pattern = { "*.tf", "*.tfvars" },
+    command = "set ft=terraform",
+})
 -- Set options for specific file and buffer types
 vim.api.nvim_create_autocmd({
     "BufEnter",

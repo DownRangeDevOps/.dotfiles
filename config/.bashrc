@@ -1,11 +1,15 @@
 # .bashrc
-log debug ""
-log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n ${DEBUG} ]]; then
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]}]"
+fi
 
 # ------------------------------------------------
 #  bash
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating BASH aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating BASH aliases..."
+fi
 
 # auto on yubiswitch
 alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
@@ -61,28 +65,29 @@ alias wget="wget -c"               # resume downloads
 # ------------------------------------------------
 #  ansible
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Ansible aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Ansible aliases..."
+fi
 
 # ansible vault shortcuts
 alias avv='ansible-vault view'
 
 # ------------------------------------------------
-#  aws
+#  aws vault
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating AWS aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating aws-vault aliases..."
+fi
 
 alias av="aws-vault"
 alias ave="aws-vault exec"
-alias avr="aws-vault exec msr-root --"
-alias ava="aws-vault exec msr-amzn --"
-alias avs="aws-vault exec msr-staging --"
-alias avo="aws-vault exec msr-ops-sbx --"
-alias avsci="aws-vault exec msr-sci-sbx --"
 
 # ------------------------------------------------
 #  docker
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Docker aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Docker aliases..."
+fi
 
 alias d="docker"
 alias dV="docker version"
@@ -147,7 +152,9 @@ alias dc="docker compose"
 # ------------------------------------------------
 #  git
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating git aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating git aliases..."
+fi
 
 # general
 alias g="git"
@@ -155,13 +162,20 @@ alias gf="git fetch --prune"
 alias gp="git fetch --prune && git pull --rebase"
 alias gs="git status"
 
-# branch actions
+# worktree
+alias gwt="git worktree"
+alias gwta="git worktree add"
+alias gwtl="git worktree list"
+alias gwtm="git worktree move"
+
+# branch
 alias gb="git branch"
 alias gba="git branch --all"
 alias gbn="git_get_cur_branch_name"
+alias gcb="git_get_cur_branch_name"
 alias gco="git_fuzzy_checkout"
 alias gcod="git checkout develop"
-alias gcom="git checkout \$(__git_master_or_main)"
+alias gcom="git checkout \$(__git_master_or_main) && git pull --prune"
 alias gd1="git diff HEAD~"
 alias gd="git diff"
 alias gdd="git diff origin/develop..."
@@ -220,7 +234,9 @@ alias opr="git_open_pull_request"
 # ------------------------------------------------
 #  homebrew
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Homebrew alises..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Homebrew alises..."
+fi
 
 # avoid linking against any shims
 NO_SHIMS_PATH=$(printf "%s" "${PATH}" | sed -E 's,.*shims[^:]*:,,g')
@@ -229,14 +245,18 @@ alias brew='env PATH=${NO_SHIMS_PATH} brew'
 # ------------------------------------------------
 #  kubernetes
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Kubernetes aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Kubernetes aliases..."
+fi
 
 alias k="kubectl"
 
 # ------------------------------------------------
 #  macos
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating MacOS aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating MacOS aliases..."
+fi
 
 alias flushdns='sudo killall -HUP mDNSResponder'
 alias showfiles='defaults write com.apple.finder AppleShowAllFiles true; killall Finder'
@@ -248,7 +268,9 @@ alias fixflash='sudo killall coreaudiod'
 # ------------------------------------------------
 #  terraform
 # ------------------------------------------------
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Terraform aliases..."
+if [[ -n ${DEBUG} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Terraform aliases..."
+fi
 
 alias tf="terraform"
 alias tfV="terraform version"
