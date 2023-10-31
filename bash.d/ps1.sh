@@ -19,15 +19,15 @@ function __ps1_prompt() {
     local virtualenv_name
     local tf_workspace
 
-    time="$(date +%R) "
+    time="$(date +%R)"
     aws_vault=" $(__get_aws_vault) "
     virtualenv_name=" $(__get_virtualenv_name) "
     tf_workspace=" $(__get_terraform_workspace) "
-    shell_lvl=" $(is_subsh) "
+    shell_lvl="$(is_subsh)"
 
 
     local info
-    info="$(printf "%s" "${shell_lvl}${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
+    info="$(printf "%s" "${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
 
     if [[ -n ${info} ]]; then
         info="(${info}) "
@@ -40,7 +40,7 @@ function __ps1_prompt() {
     fi
 
 
-    PS1="${time}${info}\[${CYAN}\]→ \[${RESET}\]"
+    PS1="${time}${shell_lvl}${info}\[${CYAN}\]→ \[${RESET}\]"
 }
 
 if [[ ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then

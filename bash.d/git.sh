@@ -137,10 +137,6 @@ function __git_parse_dirty() {
     esac
 }
 
-function __git_project_root() {
-    printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)"
-}
-
 function git_status_vs_master() {
     printf "%s\n" \
         "==> Log: " \
@@ -171,8 +167,8 @@ function __git_diff_so_fancy_with_less() {
 
 function __git_get_merged_branches() {
     git branch --all --merged "origin/$(__git_master_or_main)" |
-        "${BREW_PREFIX}/bin/rg" --invert-match '>|master|main|develop|release' |
-        tr -d ' '
+        "${BREW_PREFIX}/bin/rg" --invert-match "(\*|master|main|develop|release)" |
+        tr -d " "
 }
 
 # ------------------------------------------------
@@ -183,7 +179,11 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 # Info
-function git_project_path() {
+function git_project_root() {
+    printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)"
+}
+
+function git_project_path() {  # TODO: do I need this? have git_project_root
     local git_toplevel
     local git_toplevel_basename
     local git_intra_repo_path
@@ -270,7 +270,7 @@ function git_absorb() {
 
 function git_fixup() {
     local merge_base
-    merge_base="$(git merge-base "$(__git_master_or_main)" HEAD)"
+    merge_base="$(git merge-base "origin/$(__git_master_or_main)" HEAD)"
 
     git_add --update
     git log -n 50 --pretty=format:"%h %s" --no-merges |
@@ -423,7 +423,7 @@ function git_init() {
 }
 
 function git_add() {
-    git_root="$(__git_project_root)"
+    git_root="$(git_project_root)"
 
     (
         cd "${git_root}" || exit 1
@@ -470,25 +470,25 @@ function git_delete_merged_branches() {
     local remote_branches
 
     printf_callout "Fetching updates..."
+    printf "\n"
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
     cur_branch=$(git rev-parse --abbrev-ref HEAD)
-    mapfile -t local_branches < <(__git_get_merged_branches |
-        grep -Ev "^\s*remotes/origin/" |
-        grep -Ev "${cur_branch}" |
-        tr "\n" " ")
-    mapfile -t remote_branches < <(__git_get_merged_branches |
-        grep -E "^\s*remotes/origin/" |
-        sed -e "s/^\s*remotes\/origin\///g" |
-        tr "\n" " ")
 
-    if [[ ${#local_branches[@]} -eq 0 || ${#remote_branches[@]} -eq 0 ]]; then
+    mapfile -t local_branches < <(__git_get_merged_branches |
+        grep --extended-regexp --invert-match "^\s*remotes/origin/" |
+        grep --extended-regexp --invert-match "${cur_branch}")
+
+    mapfile -t remote_branches < <(__git_get_merged_branches |
+        grep --extended-regexp "^\s*remotes/origin/" |
+        sed --regexp-extended "s/^\s*remotes\/origin\///g")
+
+    if [[ ${#local_branches[@]} -gt 0 || ${#remote_branches[@]} -gt 0 ]]; then
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
         __git_get_merged_branches | indent_output
 
         prompt_to_continue "Delete branches?" || return 6
-        echo
 
         if [[ ${#local_branches[@]} -gt 0 ]]; then
             printf_callout "Deleting merged local branches..."
@@ -498,6 +498,7 @@ function git_delete_merged_branches() {
 
         if [[ ${#remote_branches[@]} -gt 0 ]]; then
             for remote in ${remotes}; do
+                printf "\n"
                 printf_callout "Deleting merged remote branches from ${remote}..."
                 # shellcheck disable=SC2068  # word splitting is desired here
                 git push --delete "${remote}" ${remote_branches[@]} | indent_output
@@ -507,9 +508,11 @@ function git_delete_merged_branches() {
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
 
-        printf_callout "Merged branches have been deleted..."
+        printf "\n"
+        printf_callout "Done."
         printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
+        printf "\n"
         printf_warning "No merged branches to delete."
     fi
 }
