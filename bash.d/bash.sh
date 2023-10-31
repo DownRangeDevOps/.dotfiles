@@ -44,7 +44,7 @@ function is_subsh() {
     fi
 
     if [[ "${shell_level}" -gt 1 ]]; then
-        printf "%s" "${shell_level}"
+        printf "%s" " [${shell_level}] "
     fi
 }
 

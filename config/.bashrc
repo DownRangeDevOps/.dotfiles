@@ -49,7 +49,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
-alias ..r="cd \$(git_project_path --absolute)"
+alias ..r="cd \$(git_project_root)"
 alias ..~="cd \${HOME}"
 
 # squeltch egrep warnings
@@ -85,6 +85,7 @@ fi
 
 alias av="aws-vault"
 alias ave="aws-vault exec"
+alias avl="aws-vault list"
 
 # ------------------------------------------------
 #  docker
@@ -284,7 +285,7 @@ alias tfd="terraform destroy"
 alias tfdb="terraform debug"
 alias tfe="terraform env"
 alias tff="terraform fmt"
-alias tffr="..r && terraform fmt -recursive && cd -"
+alias tffr="cd \$(git_project_root) && terraform fmt -recursive && cd -"
 alias tfg="terraform get"
 alias tfgr="terraform graph"
 alias tfi="terraform init"
