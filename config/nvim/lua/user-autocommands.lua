@@ -30,12 +30,6 @@ vim.api.nvim_create_autocmd("CursorHold", {
     command = "checktime" -- auto-reload from disk
 })
 
-vim.api.nvim_create_autocmd("TermEnter", {
-    group = nvim,
-    pattern = "*",
-    command = "startinsert"
-})
-
 vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
     pattern = "*",
@@ -87,99 +81,104 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- ----------------------------------------------
 -- Filetype
 -- ----------------------------------------------
--- Force "terraform" filetype for tfvars
-vim.api.nvim_create_autocmd({ "BufEnter", "BufNewFile", "BufRead" }, {
+-- bash files with no extension
+vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
-    pattern = { "*.tf", "*.tfvars" },
+    pattern = { ".envrc", ".bashrc", },
+    callback = function()
+        vim.cmd.set("ft=sh")
+    end
+})
+
+-- git commit message
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = "COMMIT_EDITMSG",
+    callback = function()
+        vim.wo.number = true
+        vim.wo.relativenumber = true
+    end
+})
+
+-- markdown comments
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = "markdown",
+    callback = function()
+        vim.bo.commentstring = "[//]: # (%s)"
+    end
+})
+
+-- terraform vars
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = "terraform-vars",
     command = "set ft=terraform",
 })
 
--- Auto-insert in new terminal
-vim.api.nvim_create_autocmd({ "TermOpen" }, {
+-- files that use tab indentation
+vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
-    pattern = "*",
-    command = "startinsert",
+    pattern = { "gitconfig", "terminfo" },
+    callback = function()
+        vim.bo.expandtab = false
+        vim.wo.listchars = table.concat({
+            "tab:⇢•",
+            "precedes:«",
+            "extends:»",
+            "trail:•",
+            "nbsp:•",
+        }, ",")
+    end
 })
 
--- Set options for specific file and buffer types
-vim.api.nvim_create_autocmd({
-    "BufEnter",
-    "BufNewFile",
-    "BufRead",
-    "BufWinEnter",
-    "TabEnter",
-    "TabNew",
-    "TermEnter",
-    "TermOpen",
-    "WinEnter"
-}, {
+-- clean ui filetypes
+vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
-    pattern = "*",
+    pattern = {
+        "Trouble",
+        "checkhealth",
+        "git",
+        "help",
+        "lspinfo",
+        "man",
+        "packer",
+        "qf",
+        "term",
+        "toggleterm",
+        "",
+    },
     callback = function()
-        local clean_filetypes = {
-            lspinfo = true,
-            packer = true,
-            checkhealth = true,
-            help = true,
-            man = true,
-            qf = true,
-            git = true,
-        }
+        vim.wo.colorcolumn = false
+        vim.wo.cursorline = false
+        vim.wo.foldcolumn = "auto"
+        vim.wo.list = false
+        vim.wo.number = false
+        vim.wo.relativenumber = false
+        vim.wo.signcolumn = "auto"
+        vim.wo.spell = false
+        vim.wo.statuscolumn = ""
 
-        local clean_buftypes = {
-            help = true,
-            quickfix = true,
-            terminal = true,
-            prompt = true,
-            starter = true,
-            Trouble = true,
-        }
+        local numbers_exception_ft = { help = true, }
 
-        local tab_filetypes = {
-            gitconfig = true,
-            terminfo = true,
-        }
-
-        local filetype = vim.bo.filetype
-        local buftype = vim.bo.buftype
-
-        filetype = filetype or "nofiletype"
-        buftype = buftype or "nobuftype"
-
-        -- set defaults
-        require("user-config")
-
-        -- disable ui elements in view-only type buffers
-        if (clean_filetypes[filetype] or clean_buftypes[buftype]) then
-            vim.wo.colorcolumn = false
-            vim.wo.cursorline = false
-            vim.wo.foldcolumn = "auto"
-            vim.wo.list = false
-            vim.wo.number = false
-            vim.wo.relativenumber = false
-            vim.wo.signcolumn = "auto"
-            vim.wo.spell = false
-            vim.wo.statuscolumn = ""
-        end
-
-        -- use tabs in specific files
-        if tab_filetypes[filetype] then
-            vim.bo.expandtab = false
-            vim.wo.listchars = table.concat({
-                "tab:⇢•",
-                "precedes:«",
-                "extends:»",
-                "trail:•",
-                "nbsp:•",
-            }, ",")
+        if numbers_exception_ft[vim.bo.filetype] then
+            vim.wo.number = true
+            vim.wo.relativenumber = true
         end
     end
+})
+
+-- terminals
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = "term",
+    command = "startinsert",
 })
 
 -- ----------------------------------------------
 -- User
 -- ----------------------------------------------
--- Auto-Save
+-- Auto-Save after trimming trailing whitespace
 vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
     group = user,
     pattern = "*",
@@ -189,23 +188,32 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
             and vim.api.nvim_buf_get_option(0, "modifiable")
             and vim.fn.expand("%") ~= "" then
 
-            vim.cmd("silent write")
-            vim.defer_fn(function() vim.cmd.echon("''") end, 500)
+            MiniTrailspace.trim()
+            MiniTrailspace.trim_last_lines()
+
+            vim.cmd.write()
+            vim.defer_fn(function() vim.cmd.echon("''") end, 750)
         end
     end
 })
 
--- Map/unmap shitty plugin auto bindings
+-- Fix shitty bullets plugin bindings, only one that does markdown bullets correctly
 vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     group = user,
     pattern = "*",
     callback = function()
         local bullets_mappings = {
-            promote    = { mode = "i", lhs = "<C-d>",     rhs = function()
+            promote = { mode = "i", lhs = "<C-d>", rhs = function()
                 vim.cmd("BulletPromote")
-                vim.fn.feedkeys("<Esc>A")
-            end,       opts = { group = "list", desc = "bullets promote" } },
-            demote     = { mode = "i", lhs = "<C-t>",     rhs = function() vim.cmd("BulletDemote") end,        opts = { group = "list", desc = "bullets demote" } },
+                vim.cmd.stopinsert()
+                vim.fn.feedkeys("A")
+            end, opts = { group = "list", desc = "bullets promote" } },
+            demote = { mode = "i", lhs = "<C-t>", rhs = function()
+                vim.cmd("BulletDemote")
+                vim.cmd.stopinsert()
+                vim.fn.feedkeys("A")
+            end, opts = { group = "list", desc = "bullets demote" } },
+
             vpromote   = { mode = "v", lhs  = "<C-d>",    rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },
             vdemote    = { mode = "v", lhs  = "<C-t>",    rhs = function() vim.cmd("BulletDemoteVisual") end,  opts = { group = "list", desc = "bullets demote" } },
             enter      = { mode = "i", lhs = "<CR>",      rhs = function() vim.cmd("InsertNewBullet") end,     opts = { group = "list", desc = "bullets newline" } },
@@ -227,21 +235,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     end
 })
 
--- Trim trailing white-space/lines
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    group = user,
-    pattern = "*",
-    callback = function()
-        local file_name = vim.fn.expand("%")
-        local is_diffview = file_name:find("^diffview")
-
-        if file_name ~= "" and vim.api.nvim_buf_get_option(0, "modifiable") and not is_diffview then
-            MiniTrailspace.trim()
-            MiniTrailspace.trim_last_lines()
-        end
-    end
-})
-
 -- Overpower some buffers
 vim.api.nvim_create_autocmd({ "WinEnter" }, {
     group = user,
@@ -258,10 +251,18 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
 -- ----------------------------------------------
 -- Plugins
 -- ----------------------------------------------
-vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "TextChanged" }, {
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
     group = plugin,
-    pattern = { "*.lua", "*.sh", "*.py" },
+    pattern = ".github/workflows/*.yaml", -- run on YAML files in the `.github` dir
     callback = function()
-        if vim.bo.modifiable == 1 then require('lint').try_lint() end
+        require("lint").try_lint("actionlint") -- doesn't work: https://github.com/mfussenegger/nvim-lint/issues/355#issuecomment-1759203127
+    end
+})
+
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
+    group = plugin,
+    pattern = "*",
+    callback = function()
+        require("lint").try_lint()
     end
 })

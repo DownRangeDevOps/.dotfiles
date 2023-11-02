@@ -7,3 +7,6 @@ fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -C "${BREW_PREFIX}/bin/terraform" terraform
+
+# added by Snowflake SnowSQL installer v1.2
+export PATH=/Applications/SnowSQL.app/Contents/MacOS:$PATH

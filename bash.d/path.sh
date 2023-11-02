@@ -40,6 +40,8 @@ function set_path() {
         done
     fi
 
+    prepend+=/Applications/SnowSQL.app/Contents/MacOS:$PATH # SnowSQL
+
     append="${HOME}/.local/bin"   # Ansible
     append+=":${HOME}/.cargo/bin" # rust
 

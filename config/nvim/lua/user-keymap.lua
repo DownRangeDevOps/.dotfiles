@@ -254,12 +254,42 @@ vim.on_key(
 )
 
 -- QOL
-map("i", "jj", fk.escape, { group = "gen", desc = "Escape" })
-map("n", "gl", "gu")    -- err "go lower" sure makes sense to me...
-map("n", "gL", "gu")    -- err "go lower" sure makes sense to me...
+map("n", "<leader>rc", function()
+    for name,_ in pairs(package.loaded) do
+        if name:match("^user-") and not name:match("^user-plugins") then
+            package.loaded[name] = nil
+        end
+    end
+
+    dofile(vim.env.MYVIMRC)
+
+    vim.cmd.nohlsearch()
+    vim.notify("Config reloaded.")
+end, { group = "gen", desc = "Reload Neovim configuration files" })
+map("n", "gl", "gu")    -- "go lower" sure makes sense to me...
+map("n", "gL", "gu")
 map("n", "gQ", "<nop>") -- reeeeeee (use :Ex-mode if you really need it, which will be never)
-map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+map("n", "<leader>nu", function()
+    local bufnr = vim.api.nvim_win_get_buf(0)
+
+    if vim.wo.number and vim.wo.relativenumber then
+        vim.b[bufnr].num_toggle_state = true
+    else
+        vim.b[bufnr].num_toggle_state = false
+    end
+
+    if vim.b[bufnr].num_toggle_state then
+        vim.wo.number = false
+        vim.wo.relativenumber = false
+    else
+        vim.wo.number = true
+        vim.wo.relativenumber = true
+    end
+
+    vim.b[bufnr].num_toggle_state = not vim.b[bufnr].num_toggle_state
+end, { group = "gen", desc = "toggle relativenumber" })
 
 -- fuuuuuuu (disable command-line mode, use <C-F>, see :h c_CTRL-F)
 map("c", "q:", ":")
@@ -314,7 +344,10 @@ end, { group = "txt", desc = "copy path to cur line" })
 -- file/buffer management (auto-save, browser)
 map("n", "<leader>w", function()
     local modifiable = vim.bo.modifiable
-    if modifiable then vim.cmd.write() end
+    if modifiable then
+        vim.cmd.write()
+        vim.defer_fn(function() vim.cmd.echon("''") end, 750)
+    end
 end, { silent = true, group = "file", desc = "write to file" })
 map("n", "<leader>u", vim.cmd.UndotreeToggle, { group = "file", desc = "open undo-tree" })
 map("n", "<leader>1", function()
@@ -428,8 +461,12 @@ map("n", "<leader>tc", function() vim.cmd.tabclose() end,
     { group = "gen", desc = "close tab" })
 
 -- Terminal split management
-map("n", "<leader>`", function() vim.cmd("ToggleTerm size=15 direction=horizontal") end, { group = "gen", desc = "bottom term" })
-map("n", "<leader>~", function() vim.cmd("ToggleTerm size=140 direction=vertical") end, { group = "gen", desc = "vertical term" })
+map("n", "<leader>`", function()
+    vim.cmd("ToggleTerm size=20 direction=horizontal")
+end, { group = "gen", desc = "bottom term" })
+map("n", "<leader>~", function()
+    vim.cmd("ToggleTerm size=120 direction=vertical")
+end, { group = "gen", desc = "vertical term" })
 
 -- Split navigation and sizing
 map({ "n" }, "<C-h>", "<C-w>h", { group = "nav", desc = "left window" })
@@ -612,19 +649,6 @@ local treesitter_playground_maps = {
     show_help = '?',
 }
 M.treesitter_playground_maps = treesitter_playground_maps
-
--- nvim-cmp keymaps
-local cmp_maps = {
-    select_next_item = "<C-j>",
-    select_prev_item = "<C-k>",
-    scroll_docs_up = "<C-u>",
-    scroll_docs_down = "<C-f>",
-    complete = "<C-Space>",
-    confirm = "<CR>",
-    tab = "<Tab>",
-    shift_tab = "<S-Tab>",
-}
-M.cmp_maps = cmp_maps
 
 -- trouble.nvim keymaps
 local trouble_maps = { -- key mappings for actions in the trouble list

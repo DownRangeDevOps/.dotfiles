@@ -228,6 +228,7 @@ alias gfpo="git push --force-with-lease origin HEAD"
 alias git-contributors="git shortlog --summary --email --numbered"
 
 # helpers
+alias gwtp="git rev-parse --path-format=absolute --git-common-dir"
 alias gcot="git_checkout_ticket"
 alias gcpu="git_commit_push"
 alias ginit="git_init"
@@ -327,4 +328,3 @@ set -ua
 if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: .bashrc done..."
 fi
-# vi: ft=sh
