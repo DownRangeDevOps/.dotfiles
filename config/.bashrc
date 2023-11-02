@@ -1,4 +1,6 @@
+# shellcheck shell=bash
 # .bashrc
+
 if [[ -n ${DEBUG:-} ]]; then
     set +ua
     # shellcheck disable=SC1091
@@ -228,6 +230,7 @@ alias gfpo="git push --force-with-lease origin HEAD"
 alias git-contributors="git shortlog --summary --email --numbered"
 
 # helpers
+alias gcr="git_config_remote"
 alias gwtp="git rev-parse --path-format=absolute --git-common-dir"
 alias gcot="git_checkout_ticket"
 alias gcpu="git_commit_push"

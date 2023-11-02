@@ -13,7 +13,7 @@
 #       <ISSUE_ID>--<ISSUE_TYPE>--<SUBJECT>
 #       <ISSUE_ID>--<ISSUE_TYPE>--<ISSUE_SCOPE>--<SUBJECT>
 #
-#       Optionall, if `$PROJECT_TRACKER_URL` is set in the current envionrment
+#       Optional, if `$PROJECT_TRACKER_URL` is set in the current environment
 #       a markdown reference link will be appended to the end of
 #       `$COMMIT_MSG_FILE`.
 

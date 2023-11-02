@@ -1,4 +1,5 @@
-# shellcheck disable=SC1090,SC1091
+# shellcheck shell=bash disable=SC1090,SC1091
+
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
@@ -8,7 +9,7 @@ fi
 #  config
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring enviornment..."
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring environment..."
 fi
 
 # llvm
@@ -73,6 +74,9 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 function nvim() {
+    rbenv init &>/dev/null
+    pyenv &>/dev/null
+
     if [[ -w ${NVIM_SESSION_FILE_PATH:-} ]]; then
         command nvim -S "${NVIM_SESSION_FILE_PATH}" "$@"
     else

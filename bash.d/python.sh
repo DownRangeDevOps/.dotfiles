@@ -122,5 +122,7 @@ function pyenv() {
 
     add_to_path "prepend" "$(pyenv prefix)"
 
-    $(which pyenv) "$@"
+    if [[ ${1:-} != "init" ]]; then
+        $(which pyenv) "$@"
+    fi
 }

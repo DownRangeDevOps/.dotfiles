@@ -1,4 +1,4 @@
-# shellcheck disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
+# shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
 
 # Load logger or overload with no-op
 if [[ ${DEBUG:-} -eq 1 ]]; then

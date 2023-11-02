@@ -186,7 +186,8 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
         if vim.g.auto_save
             and vim.api.nvim_buf_get_option(0, "buftype") == ""
             and vim.api.nvim_buf_get_option(0, "modifiable")
-            and vim.fn.expand("%") ~= "" then
+            and vim.fn.expand("%") ~= ""
+        then
 
             MiniTrailspace.trim()
             MiniTrailspace.trim_last_lines()
@@ -259,10 +260,17 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNew
     end
 })
 
-vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
-    group = plugin,
-    pattern = "*",
-    callback = function()
-        require("lint").try_lint()
-    end
-})
+vim.api.nvim_create_autocmd({
+    "BufWritePost",
+    "BufEnter",
+    "BufReadPost",
+    "BufNewFile",
+    "TextChanged",
+},
+    {
+        group = plugin,
+        pattern = "*",
+        callback = function()
+            require("lint").try_lint()
+        end
+    })

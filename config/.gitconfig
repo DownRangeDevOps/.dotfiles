@@ -74,7 +74,7 @@
 	strategy = incremental
 [difftool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
 	trustExitCode = true
