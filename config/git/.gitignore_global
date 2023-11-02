@@ -1,6 +1,9 @@
 # direnv local
 .envrc
 
+# local misc files
+notes.md
+
 # MacOS
 .DS_Store
 .AppleDouble
