@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
@@ -392,34 +394,59 @@ function git_commit_push() {
 }
 
 # Utils
-function git_init() {
-    local git_remote_name
+function git_config_remote() {
+    local args=""
 
-    if [[ -z ${1:-} ]]; then
-        printf "%s\n" "Usage: git_init <path>"
+    if ! __git_is_repo; then
+        printf_error "Current directory is not a repository"
         return 1
     fi
 
-    mkdir -p "$1/.bare"
-    (
-        cd "$1/.bare" || return 1
-        git init --bare
-    )
+    if [[ -z ${1:-} ]]; then
+        if [[ ${1} != "-C" ]]; then
+            printf "%s\n" "Usage: git_init <path>"
+            return 1
+        else
+            args=("-C" "${1}")
+        fi
 
-    printf "%s\n" "gitdir: .bare" > .git
+    fi
 
-    git worktree add main
+    printf_callout "Adding fetch refs for origin to git config..."
+    git "${args[@]}" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 
-    (
-        cd main || return 1
-        cp --force --interactive "${HOME}"/.dotfiles/config/git/.git-template/{.gitignore,.mailmap,.pre-commit-config.yaml} .
-        git add --all
-        git commit --message "Init"
-        gh repo create
-    )
+    prinf_callout "Fetching updates..."
+    git "${args[@]}" git fetch --prune
 
-    git_remote_name=$(git -C main remote show)
-    git config "remote.${git_remote_name}.fetch" "+refs/heads/*:refs/remotes/origin/*"
+}
+
+function git_init() {
+    printf_error "Not implemented."
+    # if [[ -z ${1:-} ]]; then
+    #     printf "%s\n" "Usage: git_init <path>"
+    #     return 1
+    # fi
+    #
+    # mkdir -p "$1/.bare"
+    # (
+    #     cd "$1/.bare" || return 1
+    #     git init --bare
+    # )
+    #
+    # printf "%s\n" "gitdir: .bare" > .git
+    #
+    # git worktree add main
+    #
+    # (
+    #     cd main || return 1
+    #     cp --force --interactive "${HOME}"/.dotfiles/config/git/.git-template/{.gitignore,.mailmap,.pre-commit-config.yaml} .
+    #     git add --all
+    #     git commit --message "Init"
+    #     gh repo create
+    # )
+    #
+    # git_remote_name=$(git -C main remote show)
+    # git config "remote.${git_remote_name}.fetch" "+refs/heads/*:refs/remotes/origin/*"
 }
 
 function git_add() {
