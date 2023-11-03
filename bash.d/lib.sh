@@ -1,4 +1,4 @@
-# shellcheck disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
+# shellcheck shell=bash disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
 if [[ -n "${DEBUG:-}" ]]; then
     set +ua
     source "${HOME}/.dotfiles/lib/log.sh"
@@ -90,26 +90,26 @@ function prompt_to_continue() {
 
 # Utils
 function add_to_path() {
-    local position="${1:-}"
-    local new_path="${2:-}"
+    error_msg="Usage: add_to_path <prepend|append> <path> [path]..."
+
+    local position="${1}"
+    shift
+    local paths=( "$@" )
 
     case "${position}" in
     prepend)
-        if [[ -n "${PATH:-}" ]]; then
+        for new_path in "${paths[@]}"; do
             export PATH="${new_path}:${PATH}"
-        else
-            export PATH="${new_path}"
-        fi
+        done
         ;;
     append)
-        if [[ -n "${PATH:-}" ]]; then
+        for new_path in "${paths[@]}"; do
             export PATH="${PATH}:${new_path}"
-        else
-            export PATH="${new_path}"
-        fi
+        done
         ;;
     *)
-        true
+        echo 2
+        printf_error "${error_msg}"
         ;;
     esac
 }
