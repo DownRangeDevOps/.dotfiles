@@ -532,7 +532,7 @@ map("n", "]d", vim.diagnostic.goto_next, { group = "diag", desc = "next message"
 
 -- trouble
 -- :help trouble.nvim.txt
-map("n", "<leader>tt", function() vim.cmd.TroubleToggle() end, { group = "lsp", desc = "toggle trouble" })
+map("n", "<leader>t", function() vim.cmd.TroubleToggle() end, { group = "lsp", desc = "toggle trouble" })
 
 -- others
 map("n", "<leader><space>", function() require("telescope.builtin").buffers() end, { group = "ts", desc = "fuzzy buffers" })

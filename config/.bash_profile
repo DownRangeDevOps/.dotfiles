@@ -1,7 +1,31 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
 
+# Reset path to always start fresh
+export PATH=""
+
+set +ua
+source /etc/profile # Set default paths
+set -ua
+
+# Set base Homebrew paths
+if [[ $(uname -m) == "arm64" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+    eval "$(/opt/local/bin/brew shellenv)"
+fi
+
+# Globals
+export DOTFILES_PREFIX="${HOME}/.dotfiles"
+export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
+export BREW_PREFIX="${HOMEBREW_PREFIX}"
+export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
+
 # Load logger or overload with no-op
 if [[ ${DEBUG:-} -eq 1 ]]; then
+    function basename() {
+        "${BREW_PREFIX}/opt/coreutils/libexec/gnubin/basename" "$@"
+    }
+
     set +ua
     source "${HOME}/.dotfiles/lib/log.sh"
     set -ua
@@ -26,24 +50,7 @@ fi
 # will export functions and throw errors
 set -uao pipefail
 
-# Make my bins available while loading dotfiles
-export PATH="${HOME}/.dotfiles/bin:${PATH}"
-
-# Globals
-if [[ $(uname -m) == "arm64" ]]; then
-    BREW_PREFIX="/opt/homebrew"
-else
-    BREW_PREFIX="/usr/local"
-fi
-
-# Put brew bins first in path
-export PATH="${BREW_PREFIX}/bin:${PATH}"
-
-export DOTFILES_PREFIX="${HOME}/.dotfiles"
-export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
-
-# Use my ncurses and terminfo
-export PATH="${BREW_PREFIX}/opt/ncurses/bin:$PATH"
+# Use my terminfo
 export TERMINFO=~/.local/share/terminfo
 export TERMINFO_DIRS=~/.local/share/terminfo
 
@@ -52,10 +59,11 @@ HISTSIZE=1000
 HISTFILESIZE=2000
 HISTCONTROL=ignoredups:ignorespace # don't put duplicate lines in the history
 
-shopt -s histappend # append
+ulimit -n 1024        # increase limit on open files (default: 256)
+shopt -s histappend   # append
 shopt -s checkwinsize # check the win size after each command and update if necessary
-history -a # append
-history -n # read new lines and append
+history -a            # append
+history -n            # read new lines and append
 
 # Use vi mode on command line
 set -o vi
