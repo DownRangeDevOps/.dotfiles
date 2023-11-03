@@ -13,7 +13,13 @@ return {
     dependencies = {
         --  LuaSnip: snippets manager (https://github.com/L3MON4D3/LuaSnip)
         -- :help luasnip.txt
-        { "L3MON4D3/LuaSnip", lazy = true, event = "InsertEnter", config = function() require("luasnip.loaders.from_vscode").lazy_load() end },
+        {
+            "L3MON4D3/LuaSnip",
+            lazy = true,
+            event = "InsertEnter",
+            config = function() require("luasnip.loaders.from_vscode").lazy_load() end,
+            build = "make install_jsregexp",
+        },
 
         -- LuaSnip completion source (https://github.com/saadparwaiz1/cmp_luasnip)
         -- :help cmp_luasnip

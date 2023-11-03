@@ -395,28 +395,21 @@ function git_commit_push() {
 
 # Utils
 function git_config_remote() {
-    local args=""
-
     if ! __git_is_repo; then
         printf_error "Current directory is not a repository"
         return 1
     fi
 
-    if [[ -z ${1:-} ]]; then
-        if [[ ${1} != "-C" ]]; then
-            printf "%s\n" "Usage: git_init <path>"
-            return 1
-        else
-            args=("-C" "${1}")
-        fi
-
+    if [[ ${1} == "help" ]]; then
+        printf "%s\n" "Usage: git_config_remote <path>"
+        return 1
     fi
 
     printf_callout "Adding fetch refs for origin to git config..."
-    git "${args[@]}" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+    git "${@}" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 
-    prinf_callout "Fetching updates..."
-    git "${args[@]}" git fetch --prune
+    printf_callout "Fetching updates..."
+    git "${@}" fetch --prune
 
 }
 
@@ -477,7 +470,8 @@ function git_add() {
 # }
 
 function git_fuzzy_checkout() {
-    if [[ ${1:-} ]]; then
+    if [[ -n ${1:-} ]]; then
+        git fetch --prune
         git checkout "${@}"
     else
         git branch --all |

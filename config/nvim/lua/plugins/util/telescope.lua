@@ -29,6 +29,21 @@ return {
                     ["<C-d>"] = false,
                 },
             },
+            vimgrep_arguments = {
+                "rg",
+                -- required
+                "--color=never",
+                "--no-heading",
+                "--no-ignore",
+                "--line-number",
+                "--column",
+                "--with-filename",
+                -- optional
+                "--smart-case",
+                "--hidden",
+                "--no-config",
+                "--glob='!.git'",
+            }
         },
     },
 }

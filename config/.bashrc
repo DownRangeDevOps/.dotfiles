@@ -169,7 +169,8 @@ alias gf="git fetch --prune"
 alias gp="git fetch --prune && git pull --rebase"
 alias gs="git status"
 
-# worktree
+# repo/worktree
+alias gr="git remote"
 alias gwt="git worktree"
 alias gwta="git worktree add"
 alias gwtl="git worktree list"

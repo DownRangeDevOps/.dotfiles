@@ -27,30 +27,60 @@ if [[ "${COMMIT_SOURCE}" == "template" && -n "$(command -v envsubst)" ]]; then
     SUBJECT=""
     REFERENCE=""
 
-    mapfile -t BRANCH_PARTS < <(awk NF=NF FS='--' OFS='\n' <(git branch --show-current))
+    cur_branch="$(git branch --show-current)"
 
-    ISSUE_ID="${BRANCH_PARTS[0]}"
+    # fix/JIRA2-1234--rf-foo-bar-baz (3 parts)
+    # fix/JIRA2-1234--topic--rf-foo-bar-baz (4 parts)
+    if [[ "${cur_branch}" =~ "/" ]]; then
+        mapfile -t BRANCH_PARTS < <(awk NF=NF FS="/" OFS="\n" <<< "${cur_branch}" | awk NF=NF FS="--" OFS="\n")
+        TYPE="${BRANCH_PARTS[0]}"
+        ISSUE_ID="${BRANCH_PARTS[1]}"
 
-    case ${#BRANCH_PARTS[@]} in
-        2)
-            DESCRIPTION="${BRANCH_PARTS[1]//-/ }"
-            DESCRIPTION="${DESCRIPTION#"rf "}"
-            SUBJECT="${DESCRIPTION^}  [[${ISSUE_ID}]]"
-            ;;
-        3)
-            DESCRIPTION="${BRANCH_PARTS[2]//-/ }"
-            DESCRIPTION="${DESCRIPTION#"rf "}"
-            SUBJECT="${BRANCH_PARTS[1]}: ${DESCRIPTION^} [[${ISSUE_ID}]]"
-            ;;
-        4)
-            DESCRIPTION="${BRANCH_PARTS[3]//-/ }"
-            DESCRIPTION="${DESCRIPTION#"rf "}"
-            SUBJECT="${BRANCH_PARTS[1]}(${BRANCH_PARTS[2]}): ${DESCRIPTION^} [[${ISSUE_ID}]]"
-            ;;
-        *)
-            SUBJECT="${BRANCH_PARTS[*]}"
-            ;;
-    esac
+        case ${#BRANCH_PARTS[@]} in
+            3)
+                DESCRIPTION="${BRANCH_PARTS[2]//-/ }"
+                DESCRIPTION="${DESCRIPTION#"rf "}"
+                SUBJECT="${TYPE}: ${DESCRIPTION^} [[${ISSUE_ID}]]"
+                ;;
+            4)
+                DESCRIPTION="${BRANCH_PARTS[3]//-/ }"
+                DESCRIPTION="${DESCRIPTION#"rf "}"
+                SUBJECT="${TYPE}(${BRANCH_PARTS[2]}): ${DESCRIPTION^} [[${ISSUE_ID}]]"
+                ;;
+            *)
+                SUBJECT="${BRANCH_PARTS[*]}"
+                ;;
+        esac
+
+    # JIRA2-1234--rf-foo-bar-baz (2 parts)
+    # JIRA2-1234--fix--rf-foo-bar-baz (3 parts)
+    # JIRA2-1234--fix--topic--rf-foo-bar-baz (4 parts)
+    else
+        mapfile -t BRANCH_PARTS < <(awk NF=NF FS="--" OFS="\n" <<< "${cur_branch}")
+        ISSUE_ID="${BRANCH_PARTS[0]}"
+
+        case ${#BRANCH_PARTS[@]} in
+            2)
+                DESCRIPTION="${BRANCH_PARTS[1]//-/ }"
+                DESCRIPTION="${DESCRIPTION#"rf "}"
+                SUBJECT="${DESCRIPTION^}  [[${ISSUE_ID}]]"
+                ;;
+            3)
+                DESCRIPTION="${BRANCH_PARTS[2]//-/ }"
+                DESCRIPTION="${DESCRIPTION#"rf "}"
+                SUBJECT="${BRANCH_PARTS[1]}: ${DESCRIPTION^} [[${ISSUE_ID}]]"
+                ;;
+            4)
+                DESCRIPTION="${BRANCH_PARTS[3]//-/ }"
+                DESCRIPTION="${DESCRIPTION#"rf "}"
+                SUBJECT="${BRANCH_PARTS[1]}(${BRANCH_PARTS[2]}): ${DESCRIPTION^} [[${ISSUE_ID}]]"
+                ;;
+            *)
+                SUBJECT="${BRANCH_PARTS[*]}"
+                ;;
+        esac
+    fi
+
 
     export SUBJECT
 
