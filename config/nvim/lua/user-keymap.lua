@@ -515,7 +515,7 @@ map("n", "<C-p>", function()
         require("telescope.builtin").find_files()
     end
 end, { group = "ts", desc = "fuzzy git files" })
-map("n", "<leader>ff", function() require("telescope.builtin").find_files() end, { group = "ts", desc = "fuzzy files" })
+map("n", "<leader>ff", function() require("telescope.builtin").find_files({ hidden = true, no_ignore = true }) end, { group = "ts", desc = "fuzzy files" })
 map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { group = "ts", desc = "fuzzy recent files" })
 map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { group = "ts", desc = "fuzzy help" })
 map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { group = "ts", desc = "fuzzy manpage" })
