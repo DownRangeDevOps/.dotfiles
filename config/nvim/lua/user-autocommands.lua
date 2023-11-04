@@ -252,12 +252,20 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
 -- ----------------------------------------------
 -- Plugins
 -- ----------------------------------------------
+-- vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
+--     group = plugin,
+--     pattern = ".github/workflows/*", -- only run on YAML files in the `.github` dir
+--     callback = function()
+--         require("lint").try_lint("actionlint")
+--     end
+-- })
+
 vim.api.nvim_create_autocmd({
     "BufWritePost",
     "BufEnter",
     "BufReadPost",
     "BufNewFile",
-    "TextChanged",
+    -- "TextChanged",
 },
     {
         group = plugin,
@@ -266,11 +274,3 @@ vim.api.nvim_create_autocmd({
             require("lint").try_lint()
         end
     })
-
-vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
-    group = plugin,
-    pattern = ".github/workflows/*.yaml", -- run on YAML files in the `.github` dir
-    callback = function()
-        require("lint").try_lint("actionlint") -- doesn't work: https://github.com/mfussenegger/nvim-lint/issues/355#issuecomment-1759203127
-    end
-})

@@ -313,6 +313,7 @@ function git_rebase_merge_and_push() {
             "" \
             "    If no TARGET_BRANCH, the current branch will be merged to ${main_branch}."
     else
+        set -e # exit immediately if any sub-processes fail
         printf_callout "Updating ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
         git fetch --prune >/dev/null 2>&1
@@ -364,6 +365,7 @@ function git_rebase_merge_and_push() {
         git branch --delete "${source_branch}" 2>&1 | indent_output
         printf "\n"
 
+        set +e
     fi
 }
 
@@ -394,7 +396,7 @@ function git_commit_push() {
 }
 
 # Utils
-function git_config_remote() {
+function git_configure_fetch_rules() {
     if ! __git_is_repo; then
         printf_error "Current directory is not a repository"
         return 1
@@ -491,7 +493,6 @@ function git_delete_merged_branches() {
     local remote_branches
 
     printf_callout "Fetching updates..."
-    printf "\n"
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
@@ -506,12 +507,14 @@ function git_delete_merged_branches() {
         sed --regexp-extended "s/^\s*remotes\/origin\///g")
 
     if [[ ${#local_branches[@]} -gt 0 || ${#remote_branches[@]} -gt 0 ]]; then
+        printf "\n"
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
         __git_get_merged_branches | indent_output
 
         prompt_to_continue "Delete branches?" || return 6
 
         if [[ ${#local_branches[@]} -gt 0 ]]; then
+            printf "\n"
             printf_callout "Deleting merged local branches..."
             # shellcheck disable=SC2068  # word splitting is desired here
             git branch --delete --force ${local_branches[@]} | indent_output
@@ -533,7 +536,6 @@ function git_delete_merged_branches() {
         printf_callout "Done."
         printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        printf "\n"
         printf_warning "No merged branches to delete."
     fi
 }
@@ -573,7 +575,7 @@ function git_checkout_ticket() {
 }
 
 function git_open_pull_request() {
-    # [o]pen [p]ull [r]equest - open a pull request for the current branch
+    # open a pull request for the current branch
     # Real URL example: https://gitlab.com/${ORG_NAME}/${PROJECT_NAME}/${REPO_NAME}/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4597--docker-add-health-check
 
     REPO=$(basename "$(git rev-parse --show-toplevel)")

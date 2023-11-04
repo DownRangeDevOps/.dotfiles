@@ -175,6 +175,8 @@ alias gwt="git worktree"
 alias gwta="git worktree add"
 alias gwtl="git worktree list"
 alias gwtm="git worktree move"
+alias gwtp="git worktree prune"
+alias gwtr="git worktree remove"
 
 # branch
 alias gb="git branch"
@@ -205,6 +207,7 @@ alias ga="git_add"
 alias gab="git_absorb"
 alias gac="pre-commit run --all-files && __git_add --update && git commit --no-verify --gpg-sign"
 alias gc="git commit --gpg-sign"
+alias gcnv="git commit --gpg-sign --no-verify"
 alias gcp="git cherry-pick -x" # -x: add "cherry-picked from..." message
 alias gcpu="git_commit_and_push"
 alias gfu="git_fixup"
@@ -231,8 +234,8 @@ alias gfpo="git push --force-with-lease origin HEAD"
 alias git-contributors="git shortlog --summary --email --numbered"
 
 # helpers
-alias gcr="git_config_remote"
-alias gwtp="git rev-parse --path-format=absolute --git-common-dir"
+alias gcfr="git_configure_fetch_rules"
+alias gwtpath="git rev-parse --path-format=absolute --git-common-dir"
 alias gcot="git_checkout_ticket"
 alias gcpu="git_commit_push"
 alias ginit="git_init"
