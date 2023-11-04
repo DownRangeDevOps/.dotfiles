@@ -44,7 +44,8 @@ local function is_git_repo()
 end
 M.is_git_repo = is_git_repo
 
--- Shortcut for vim.keymap.set
+-- Custom vim.keymap.set supporting "group"
+-- This was intended to be used by WhichKey, I don't know if I'll ever go back to it.
 --
 ---@param mode string|table ("n"|"i"|"v"|"c"|"t")
 ---@param lhs string
@@ -114,7 +115,14 @@ M.snap = thanos_snap
 vim.on_key(
     function(char)
         if vim.fn.mode() == "n" then
-            local new_hlsearch = vim.tbl_contains({ "v", "n", "N", "*", "?", "/" }, vim.fn.keytrans(char))
+            -- ignore these literal keys
+            local new_hlsearch = vim.tbl_contains({
+                "", "", "", "",
+                "H", "L",
+                "z", "v", "t", "m", "b",
+                "n", "N",
+                "*", "?", "/",
+            }, vim.fn.keytrans(char))
 
             if vim.opt.hlsearch:get() ~= new_hlsearch then
                 vim.opt.hlsearch = new_hlsearch
@@ -202,8 +210,10 @@ map("", "<leader>X", "X", { group = "txt", desc = "delete back & cut" })
 
 -- maintain cursor pos
 map("n", "J", "mzJ`z", { group = "txt", desc = "join w/o hop" })
-map("n", "<C-u>", "<C-u>zz", { group = "gen", desc = "pgup" })
-map("n", "<C-d>", "<C-d>zz", { group = "gen", desc = "pgdn" })
+map("n", "<C-u>", "<C-u>zz", { group = "gen", desc = "half-pgup" })
+map("n", "<C-d>", "<C-d>zz", { group = "gen", desc = "half-pgdn" })
+map("n", "<C-f>", "<C-f>zz", { group = "gen", desc = "pgup" })
+map("n", "<C-b>", "<C-b>zz", { group = "gen", desc = "pgdn" })
 map("n", "n", "nzzzv", { desc = "next search" })
 map("n", "N", "Nzzzv", { desc = "prev search" })
 
