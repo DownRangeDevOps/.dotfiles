@@ -6811,11 +6811,11 @@ Password Manager</string>
 				<key>Saved Window Type</key>
 				<integer>13</integer>
 				<key>Screen</key>
-				<integer>1</integer>
+				<integer>2</integer>
 				<key>Scroller Width</key>
 				<real>0.0</real>
 				<key>Selected Tab Index</key>
-				<integer>4</integer>
+				<integer>0</integer>
 				<key>Tabs</key>
 				<array>
 					<dict>
@@ -7208,7 +7208,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>E37A11B4-7572-4657-A3CB-BA87661A73B0</string>
+											<string>BD0190A7-9BB0-49F5-964A-DAB2E698B73E</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -7977,7 +7977,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/.dotfiles/config/nvim/lua/plugins</string>
+										<string>/Users/xjxf277/.dotfiles</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -8339,13 +8339,13 @@ Password Manager</string>
 												<key>Alpha Component</key>
 												<real>1</real>
 												<key>Blue Component</key>
-												<real>0.83529412746429443</real>
+												<real>0.92549020051956177</real>
 												<key>Color Space</key>
 												<string>sRGB</string>
 												<key>Green Component</key>
-												<real>0.88627451658248901</real>
+												<real>0.78039222955703735</real>
 												<key>Red Component</key>
-												<real>0.58039218187332153</real>
+												<real>0.45490187406539917</real>
 											</dict>
 											<key>Cursor Guide Color</key>
 											<dict>
@@ -8405,7 +8405,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>0815F341-1EDF-4B60-A277-F6EB6DCF80B7</string>
+											<string>8504CBBF-390C-4C48-97E2-68022FC9AE93</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -9128,7 +9128,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/aws-dataservice/working</string>
+											<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/adminservice/working</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -9151,6 +9151,7 @@ Password Manager</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Cursor Color</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -9173,7 +9174,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/adminservice/working</string>
+										<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -9601,7 +9602,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>FA647421-C680-4CA4-914F-B7C6BD5D8D23</string>
+											<string>3444CE07-AF5C-452A-8230-56866160A7A9</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10370,7 +10371,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/aws-dataservice/working</string>
+										<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -10798,7 +10799,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>07998EF3-AFA6-4146-BC6F-27D2CB4A244F</string>
+											<string>C95363CE-175A-45D1-B8DE-C7A9E365F379</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11567,7 +11568,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/unitycatalog/working</string>
+										<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -11995,7 +11996,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>8D9822FA-2E71-47DB-8A8D-AB9DA8897DEC</string>
+											<string>D7ABDABB-0493-46DA-846B-F42F9DA244DA</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -12764,7 +12765,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/infa-core/working</string>
+										<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -13192,7 +13193,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>4BEF4E04-251F-449C-929B-68B4F196B860</string>
+											<string>F3522313-0371-436E-861C-0DDA719A8F40</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
