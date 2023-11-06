@@ -299,20 +299,20 @@ M.gitsigns_maps = gitsigns_maps
 
 -- use magic when searching
 -- :help magic
-local use_magic = function(key, prefix)
+local set_magic_prefix = function(keymap, search_prefix)
     local pos = vim.fn.getcmdpos()
 
     if pos == 1 or pos == 6 then
-        vim.fn.setcmdline(vim.fn.getcmdline() .. prefix)
+        vim.fn.setcmdline(vim.fn.getcmdline() .. search_prefix)
     else
-        vim.fn.setcmdline(vim.fn.getcmdline() .. key)
+        vim.fn.feedkeys(keymap)
     end
 end
 
 map("n", "*", "*N", { group = "gen", desc = "find word at cur" })
 map("n", "/", "/\\v\\c", { group = "gen", desc = "regex search" })
-map("c", "%", function() use_magic("%", "%s/\\v\\c") end, { group = "gen", desc = "regex replace" })
-map("c", "%%", function() use_magic("%%", "s/\\v\\c") end, { group = "gen", desc = "regex replace visual" })
+map("c", "%", function() set_magic_prefix("%", "%s/\\v\\c") end, { group = "gen", desc = "regex replace" })
+map("c", "%%", function() set_magic_prefix("%%", "s/\\v\\c") end, { group = "gen", desc = "regex replace visual" })
 map("n", "<leader>rw", ":%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>", { group = "txt", desc = "replace current word" })
 
 -- Split management
@@ -473,9 +473,9 @@ M.lsp_maps = lsp_maps
 -- Treesitter keymaps
 local treesitter_maps = {
     incremental_selection = {
-        init_selection = "<c-space>",
-        node_incremental = "<c-space>",
-        scope_incremental = "<c-s>",
+        init_selection = "<C-Space>",
+        node_incremental = "<C-Space>",
+        scope_incremental = "<C-s>",
         node_decremental = "<M-space>",
     },
     textobjects = {

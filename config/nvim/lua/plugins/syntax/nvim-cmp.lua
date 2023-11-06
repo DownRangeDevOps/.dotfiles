@@ -25,6 +25,10 @@ return {
         -- :help cmp_luasnip
         { "saadparwaiz1/cmp_luasnip", lazy = true, event = "InsertEnter" },
 
+
+        -- { "SirVer/ultisnips" }, -- Utilisnip (https://github.com/SirVer/ultisnips)
+        -- { "quangnguyen30192/cmp-nvim-ultisnips" }, -- Utilisnips integration (https://github.com/quangnguyen30192/cmp-nvim-ultisnips)
+
         -- Adds a number of user-friendly snippets
         { "rafamadriz/friendly-snippets", lazy = true, event = "InsertEnter" }, -- https://github.com/rafamadriz/friendly-snippets
 
@@ -73,8 +77,12 @@ return {
             sources = {
                 { name = "nvim_lsp" },
                 { name = "luasnip" },
+                { name = "ultisnips" },
                 { name = "buffer" },
-                { name = "path" },
+                {
+                    name = "path",
+                    option = { trailing_slash = true, },
+                }
             },
 
             -- Key mappings
