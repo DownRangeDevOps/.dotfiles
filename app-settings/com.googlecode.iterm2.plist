@@ -4502,7 +4502,7 @@
 	<key>Default Bookmark Guid</key>
 	<string>3AA05C2E-B0C4-4ACC-87AF-CD3D1C9E7111</string>
 	<key>DimBackgroundWindows</key>
-	<false/>
+	<true/>
 	<key>DimInactiveSplitPanes</key>
 	<false/>
 	<key>DimOnlyText</key>
@@ -6735,7 +6735,7 @@ Password Manager</string>
 	<key>SoundForEsc</key>
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
-	<real>0.20327740343287126</real>
+	<real>0.19882465768044408</real>
 	<key>StretchTabsToFillBar</key>
 	<false/>
 	<key>SwitchTabModifier</key>
