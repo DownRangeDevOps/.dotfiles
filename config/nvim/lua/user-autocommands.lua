@@ -81,6 +81,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- ----------------------------------------------
 -- Filetype
 -- ----------------------------------------------
+-- reset config that may have been changed by plugins
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = "*",
+    callback = function()
+        require("user-config")
+    end
+})
 -- bash files with no extension
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
@@ -97,6 +105,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     callback = function()
         vim.wo.number = true
         vim.wo.relativenumber = true
+        vim.wo.spell = true
     end
 })
 
@@ -109,11 +118,18 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end
 })
 
+-- terraform
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = "terraform",
+    callback = function() vim.bo.commentstring = "# %s" end,
+})
+
 -- terraform vars
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
     pattern = "terraform-vars",
-    command = "set ft=terraform",
+    callback = function() vim.treesitter.start(0, "terraform") end,
 })
 
 -- files that use tab indentation
@@ -207,12 +223,12 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
             promote = { mode = "i", lhs = "<C-d>", rhs = function()
                 vim.cmd("BulletPromote")
                 vim.cmd.stopinsert()
-                vim.fn.feedkeys("A")
+                vim.fn.feedkeys("A ")
             end, opts = { group = "list", desc = "bullets promote" } },
             demote = { mode = "i", lhs = "<C-t>", rhs = function()
                 vim.cmd("BulletDemote")
                 vim.cmd.stopinsert()
-                vim.fn.feedkeys("A")
+                vim.fn.feedkeys("A ")
             end, opts = { group = "list", desc = "bullets demote" } },
 
             vpromote   = { mode = "v", lhs  = "<C-d>",    rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },

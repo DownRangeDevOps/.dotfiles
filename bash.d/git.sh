@@ -278,7 +278,7 @@ function git_fixup() {
     git log -n 50 --pretty=format:"%h %s" --no-merges |
         fzf |
         awk '{print $1}' |
-        xargs -o hub commit --fixup
+        xargs -o git commit --no-verify --fixup
     git rebase --interactive "${merge_base}"
 }
 
@@ -507,14 +507,12 @@ function git_delete_merged_branches() {
         sed --regexp-extended "s/^\s*remotes\/origin\///g")
 
     if [[ ${#local_branches[@]} -gt 0 || ${#remote_branches[@]} -gt 0 ]]; then
-        printf "\n"
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
         __git_get_merged_branches | indent_output
 
         prompt_to_continue "Delete branches?" || return 6
 
         if [[ ${#local_branches[@]} -gt 0 ]]; then
-            printf "\n"
             printf_callout "Deleting merged local branches..."
             # shellcheck disable=SC2068  # word splitting is desired here
             git branch --delete --force ${local_branches[@]} | indent_output
@@ -522,7 +520,6 @@ function git_delete_merged_branches() {
 
         if [[ ${#remote_branches[@]} -gt 0 ]]; then
             for remote in ${remotes}; do
-                printf "\n"
                 printf_callout "Deleting merged remote branches from ${remote}..."
                 # shellcheck disable=SC2068  # word splitting is desired here
                 git push --delete "${remote}" ${remote_branches[@]} | indent_output
@@ -532,7 +529,6 @@ function git_delete_merged_branches() {
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
 
-        printf "\n"
         printf_callout "Done."
         printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
@@ -560,6 +556,8 @@ function git_nuke_cur_branch() {
 }
 
 function git_log_copy() {
+    printf_callout "Fetching updates..."
+    git fetch
     git log --format="## %s (%h)%n%n%b" "origin/$(__git_master_or_main)..HEAD" | cat -s | pbcopy
 }
 

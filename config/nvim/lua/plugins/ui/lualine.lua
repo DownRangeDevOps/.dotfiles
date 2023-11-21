@@ -7,16 +7,83 @@ return {
     lazy = false,
     config = true,
     opts = {
+        extensions = {},
+        inactive_sections = {
+            lualine_a = {},
+            lualine_b = {},
+            lualine_c = { "filename" },
+            lualine_x = { "location" },
+            lualine_y = {},
+            lualine_z = {}
+        },
+        inactive_winbar = {},
         options = {
-            icons_enabled = false,
-            theme = "catppuccin",
-            component_separators = "┆",
-            section_separators = { left = "", right = ""},
+            always_divide_middle = true,
+            component_separators = {
+                left = "┆",
+                right = "┆"
+            },
             disabled_filetypes = {
                 statusline = {},
-                winbar = {},
+                winbar = {}
             },
+            globalstatus = false,
+            icons_enabled = false,
+            ignore_focus = {},
+            refresh = {
+                statusline = 1000,
+                tabline = 1000,
+                winbar = 1000
+            },
+            section_separators = {
+                left = "",
+                right = ""
+            },
+            theme = "catppuccin"
         },
+        sections = {
+            lualine_a = { "mode" },
+            lualine_b = {
+                {
+                    "branch",
+                    fmt = function(str)
+                        local len = vim.api.nvim_strwidth(str)
+
+                        if len > 24 then
+                            str = ("...%s"):format(str:sub(len - 25, len))
+                        end
+
+                        return str
+                    end,
+                },
+                "diff",
+                "diagnostics"
+            },
+            lualine_c = {
+                {
+                    "filename",
+                    fmt = function(str)
+                        local root_dir = vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "/"
+                        return string.gsub(str, root_dir, "")
+                    end,
+                    file_status = true,
+                    newfile_status = true,
+                    path = 4,
+                    symbols = {
+                        modified = '[+]',
+                        readonly = '[-]',
+                        unnamed = '[No Name]',
+                        newfile = '[New]',
+                    },
+
+                }
+            },
+            lualine_x = { "encoding", "fileformat", "filetype" },
+            lualine_y = { "progress" },
+            lualine_z = { "location" }
+        },
+        tabline = {},
+        winbar = {}
     },
 }
 -- local theme = require("catppuccin.palettes").mocha

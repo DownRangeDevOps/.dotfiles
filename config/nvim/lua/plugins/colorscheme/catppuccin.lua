@@ -69,6 +69,9 @@ return {
                     DiagnosticUnderlineHint = { style = { "undercurl" } },
                     DiagnosticUnderlineInfo = { style = { "undercurl" } },
                     DiagnosticUnderlineWarn = { style = { "undercurl" } },
+
+                    -- Neotree
+                    NeoTreeSymbolicLinkTarget = { fg = mocha.teal },
                 }
             end,
         },
