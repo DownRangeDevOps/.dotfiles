@@ -56,11 +56,33 @@ vim.api.nvim_create_user_command(
 vim.api.nvim_create_user_command("Ca", "WipeAllBuffers", { desc = "Close all hidden buffers" })
 vim.api.nvim_create_user_command("CloseAll", "WipeAllBuffers", { desc = "Close all hidden buffers" })
 
+vim.api.nvim_create_user_command(
+    "ExtractTfVars",
+    function()
+        vim.cmd([[
+            %s/\v\s*(default|variable)/ß\1/
+            %s/\v\c^[^ß]*\n/
+            %s/\v\c^ß//
+            %s/\v\c^default[^\=]*\=\s*//
+            %s/\v\cvariable[^"]*"([^"]*).*\n/\1 = /
+        ]])
+    end,
+    { desc = "Extract vars from *.tf files"}
+)
+
+-- ----------------------------------------------
+-- Formatters
+-- ----------------------------------------------
+vim.api.nvim_create_user_command("Tff", function()
+    vim.cmd("silent! !terraform fmt %:p")
+end, { desc = "terraform fmt"})
+
 -- ----------------------------------------------
 -- Typos
 -- ----------------------------------------------
 vim.api.nvim_create_user_command("W", function() vim.cmd.write() end, { desc = "write"})
 vim.api.nvim_create_user_command("Wa", function() vim.cmd.wall() end, { desc = "wall"})
+vim.api.nvim_create_user_command("Wq", function() vim.cmd.wq() end, { desc = "wq"})
 vim.api.nvim_create_user_command("Wqa", function() vim.cmd.wqall() end, { desc = "wqall"})
 vim.api.nvim_create_user_command("Qa", function() vim.cmd.wqall() end, { desc = "qall"})
 

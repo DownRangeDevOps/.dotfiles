@@ -132,6 +132,12 @@ vim.on_key(
     vim.api.nvim_create_namespace "auto_hlsearch"
 )
 
+-- TKL keyboard
+map("n", "<S-Esc>", "~", { group = "gen", desc = "tilde" })
+map("i", "<C-[>", "<Esc>", { group = "gen", desc = "tilde" })
+map("i", "<Esc>", "`", { group = "gen", desc = "tilde" })
+map("i", "<S-Esc>", "~", { group = "gen", desc = "tilde" })
+
 -- QOL
 map("n", "<leader>rc", function()
     for name,_ in pairs(package.loaded) do
@@ -230,6 +236,11 @@ map("n", "<leader>w", function()
         vim.defer_fn(function() vim.cmd.echon("''") end, 750)
     end
 end, { silent = true, group = "file", desc = "write to file" })
+map("n", "<leader>rf", function()
+    vim.cmd("e")
+    vim.print(vim.fn.expand("%:t") .. " reloaded...")
+    vim.defer_fn(function() vim.cmd.echon("''") end, 750)
+end, { silent = true, group = "file", desc = "reload file" })
 map("n", "<leader>u", vim.cmd.UndotreeToggle, { group = "file", desc = "open undo-tree" })
 map("n", "<leader>1", function()
     vim.cmd("Neotree action=focus source=filesystem position=current toggle reveal")
@@ -305,7 +316,7 @@ local set_magic_prefix = function(keymap, search_prefix)
     if pos == 1 or pos == 6 then
         vim.fn.setcmdline(vim.fn.getcmdline() .. search_prefix)
     else
-        vim.fn.feedkeys(keymap)
+        vim.fn.setcmdline(vim.fn.getcmdline() .. keymap)
     end
 end
 
@@ -342,18 +353,25 @@ map("n", "<leader>tc", function() vim.cmd.tabclose() end,
     { group = "gen", desc = "close tab" })
 
 -- Terminal split management
-map("n", "<leader>`", function()
-    vim.cmd("ToggleTerm size=20 direction=horizontal")
+map("n", "`", function()
+    vim.cmd("ToggleTerm size=20 direction=horizontal name=tterm")
 end, { group = "gen", desc = "bottom term" })
-map("n", "<leader>~", function()
-    vim.cmd("ToggleTerm size=120 direction=vertical")
+map("n", "<leader>`", function()
+    vim.cmd("ToggleTerm size=120 direction=vertical name=tterm")
+end, { group = "gen", desc = "vertical term" })
+map("n", "<Esc>", function()
+    vim.cmd("ToggleTerm size=20 direction=horizontal name=tterm")
+end, { group = "gen", desc = "bottom term" })
+map("n", "<leader><Esc>", function()
+    vim.cmd("ToggleTerm size=120 direction=vertical name=tterm")
 end, { group = "gen", desc = "vertical term" })
 
+
 -- Split navigation and sizing
-map({ "n" }, "<C-h>", "<C-w>h", { group = "nav", desc = "left window" })
-map({ "n" }, "<C-j>", "<C-w>j", { group = "nav", desc = "down window" })
-map({ "n" }, "<C-k>", "<C-w>k", { group = "nav", desc = "up window" })
-map({ "n" }, "<C-l>", "<C-w>l", { group = "nav", desc = "right window" })
+map({ "n", "i" }, "<C-h>", "<Esc><C-w>h", { group = "nav", desc = "left window" })
+map({ "n", "i" }, "<C-j>", "<Esc><C-w>j", { group = "nav", desc = "down window" })
+map({ "n", "i" }, "<C-k>", "<Esc><C-w>k", { group = "nav", desc = "up window" })
+map({ "n", "i" }, "<C-l>", "<Esc><C-w>l", { group = "nav", desc = "right window" })
 
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", { group = "nav", desc = "left window" })
 map("t", "<C-j>", "<C-\\><C-n><C-w>j", { group = "nav", desc = "down window" })
@@ -389,13 +407,13 @@ map("n", "zm", function() require("ufo").closeFoldsWith() end, { group = "ui", d
 -- files
 map("n", "<C-p>", function()
     if is_git_repo() then
-        vim.print("Running Telescope git_files in " .. vim.cmd.pwd())
         require("telescope.builtin").git_files({ show_untracked = true })
     else
-        vim.print("Running Telescope find_files in " .. vim.cmd.pwd())
         require("telescope.builtin").find_files()
     end
 end, { group = "ts", desc = "fuzzy git files" })
+map("i", "<C-n>", function() require("telescope.actions").cycle_history_next() end, { group = "ts", desc = "history next" })
+map("i", "<C-p>", function() require("telescope.actions").cycle_history_prev() end, { group = "ts", desc = "history prev" })
 map("n", "<leader>ff", function() require("telescope.builtin").find_files({ hidden = true, no_ignore = true }) end, { group = "ts", desc = "fuzzy files" })
 map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { group = "ts", desc = "fuzzy recent files" })
 map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { group = "ts", desc = "fuzzy help" })

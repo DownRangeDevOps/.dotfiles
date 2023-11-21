@@ -23,12 +23,8 @@ return {
             harpoon = {},
         },
         defaults = {
-            mappings = {
-                i = {
-                    ["<C-u>"] = false,
-                    ["<C-d>"] = false,
-                },
-            },
+            history = {},
+            mappings = {},
             vimgrep_arguments = {
                 "rg",
                 -- required

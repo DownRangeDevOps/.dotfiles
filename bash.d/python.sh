@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
@@ -16,9 +18,9 @@ export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
 # Pipx
 export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 
-function pipx() { # TODO: make lazy autocompletion loader
+function pipx() { # TODO: make lazy auto-completion loader
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing pipx completions..."
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pipx completions..."
     fi
 
     unset -f pipx
