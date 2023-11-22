@@ -7,6 +7,7 @@ return {
     lazy = false,
     enabled = true,
     config = true,
+    -- init = vim.cmd("UfoEnable"),
     opts = {
         provider_selector = function() return { "treesitter", "indent" } end,
         close_fold_kinds = { "imports", "comments" },

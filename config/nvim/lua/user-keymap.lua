@@ -122,6 +122,7 @@ vim.on_key(
                 "z", "v", "t", "m", "b",
                 "n", "N",
                 "*", "?", "/",
+                "<ScrollWheelUp>", "<ScrollWheelDown>",
             }, vim.fn.keytrans(char))
 
             if vim.opt.hlsearch:get() ~= new_hlsearch then
@@ -134,9 +135,9 @@ vim.on_key(
 
 -- TKL keyboard
 map("n", "<S-Esc>", "~", { group = "gen", desc = "tilde" })
-map("i", "<C-[>", "<Esc>", { group = "gen", desc = "tilde" })
-map("i", "<Esc>", "`", { group = "gen", desc = "tilde" })
-map("i", "<S-Esc>", "~", { group = "gen", desc = "tilde" })
+map({ "i", "c" },"<C-[>", "<Esc>", { group = "gen", desc = "tilde" })
+map({ "i", "c" },"<Esc>", "`", { group = "gen", desc = "tilde" })
+map({ "i", "c" },"<S-Esc>", "~", { group = "gen", desc = "tilde" })
 
 -- QOL
 map("n", "<leader>rc", function()
@@ -349,19 +350,23 @@ map("n", "<leader>q", function()
 end, { silent = true, group = "gen", desc = "close" })
 map("n", "<leader>Q", function() vim.cmd("quit!") end,
     { silent = true, group = "gen", desc = "quit" })
-map("n", "<leader>tc", function() vim.cmd.tabclose() end,
-    { group = "gen", desc = "close tab" })
+
+-- Tab management (barbar.nvim)
+map("n", "<leader>tc", function() vim.cmd.tabclose() end, { group = "tab", desc = "close tab" })
+map("n", "<leader>tp", function() vim.cmd("BufferPrevious") end, { group = "tab", desc = "prev tab" })
+map("n", "<leader>tn", function() vim.cmd("BufferNext") end, { group = "tab", desc = "next tab" })
+map("n", "gt", function() vim.cmd("BufferPick") end, { group = "tab", desc = "pick tab" })
 
 -- Terminal split management
 map("n", "`", function()
     vim.cmd("ToggleTerm size=20 direction=horizontal name=tterm")
 end, { group = "gen", desc = "bottom term" })
-map("n", "<leader>`", function()
-    vim.cmd("ToggleTerm size=120 direction=vertical name=tterm")
-end, { group = "gen", desc = "vertical term" })
 map("n", "<Esc>", function()
     vim.cmd("ToggleTerm size=20 direction=horizontal name=tterm")
 end, { group = "gen", desc = "bottom term" })
+map("n", "<leader>`", function()
+    vim.cmd("ToggleTerm size=120 direction=vertical name=tterm")
+end, { group = "gen", desc = "vertical term" })
 map("n", "<leader><Esc>", function()
     vim.cmd("ToggleTerm size=120 direction=vertical name=tterm")
 end, { group = "gen", desc = "vertical term" })

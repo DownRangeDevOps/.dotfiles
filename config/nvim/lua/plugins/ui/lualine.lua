@@ -49,8 +49,8 @@ return {
                     fmt = function(str)
                         local len = vim.api.nvim_strwidth(str)
 
-                        if len > 24 then
-                            str = ("...%s"):format(str:sub(len - 25, len))
+                        if len > 30 then
+                            str = ("...%s"):format(str:sub(len - 31, len))
                         end
 
                         return str
