@@ -11,7 +11,7 @@ set -ua
 if [[ $(uname -m) == "arm64" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 else
-    eval "$(/opt/local/bin/brew shellenv)"
+    eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 # Globals
