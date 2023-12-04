@@ -22,7 +22,7 @@ printf "%s\n" "***** PROFILING START *****" >> "./${LOG_FILE}"
 # for ((i=2; i--;))
 # do
 #     # shellcheck disable=SC1090
-#     source "${SCRIPT_TO_PROFILE}"
+#     safe_source "${SCRIPT_TO_PROFILE}"
 # done
 
 # Start profiling

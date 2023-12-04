@@ -27,7 +27,7 @@ if [[ ${DEBUG:-} -eq 1 ]]; then
     }
 
     set +ua
-    source "${HOME}/.dotfiles/lib/log.sh"
+    [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
     set -ua
     log debug ""
     log debug "[${BASH_SOURCE[0]}]"

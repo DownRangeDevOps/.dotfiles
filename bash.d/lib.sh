@@ -1,7 +1,7 @@
 # shellcheck shell=bash disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
 if [[ -n "${DEBUG:-}" ]]; then
     set +ua
-    source "${HOME}/.dotfiles/lib/log.sh"
+    [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
     set -ua
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"

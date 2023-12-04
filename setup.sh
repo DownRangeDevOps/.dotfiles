@@ -128,7 +128,7 @@ function init_shell() {
         printf "%s\n" "source ${init_file}" | indent_output
     else
         printf "%s\n" "source ${init_file}" | indent_output
-        source "${init_file}"
+        [[ -f "${init_file}" ]] && source "${init_file}"
     fi
 
     printf "\n"

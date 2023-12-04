@@ -14,7 +14,7 @@ function cargo() {
     unset -f cargo
 
     # shellcheck disable=SC1090,SC1091
-    source "$HOME/.cargo/env"
+    safe_source "$HOME/.cargo/env"
 
     $(which cargo) "$@"
 }

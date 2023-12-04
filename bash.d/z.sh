@@ -14,7 +14,7 @@ function z() {
     unset -f z
 
     # shellcheck disable=SC1091
-    source "${BREW_PREFIX}/etc/profile.d/z.sh"
+    safe_source "${BREW_PREFIX}/etc/profile.d/z.sh"
 
     _z 2>&1 "$@"
 }

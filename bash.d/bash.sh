@@ -138,7 +138,7 @@ fi
                 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading ${file} ..."
             fi
 
-            source "${file}"
+            safe_source "${file}"
         fi
     done
 
@@ -151,7 +151,7 @@ if [[ -f "${HOME}/.bashrc" ]]; then
         log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
     fi
 
-    source "${HOME}/.bashrc"
+    safe_source "${HOME}/.bashrc"
 
     if [[ -n "${DEBUG:-}" ]]; then
         log debug "[$(basename "${BASH_SOURCE[0]}")]: Done."

@@ -5,5 +5,5 @@ fi
 
 # shellcheck disable=SC1090,SC1091
 if [[ -f "${HOME}/.bash_secrets" ]]; then
-    source "${HOME}/.bash_secrets"
+    safe_source "${HOME}/.bash_secrets"
 fi

@@ -14,5 +14,5 @@ function luaver() {
     unset -f luaver
 
     # shellcheck disable=SC1090
-    source "$(which luaver)"
+    safe_source "$(which luaver)"
 }
