@@ -118,7 +118,7 @@ function pyenv() {
     unset -f pyenv
 
     export PYENV_ROOT="$HOME/.pyenv"
-    export PIPENV_SHELL_EXPLICIT="${BREW_PREFIX}/bin/bash"
+    export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
 
     eval "$(pyenv init -)"
 

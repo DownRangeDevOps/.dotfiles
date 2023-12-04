@@ -17,7 +17,7 @@ vim.opt.undofile = true
 vim.opt.updatetime = 250
 
 vim.opt.grepprg = table.concat({
-    "${BREW_PREFIX}/bin/rg",
+    "${HOMEBREW_PREFIX}/bin/rg",
     " --follow",
     " --hidden",
     " --no-config",

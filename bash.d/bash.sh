@@ -13,9 +13,9 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 # llvm
-export LDFLAGS="-L${BREW_PREFIX}/opt/llvm/lib && -L${BREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${BREW_PREFIX}/opt/llvm/lib/c++"
-export CPPFLAGS="-I${BREW_PREFIX}/opt/llvm/include && -I${BREW_PREFIX}/opt/llvm/include/c++/v1/"
-export LLVM_INCLUDE_FLAGS="-L${BREW_PREFIX}/"
+export LDFLAGS="-L${HOMEBREW_PREFIX}/opt/llvm/lib && -L${HOMEBREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${HOMEBREW_PREFIX}/opt/llvm/lib/c++"
+export CPPFLAGS="-I${HOMEBREW_PREFIX}/opt/llvm/include && -I${HOMEBREW_PREFIX}/opt/llvm/include/c++/v1/"
+export LLVM_INCLUDE_FLAGS="-L${HOMEBREW_PREFIX}/"
 
 # config
 export AWS_ASSUME_ROLE_TTL=1h
@@ -50,7 +50,7 @@ function is_subsh() {
 }
 
 function list_dir() {
-    local gnu_ls="${BREW_PREFIX}/opt/coreutils/libexec/gnubin/ls"
+    local gnu_ls="${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/ls"
     local lsopts=("--color=auto" "--almost-all")
 
     if [[ ${1:-} == "--long" ]]; then
@@ -85,7 +85,7 @@ function nvim() {
 }
 
 function rg() {
-    "${BREW_PREFIX}/bin/rg" \
+    "${HOMEBREW_PREFIX}/bin/rg" \
         --follow \
         --hidden \
         --no-config \
@@ -118,11 +118,11 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 set +ua
-source "${BREW_PREFIX}/etc/profile.d/bash_completion.sh"
+source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 
 # NOTE: overwrites PS1, source it before setting custom PS1
-source "${BREW_PREFIX}/share/google-cloud-sdk/path.bash.inc"
-source "${BREW_PREFIX}/share/google-cloud-sdk/completion.bash.inc"
+source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/path.bash.inc"
+source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.bash.inc"
 set -ua
 
 if [[ -n "${DEBUG:-}" ]]; then

@@ -15,19 +15,19 @@ function set_path() {
     local gnu_tools=("gnu-tar" "gnu-which" "gnu-sed" "grep" "coreutils" "findutils" "make")
     local compilers=("llvm/bin")
 
-    if [[ -n ${BREW_PREFIX} ]]; then
-        prepend+=( "${BREW_PREFIX}/lib" )             # Homebrew
-        prepend+=( "${BREW_PREFIX}/include" )         # Homebrew
-        prepend+=( "${BREW_PREFIX}/opt" )             # Homebrew
-        prepend+=( "${BREW_PREFIX}/opt/ncurses/bin" ) # Homebrew ncurses
+    if [[ -n ${HOMEBREW_PREFIX} ]]; then
+        prepend+=( "${HOMEBREW_PREFIX}/lib" )             # Homebrew
+        prepend+=( "${HOMEBREW_PREFIX}/include" )         # Homebrew
+        prepend+=( "${HOMEBREW_PREFIX}/opt" )             # Homebrew
+        prepend+=( "${HOMEBREW_PREFIX}/opt/ncurses/bin" ) # Homebrew ncurses
 
         for tool in "${gnu_tools[@]}"; do
-            prepend+=( "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
-            prepend+=( "${BREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
+            prepend+=( "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
+            prepend+=( "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
         done
 
         for path in "${compilers[@]}"; do
-            prepend+=( "${BREW_PREFIX}/opt/${path}" ) # llvm
+            prepend+=( "${HOMEBREW_PREFIX}/opt/${path}" ) # llvm
         done
 
     fi

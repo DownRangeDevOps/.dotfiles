@@ -17,13 +17,12 @@ fi
 # Globals
 export DOTFILES_PREFIX="${HOME}/.dotfiles"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
-export BREW_PREFIX="${HOMEBREW_PREFIX}"
 export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 
 # Load logger or overload with no-op
 if [[ ${DEBUG:-} -eq 1 ]]; then
     function basename() {
-        "${BREW_PREFIX}/opt/coreutils/libexec/gnubin/basename" "$@"
+        "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/basename" "$@"
     }
 
     set +ua
@@ -75,9 +74,10 @@ stty -ixon 2> /dev/null
 # Load everything else
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 
-source "${BASH_D_PATH}/lib.sh"
-source "${BASH_D_PATH}/path.sh"
-source "${BASH_D_PATH}/bash.sh"
+[[ -f "${BASH_D_PATH}/lib.sh" ]] && source "${BASH_D_PATH}/lib.sh"
+safe_source "${BASH_D_PATH}/path.sh"
+safe_source "${BASH_D_PATH}/bash.sh"
+safe_source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 
 # +u: Allow unbound variables
 # +a: Don't export functions to sub-sells

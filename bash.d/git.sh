@@ -173,7 +173,7 @@ function __git_diff_so_fancy_with_less() {
 
 function __git_get_merged_branches() {
     git branch --all --merged "origin/$(__git_master_or_main)" |
-        "${BREW_PREFIX}/bin/rg" --invert-match "(\*|master|main|develop|release)" |
+        "${HOMEBREW_PREFIX}/bin/rg" --invert-match "(\*|master|main|develop|release)" |
         tr -d " "
 }
 

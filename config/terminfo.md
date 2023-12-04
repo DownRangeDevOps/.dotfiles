@@ -19,7 +19,7 @@ Add to .bash_profile or whatever your login shell sources on start
 
 ```sh
 # Use my ncurses and terminfo
-export PATH="${BREW_PREFIX}/opt/ncurses/bin:$PATH"
+export PATH="${HOMEBREW_PREFIX}/opt/ncurses/bin:$PATH"
 export TERMINFO=~/.local/share/terminfo
 export TERMINFO_DIRS=~/.local/share/terminfo
 ```

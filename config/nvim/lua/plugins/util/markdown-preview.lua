@@ -17,7 +17,7 @@ return {
     config = function()
         vim.g.mkdp_auto_close = 1 -- Close preview window when associated buffer is closed
         vim.g.mkdp_echo_preview_url = 1
-        -- vim.g.mkdp_markdown_css = vim.env.HOME .. "/.dotfiles/external/github-markdown-css/github-markdown-" .. mkdp_theme .. ".css"
+        vim.g.mkdp_markdown_css = vim.env.HOME .. "/.dotfiles/external/github-markdown-css/github-markdown-" .. mkdp_theme .. ".css"
         vim.g.mkdp_filetypes = { "markdown" } -- Attach MKDP commands to these filetypes
         vim.g.mkdp_page_title = vim.fn.expand("%:.")
         vim.g.mkdp_refresh_slow = 1
