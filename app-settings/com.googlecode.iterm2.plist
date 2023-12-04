@@ -6799,7 +6799,7 @@ Password Manager</string>
 				<key>Has Toolbelt</key>
 				<false/>
 				<key>Height</key>
-				<real>1415</real>
+				<real>1394</real>
 				<key>Hide After Opening</key>
 				<false/>
 				<key>Hiding Toolbelt Should Resize Window</key>
@@ -6811,11 +6811,11 @@ Password Manager</string>
 				<key>Saved Window Type</key>
 				<integer>13</integer>
 				<key>Screen</key>
-				<integer>2</integer>
+				<integer>1</integer>
 				<key>Scroller Width</key>
 				<real>0.0</real>
 				<key>Selected Tab Index</key>
-				<integer>0</integer>
+				<integer>5</integer>
 				<key>Tabs</key>
 				<array>
 					<dict>
@@ -7208,7 +7208,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>BD0190A7-9BB0-49F5-964A-DAB2E698B73E</string>
+											<string>ABED1811-7047-40F9-BACC-9E15E7B87DDE</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -7923,7 +7923,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>363</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -7931,7 +7931,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/.dotfiles/config/nvim/lua/plugins</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -7962,7 +7962,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>53</integer>
 										<key>Session GUID</key>
 										<string>85C4A4E0-B99D-461E-AD08-38DC6BD2B761</string>
 										<key>Short Lived Single Use</key>
@@ -7986,9 +7986,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>1335</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2556</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -8001,9 +8001,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>1335</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2556</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -8405,7 +8405,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>8504CBBF-390C-4C48-97E2-68022FC9AE93</string>
+											<string>BB9AD06D-CE83-4FD8-A24C-D04223EFE941</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -9120,7 +9120,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>363</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -9128,7 +9128,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/adminservice/working</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -9159,7 +9159,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>53</integer>
 										<key>Session GUID</key>
 										<string>D9D9D257-8034-4947-8CFC-F350A1A4626A</string>
 										<key>Short Lived Single Use</key>
@@ -9183,9 +9183,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>1335</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2556</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -9198,9 +9198,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>1335</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2556</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -9602,7 +9602,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>3444CE07-AF5C-452A-8230-56866160A7A9</string>
+											<string>EB44DB18-F318-4AA7-BF18-5FC048F811D9</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10317,7 +10317,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>363</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -10325,7 +10325,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/aws-dataservice/working</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -10356,7 +10356,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>53</integer>
 										<key>Session GUID</key>
 										<string>0A2E959F-F49B-479C-BF8E-DE205BEDB5E6</string>
 										<key>Short Lived Single Use</key>
@@ -10380,9 +10380,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>1335</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2556</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -10395,9 +10395,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>1335</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2556</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -10799,7 +10799,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>C95363CE-175A-45D1-B8DE-C7A9E365F379</string>
+											<string>39311346-215B-419F-8D4B-37A2A18A1E66</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11514,7 +11514,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>363</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -11522,7 +11522,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/unitycatalog/working</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -11553,7 +11553,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>53</integer>
 										<key>Session GUID</key>
 										<string>B0AB00A1-F721-4530-9DF1-02BA763C8B92</string>
 										<key>Short Lived Single Use</key>
@@ -11577,9 +11577,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>1335</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2556</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -11592,9 +11592,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>1335</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2556</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -11996,7 +11996,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>D7ABDABB-0493-46DA-846B-F42F9DA244DA</string>
+											<string>F3B31D25-0E31-412F-98C1-E1C0B0E7B15B</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -12711,7 +12711,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>363</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -12719,7 +12719,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Development/Grainger/worktrees/mlops/dbx/infa-core/working</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -12750,7 +12750,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>53</integer>
 										<key>Session GUID</key>
 										<string>BF508ED5-5E9D-4321-A386-2930FF408776</string>
 										<key>Short Lived Single Use</key>
@@ -12774,9 +12774,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>1335</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2556</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -12789,9 +12789,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>1335</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2556</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -13193,7 +13193,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>F3522313-0371-436E-861C-0DDA719A8F40</string>
+											<string>D4DFB521-319B-4148-8E75-3E1BF8A90DB9</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -13908,7 +13908,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>364</integer>
+										<integer>363</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
@@ -13947,7 +13947,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>54</integer>
+										<integer>53</integer>
 										<key>Session GUID</key>
 										<string>2F2C42D0-1503-465F-A88B-489713F6309F</string>
 										<key>Short Lived Single Use</key>
@@ -13962,7 +13962,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/Development/Reference/Example-Ops</string>
+										<string>/</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -13971,9 +13971,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1356</real>
+										<real>1335</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2556</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -13986,9 +13986,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1356</real>
+								<real>1335</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2556</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -14031,13 +14031,13 @@ Password Manager</string>
 				<key>Use Transparency</key>
 				<true/>
 				<key>Width</key>
-				<real>2560</real>
+				<real>2556</real>
 				<key>Window Type</key>
 				<integer>13</integer>
 				<key>X Origin</key>
-				<real>944</real>
+				<real>-1391</real>
 				<key>Y Origin</key>
-				<real>1117</real>
+				<real>1138</real>
 			</dict>
 		</array>
 	</dict>
