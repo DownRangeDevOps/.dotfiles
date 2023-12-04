@@ -1,7 +1,7 @@
 [user]
 	name = Ryan Fisher
 	email = ryan.fisher@grainger.com
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGNwmFMT1LMa0GpaJDSTwY57bTt4LBtbiMVqDfubS9WW
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGNwmFMT1LMa0GpaJDSTwY57bTt4LBtbiMVqDfubS9WW
 [gpg "ssh"]
 	allowedSignersFile = ~/.dotfiles/config/git/.gitconfig-signers-grainger
 
