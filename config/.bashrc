@@ -184,8 +184,8 @@ alias gba="git branch --all"
 alias gbn="git_get_cur_branch_name"
 alias gcb="git_get_cur_branch_name"
 alias gco="git_fuzzy_checkout"
-alias gcod="git checkout develop"
-alias gcom="git checkout \$(__git_master_or_main) && git pull --prune"
+alias gcod="git_checkout_and_update develop"
+alias gcom="git_checkout_and_update \$(__git_master_or_main)"
 alias gdmb="git_delete_merged_branches"
 
 # diff
@@ -195,11 +195,11 @@ alias gdd="git diff origin/develop..."
 alias gdm="git diff origin/\$(__git_master_or_main)..."
 
 # logging
-alias gL-="git_log_all_branches_no_trunc_msg"
-alias gL="git_log_all_branches"
-alias gl-="git_log_branch_no_trunc_msg"
-alias gl="git_log_branch"
-alias glm="git_log_branch_only_msg"
+alias gl-="git_log"
+alias gL-="git_log --all"
+alias gl="git_log --truncate-subject"
+alias gL="git_log --all --truncate-subject"
+alias glm="git_log --subject-only"
 alias gstat="git_status_vs_master"
 alias gstatd="git_status_vs_develop"
 

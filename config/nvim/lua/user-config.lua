@@ -3,6 +3,7 @@ local M = {}
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
+
 vim.env.EDITOR="nvr -cc split" -- prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
@@ -46,8 +47,8 @@ vim.opt.viewoptions = table.concat({
 }, ",")
 
 -- Providers
-vim.g.node_host_prog = vim.env.BREW_PREFIX .. "/bin/neovim-node-host"
-vim.g.perl_host_prog = vim.env.BREW_PREFIX .. "/bin/perl"
+vim.g.node_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/neovim-node-host"
+vim.g.perl_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/perl"
 vim.g.python3_host_prog = vim.env.HOME .. "/.pyenv/shims/python"
 vim.g.ruby_host_prog = vim.env.HOME .. "/.rbenv/shims/neovim-ruby-host"
 

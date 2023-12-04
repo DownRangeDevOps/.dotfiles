@@ -22,6 +22,7 @@
 	ignorecase = false
 	pager = delta # less -JRS
 	fsmonitor = true
+	commitGraph = true
 [init]
 	templateDir = ~/.dotfiles/config/git/.git-template
 	defaultBranch = main
@@ -73,3 +74,5 @@
 [maintenance]
 	auto = true
 	strategy = incremental
+[core "gc"]
+	writeCommitGraph = true

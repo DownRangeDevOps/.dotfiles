@@ -16,7 +16,7 @@ return {
         presist_size = true,
         presist_mode = true,
         direction = "horizontal",
-        shell = vim.env.BREW_PREFIX .. "/bin/bash --login",
+        shell = vim.env.HOMEBREW_PREFIX .. "/bin/bash --login",
         auto_scroll = true,
         border = "curve",
         highlights = {

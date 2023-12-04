@@ -221,77 +221,97 @@ function git_project_path() {  # TODO: do I need this? have git_project_root
 }
 
 # logging
-function git_log_branch() {
-    git log \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" \
-        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
-        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
-        | LESS -SFX -R
+function git_log() {
+    local options="ats"
+    local long_options="all,truncate-subject,subject-only"
+    local subject_only=false
+    local colorize_signing_status=false
+    local unknown_args=()
+    local git_args=(
+        "--color"
+        "--graph"
+        "--decorate=short"
+    )
+
+    local truncate_subject
+    local parsed
+    local format
+
+    getopt --test > /dev/null
+
+    if [[ $? -ne 4 ]]; then
+        printf_error "\`getopt --test\` failed in this environment."
+        return 1
+    fi
+
+    if ! parsed=$(getopt --options=${options} --longoptions=${long_options} --name "$0" -- "$@"); then
+        printf_error "gitopts parsing error"
+        return 2
+    fi
+
+    eval set -- "${parsed}"
+
+    while true; do
+        case "${1:-}" in
+            -a|--all)
+                git_args+=( "--branches" "--remotes" )
+                shift
+                ;;
+            -t|--truncate-subject)
+                truncate_subject=",trunc"
+                shift
+                ;;
+            -o|--subject-only)
+                subject_only=true
+                git_args=("--color")
+                shift
+                ;;
+            -s|--show-signature)
+                colorize_signing_status=true
+                signature_status="(%G?) "
+                shift
+                ;;
+            --)
+                shift
+                break
+                ;;
+            *)
+                git_args+=( "$1" )
+                shift
+                ;;
+        esac
+    done
+
+    # %C(...): color
+    # %x09: tab
+    # %h: short hash
+    # %G?: signature status
+    # %d: ref names
+    # %s: subject
+    # %cn: committer name
+    # %cr: committer date, relative
+    if ${subject_only}; then
+        format="• %C(yellow)%s%C(reset)"
+    else
+        format="%x09%C(blue)%h ${signature_status}%C(reset)-%C(auto)%d %C(yellow)%<(72${truncate_subject})%s %C(blue)[%cn - %cr]%C(reset)"
+    fi
+
+    git_args+=( "--format=format:${format}" )
+
+    if ${colorize_signing_status}; then
+        git log "${git_args[@]}" \
+            | sed -E \
+                -e "s/\((G)\)/(${BOLD}${GREEN}\1${RESET}${BLUE})/g" \
+                -e "s/\(([BR])\)/(${BOLD}${RED}\1${RESET}${BLUE})/g" \
+                -e "s/\(([UE])\)/(${BOLD}${YELLOW}\1${RESET}${BLUE})/g" \
+                -e "s/\(([XY])\)/(${BOLD}${WHITE}(\1${RESET}${BLUE})/g" \
+            | LESS -SFXR
+    else
+        git log "${git_args[@]}" | LESS -SFXR
+    fi
 }
 
-function git_log_branch_no_trunc_msg() {
-    git log \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" \
-        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
-        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
-        | LESS -SFX -R
-}
-
-function git_log_branch_only_msg() {
-    git log --color --format=format:'• %C(yellow)%s%C(reset)' \
-        "$@" \
-        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
-        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
-        | LESS -SFX -R
-}
-
-function git_log_all_branches() {
-    git log \
-        --branches \
-        --remotes \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" \
-        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
-        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
-        | LESS -SFX -R
-}
-
-function git_log_all_branches_no_trunc_msg() {
-    git log \
-        --branches \
-        --remotes \
-        --graph \
-        --color \
-        --decorate=short \
-        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)'
-        "$@" \
-        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
-        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
-        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
-        | LESS -SFX -R
-}
-
-# Committing
+# committing
 function git_absorb() {
     git_add -u
     git absorb --and-rebase "$@"
@@ -540,18 +560,26 @@ function git_add() {
 #     fi
 # }
 
+# branching
+function git_checkout_and_update() {
+    local msg
+    msg=$(git checkout "${1:--}")
+
+    if [[ ${msg} =~ "behind" ]]; then
+        git pull --prune
+    fi
+}
 function git_fuzzy_checkout() {
     if [[ -n ${1:-} ]]; then
-        git fetch --prune
         git checkout "${@}"
     else
         git branch --all |
             tr -d " " |
-            sed -e "s,^remotes/origin/,," |
-            sed -e "s,^HEAD.*,," |
+            sed -E "s,^remotes/origin/,," |
+            sed -E "s,^HEAD.*,," |
             sort -u |
             fzf |
-            xargs git checkout
+            xargs bash -c "git_checkout_and_update"
     fi
 }
 

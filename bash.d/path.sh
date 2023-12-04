@@ -12,16 +12,25 @@ function set_path() {
 
     local prepend=()
     local append=()
-    local gnu_tools=("gnu-tar" "gnu-which" "gnu-sed" "grep" "coreutils" "findutils" "make")
+    local gnu_libexec_bins=(
+        "coreutils"
+        "findutils"
+        "gnu-sed"
+        "gnu-tar"
+        "gnu-which"
+        "grep"
+        "make"
+    )
     local compilers=("llvm/bin")
 
     if [[ -n ${HOMEBREW_PREFIX} ]]; then
-        prepend+=( "${HOMEBREW_PREFIX}/lib" )             # Homebrew
-        prepend+=( "${HOMEBREW_PREFIX}/include" )         # Homebrew
-        prepend+=( "${HOMEBREW_PREFIX}/opt" )             # Homebrew
-        prepend+=( "${HOMEBREW_PREFIX}/opt/ncurses/bin" ) # Homebrew ncurses
+        prepend+=( "${HOMEBREW_PREFIX}/lib" )                # Homebrew
+        prepend+=( "${HOMEBREW_PREFIX}/include" )            # Homebrew
+        prepend+=( "${HOMEBREW_PREFIX}/opt" )                # Homebrew
+        prepend+=( "${HOMEBREW_PREFIX}/opt/ncurses/bin" )    # Homebrew ncurses
+        prepend+=( "${HOMEBREW_PREFIX}/opt/gnu-getopt/bin" ) # GNU get-opt
 
-        for tool in "${gnu_tools[@]}"; do
+        for tool in "${gnu_libexec_bins[@]}"; do
             prepend+=( "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
             prepend+=( "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
         done
