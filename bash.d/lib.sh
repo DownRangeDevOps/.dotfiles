@@ -88,6 +88,34 @@ function prompt_to_continue() {
     fi
 }
 
+# Helpers
+function safe_source() {
+    local help_msg=(
+        "USAGE      safe_source <FILE>"
+        ""
+        "SYSNOPSIS      Check if FILE exists before attempting to source it."
+        ""
+        "OPTIONS"
+        "               -h, --help  Show this help message."
+    )
+
+    case ${1:-} in
+        "-h|--help")
+            printf "%s\n" "${help_msg[@]}"
+            return 0
+            ;;
+        "")
+            printf_error "Missing FILE argument."
+            printf "%s\n" "" "${help_msg[@]}"
+            return 0
+            ;;
+    esac
+
+    if [[ -f "${1}" ]]; then
+        source "${1}"
+    fi
+}
+
 # Utils
 function add_to_path() {
     error_msg="Usage: add_to_path <prepend|append> <path> [path]..."

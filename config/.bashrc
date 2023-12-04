@@ -186,11 +186,13 @@ alias gcb="git_get_cur_branch_name"
 alias gco="git_fuzzy_checkout"
 alias gcod="git checkout develop"
 alias gcom="git checkout \$(__git_master_or_main) && git pull --prune"
+alias gdmb="git_delete_merged_branches"
+
+# diff
 alias gd1="git diff HEAD~"
 alias gd="git diff"
 alias gdd="git diff origin/develop..."
 alias gdm="git diff origin/\$(__git_master_or_main)..."
-alias gdmb="git_delete_merged_branches"
 
 # logging
 alias gL-="git_log_all_branches_no_trunc_msg"
@@ -227,8 +229,10 @@ alias gm="git_rebase_merge_and_push"
 alias gmerged="git_get_merged_branches"
 
 # pushing
-alias gpu="git push --set-upstream \$(git remote) HEAD"
-alias gfpo="git push --force-with-lease origin HEAD"
+alias gpu="git_push"
+alias gfp="git fetch --prune && git push origin --force-with-lease HEAD"
+alias gfpo=gfp # deprecated
+alias gfpa="git_push --force-update-refs"
 
 # repository info
 alias git-contributors="git shortlog --summary --email --numbered"
@@ -299,7 +303,7 @@ alias tfgr="terraform graph"
 alias tfi="terraform init"
 alias tfim="terraform import"
 alias tfo="terraform output"
-alias tfp="terraform plan"
+alias tfp="terraform_plan"
 alias tfpu="terraform push"
 alias tfpv="terraform providers"
 alias tfr="terraform refresh"

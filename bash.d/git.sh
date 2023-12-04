@@ -10,6 +10,9 @@ fi
 # ------------------------------------------------
 function __git_add_completion_to_aliases() {
     if declare -f -F __git_complete >/dev/null; then
+        # git (main command)
+        __git_complete g __git_main
+
         # add
         __git_complete ga _git_add
         __git_complete git_add _git_add
@@ -23,6 +26,7 @@ function __git_add_completion_to_aliases() {
         # checkout
         __git_complete gco _git_checkout
         __git_complete git_fuzzy_checkout _git_checkout
+        __git_complete grb _git_checkout
 
         # merge
         __git_complete gm _git_merge
@@ -223,8 +227,8 @@ function git_log_branch() {
         --color \
         --decorate=short \
         --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" |
-        LESS -SFX -R
+        "$@" \
+        | LESS -SFX -R
 }
 
 function git_log_branch_no_trunc_msg() {
@@ -233,8 +237,8 @@ function git_log_branch_no_trunc_msg() {
         --color \
         --decorate=short \
         --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" |
-        LESS -SFX -R
+        "$@" \
+        | LESS -SFX -R
 }
 
 function git_log_branch_only_msg() {
@@ -249,8 +253,8 @@ function git_log_all_branches() {
         --color \
         --decorate=short \
         --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
-        "$@" |
-        LESS -SFX -R
+        "$@" \
+        | LESS -SFX -R
 }
 
 function git_log_all_branches_no_trunc_msg() {
@@ -260,8 +264,8 @@ function git_log_all_branches_no_trunc_msg() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' |
-        LESS -SFX -R
+        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
+        | LESS -SFX -R
 }
 
 # Committing
@@ -369,6 +373,28 @@ function git_rebase_merge_and_push() {
     fi
 }
 
+function git_push() {
+    local refs
+
+    if [[ "$#" -eq 0 ]]; then
+        git push --set-upstream "$(git remote)" HEAD
+    else
+        case $1 in
+            "--force-update-refs")
+                readarray -t refs < <(get_branch_refs_between_head_and_main)
+
+                git push \
+                    --set-upstream "$(git remote)" \
+                    --force-with-lease \
+                    "${refs[@]}"
+                ;;
+            *)
+                git push "$@"
+                ;;
+        esac
+    fi
+}
+
 function git_commit_push() {
     if [[ ${1:-} == "help" || ${1:-} == "--help" ]]; then
         echo "Optionally adds all unstaged changes, commits, and pushes to origin"
@@ -396,13 +422,32 @@ function git_commit_push() {
 }
 
 # Utils
+function get_branch_refs_between_head_and_main() {
+    local main_ref
+    local commit_shas
+    local tmp
+    local refs=()
+
+    git fetch --prune
+
+    main_ref=$(__git_master_or_main)
+    readarray -t commit_shas < <(git log --format="%H" --no-merges HEAD "^origin/${main_ref}")
+
+    for sha in "${commit_shas[@]}"; do
+        readarray -t tmp < <(git branch --contains "${sha}" | sed -E "s/^[\* ]+//")
+        refs+=( "${tmp[@]}" )
+    done
+
+    printf "%s\n" "${refs[@]}" | sort -u
+}
+
 function git_configure_fetch_rules() {
     if ! __git_is_repo; then
         printf_error "Current directory is not a repository"
         return 1
     fi
 
-    if [[ ${1} == "help" ]]; then
+    if [[ ${1:-} == "--help" || ${1:-} == "-h" ]]; then
         printf "%s\n" "Usage: git_config_remote <path>"
         return 1
     fi
@@ -416,18 +461,19 @@ function git_configure_fetch_rules() {
 }
 
 function git_init() {
-    printf_error "Not implemented."
-    # if [[ -z ${1:-} ]]; then
-    #     printf "%s\n" "Usage: git_init <path>"
-    #     return 1
-    # fi
-    #
-    # mkdir -p "$1/.bare"
-    # (
-    #     cd "$1/.bare" || return 1
-    #     git init --bare
-    # )
-    #
+    if [[ ${1:-} == "--help" || ${1:-} == "-h" ]]; then
+        printf "%s\n" "Usage: git_init [<path>]"
+        return 0
+    fi
+
+    local repo_root="${1:-./}"
+
+    command mkdir -pv "$1"
+    (
+        cd "${repo_root}" || return 1
+        git init --bare
+    )
+
     # printf "%s\n" "gitdir: .bare" > .git
     #
     # git worktree add main
@@ -498,11 +544,11 @@ function git_delete_merged_branches() {
 
     cur_branch=$(git rev-parse --abbrev-ref HEAD)
 
-    mapfile -t local_branches < <(__git_get_merged_branches |
+    readarray -t local_branches < <(__git_get_merged_branches |
         grep --extended-regexp --invert-match "^\s*remotes/origin/" |
         grep --extended-regexp --invert-match "${cur_branch}")
 
-    mapfile -t remote_branches < <(__git_get_merged_branches |
+    readarray -t remote_branches < <(__git_get_merged_branches |
         grep --extended-regexp "^\s*remotes/origin/" |
         sed --regexp-extended "s/^\s*remotes\/origin\///g")
 

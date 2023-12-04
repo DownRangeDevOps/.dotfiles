@@ -32,7 +32,7 @@ return {
                     --     teal      = "#94e2d5",  base     = "#1e1e2e",
                     --     sky       = "#89dceb",  mantle   = "#181825",
                     --     sapphire  = "#74c7ec",  crust    = "#11111b",
-                    --     blue      = "#89b4fa", lavender = "#b4befe":,
+                    --     blue      = "#89b4fa", lavender = "#b4befe",
                     -- }
 
                     CmpBorder = { fg = "#3e4145" },

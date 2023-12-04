@@ -33,7 +33,7 @@
 	navigate = true # navigate sections with n/N
 	light = false
 	line-numbers = true
-	side-by-side = true
+	side-by-side = false
 	diff-so-fancy = true
 [diff]
 	tool = diffview.nvim
@@ -62,6 +62,7 @@
 	ui = auto
 [rebase]
 	autosquash = true
+	updateRefs = true
 [pack]
 	windowMemory = 100m
 	SizeLimit = 100m
@@ -74,7 +75,7 @@
 	strategy = incremental
 [difftool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
 	trustExitCode = true

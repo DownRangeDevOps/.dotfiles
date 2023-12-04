@@ -35,6 +35,18 @@ local function switch_toggle_state(id)
     return toggle_states[id]
 end
 
+local function git_master_or_main()
+    local handle = io.popen("__git_master_or_main")
+    local result = "main"
+
+    if handle ~= nil then
+        result = handle:read("*a")
+        handle:close()
+    end
+
+    return result
+end
+
 local function is_git_repo()
     if os.execute("git rev-parse") == 0 then
         return true
@@ -132,14 +144,25 @@ vim.on_key(
     end,
     vim.api.nvim_create_namespace "auto_hlsearch"
 )
+map("n", "<Leader>cs", function() vim.fn.setreg("/", "") end, { group = "gen", desc = "clear search" })
 
 -- TKL keyboard
-map("n", "<S-Esc>", "~", { group = "gen", desc = "tilde" })
-map({ "i", "c" },"<C-[>", "<Esc>", { group = "gen", desc = "tilde" })
-map({ "i", "c" },"<Esc>", "`", { group = "gen", desc = "tilde" })
-map({ "i", "c" },"<S-Esc>", "~", { group = "gen", desc = "tilde" })
+-- map("n", "<S-Esc>", "~", { group = "gen", desc = "tilde" })
+-- map({ "i", "c" },"<C-[>", "<Esc>", { group = "gen", desc = "tilde" })
+-- map({ "i", "c" },"<Esc>", "`", { group = "gen", desc = "tilde" })
+-- map({ "i", "c" },"<S-Esc>", "~", { group = "gen", desc = "tilde" })
 
 -- QOL
+map("n", "<Enter>", function()
+    local keypress = vim.api.nvim_replace_termcodes("<Enter>", true, false, true)
+
+    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
+        vim.cmd.startinsert()
+        vim.api.nvim_feedkeys(keypress, "m", false)
+    else
+        vim.api.nvim_feedkeys("j", "m", false)
+    end
+end, { group = "gen", desc = "Enter"})
 map("n", "<leader>rc", function()
     for name,_ in pairs(package.loaded) do
         if name:match("^user-") and not name:match("^user-plugins") then
@@ -279,7 +302,7 @@ map("n", "<C-j>", function() require("harpoon.ui").nav_prev() end, { group = "fi
 map("n", "<C-k>", function() require("harpoon.ui").nav_next() end, { group = "file", desc = "harpoon >>" })
 map("n", "<leader>hc", function() require("harpoon.mark").clear_all() end, { group = "file", desc = "release all harpoons" })
 
--- git (fugitive, gitsigns, diffview)
+-- git (fugitive, gitsigns, DiffView, LazyGit)
 -- :help Git
 map("n", "<leader>gl", function() vim.cmd.TermExec("size=15 direction=horizontal cmd=gl") end, { group = "git", desc = "git log this branch" })
 map("n", "<leader>gl-", function() vim.cmd.TermExec("size=15 direction=horizontal cmd=gl-") end, { group = "git", desc = "git log this branch, full msg" })
@@ -290,12 +313,20 @@ map("n", "<leader>gL-", function() vim.cmd.TermExec("size=15 direction=horizonta
 map("n", "<leader>gs", function() vim.cmd("Git") end, { group = "git", desc = "git status" })
 map("n", "<leader>gb", function() vim.cmd("Git_blame") end, { group = "git", desc = "git blame" })
 
--- git diffview
+-- git d, DiffView
 -- :help diffview
-map("n", "<leader>do", function() vim.cmd("DiffviewOpen") end, { group = "git", desc = "diffview open" })
-map("n", "<leader>df", function() vim.cmd("DiffviewFileHistory") end, { group = "git", desc = "diffview log" })
-map("n", "<leader>dtf", function() vim.cmd("DiffviewToggleFiles") end, { group = "git", desc = "diffview file browser" })
-map("n", "<leader>dr", function() vim.cmd("DiffviewRefresh") end, { group = "git", desc = "diffview refresh" })
+map("n", "<leader>do", function() vim.cmd("DiffviewOpen") end, { group = "git", desc = "DiffView open" })
+map("n", "<leader>dom", function() vim.cmd("DiffviewOpen origin/" .. git_master_or_main() .. "...") end, { group = "git", desc = "DiffView open" })
+map("n", "<leader>df", function() vim.cmd("DiffviewFileHistory") end, { group = "git", desc = "DiffView log" })
+map("n", "<leader>dtf", function() vim.cmd("DiffviewToggleFiles") end, { group = "git", desc = "DiffView file browser" })
+map("n", "<leader>dr", function() vim.cmd("DiffviewRefresh") end, { group = "git", desc = "DiffView refresh" })
+
+-- LazyGit
+-- :help lazygit.nvim
+map("n", "<leader>lg", function() vim.cmd("LazyGit") end, { group = "git", desc = "LazyGit" })
+map("n", "<leader>lgt", function() vim.cmd("LazyGitCurrentFile") end, { group = "git", desc = "LazyGitCurrentFile" })
+map("n", "<leader>lgf", function() vim.cmd("LazyGitFilter") end, { group = "git", desc = "LazyGitFilter" })
+map("n", "<leader>lgff", function() vim.cmd("LazyGitFilterCurrentFile") end, { group = "git", desc = "LazyGitFilterCurrentFile" })
 
 -- gitsigns
 -- :help gitsigns.txt
@@ -340,21 +371,30 @@ end, { silent = true, group = "gen", desc = "toggle zoom" })
 map("n", "<leader>\\", function() vim.cmd("vsplit") end, { silent = true, group = "gen", desc = "vsplit" })
 map("n", "<leader>-", function() vim.cmd("split") end, { silent = true, group = "gen", desc = "split" })
 map("n", "<leader>q", function()
-    vim.cmd.write()
+    if vim.api.nvim_buf_get_option(0, "modifiable") then
+        vim.cmd.write()
+    end
+
     vim.cmd.buffer("#")
     vim.cmd.bwipeout("#")
 
     if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
         vim.cmd.startinsert()
     end
-end, { silent = true, group = "gen", desc = "close" })
-map("n", "<leader>Q", function() vim.cmd("quit!") end,
-    { silent = true, group = "gen", desc = "quit" })
+end, { silent = true, group = "gen", desc = "save, open alt buf, wipe" })
+map("n", "<leader>Q", function()
+    if vim.api.nvim_buf_get_option(0, "modifiable") then
+        vim.cmd.write()
+    end
+
+    vim.cmd("quit!")
+end, { silent = true, group = "gen", desc = "save and close split" })
 
 -- Tab management (barbar.nvim)
 map("n", "<leader>tc", function() vim.cmd.tabclose() end, { group = "tab", desc = "close tab" })
 map("n", "<leader>tp", function() vim.cmd("BufferPrevious") end, { group = "tab", desc = "prev tab" })
 map("n", "<leader>tn", function() vim.cmd("BufferNext") end, { group = "tab", desc = "next tab" })
+map("n", "<leader>nt", function() vim.cmd("tabnew") end, { group = "tab", desc = "new tab" })
 map("n", "gt", function() vim.cmd("BufferPick") end, { group = "tab", desc = "pick tab" })
 
 -- Terminal split management

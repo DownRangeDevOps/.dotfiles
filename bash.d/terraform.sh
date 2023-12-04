@@ -47,3 +47,7 @@ function validate_all_modules() {
         (cd "${module}" && terraform validate)
     done
 }
+
+function terraform_plan() {
+    terraform plan "$@" 2>&1 | less -XFR
+}

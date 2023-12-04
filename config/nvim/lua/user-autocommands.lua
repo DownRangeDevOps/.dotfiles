@@ -201,6 +201,7 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
     callback = function()
         if vim.g.auto_save
             and vim.api.nvim_buf_get_option(0, "buftype") == ""
+            and vim.api.nvim_buf_get_option(0, "buftype") ~= "nowrite"
             and vim.api.nvim_buf_get_option(0, "modifiable")
             and vim.fn.expand("%") ~= ""
         then

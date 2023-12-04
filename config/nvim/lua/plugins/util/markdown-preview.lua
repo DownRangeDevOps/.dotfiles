@@ -7,8 +7,12 @@ local mkdp_theme = "dark"
 return {
     "iamcco/markdown-preview.nvim",
     lazy = false,
-    -- cmd = { "MarkdownPreview", "MarkdownPreviewStop" },
-    -- ft = { "markdown" },
+    cmd = {
+        "MarkdownPreview",
+        "MarkdownPreviewStop",
+        "MarkdownPreviewToggle",
+    },
+    ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
     config = function()
         vim.g.mkdp_auto_close = 1 -- Close preview window when associated buffer is closed
@@ -33,5 +37,5 @@ return {
             disable_filename = 1,          -- disable filename header for preview page
             toc = {}
         }
-    end
+    end,
 }
