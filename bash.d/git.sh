@@ -226,8 +226,12 @@ function git_log_branch() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
+        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
         "$@" \
+        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
+        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
         | LESS -SFX -R
 }
 
@@ -236,13 +240,23 @@ function git_log_branch_no_trunc_msg() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
+        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
         "$@" \
+        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
+        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
         | LESS -SFX -R
 }
 
 function git_log_branch_only_msg() {
-    git log --color --format=format:'• %C(yellow)%s%C(reset)' "$@" | LESS -SFX -R
+    git log --color --format=format:'• %C(yellow)%s%C(reset)' \
+        "$@" \
+        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
+        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
+        | LESS -SFX -R
 }
 
 function git_log_all_branches() {
@@ -252,8 +266,12 @@ function git_log_all_branches() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
+        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72,trunc)%s %C(blue)[%cn - %ar]%C(reset)' \
         "$@" \
+        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
+        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
         | LESS -SFX -R
 }
 
@@ -264,7 +282,12 @@ function git_log_all_branches_no_trunc_msg() {
         --graph \
         --color \
         --decorate=short \
-        --format=format:'%x09%C(blue)%h %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)' \
+        --format=format:'%x09%C(blue)%h (%G?) %C(reset)-%C(auto)%d %C(yellow)%<(72)%s %C(blue)[%cn - %ar]%C(reset)'
+        "$@" \
+        | sed -e "s/\(G\)/${BOLD}${GREEN}G${RESET}${BLUE}/g" \
+        | sed -e "s/\(([BR])\)/${BOLD}${RED}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([UE])\)/${BOLD}${YELLOW}\1${RESET}${BLUE}/g" \
+        | sed -e "s/\(([XY])\)/${BOLD}${WHITE}\1${RESET}${BLUE}/g" \
         | LESS -SFX -R
 }
 
