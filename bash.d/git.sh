@@ -222,17 +222,17 @@ function git_project_path() {  # TODO: do I need this? have git_project_root
 
 # logging
 function git_log() {
-    local options="ats"
-    local long_options="all,truncate-subject,subject-only"
+    local options="atsn"
+    local long_options="all,truncate-subject,subject-only,no-merges"
     local subject_only=false
     local colorize_signing_status=false
-    local unknown_args=()
     local git_args=(
         "--color"
         "--graph"
         "--decorate=short"
     )
 
+    local signature_status
     local truncate_subject
     local parsed
     local format
@@ -263,7 +263,7 @@ function git_log() {
                 ;;
             -o|--subject-only)
                 subject_only=true
-                git_args=("--color")
+                git_args=( "--color" )
                 shift
                 ;;
             -s|--show-signature)
@@ -271,13 +271,13 @@ function git_log() {
                 signature_status="(%G?) "
                 shift
                 ;;
+            -n|--no-merges)
+                git_args+=( "--no-merges" )
+                shift
+                ;;
             --)
                 shift
                 break
-                ;;
-            *)
-                git_args+=( "$1" )
-                shift
                 ;;
         esac
     done
@@ -299,7 +299,7 @@ function git_log() {
     git_args+=( "--format=format:${format}" )
 
     if ${colorize_signing_status}; then
-        git log "${git_args[@]}" \
+        git log "${git_args[@]}" "$@" \
             | sed -E \
                 -e "s/\((G)\)/(${BOLD}${GREEN}\1${RESET}${BLUE})/g" \
                 -e "s/\(([BR])\)/(${BOLD}${RED}\1${RESET}${BLUE})/g" \
@@ -307,7 +307,7 @@ function git_log() {
                 -e "s/\(([XY])\)/(${BOLD}${WHITE}(\1${RESET}${BLUE})/g" \
             | LESS -SFXR
     else
-        git log "${git_args[@]}" | LESS -SFXR
+        git log "${git_args[@]}" "$@" | LESS -SFXR
     fi
 }
 
