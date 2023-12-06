@@ -158,3 +158,7 @@ function fix_missing_newline() {
         fi
     done
 }
+
+function egrep() {
+    grep -E "$@"
+}

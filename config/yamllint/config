@@ -70,11 +70,11 @@ rules:
   key-ordering: disable
 
   # comply with PEP8 line length
-  line-length:
-    level: warning
-    max: 88
-    allow-non-breakable-words: true
-    allow-non-breakable-inline-mappings: true
+  line-length: disable
+    # level: warning
+    # max: 88
+    # allow-non-breakable-words: true
+    # allow-non-breakable-inline-mappings: true
 
   # enforce unix EOL standards
   new-line-at-end-of-file: enable

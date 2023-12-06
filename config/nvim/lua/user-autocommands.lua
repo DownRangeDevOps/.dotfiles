@@ -89,6 +89,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         require("user-config")
     end
 })
+
 -- bash files with no extension
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,

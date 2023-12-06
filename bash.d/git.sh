@@ -420,14 +420,14 @@ function git_push() {
     local refs
 
     if [[ "$#" -eq 0 ]]; then
-        git push --set-upstream "$(git remote)" HEAD
+        git push --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" HEAD
     else
         case $1 in
             "--force-update-refs")
                 readarray -t refs < <(get_branch_refs_between_head_and_main)
 
                 git push \
-                    --set-upstream "$(git remote)" \
+                    --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
                     --force-with-lease \
                     "${refs[@]}"
                 ;;
@@ -579,7 +579,7 @@ function git_fuzzy_checkout() {
             sed -E "s,^HEAD.*,," |
             sort -u |
             fzf |
-            xargs bash -c "git_checkout_and_update"
+            xargs git checkout
     fi
 }
 
@@ -653,9 +653,23 @@ function git_nuke_cur_branch() {
 }
 
 function git_log_copy() {
+    local commits
+    local tempdir
+    tempdir="$(mktemp -d)"
+
+    local tempfile="${tempdir}/git_log_content"
+
     printf_callout "Fetching updates..."
     git fetch
-    git log --format="## %s (%h)%n%n%b" "origin/$(__git_master_or_main)..HEAD" | cat -s | pbcopy
+
+    readarray -t commits < <(git log --format="%h %d" origin/$(__git_master_or_main)...HEAD | sed -E '/.*\(origin.*/d' | cut -d ' ' -f1)
+
+    for commit in "${commits[@]}"; do
+        git log -1 --format="## %s (%h)%n%n%b" "${commit}" >> "${tempfile}"
+    done
+
+    pbcopy < "${tempfile}"
+    rm -rf "${tempfile}"
 }
 
 function git_checkout_ticket() {

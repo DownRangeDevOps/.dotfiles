@@ -18,7 +18,11 @@ return {
                     "mfussenegger/nvim-lint",
                     lazy = false,
                     init = function()
-                        local lint = require('lint')
+                        local lint = require("lint")
+                        local mypy = require("lint").linters.mypy
+
+                        table.insert(mypy.args, "--python-executable /Users/xjxf277/.pyenv/shims/python")
+
 
                         -- Linters that run on specific paths/all filetypes are controlled
                         -- with autocommands. See `user-autocommands.lua`.
@@ -27,6 +31,7 @@ return {
                             [ "ansible.yaml" ] = { "ansible-lint", },
                             go                 = { "revive", },
                             json               = { "jsonlint", },
+                            python             = { "mypy", "ruff", },
                             -- TODO: implement it, only markdownlint supported -- markdown           = { "markdownlint-cli2", },
                             sh                 = { "shellcheck", },
                             terraform          = { "tflint", "tfsec", },

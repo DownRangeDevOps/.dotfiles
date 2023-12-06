@@ -119,12 +119,15 @@ function pyenv() {
 
     export PYENV_ROOT="$HOME/.pyenv"
     export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
+    export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
     eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    pyenv virtualenvwrapper_lazy
 
     add_to_path "prepend" "$(pyenv prefix)"
 
-    if [[ ${1:-} != "init" ]]; then
+    if [[ "$#" -ne 0 && ${1:-} != "init" ]]; then
         $(which pyenv) "$@"
     fi
 }
