@@ -106,30 +106,31 @@ local mason_lspconfig = require("mason-lspconfig")
 
 -- Ensure these language servers are installed:
 local mason_lsp_required_servers = {
-    "ruby_ls",
-    "lua_ls",
-    "helm_ls",
     "ansiblels",
-    "gopls",
-    "pylsp",
-    "cssls",
-    "terraformls",
-    "taplo",
-    "neocmake",
-    "marksman",
     "bashls",
-    "vimls",
-    "sqlls",
-    "yamlls",
-    "lemminx",
-    "html",
-    "tflint",
-    "dockerls",
-    "jqls",
-    "pyre",
+    "cssls",
     "docker_compose_language_service",
-    "rubocop",
+    "dockerls",
+    "gopls",
+    "helm_ls",
+    "html",
+    "jqls",
     "jsonls",
+    "lemminx",
+    "lua_ls",
+    "marksman",
+    "neocmake",
+    "pylsp",
+    "rubocop",
+    "ruby_ls",
+    "ruff_lsp",
+    "sqlls",
+    "taplo",
+    "terraformls",
+    "tflint",
+    "tsserver",
+    "vimls",
+    "yamlls",
 }
 
 -- Language server customizations
@@ -143,6 +144,50 @@ local mason_lsp_server_configs = {
             telemetry = { enable = false },
             diagnostics = {
                 globals = { "vim", }
+            },
+        },
+    },
+    pylsp = {
+        pylsp = {
+            plugins = {
+                -- formatters
+                autopep8 = { enabled = false },
+                black = { enabled = true },
+                pyls_isort = { enabled = true },
+                yapf = { enabled = false },
+
+                -- linters
+                flake8 = { enabled = false },
+                mccabe = { enabled = true },
+                pycodestyle = { enabled = false },
+                pydocstyle = { enabled = false },
+                pyflakes = { enabled = false },
+                pylint = { enabled = false },
+                python_lsp_ruff = { enabled = true },
+
+                -- type checkers
+                pylsp_mypy = { enabled = true },
+
+                -- auto-completion
+                jedi_completion = {
+                    enabled = true,
+                    fuzzy = true,
+                    include_params = true,
+                    include_class_objects = true,
+                    include_function_objects = true,
+                },
+                jedi_definition = {
+                    enabled = true,
+                    follow_imports = true,
+                    follow_builtin_imports = true,
+                    follow_builtin_deffinitions = true,
+                },
+                rope_autoimport = {
+                    enabled = true,
+                    completions = { enabled = true },
+                    code_actions = { enabled = true },
+                },
+                rope_completion = { enabled = true },
             },
         },
     },

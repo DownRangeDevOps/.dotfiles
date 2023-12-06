@@ -13,8 +13,8 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 # llvm
-export LDFLAGS="-L${HOMEBREW_PREFIX}/opt/llvm/lib && -L${HOMEBREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${HOMEBREW_PREFIX}/opt/llvm/lib/c++"
-export CPPFLAGS="-I${HOMEBREW_PREFIX}/opt/llvm/include && -I${HOMEBREW_PREFIX}/opt/llvm/include/c++/v1/"
+export LDFLAGS="-L${HOMEBREW_PREFIX}/opt/llvm/lib -L${HOMEBREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${HOMEBREW_PREFIX}/opt/llvm/lib/c++"
+export CPPFLAGS="-I${HOMEBREW_PREFIX}/opt/llvm/include -I${HOMEBREW_PREFIX}/opt/llvm/include/c++/v1/"
 export LLVM_INCLUDE_FLAGS="-L${HOMEBREW_PREFIX}/"
 
 # config

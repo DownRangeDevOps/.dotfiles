@@ -156,6 +156,8 @@ map("n", "<Leader>cs", function() vim.fn.setreg("/", "") end, { group = "gen", d
 map("n", "<Enter>", function()
     local keypress = vim.api.nvim_replace_termcodes("<Enter>", true, false, true)
 
+    vim.fn.setreg("/", "")
+
     if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
         vim.cmd.startinsert()
         vim.api.nvim_feedkeys(keypress, "m", false)
@@ -485,6 +487,7 @@ map("n", "<leader>gh", function() vim.print("not implemented") end, { group = "t
 map("n", "<leader>fk", function() require("telescope.builtin").keymaps() end, { group = "ts", desc = "fuzzy keymaps" })
 map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions() end, { group = "ts", desc = "goto definition" })
 map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { group = "ts", desc = "goto implementation" })
+map("n", "<leader>fr", function() require("telescope.builtin").lsp_references() end, { group = "ts", desc = "find references" })
 map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { group = "ts", desc = "fuzzy quickfix" })
 map("n", "<leader>/", function()
     require("telescope.builtin").current_buffer_fuzzy_find(

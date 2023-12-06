@@ -77,3 +77,9 @@
 	strategy = incremental
 [core "gc"]
 	writeCommitGraph = true
+[difftool "sourcetree"]
+	cmd = nvim -f -c DiffviewOpen
+	path = 
+[mergetool "sourcetree"]
+	cmd = nvim -f -c DiffviewOpen
+	trustExitCode = true
