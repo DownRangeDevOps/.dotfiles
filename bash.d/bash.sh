@@ -74,14 +74,15 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 function nvim() {
-    rbenv init &>/dev/null
-    pyenv &>/dev/null
-
-    if [[ -w ${NVIM_SESSION_FILE_PATH:-} ]]; then
-        command nvim -S "${NVIM_SESSION_FILE_PATH}" "$@"
-    else
-        command nvim "$@"
+    if [[ -n "${RBENV_SHELL:-}" ]]; then
+        rbenv init &>/dev/null
     fi
+
+    if [[ -n "${PYENV_SHELL:-}" ]]; then
+        pyenv init &>/dev/null
+    fi
+
+    command nvim "$@"
 }
 
 function rg() {

@@ -34,8 +34,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
     pattern = "*",
     callback = function()
-        if vim.env.NVIM_SESSION_FILE_PATH then
-            vim.cmd("silent Obsession " .. vim.env.NVIM_SESSION_FILE_PATH) -- set by .envrc
+        local session_file_path = vim.env.NVIM_SESSION_FILE_PATH -- set by .envrc
+
+        if session_file_path then
+            vim.cmd("silent Obsession " .. session_file_path)
         end
     end
 })
