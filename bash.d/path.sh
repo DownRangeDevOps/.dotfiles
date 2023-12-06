@@ -24,27 +24,27 @@ function set_path() {
     local compilers=("llvm/bin")
 
     if [[ -n ${HOMEBREW_PREFIX} ]]; then
-        prepend+=( "${HOMEBREW_PREFIX}/lib" )                # Homebrew
-        prepend+=( "${HOMEBREW_PREFIX}/include" )            # Homebrew
-        prepend+=( "${HOMEBREW_PREFIX}/opt" )                # Homebrew
-        prepend+=( "${HOMEBREW_PREFIX}/opt/ncurses/bin" )    # Homebrew ncurses
-        prepend+=( "${HOMEBREW_PREFIX}/opt/gnu-getopt/bin" ) # GNU get-opt
+        prepend+=("${HOMEBREW_PREFIX}/lib")                # Homebrew
+        prepend+=("${HOMEBREW_PREFIX}/include")            # Homebrew
+        prepend+=("${HOMEBREW_PREFIX}/opt")                # Homebrew
+        prepend+=("${HOMEBREW_PREFIX}/opt/ncurses/bin")    # Homebrew ncurses
+        prepend+=("${HOMEBREW_PREFIX}/opt/gnu-getopt/bin") # GNU get-opt
 
         for tool in "${gnu_libexec_bins[@]}"; do
-            prepend+=( "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
-            prepend+=( "${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin" ) # Homebrew gnu tools
+            prepend+=("${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin") # Homebrew gnu tools
+            prepend+=("${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin") # Homebrew gnu tools
         done
 
         for path in "${compilers[@]}"; do
-            prepend+=( "${HOMEBREW_PREFIX}/opt/${path}" ) # llvm
+            prepend+=("${HOMEBREW_PREFIX}/opt/${path}") # llvm
         done
 
     fi
 
-    prepend+=( "/Applications/SnowSQL.app/Contents/MacOS" ) # SnowSQL
+    prepend+=("/Applications/SnowSQL.app/Contents/MacOS") # SnowSQL
 
-    append+=( "${HOME}/.local/bin" )   # Ansible
-    append+=( "${HOME}/.cargo/bin" ) # rust
+    append+=("${HOME}/.local/bin") # Ansible
+    append+=("${HOME}/.cargo/bin") # rust
 
     add_to_path prepend "${prepend[@]}"
     add_to_path append "${append[@]}"

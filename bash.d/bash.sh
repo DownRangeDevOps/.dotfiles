@@ -41,7 +41,7 @@ function is_subsh() {
     local shell_level="${SHLVL}"
 
     if [[ -n "${NVIM_LOG_FILE:-}" ]]; then
-        shell_level="$(( SHLVL - 1 ))"
+        shell_level="$((SHLVL - 1))"
     fi
 
     if [[ "${shell_level}" -gt 1 ]]; then

@@ -100,15 +100,15 @@ function safe_source() {
     )
 
     case ${1:-} in
-        "-h|--help")
-            printf "%s\n" "${help_msg[@]}"
-            return 0
-            ;;
-        "")
-            printf_error "Missing FILE argument."
-            printf "%s\n" "" "${help_msg[@]}"
-            return 0
-            ;;
+    "-h|--help")
+        printf "%s\n" "${help_msg[@]}"
+        return 0
+        ;;
+    "")
+        printf_error "Missing FILE argument."
+        printf "%s\n" "" "${help_msg[@]}"
+        return 0
+        ;;
     esac
 
     if [[ -f "${1}" ]]; then
@@ -122,7 +122,7 @@ function add_to_path() {
 
     local position="${1}"
     shift
-    local paths=( "$@" )
+    local paths=("$@")
 
     case "${position}" in
     prepend)
