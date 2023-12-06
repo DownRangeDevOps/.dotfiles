@@ -360,8 +360,6 @@ function git_rebase_merge_and_push() {
             "" \
             "    If no TARGET_BRANCH, the current branch will be merged to ${main_branch}."
     else
-        set -e # exit immediately if any sub-processes fail
-
         printf_callout "Updating ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
         git fetch --prune >/dev/null 2>&1
@@ -412,8 +410,6 @@ function git_rebase_merge_and_push() {
         git push origin --delete "${source_branch}" 2>/dev/null | indent_output
         git branch --delete "${source_branch}" 2>&1 | indent_output
         printf "\n"
-
-        set +e
     fi
 }
 

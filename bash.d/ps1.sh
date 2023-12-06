@@ -27,7 +27,6 @@ function __ps1_prompt() {
     tf_workspace=" $(__get_terraform_workspace) "
     shell_lvl="$(is_subsh)"
 
-
     local info
     info="$(printf "%s" "${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
 
@@ -40,7 +39,6 @@ function __ps1_prompt() {
     else
         printf "%s\n" "${YELLOW}${path_with_tilde}${RESET}"
     fi
-
 
     PS1="${time}${shell_lvl}${info}\[${CYAN}\]→ \[${RESET}\]"
 }

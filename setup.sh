@@ -19,12 +19,12 @@ if [[ ${BASH_VERSION:0:1} -lt 4 ]]; then
     exit 0
 fi
 
-set -uo pipefail;
+set -uo pipefail
 
 # defaults
 debug=false
 dry_run=false
-SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # settings
 NVIM_CONF_DIR="${HOME}/.config/nvim"
@@ -49,12 +49,12 @@ fi
 function print_error_msg() {
     if [[ -n ${1:-} ]]; then
         case $1 in
-            not_repo)
-                printf_error "${SCRIPT_DIR} exists and is not a git repo"
-                ;;
-            *)
-                printf_error "ERROR: ${*}"
-                ;;
+        not_repo)
+            printf_error "${SCRIPT_DIR} exists and is not a git repo"
+            ;;
+        *)
+            printf_error "ERROR: ${*}"
+            ;;
         esac
     else
         printf_error "ERROR: unknown error"
@@ -65,7 +65,8 @@ function symlink_config_dirs() {
     printf_callout "Creating config symlinks..."
 
     if ${dry_run}; then
-        (cd "${HOME}" || exit 1
+        (
+            cd "${HOME}" || exit 1
             ln -sfv "${SCRIPT_DIR}/config/nvim" "${NVIM_CONF_DIR}" | indent_output
             ln -sfv "${SCRIPT_DIR}/config/.terminfo" "${TERMINFO_CONF_DIR}" | indent_output
             ln -sfv "${SCRIPT_DIR}/config/yamlfmt" "${YAMLFMT_CONF_DIR}" | indent_output
@@ -160,7 +161,7 @@ function setup() {
 }
 
 if ${debug}; then
-    printf  "%s\n" "$OPTIONS"
+    printf "%s\n" "$OPTIONS"
 else
     setup
 fi
