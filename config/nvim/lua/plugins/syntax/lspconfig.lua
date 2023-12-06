@@ -21,7 +21,7 @@ return {
                         local lint = require("lint")
                         local mypy = require("lint").linters.mypy
 
-                        table.insert(mypy.args, "--python-executable /Users/xjxf277/.pyenv/shims/python")
+                        table.insert(mypy.args, "--python-executable $(which python)")
 
 
                         -- Linters that run on specific paths/all filetypes are controlled

@@ -91,7 +91,7 @@ function __git_master_or_main() {
         local main_branch="main"
 
         for ref in "origin/main" "origin/master" "main" "master"; do
-            branch_len=$(git rev-list --count "${ref}" 2> /dev/null || printf "0")
+            branch_len=$(git rev-list --count "${ref}" 2>/dev/null || printf "0")
 
             if [[ ${branch_len} -gt ${longest_branch_len} ]]; then
                 main_branch="${ref##*"/"}"
@@ -189,7 +189,7 @@ function git_project_root() {
     printf "%s" "$(git rev-parse --show-toplevel 2>/dev/null)"
 }
 
-function git_project_path() {  # TODO: do I need this? have git_project_root
+function git_project_path() { # TODO: do I need this? have git_project_root
     local git_toplevel
     local git_toplevel_basename
     local git_intra_repo_path
@@ -208,15 +208,15 @@ function git_project_path() {  # TODO: do I need this? have git_project_root
     git_intra_repo_path=${PWD##*"${git_toplevel_basename}"}
 
     case ${1:-} in
-        "--dirname")
-            printf "%s" "${git_toplevel_basename}"
-            ;;
-        "--absolute")
-            printf "%s" "${git_toplevel}"
-            ;;
-        *)
-            printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
-            ;;
+    "--dirname")
+        printf "%s" "${git_toplevel_basename}"
+        ;;
+    "--absolute")
+        printf "%s" "${git_toplevel}"
+        ;;
+    *)
+        printf "%s" "git@${git_toplevel_basename}${git_intra_repo_path}"
+        ;;
     esac
 }
 
@@ -237,7 +237,7 @@ function git_log() {
     local parsed
     local format
 
-    getopt --test > /dev/null
+    getopt --test >/dev/null
 
     if [[ $? -ne 4 ]]; then
         printf_error "\`getopt --test\` failed in this environment."
@@ -253,32 +253,32 @@ function git_log() {
 
     while true; do
         case "${1:-}" in
-            -a|--all)
-                git_args+=( "--branches" "--remotes" )
-                shift
-                ;;
-            -t|--truncate-subject)
-                truncate_subject=",trunc"
-                shift
-                ;;
-            -o|--subject-only)
-                subject_only=true
-                git_args=( "--color" )
-                shift
-                ;;
-            -s|--show-signature)
-                colorize_signing_status=true
-                signature_status="(%G?) "
-                shift
-                ;;
-            -n|--no-merges)
-                git_args+=( "--no-merges" )
-                shift
-                ;;
-            --)
-                shift
-                break
-                ;;
+        -a | --all)
+            git_args+=("--branches" "--remotes")
+            shift
+            ;;
+        -t | --truncate-subject)
+            truncate_subject=",trunc"
+            shift
+            ;;
+        -o | --subject-only)
+            subject_only=true
+            git_args=("--color")
+            shift
+            ;;
+        -s | --show-signature)
+            colorize_signing_status=true
+            signature_status="(%G?) "
+            shift
+            ;;
+        -n | --no-merges)
+            git_args+=("--no-merges")
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
         esac
     done
 
@@ -296,16 +296,16 @@ function git_log() {
         format="%x09%C(blue)%h ${signature_status}%C(reset)-%C(auto)%d %C(yellow)%<(72${truncate_subject})%s %C(blue)[%cn - %cr]%C(reset)"
     fi
 
-    git_args+=( "--format=format:${format}" )
+    git_args+=("--format=format:${format}")
 
     if ${colorize_signing_status}; then
-        git log "${git_args[@]}" "$@" \
-            | sed -E \
+        git log "${git_args[@]}" "$@" |
+            sed -E \
                 -e "s/\((G)\)/(${BOLD}${GREEN}\1${RESET}${BLUE})/g" \
                 -e "s/\(([BR])\)/(${BOLD}${RED}\1${RESET}${BLUE})/g" \
                 -e "s/\(([UE])\)/(${BOLD}${YELLOW}\1${RESET}${BLUE})/g" \
-                -e "s/\(([XY])\)/(${BOLD}${WHITE}(\1${RESET}${BLUE})/g" \
-            | LESS -SFXR
+                -e "s/\(([XY])\)/(${BOLD}${WHITE}(\1${RESET}${BLUE})/g" |
+            LESS -SFXR
     else
         git log "${git_args[@]}" "$@" | LESS -SFXR
     fi
@@ -361,6 +361,7 @@ function git_rebase_merge_and_push() {
             "    If no TARGET_BRANCH, the current branch will be merged to ${main_branch}."
     else
         set -e # exit immediately if any sub-processes fail
+
         printf_callout "Updating ${target_branch}..."
         git checkout "${target_branch}" >/dev/null 2>&1
         git fetch --prune >/dev/null 2>&1
@@ -423,17 +424,17 @@ function git_push() {
         git push --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" HEAD
     else
         case $1 in
-            "--force-update-refs")
-                readarray -t refs < <(get_branch_refs_between_head_and_main)
+        "--force-update-refs")
+            readarray -t refs < <(get_branch_refs_between_head_and_main)
 
-                git push \
-                    --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
-                    --force-with-lease \
-                    "${refs[@]}"
-                ;;
-            *)
-                git push "$@"
-                ;;
+            git push \
+                --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
+                --force-with-lease \
+                "${refs[@]}"
+            ;;
+        *)
+            git push "$@"
+            ;;
         esac
     fi
 }
@@ -478,7 +479,7 @@ function get_branch_refs_between_head_and_main() {
 
     for sha in "${commit_shas[@]}"; do
         readarray -t tmp < <(git branch --contains "${sha}" | sed -E "s/^[\* ]+//")
-        refs+=( "${tmp[@]}" )
+        refs+=("${tmp[@]}")
     done
 
     printf "%s\n" "${refs[@]}" | sort -u
@@ -659,17 +660,23 @@ function git_log_copy() {
 
     local tempfile="${tempdir}/git_log_content"
 
-    printf_callout "Fetching updates..."
+    printf_callout "Fetching updates..." 1>&2
     git fetch
 
     readarray -t commits < <(git log --format="%h %d" origin/$(__git_master_or_main)...HEAD | sed -E '/.*\(origin.*/d' | cut -d ' ' -f1)
 
     for commit in "${commits[@]}"; do
-        git log -1 --format="## %s (%h)%n%n%b" "${commit}" >> "${tempfile}"
+        git log -1 --format="## %s (%h)%n%n%b" "${commit}" >>"${tempfile}"
     done
 
-    pbcopy < "${tempfile}"
+    pbcopy <"${tempfile}"
+
+    if [[ "${1:-}" == "--print" || "${1:-}" == "-p" ]]; then
+        printf "%s" "$(<"${tempfile}")"
+    fi
+
     rm -rf "${tempfile}"
+
 }
 
 function git_checkout_ticket() {
