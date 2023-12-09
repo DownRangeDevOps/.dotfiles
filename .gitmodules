@@ -7,3 +7,12 @@
 [submodule "external/github-markdown-css"]
 	path = external/github-markdown-css
 	url = git@github.com:sindresorhus/github-markdown-css.git
+[submodule "external/test_helper/bats-support"]
+	path = external/test_helper/bats-support
+	url = https://github.com/bats-core/bats-support.git
+[submodule "external/test_helper/bats-assert"]
+	path = external/test_helper/bats-assert
+	url = https://github.com/bats-core/bats-assert.git
+[submodule "external/test_helper/bats-files"]
+	path = external/test_helper/bats-files
+	url = https://github.com/bats-core/bats-assert.git

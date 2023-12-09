@@ -338,6 +338,7 @@ function git_rebase_merge_and_push() {
     local source_branch
     local target_branch
     local merge_commit_option
+    local skip_prompts=false
 
     source_branch="$(git_get_cur_branch_name)"
     main_branch="$(__git_master_or_main)"
@@ -345,6 +346,11 @@ function git_rebase_merge_and_push() {
 
     if [[ ${1:-} == "--ff-only" ]]; then
         merge_commit_option="--ff-only"
+        shift
+    fi
+
+    if [[ ${1:-} == "-y" ]]; then
+        skip_prompts=true
         shift
     fi
 
@@ -375,9 +381,13 @@ function git_rebase_merge_and_push() {
         git diff --color --stat "origin/${target_branch}" | indent_output
         printf "\n"
 
-        if ! prompt_to_continue "Merge to ${target_branch} using ${merge_commit_option}?"; then
+        if ! ${skip_prompts}; then
+            if ! prompt_to_continue "Merge to ${target_branch} using ${merge_commit_option}?"; then
+                git checkout "${source_branch}" >/dev/null 2>&1
+                return 6
+            fi
+        else
             git checkout "${source_branch}" >/dev/null 2>&1
-            return 6
         fi
 
         printf_callout "Updating from origin..."
@@ -396,18 +406,26 @@ function git_rebase_merge_and_push() {
         fi
         printf "\n"
 
-        if ! prompt_to_continue "Push to origin?"; then
-            git checkout "${source_branch}" 2>&1 | indent_output
-            return 6
+        if ! ${skip_prompts}; then
+            if ! prompt_to_continue "Push to origin?"; then
+                git checkout "${source_branch}" 2>&1 | indent_output
+                return 6
+            fi
+        else
+            git checkout "${source_branch}" >/dev/null 2>&1
         fi
 
         printf_callout "Pushing ${target_branch}..."
         git push --progress origin HEAD 2>&1 | indent_output
         printf "\n"
 
-        if ! prompt_to_continue "Delete ${source_branch}?"; then
-            git checkout "${source_branch}" 2>&1 | indent_output
-            return 6
+        if ! ${skip_prompts}; then
+            if ! prompt_to_continue "Delete ${source_branch}?"; then
+                git checkout "${source_branch}" 2>&1 | indent_output
+                return 6
+            fi
+        else
+            git checkout "${source_branch}" >/dev/null 2>&1
         fi
 
         git push origin --delete "${source_branch}" 2>/dev/null | indent_output

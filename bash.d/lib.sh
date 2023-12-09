@@ -177,8 +177,9 @@ function add_to_path() {
 }
 
 function join() {
-    local IFS=${1:-}
+    local IFS=$1
     __="${*:2}"
+    printf "%s" "${__}"
 }
 
 function fix_missing_newline() {
@@ -194,5 +195,5 @@ function fix_missing_newline() {
 }
 
 function egrep() {
-    grep -E "$@"
+    grep --xtended-regexp "$@"
 }
