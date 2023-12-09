@@ -7208,7 +7208,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>ABED1811-7047-40F9-BACC-9E15E7B87DDE</string>
+											<string>7A351F94-3FE1-4CA0-838A-2CCEFA616D90</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -8405,7 +8405,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>BB9AD06D-CE83-4FD8-A24C-D04223EFE941</string>
+											<string>06653ADE-8A47-4562-BD26-15F7A0BB539B</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -9602,7 +9602,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>EB44DB18-F318-4AA7-BF18-5FC048F811D9</string>
+											<string>0152F2F5-5789-4093-A719-911D3990E990</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10799,7 +10799,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>39311346-215B-419F-8D4B-37A2A18A1E66</string>
+											<string>21047F27-CA7C-4D18-910E-114EF8920EDA</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11996,7 +11996,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>F3B31D25-0E31-412F-98C1-E1C0B0E7B15B</string>
+											<string>39C783BA-0144-434F-81CA-808F506E1063</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -13193,7 +13193,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>D4DFB521-319B-4148-8E75-3E1BF8A90DB9</string>
+											<string>D7801D0C-C3D6-417F-AE9C-074486BFCE05</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -13916,7 +13916,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Development/Reference/Example-Ops</string>
+											<string>/</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -13962,7 +13962,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/</string>
+										<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
 										<key>Working Directory Poller Disabled</key>
 										<false/>
 									</dict>
@@ -14035,7 +14035,7 @@ Password Manager</string>
 				<key>Window Type</key>
 				<integer>13</integer>
 				<key>X Origin</key>
-				<real>-1391</real>
+				<real>-832</real>
 				<key>Y Origin</key>
 				<real>1138</real>
 			</dict>
