@@ -121,6 +121,23 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end
 })
 
+-- helm
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+    group = ui,
+    pattern = {
+        "*/templates/*.yaml",
+        "*/templates/*.tpl",
+        "*.gotmpl",
+        "helmfile*.yaml",
+        "*.helm.yaml",
+    },
+    callback = function()
+        vim.cmd.setfiletype("helm")
+        vim.cmd.setlocal([[commentstring={{/*\ %s\ */}}]])
+    end,
+})
+
+
 -- terraform
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,

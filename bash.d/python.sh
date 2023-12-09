@@ -110,24 +110,34 @@ function lpy() {
 # ------------------------------------------------
 # Initialize pyenv (https://github.com/pyenv/pyenv)
 # ------------------------------------------------
-function pyenv() {
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pyenv..."
-    fi
-
-    unset -f pyenv
-
+function pyenv_init() {
     export PYENV_ROOT="$HOME/.pyenv"
     export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
     export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+
+    set +ua
 
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     pyenv virtualenvwrapper_lazy
 
-    add_to_path "prepend" "$(pyenv prefix)"
+    set -ua
 
-    if [[ "$#" -ne 0 && ${1:-} != "init" ]]; then
-        $(which pyenv) "$@"
+    # Fix pyenv or one of it's extensions fucking up inputrc settings
+    if [[ -f "${HOME}/.inputrc" ]]; then
+        bind -f ~/.inputrc
     fi
+
+    add_to_path "prepend" "$(which pyenv) prefix"
+
+    export PYENV_INITALIZED=1
+}
+
+function pyenv() {
+    if [[ -z "${PYENV_INITALIZED:-}" ]]; then
+        unset -f pyenv
+        pyenv_init
+    fi
+
+    "$(which pyenv)" "$@"
 }

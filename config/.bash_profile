@@ -49,25 +49,6 @@ fi
 # will export functions and throw errors
 set -uao pipefail
 
-# Use my terminfo
-export TERMINFO=~/.local/share/terminfo
-export TERMINFO_DIRS=~/.local/share/terminfo
-
-# History
-HISTSIZE=1000
-HISTFILESIZE=2000
-HISTCONTROL=ignoredups:ignorespace # don't put duplicate lines in the history
-
-ulimit -n 1024        # increase limit on open files (default: 256)
-shopt -s histappend   # append
-shopt -s checkwinsize # check the win size after each command and update if necessary
-history -a            # append
-history -n            # read new lines and append
-
-# Use vi mode on command line
-set -o vi
-bind '"jj":vi-movement-mode'
-
 # Disable flow control commands (keeps C-s from freezing everything)
 stty -ixon 2> /dev/null
 
@@ -78,6 +59,19 @@ log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
 safe_source "${BASH_D_PATH}/path.sh"
 safe_source "${BASH_D_PATH}/bash.sh"
 safe_source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+
+# .bashrc
+if [[ -f "${HOME}/.bashrc" ]]; then
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+    fi
+
+    safe_source "${HOME}/.bashrc"
+
+    if [[ -n "${DEBUG:-}" ]]; then
+        log debug "[$(basename "${BASH_SOURCE[0]}")]: Done."
+    fi
+fi
 
 # +u: Allow unbound variables
 # +a: Don't export functions to sub-sells

@@ -13,10 +13,36 @@ return {
             lazy = false,
             config = true,
             dependencies = {
-                -- Mason helper for nvim-lint integration
                 {
                     "mfussenegger/nvim-lint",
                     lazy = false,
+                    dependencies = {
+                        {
+                            -- Mason helper for nvim-lint integration
+                            "rshkarin/mason-nvim-lint",
+                            opts = {
+                                ensure_installed = {
+                                    "actionlint",
+                                    "codespell",
+                                    "djlint",
+                                    "gitleaks",
+                                    "jsonlint",
+                                    "markdownlint-cli2",
+                                    "mypy",
+                                    "pyflakes",
+                                    "pyproject-flake8",
+                                    "revive",
+                                    "rubocop",
+                                    "ruff",
+                                    "shellcheck",
+                                    "tfsec",
+                                    "vint",
+                                    "yamllint",
+                                },
+                                automatic_installation = false,
+                            },
+                        },
+                    },
                     init = function()
                         local lint = require("lint")
                         local mypy = require("lint").linters.mypy
@@ -31,7 +57,7 @@ return {
                             [ "ansible.yaml" ] = { "ansible-lint", },
                             go                 = { "revive", },
                             json               = { "jsonlint", },
-                            python             = { "mypy", "ruff", },
+                            python             = { "mypy", "ruff", "pflake8" },
                             -- TODO: implement it, only markdownlint supported -- markdown           = { "markdownlint-cli2", },
                             sh                 = { "shellcheck", },
                             terraform          = { "tflint", "tfsec", },
@@ -39,6 +65,57 @@ return {
                             yaml               = { "yamllint", },
                             -- ◍ djlint: Django, Go, Nunjucks, Twig, Handlebars, Mustache, Angular, Jinja
                         }
+
+                        local snyk = {
+                            "docker",
+                            "go",
+                            "helm",
+                            "javaScript",
+                            "python",
+                            "ruby",
+                            "rust",
+                            "terraform",
+                            "typescript"
+                        }
+
+                        local trivy = {
+                            "c",
+                            "dart",
+                            "docker",
+                            "elixir",
+                            "go",
+                            "helm",
+                            "java",
+                            "javaScript",
+                            "phP",
+                            "python",
+                            "ruby",
+                            "rust",
+                            "terraform",
+                            "typescript",
+                        }
+
+                        for ft, _ in pairs(linter_to_ft) do
+                            if snyk[ft] then
+                                table.insert(linter_to_ft[ft], "snyk")
+                            end
+
+                            if trivy[ft] then
+                                table.insert(linter_to_ft[ft], "trivy")
+                            end
+                        end
+
+                        for ft, _ in pairs(snyk) do
+                            if not linter_to_ft[ft] then
+                                linter_to_ft[ft] = { "snyk" }
+                            end
+                        end
+
+                        for ft, _ in pairs(trivy) do
+                            if not linter_to_ft[ft] then
+                                linter_to_ft[ft] = { "trivy" }
+                            end
+                        end
 
                         -- linters for all filetypes
                         for ft, _ in pairs(linter_to_ft) do

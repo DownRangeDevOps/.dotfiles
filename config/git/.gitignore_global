@@ -256,4 +256,7 @@ cscope.out
 cscope.in.out
 cscope.po.out
 
+## --- Sourcery
+.sourcery.yaml
+
 # vim: ft=gitignore
