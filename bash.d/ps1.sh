@@ -40,7 +40,7 @@ function __ps1_prompt() {
         printf "%s\n" "${YELLOW}${path_with_tilde}${RESET}"
     fi
 
-    PS1="${time}${shell_lvl}${info}\[${CYAN}\]→ \[${RESET}\]"
+    PS1="${time}${shell_lvl}${info} \[${CYAN}\]→ \[${RESET}\]"
 }
 
 if [[ ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then

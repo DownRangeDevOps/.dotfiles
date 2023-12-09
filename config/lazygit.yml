@@ -6,7 +6,7 @@ gui:
     "Ryan Fisher": "#89b4fa"
     "GitHub": "#fab387"
     "*": "#b4befe"
-  windowSize: "half"  # one of "normal" | "half" | "full" default is "normal"
+  windowSize: "normal"  # one of "normal" | "half" | "full" default is "normal"
   scrollHeight: 8  # how many lines you scroll by
   scrollPastBottom: true  # enable scrolling past the bottom
   scrollOffMargin: 8  # how many lines to keep before/after the cursor when it reaches the top/bottom of the view; see "Scroll-off Margin" section below
@@ -116,9 +116,9 @@ notARepository: "prompt"  # one of: "prompt" | "create" | "skip" | "quit"
 promptToReturnFromSubprocess: true  # display confirmation when subprocess terminates
 keybinding:
   universal:
-    quit: "q"
+    quit: "Q"
     quit-alt1: "<c-c>"  # alternative/alias of quit
-    return: "<esc>"  # return to previous menu, will quit if there"s nowhere to return
+    return: "q"  # return to previous menu, will quit if there"s nowhere to return
     quitWithoutChangingDirectory: "Q"
     togglePanel: "<tab>"  # goto the next panel
     prevItem: "k"  # go one line up

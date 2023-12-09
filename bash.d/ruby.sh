@@ -8,32 +8,12 @@ fi
 # ------------------------------------------------
 #  init
 # ------------------------------------------------
-function rbenv() {
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing rbenv..."
-    fi
+function rbenv_init() {
+    set +ua
 
-    unset -f rbenv
-    unset -f gem
-    eval "$(rbenv init - bash)"
+    eval "$($(which rbenv) init - bash)"
 
-    add_to_path "prepend" "$(rbenv prefix)/bin"
+    set -ua
 
-    if [[ ${1:-} != "init" ]]; then
-        $(which rbenv) "$@"
-    fi
-}
-
-function gem() {
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing rbenv..."
-    fi
-
-    unset -f rbenv
-    unset -f gem
-    eval "$(rbenv init - bash)"
-
-    add_to_path "prepend" "$(rbenv prefix)/bin"
-
-    $(which gem) "$@"
+    add_to_path "prepend" "$($(which rbenv) prefix)/bin"
 }

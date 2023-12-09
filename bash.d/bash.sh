@@ -74,15 +74,19 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 function nvim() {
-    if [[ -n "${RBENV_SHELL:-}" ]]; then
-        rbenv init &>/dev/null
+    if [[ -n ${RBENV_INITALIZED:-} ]]; then
+        rbenv_init &>/dev/null
     fi
 
-    if [[ -n "${PYENV_SHELL:-}" ]]; then
-        pyenv init &>/dev/null
+    if [[ -n "${PYENV_INITALIZED:-}" ]]; then
+        pyenv_init &>/dev/null
     fi
 
-    command nvim "$@"
+    if [[ "${NVIM_SESSION_FILE_PATH:-}" ]]; then
+        "$(which nvim)" -S "${NVIM_SESSION_FILE_PATH:-}"
+    else
+        "$(which nvim)"
+    fi
 }
 
 function rg() {
@@ -145,17 +149,3 @@ fi
 
     shopt -u nullglob # reset
 }
-
-# .bashrc
-if [[ -f "${HOME}/.bashrc" ]]; then
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
-    fi
-
-    safe_source "${HOME}/.bashrc"
-
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Done."
-    fi
-
-fi

@@ -335,10 +335,11 @@ map("n", "<leader>lgff", function() vim.cmd("LazyGitFilterCurrentFile") end, { g
 map("n", "<C-e>", "5<C-e>", { group = "nav", desc = "scroll down 5 lines" })
 local gitsigns_maps = function(bufnr)
     vim.keymap.set("n", "<leader>p", require("gitsigns").prev_hunk, { buffer = bufnr, desc = "go prev hunk" })
-    vim.keymap.set("n", "<leader>nh", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
+    vim.keymap.set("n", "<leader>n", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
     vim.keymap.set("n", "<leader>hp", require("gitsigns").preview_hunk, { buffer = bufnr, desc = "preview hunk" })
     vim.keymap.set("n", "<leader>hu", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
     vim.keymap.set("n", "<leader>ha", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
+    vim.keymap.set("n", "<leader>ba", require("gitsigns").stage_buffer, { buffer = bufnr, desc = "stage hunk" })
 end
 M.gitsigns_maps = gitsigns_maps
 
@@ -389,8 +390,8 @@ map("n", "<leader>Q", function()
         vim.cmd.write()
     end
 
-    vim.cmd("quit!")
-end, { silent = true, group = "gen", desc = "save and close split" })
+    vim.cmd("quit")
+end, { silent = true, group = "gen", desc = "write quit" })
 
 -- Tab management (barbar.nvim)
 map("n", "<leader>tc", function() vim.cmd.tabclose() end, { group = "tab", desc = "close tab" })

@@ -5,6 +5,42 @@
 return {
     "sindrets/diffview.nvim",
     lazy = false,
+    -- opts = {
+    --     keymaps = {
+    --         ["<leader>co"] = function()
+    --             require("diffview.config").actions.conflict_choose("ours")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --         ["<leader>ct"] = function()
+    --             require("diffview.config").actions.conflict_choose("theirs")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --         ["<leader>ca"] = function()
+    --             require("diffview.config").actions.conflict_choose("all")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --         ["<leader>cb"] = function()
+    --             require("diffview.config").actions.conflict_choose("base")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --         ["<leader>cO"] = function()
+    --             require("diffview.config").actions.conflict_choose_all("ours")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --         ["<leader>cT"] = function()
+    --             require("diffview.config").actions.conflict_choose_all("theirs")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --         ["<leader>cA"] = function()
+    --             require("diffview.config").actions.conflict_choose_all("all")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --         ["<leader>cB"] = function()
+    --             require("diffview.config").actions.conflict_choose_all("base")
+    --             vim.cmd("DiffviewRefresh")
+    --         end,
+    --    }
+    -- }
     -- cmd = {
     --     "DiffviewOpen",
     --     "DiffviewTogglefiles",

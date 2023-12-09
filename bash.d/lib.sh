@@ -89,6 +89,28 @@ function prompt_to_continue() {
 }
 
 # Helpers
+function parse_opts() {
+    local options="$1"
+    local long_options="$2"
+    local script_name="$3"
+    local script_args=("${@:4}")
+    local parsed
+
+    getopt --test >/dev/null
+
+    if [[ $? -ne 4 ]]; then
+        printf_error "\`getopt --test\` failed in this environment."
+        return 1
+    fi
+
+    if ! parsed=$(getopt --options="${options}" --longoptions="${long_options}" --name "${script_name}" -- "${script_args[@]}"); then
+        printf_error "gitopts parsing error"
+        return 2
+    fi
+
+    printf "%s\n" "${parsed}"
+}
+
 function safe_source() {
     local help_msg=(
         "USAGE      safe_source <FILE>"
@@ -100,7 +122,7 @@ function safe_source() {
     )
 
     case ${1:-} in
-    "-h|--help")
+    -h|--help)
         printf "%s\n" "${help_msg[@]}"
         return 0
         ;;
@@ -118,26 +140,38 @@ function safe_source() {
 
 # Utils
 function add_to_path() {
-    error_msg="Usage: add_to_path <prepend|append> <path> [path]..."
+    local help_msg
+
+    help_msg="Usage: add_to_path <prepend|append> <path> [path]..."
 
     local position="${1}"
     shift
     local paths=("$@")
 
+    if [[ "$#" -eq 0 ]]; then
+        printf_error "${help_msg}"
+        return 1
+    fi
+
     case "${position}" in
     prepend)
         for new_path in "${paths[@]}"; do
-            export PATH="${new_path}:${PATH}"
+            if [[ ! "${PATH}" =~ ${new_path} ]]; then
+                export PATH="${new_path}:${PATH}"
+            fi
         done
         ;;
     append)
         for new_path in "${paths[@]}"; do
-            export PATH="${PATH}:${new_path}"
+            if [[ ! "${PATH}" =~ ${new_path} ]]; then
+                export PATH="${PATH}:${new_path}"
+            fi
         done
         ;;
     *)
         echo 2
-        printf_error "${error_msg}"
+        printf_error "${help_msg}"
+        return 1
         ;;
     esac
 }

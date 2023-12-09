@@ -134,7 +134,7 @@ vim.opt.foldenable = false
 
 -- Terminal
 -- :help guicursor
--- vim.opt.shell = vim.env.SHELL .. " --login"
+-- vim.opt.shell = vim.env.SHELL .. "--login"
 vim.opt.termguicolors = true
 vim.opt.guicursor = table.concat({
     "n-c-v-sm:block",

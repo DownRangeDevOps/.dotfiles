@@ -1,49 +1,80 @@
 # shellcheck shell=bash
 
 function ghpr() {
+    local options="uc"
+    local long_options="update,check"
     local title
-    local main_sha
     local base
+    local base_args=()
     local args=()
-    local tmpdir
+    local tmpfile
+    local check
 
-    tmpdir="$(mktemp -d)"
-    local tmpfile="${tmpdir}/body"
+    tmpfile="$(mktemp)"
 
-    glc --print >"${tmpfile}"
+    glc --print >|"${tmpfile}"
 
-    title="$(git log -1 --format="%s")"
-    main_sha="$(git rev-parse "$(__git_master_or_main)")"
-    base="$(git for-each-ref \
-        --sort=-committerdate \
-        --format "%(refname:short)" \
-        --contains "${main_sha}" \
-        refs/remotes/origin/ |
-        grep -e "^origin/.*" |
-        tail -n +2 |
-        head -1)"
+    title="$(git log -1 --format='%s')"
+    base=$(git_get_branch_base_ref | sed -E "s/^origin\///")
 
     if [[ -n "${CODEOWNERS:-}" ]]; then
-        args+=("--assignee" "${CODEOWNERS}")
+        args+=("--add-assignee" "${CODEOWNERS}")
     fi
 
-    args=(
+    base_args=(
         "--title"
         "'${title}'"
         "--body-file"
-        "'${tmpfile}'"
+        "${tmpfile}"
         "--base"
-        "'${base}'"
+        "${base}"
     )
 
-    if [[ "${1:-}" == "--check" || "${1:-}" == "-c" ]]; then
-        printf "%s\n" "gh pr create ${args[*]}"
+    if [[ $# -ne 0 ]]; then
+        # Parse options
+        parsed=$(parse_opts "${options}" "${long_options}" "$0" "$@")
+        eval set -- "${parsed}"
+
+        while true; do
+            case "${1:-}" in
+            -u | --update)
+                args=("pr" "edit" "${base_args[@]}")
+                shift
+                ;;
+            -c | --check)
+                check="true"
+                args=(
+                    "Body:"
+                    "$(<"${tmpfile}")"
+                    ""
+                    "Command:"
+                    "${base_args[*]}"
+                )
+                shift
+                ;;
+            --)
+                shift
+                break
+                ;;
+            *)
+                printf_error "Unknown option: ${1}"
+                break
+                ;;
+            esac
+        done
     else
-        gh pr create "${args[@]}"
+        args=("pr" "create" "${base_args[@]}")
+    fi
+
+    if [[ -n ${check:-} ]]; then
+        printf "%s\n" "${args[@]}"
+    else
+        gh "${args[@]}"
     fi
 
     rm -rf "${tmpfile}"
 }
+
 # function gh() {
 #     if [[ "${1}" == "pr" && "${2}" == create ]]; then
 #         title="$(git log -1 --format="%s" "origin/$(__git_master_or_main)..head")"

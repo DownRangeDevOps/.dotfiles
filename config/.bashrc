@@ -11,6 +11,36 @@ if [[ -n ${DEBUG:-} ]]; then
 fi
 
 # ------------------------------------------------
+#  Terminal
+# ------------------------------------------------
+if [[ -n ${DEBUG:-} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring terminal..."
+fi
+
+# Use my terminfo
+export TERMINFO=~/.local/share/terminfo
+export TERMINFO_DIRS=~/.local/share/terminfo
+
+# History
+HISTSIZE=1000
+HISTFILESIZE=2000
+HISTCONTROL=ignoredups:ignorespace # don't put duplicate lines in the history
+
+ulimit -n 1024        # increase limit on open files (default: 256)
+shopt -s histappend   # append
+shopt -s checkwinsize # check the win size after each command and update if necessary
+history -a            # append
+history -n            # read new lines and append
+
+# Search history with arrows, up: \e[A, down: \e[B
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+# Use vi mode on command line
+set -o vi
+bind '"jj":vi-movement-mode'
+
+# ------------------------------------------------
 #  bash
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
@@ -339,3 +369,20 @@ set -ua
 if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: .bashrc done..."
 fi
+
+# ------------------------------------------------
+# Non-login shells
+# ------------------------------------------------
+# Load/reload .inputrc
+if [[ -f "${HOME}/.inputrc" ]]; then
+    bind -f ~/.inputrc
+fi
+
+# Too slow
+# Ensure lazy loaded dependencies are available to Neovim subshells
+# if [[ -n "${NVIM:-}" ]]; then
+#     if [[ -z "${PYENV_INITALIZED:-}" ||  -z "${RBENV_INITALIZED:-}" ]]; then
+#         rbenv_init
+#         pyenv_init
+#     fi
+# fi

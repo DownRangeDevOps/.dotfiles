@@ -222,10 +222,12 @@ function git_project_path() { # TODO: do I need this? have git_project_root
 
 # logging
 function git_log() {
-    local options="atsn"
-    local long_options="all,truncate-subject,subject-only,no-merges"
+    local options="atsni"
+    local long_options="all,truncate-subject,subject-only,no-merges,include-upstream"
+    local all=false
     local subject_only=false
     local colorize_signing_status=false
+    local include_upstream=false
     local git_args=(
         "--color"
         "--graph"
@@ -237,24 +239,14 @@ function git_log() {
     local parsed
     local format
 
-    getopt --test >/dev/null
-
-    if [[ $? -ne 4 ]]; then
-        printf_error "\`getopt --test\` failed in this environment."
-        return 1
-    fi
-
-    if ! parsed=$(getopt --options=${options} --longoptions=${long_options} --name "$0" -- "$@"); then
-        printf_error "gitopts parsing error"
-        return 2
-    fi
-
+    # Parse options
+    parsed=$(parse_opts "${options}" "${long_options}" "$0" "$@")
     eval set -- "${parsed}"
 
     while true; do
         case "${1:-}" in
         -a | --all)
-            git_args+=("--branches" "--remotes")
+            all=true
             shift
             ;;
         -t | --truncate-subject)
@@ -275,9 +267,17 @@ function git_log() {
             git_args+=("--no-merges")
             shift
             ;;
+        -i | --include-upstream)
+            include_upstream=true
+            shift
+            ;;
         --)
             shift
             break
+            ;;
+        *)
+            git_args+=("${1}")
+            shift
             ;;
         esac
     done
@@ -297,6 +297,9 @@ function git_log() {
     fi
 
     git_args+=("--format=format:${format}")
+
+    if ! ${include_upstream}; then git_args+=("--exclude=refs/remotes/upstream/*"); fi
+    if ${all}; then git_args+=("--all"); fi
 
     if ${colorize_signing_status}; then
         git log "${git_args[@]}" "$@" |
@@ -462,6 +465,39 @@ function git_commit_push() {
 }
 
 # Utils
+function git_get_branch_base_ref() {
+    local base
+    local main_sha
+    local head_sha
+
+    main_sha=$(git rev-parse "origin/$(__git_master_or_main)")
+    head_sha=$(git rev-parse HEAD)
+
+    local git_args=(
+        "for-each-ref"
+        "--sort=-committerdate"
+        "--format"
+        "%(refname:short)"
+        "--merged=HEAD"
+        "--contains"
+        "${main_sha}"
+        "--no-contains"
+        "${head_sha}"
+        "refs/remotes/origin/"
+    )
+
+    base=$(git "${git_args[@]}" | grep -e "^origin/.*" | head -n 1)
+
+    printf "%s\n" "${base}"
+}
+
+function git_get_commits_by_this_branch() {
+    local base
+    base=$(git_get_branch_base_ref)
+
+    printf "%s\n" "$(git rev-list --no-merges "${base}...HEAD")"
+}
+
 function get_branch_refs_between_head_and_main() {
     local main_ref
     local commit_shas
@@ -650,29 +686,23 @@ function git_nuke_cur_branch() {
 }
 
 function git_log_copy() {
-    local commits
-    local tempdir
-    tempdir="$(mktemp -d)"
-
-    local tempfile="${tempdir}/git_log_content"
+    local tmpfile
+    tmpfile="$(mktemp)"
 
     printf_callout "Fetching updates..." 1>&2
     git fetch
 
-    readarray -t commits < <(git log --format="%h %d" origin/$(__git_master_or_main)...HEAD | sed -E '/.*\(origin.*/d' | cut -d ' ' -f1)
-
-    for commit in "${commits[@]}"; do
-        git log -1 --format="## %s (%h)%n%n%b" "${commit}" >>"${tempfile}"
+    for commit in $(git_get_commits_by_this_branch); do
+        git log -1 --format="## %s (%h)%n%n%b" "${commit}" >>"${tmpfile}"
     done
 
-    pbcopy <"${tempfile}"
+    pbcopy <"${tmpfile}"
 
     if [[ "${1:-}" == "--print" || "${1:-}" == "-p" ]]; then
-        printf "%s" "$(<"${tempfile}")"
+        printf "%s" "$(<"${tmpfile}")"
     fi
 
-    rm -rf "${tempfile}"
-
+    rm -rf "${tmpfile}"
 }
 
 function git_checkout_ticket() {
