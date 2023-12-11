@@ -8,14 +8,17 @@
 #       contained in the current commit message template file
 #       (`commit.template`) and write the results to `$COMMIT_MSG_FILE`.
 #
-        # branch parts:
-        #   * branch name
-        #   * user initials (optional, removed if present)
-        #   * branch type (optional)
-        #   * branch scope (optional)
-        #   * ticket id (optional)
+#       Supported branch elements:
+
+#       | element   | required     | format (leading)  | (trailing)           |
+#       | --------- | ------------ | ----------------- | ---------------------|
+#       | subject   | yes          | `subject`         | `.../subject`        |
+#       | initials  | no (removed) | `xx/...`          | `.../xx/...`         |
+#       | type      | no           | `type/...`        | `.../type/...`       |
+#       | scope     | no           | `type-scope/...`  | `.../type-scope/...` |
+#       | ticket id | no           | `ticket_id--...`  | `.../ticket_id--...` |
 #
-#       Supported branch formats:
+#       Examples:
 #       <subject>
 #       <ticket-id>--<subject>
 #       <user-initials>/<subject>
@@ -31,20 +34,9 @@
 #           * <ticket-id> in the commit message will be formatted as markdown
 #             links (e.g. [<ticket-id>])
 
-set -euf -o pipefail # https://sipb.mit.edu/doc/safe-shell/
-source "${HOME}/.dotfiles/bash.d/lib.sh"
-
 COMMIT_MSG_FILE=$1
 COMMIT_SOURCE=$2
 # SHA1=$3
-
-# Set defaults
-COMMIT_TYPES="${COMMIT_TYPES:-feat|fix|build|chore|ci|docs|style|refactor|perf|test}"
-USER_INITIALS="${USER_INITIALS:-rf}"
-
-CUR_BRANCH="${CUR_BRANCH:-$(git branch --show-current)}"
-TEMPLATE_FILE="${HOME}/$(git config commit.template | sed -E "s/^~//")"
-mapfile -t BRANCH_PARTS < <(awk NF=NF FS="/|--" OFS="\n" <<< "${CUR_BRANCH}")
 
 function search_arr() {
     MATCH=""
@@ -60,74 +52,77 @@ function search_arr() {
     shift
 
     for part in "$@"; do
-        if "${grep_cmd[@]}" "${pattern}" <<< "${part}" &>/dev/null; then
+        if "${grep_cmd[@]}" "${pattern}" <<<"${part}" &>/dev/null; then
             # match="${part}"
             MATCH=${part}
             unset "BRANCH_PARTS[$i]"
             break
         fi
 
-        i=$((i+1))
+        i=$((i + 1))
     done
 }
 
 function parse() {
-    if [[ "${COMMIT_SOURCE}" == "template" && -n "$(command -v envsubst)" ]]; then
-        local branch_type
-        local branch_scope
-        local tmp
-        local ticket_id
+    local branch_type
+    local branch_scope
+    local tmp
+    local ticket_id
 
-        search_arr "${COMMIT_TYPES}" "${BRANCH_PARTS[@]}"
-        BRANCH_PARTS=("${BRANCH_PARTS[@]}")
-        mapfile -t tmp < <(awk NF=NF FS="-" OFS="\n" <<< "${MATCH}")
-        branch_type="${tmp[0]:-}"
-        branch_scope="${tmp[1]:-}"
+    search_arr "${COMMIT_TYPES}" "${BRANCH_PARTS[@]}"
+    BRANCH_PARTS=("${BRANCH_PARTS[@]}")
+    mapfile -t tmp < <(awk NF=NF FS="-" OFS="\n" <<<"${MATCH}")
+    branch_type="${tmp[0]:-}"
+    branch_scope="${tmp[1]:-}"
 
-        search_arr "[A-Za-z]+[0-9]+-[0-9]+" "${BRANCH_PARTS[@]}"
-        BRANCH_PARTS=("${BRANCH_PARTS[@]}")
-        ticket_id="${MATCH}"
+    search_arr "[A-Za-z]+[0-9]+-[0-9]+" "${BRANCH_PARTS[@]}"
+    BRANCH_PARTS=("${BRANCH_PARTS[@]}")
+    ticket_id="${MATCH}"
 
-        # Remove user initials
-        search_arr "${USER_INITIALS}" "${BRANCH_PARTS[@]}"
-        BRANCH_PARTS=("${BRANCH_PARTS[@]}")
+    # Remove user initials
+    search_arr "${USER_INITIALS}" "${BRANCH_PARTS[@]}"
+    BRANCH_PARTS=("${BRANCH_PARTS[@]}")
 
-        # Join the rest
-        branch_name="$(join " " "${BRANCH_PARTS[@]}")"
-    fi
+    # Join the rest
+    branch_name="$(join " " "${BRANCH_PARTS[@]}")"
 
     local SUBJECT_PARTS=()
 
-    if [[ -n "${branch_type:-}" && -n "${branch_scope:-}" ]]; then
-        SUBJECT_PARTS+=( "${branch_type}(${branch_scope}):")
-    elif [[ -n "${branch_type:-}" ]]; then
-        SUBJECT_PARTS+=( "${branch_type}:")
+    if [[ -n ${branch_type:-} && -n ${branch_scope:-} ]]; then
+        SUBJECT_PARTS+=("${branch_type}(${branch_scope}):")
+    elif [[ -n ${branch_type:-} ]]; then
+        SUBJECT_PARTS+=("${branch_type}:")
     fi
 
-    if [[ -n "${branch_name}" ]]; then
-        SUBJECT_PARTS+=("$(sed -E "s/-/ /g" <<< "${branch_name^}")")
+    if [[ -n ${branch_name:-} ]]; then
+        SUBJECT_PARTS+=("$(sed -E "s/-/ /g" <<<"${branch_name^}")")
     fi
 
-    if [[ -n "${ticket_id}" ]]; then
+    if [[ -n ${ticket_id:-} ]]; then
         SUBJECT_PARTS+=("[[${ticket_id}]]")
     fi
 
-    echo "SUBJECT PARTS: ${SUBJECT_PARTS[*]}"
     export SUBJECT="${SUBJECT_PARTS[*]}"
 
-    echo "TEMPLATE_FILE: ${TEMPLATE_FILE:-}"
-    echo "COMMIT_MSG_FILE: ${COMMIT_MSG_FILE:-}"
-
-    if [[ -n "${PROJECT_TRACKER_URL:-}" && -n "${ticket_id:-}" ]]; then
-        PROJECT_TRACKER_URL=$(sed -E 's/\/$//' <<< "${PROJECT_TRACKER_URL}")
+    if [[ -n ${PROJECT_TRACKER_URL:-} && -n ${ticket_id:-} ]]; then
+        PROJECT_TRACKER_URL=$(sed -E 's/\/$//' <<<"${PROJECT_TRACKER_URL}")
         export REFERENCE="[${ticket_id}]: ${PROJECT_TRACKER_URL}/${ticket_id}"
-        envsubst "\${SUBJECT} \${REFERENCE}" < "${TEMPLATE_FILE}" > "${COMMIT_MSG_FILE}"
+        envsubst '${SUBJECT} ${REFERENCE}' <"${TEMPLATE_FILE}" >"${COMMIT_MSG_FILE}"
     else
-        envsubst "\${SUBJECT}" < "${TEMPLATE_FILE}" > "${COMMIT_MSG_FILE}"
+        envsubst '${SUBJECT}' <"${TEMPLATE_FILE}" >"${COMMIT_MSG_FILE}"
     fi
 
     unset SUBJECT
     unset REFERENCE
 }
 
-parse
+if [[ ${COMMIT_SOURCE} == "template" && -n "$(command -v envsubst)" ]]; then
+    source "${HOME}/.dotfiles/bash.d/lib.sh"
+    COMMIT_TYPES="${COMMIT_TYPES:-feat|fix|build|chore|ci|docs|style|refactor|perf|test}"
+    USER_INITIALS="${USER_INITIALS:-rf}"
+    CUR_BRANCH="${CUR_BRANCH:-$(git branch --show-current)}"
+    TEMPLATE_FILE="${HOME}/$(git config commit.template | sed -E "s/^~//")"
+    mapfile -t BRANCH_PARTS < <(awk NF=NF FS="/|--" OFS="\n" <<<"${CUR_BRANCH}")
+
+    parse
+fi

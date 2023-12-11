@@ -235,6 +235,19 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
     end
 })
 
+-- markdown.nvim wip
+-- vim.api.nvim_create_autocmd({ "FileType" }, {
+--     group = user,
+--     pattern = "*",
+--     callback = function()
+--         if vim.api.nvim_buf_get_option(0, "filetype") == "markdown" then
+--             vim.keymap.set("i", )
+--         else
+--         end
+--     end,
+--
+-- })
+
 -- Fix shitty bullets plugin bindings, only one that does markdown bullets correctly
 vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     group = user,

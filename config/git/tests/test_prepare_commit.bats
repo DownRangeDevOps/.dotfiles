@@ -7,7 +7,7 @@ setup() {
     load ../../../external/test_helper/bats-support/load
     load ./test_helpers.sh
 
-    DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
+    DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" >/dev/null 2>&1 && pwd)"
     PATH="$DIR/../.git-template/hooks:$PATH"
 
     export SUBJECT="this-is-a-subject"
@@ -20,7 +20,8 @@ setup() {
     # shellcheck disable=SC2034  # Used by prepare-commit-msg
     export PROJECT_TRACKER_URL="https://example.com/"
 
-    export COMMIT_MSG_FILE="$(mktemp)"
+    COMMIT_MSG_FILE="$(mktemp)"
+    export COMMIT_MSG_FILE
 }
 
 # <subject>

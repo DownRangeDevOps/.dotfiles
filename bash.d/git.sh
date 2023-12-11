@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 
-if [[ -n "${DEBUG:-}" ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug ""
     log debug "==> [${BASH_SOURCE[0]}]"
 fi
@@ -47,7 +47,7 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 # ------------------------------------------------
 #  Private
 # ------------------------------------------------
-if [[ -n "${DEBUG:-}" ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
 fi
 
@@ -86,7 +86,7 @@ function __git_master_or_main() {
     if git show-ref --verify --quiet refs/remotes/origin/master || git show-ref --verify --quiet refs/heads/master; then master_exists=true; fi
     if git show-ref --verify --quiet refs/remotes/origin/main || git show-ref --verify --quiet refs/heads/main; then main_exists=true; fi
 
-    if [[ -n "${master_exists:-}" && -n "${main_exists:-}" ]]; then
+    if [[ -n ${master_exists:-} && -n ${main_exists:-} ]]; then
         local longest_branch_len=0
         local main_branch="main"
 
@@ -180,7 +180,7 @@ function __git_get_merged_branches() {
 # ------------------------------------------------
 #  Public
 # ------------------------------------------------
-if [[ -n "${DEBUG:-}" ]]; then
+if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
 fi
 
@@ -424,12 +424,12 @@ function git_rebase_merge_and_push() {
                 git checkout "${source_branch}" 2>&1 | indent_output
                 return 6
             fi
+            git push origin --delete "${source_branch}" 2>/dev/null | indent_output
+            git branch --delete "${source_branch}" 2>&1 | indent_output
         else
-            git checkout "${source_branch}" >/dev/null 2>&1
+            git push origin --delete "${source_branch}" 2>/dev/null | indent_output
+            git branch --delete "${source_branch}" 2>&1 | indent_output
         fi
-
-        git push origin --delete "${source_branch}" 2>/dev/null | indent_output
-        git branch --delete "${source_branch}" 2>&1 | indent_output
         printf "\n"
     fi
 }
@@ -437,7 +437,7 @@ function git_rebase_merge_and_push() {
 function git_push() {
     local refs
 
-    if [[ "$#" -eq 0 ]]; then
+    if [[ $# -eq 0 ]]; then
         git push --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" HEAD
     else
         case $1 in
@@ -678,7 +678,7 @@ function git_delete_merged_branches() {
         git remote prune origin &>/dev/null
 
         printf_callout "Done."
-        printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
+        printf_warning 'Everyone should run `git fetch --prune` to sync with this remote.'
     else
         printf_warning "No merged branches to delete."
     fi
@@ -716,7 +716,7 @@ function git_log_copy() {
 
     pbcopy <"${tmpfile}"
 
-    if [[ "${1:-}" == "--print" || "${1:-}" == "-p" ]]; then
+    if [[ ${1:-} == "--print" || ${1:-} == "-p" ]]; then
         printf "%s" "$(<"${tmpfile}")"
     fi
 
