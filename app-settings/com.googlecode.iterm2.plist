@@ -5755,7 +5755,7 @@ Password Manager</string>
 			<key>Use Cursor Guide</key>
 			<false/>
 			<key>Use Italic Font</key>
-			<true/>
+			<false/>
 			<key>Use Non-ASCII Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
@@ -6727,6 +6727,8 @@ Password Manager</string>
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
+	<true/>
+	<key>ShowNewOutputIndicator</key>
 	<true/>
 	<key>ShowPaneTitles</key>
 	<false/>
