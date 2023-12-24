@@ -51,18 +51,27 @@ function is_subsh() {
 
 function list_dir() {
     local gnu_ls="${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/ls"
+    local eza="${HOMEBREW_PREFIX}/bin/eza"
     local lsopts=("--color=auto" "--almost-all")
 
     if [[ ${1:-} == "--long" ]]; then
         shift
-        lsopts+=("-l" "--classify" "--no-group" "--size" "--human-readable" "--group-directories-first")
+        lsopts+=("-l" "--classify" "--group-directories-first")
     fi
 
-    if [[ -f ${gnu_ls} ]]; then
-        ${gnu_ls} "${lsopts[@]}" "$@"
+    if [[ -f ${eza} ]]; then
+        lsopts+=("--icons=auto" "--header" "--modified" "--git")
+        ${eza} "${lsopts[@]}" "$@"
     else
-        printf_warning "GNU ls not found at ${gnu_ls}, falling back to /bin/ls"
-        /bin/ls "${lsopts[@]}" "$@"
+        lsopts+=("--no-group" "--size" "--human-readable")
+
+        if [[ -f ${gnu_ls} ]]; then
+            printf_warning "eza not found at ${eza}, falling back to ${gnu_ls}"
+            ${gnu_ls} "${lsopts[@]}" "$@"
+        else
+            printf_warning "GNU ls not found at ${gnu_ls}, falling back to /bin/ls"
+            /bin/ls "${lsopts[@]}" "$@"
+        fi
     fi
 }
 
@@ -74,18 +83,18 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 function nvim() {
-    if [[ -n ${RBENV_INITALIZED:-} ]]; then
-        rbenv_init &>/dev/null
-    fi
-
-    if [[ -n "${PYENV_INITALIZED:-}" ]]; then
-        pyenv_init &>/dev/null
-    fi
-
+    # if [[ -n ${RBENV_INITALIZED:-} ]]; then
+    #     rbenv_init &>/dev/null
+    # fi
+    #
+    # if [[ -n "${PYENV_INITALIZED:-}" ]]; then
+    #     pyenv_init &>/dev/null
+    # fi
+    #
     if [[ "${NVIM_SESSION_FILE_PATH:-}" ]]; then
-        "$(which nvim)" -S "${NVIM_SESSION_FILE_PATH:-}"
+        "$(which nvim)" -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
     else
-        "$(which nvim)"
+        "$(which nvim)" "$@"
     fi
 }
 

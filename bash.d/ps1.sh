@@ -44,5 +44,5 @@ function __ps1_prompt() {
 }
 
 if [[ ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then
-    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}history -a ~/.bash_history; history -n ~/.bash_history; __ps1_prompt"
+    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}history -a ~/.bash_history; history -r ~/.bash_history; __ps1_prompt"
 fi

@@ -22,9 +22,10 @@ export TERMINFO=~/.local/share/terminfo
 export TERMINFO_DIRS=~/.local/share/terminfo
 
 # History
-HISTSIZE=1000
-HISTFILESIZE=2000
-HISTCONTROL=ignoredups:ignorespace # don't put duplicate lines in the history
+export HISTSIZE=10000
+export HISTFILESIZE=100000
+export HISTFILE=~/.bash_history
+export HISTCONTROL=ignoreboth:erasedups # don't put duplicate lines in the history
 
 ulimit -n 1024        # increase limit on open files (default: 256)
 shopt -s histappend   # append
@@ -278,6 +279,9 @@ alias gnuke="git_nuke_branch"
 alias gnukethis="git_nuke_cur_branch"
 alias opr="git_open_pull_request"
 
+# gh
+alias ghpru=gh_pr_update
+
 # ------------------------------------------------
 #  homebrew
 # ------------------------------------------------
@@ -356,6 +360,11 @@ alias tfia=init_all_modules
 alias tfva=validate_all_modules
 
 # ------------------------------------------------
+#  pyenv init
+# ------------------------------------------------
+alias pyenvinit="eval \"\$(pyenv init -)\"; eval \"\$(pyenv virtualenv-init -)\"; pyenv virtualenvwrapper_lazy"
+
+# ------------------------------------------------
 #  direnv
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
@@ -378,11 +387,12 @@ if [[ -f "${HOME}/.inputrc" ]]; then
     bind -f ~/.inputrc
 fi
 
-# Too slow
-# Ensure lazy loaded dependencies are available to Neovim subshells
-# if [[ -n "${NVIM:-}" ]]; then
-#     if [[ -z "${PYENV_INITALIZED:-}" ||  -z "${RBENV_INITALIZED:-}" ]]; then
-#         rbenv_init
-#         pyenv_init
-#     fi
-# fi
+# ------------------------------------------------
+# Externally managed
+# ------------------------------------------------
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/xjxf277/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+set +ua

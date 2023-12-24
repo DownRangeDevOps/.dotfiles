@@ -156,13 +156,13 @@ map("n", "<Leader>cs", function() vim.fn.setreg("/", "") end, { group = "gen", d
 map("n", "<Enter>", function()
     local keypress = vim.api.nvim_replace_termcodes("<Enter>", true, false, true)
 
-    vim.fn.setreg("/", "")
+    vim.fn.setreg("/", "åß∂ƒ")
 
     if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
         vim.cmd.startinsert()
         vim.api.nvim_feedkeys(keypress, "m", false)
     else
-        vim.api.nvim_feedkeys("j", "m", false)
+        vim.api.nvim_feedkeys(keypress, "n", false)
     end
 end, { group = "gen", desc = "Enter"})
 map("n", "<leader>rc", function()
@@ -250,9 +250,24 @@ map("n", "n", "nzzzv", { desc = "next search" })
 map("n", "N", "Nzzzv", { desc = "prev search" })
 
 -- Copy line info
-map("n", "gcl", function()
-    vim.fn.setreg("+", vim.fn.expand('%:.') .. ":" .. vim.fn.line("."))
-end, { group = "txt", desc = "copy path to cur line" })
+map("n", "<leader>L", function()
+    local current_line = vim.fn.line(".")
+    local path = vim.fn.expand("%:p")
+    local git_root = vim.fn.systemlist("basename \"$(git rev-parse --show-toplevel)\"")[1]
+    local git_repo = vim.fn.systemlist("git remote -v | awk '{print $2}' | sed 's|.*/||'")[1]
+
+    if git_root ~= "" then
+        local intra_repo_path = string.gsub(path, ".*" .. git_root .. "/", "")
+        path = git_repo .. "/" .. intra_repo_path
+    end
+
+    local path_with_line_num = string.format("%s:%d", path, current_line)
+
+    vim.fn.setreg('"', path_with_line_num)
+    vim.fn.setreg('*', path_with_line_num)
+    vim.fn.setreg('+', path_with_line_num)
+end, { group = "txt", desc = "path to cur line from git root"})
+
 
 -- file/buffer management (auto-save, browser)
 map("n", "<leader>w", function()
@@ -466,7 +481,15 @@ map("n", "<leader>ff", function() require("telescope.builtin").find_files({ hidd
 map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { group = "ts", desc = "fuzzy recent files" })
 map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { group = "ts", desc = "fuzzy help" })
 map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { group = "ts", desc = "fuzzy manpage" })
-map("n", "<leader>rg", function() require("telescope.builtin").live_grep() end, { group = "ts", desc = "ripgrep" })
+map("n", "<leader>rg", function()
+    local cwd = require("mini.misc").find_root(0, { ".git", "Makefile" })
+    local opts = {
+        cwd = cwd,
+        grep_open_files = false,
+    }
+
+    require("telescope.builtin").live_grep(opts)
+end, { group = "ts", desc = "ripgrep" })
 
 -- strings
 map("n", "<leader>fw", function() require("telescope.builtin").grep_string() end, { group = "ts", desc = "fuzzy word" })

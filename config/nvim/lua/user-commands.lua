@@ -77,6 +77,9 @@ vim.api.nvim_create_user_command("Tff", function()
     vim.cmd("silent! !terraform fmt %:p")
 end, { desc = "terraform fmt"})
 
+vim.api.nvim_create_user_command("Tffr", function()
+    vim.cmd("silent! !cd $(git rev-parse --show-toplevel 2>/dev/null) && terraform fmt -recursive && cd -")
+end, { desc = "terraform recursive fmt"})
 -- ----------------------------------------------
 -- Typos
 -- ----------------------------------------------
