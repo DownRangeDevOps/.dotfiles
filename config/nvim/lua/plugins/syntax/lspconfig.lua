@@ -29,8 +29,6 @@ return {
                                     "jsonlint",
                                     "markdownlint-cli2",
                                     "mypy",
-                                    "pyflakes",
-                                    "pyproject-flake8",
                                     "revive",
                                     "rubocop",
                                     "ruff",
@@ -44,6 +42,12 @@ return {
                         },
                     },
                     init = function()
+                        -- Set paths to system bins
+                        vim.g.mason_ruby_path = vim.fn.trim(vim.fn.system("rbenv which ruby"))
+                        vim.g.mason_gem_path = vim.fn.trim(vim.fn.system("rbenv which gem"))
+
+
+                        -- Initalize nvim-lint
                         local lint = require("lint")
                         local mypy = require("lint").linters.mypy
 
@@ -57,7 +61,7 @@ return {
                             [ "ansible.yaml" ] = { "ansible-lint", },
                             go                 = { "revive", },
                             json               = { "jsonlint", },
-                            python             = { "mypy", "ruff", "pflake8" },
+                            python             = { "mypy", },
                             -- TODO: implement it, only markdownlint supported -- markdown           = { "markdownlint-cli2", },
                             sh                 = { "shellcheck", },
                             terraform          = { "tflint", "tfsec", },

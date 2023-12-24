@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
 # USAGE: git commit
 #
@@ -8,8 +9,9 @@
 #       contained in the current commit message template file
 #       (`commit.template`) and write the results to `$COMMIT_MSG_FILE`.
 #
+# USAGE:
 #       Supported branch elements:
-
+#
 #       | element   | required     | format (leading)  | (trailing)           |
 #       | --------- | ------------ | ----------------- | ---------------------|
 #       | subject   | yes          | `subject`         | `.../subject`        |
@@ -18,7 +20,22 @@
 #       | scope     | no           | `type-scope/...`  | `.../type-scope/...` |
 #       | ticket id | no           | `ticket_id--...`  | `.../ticket_id--...` |
 #
+#       Supported change types (based on the Angular conventions:
+#       https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
+#
+#       * feat(ure): A new feature
+#       * fix: A bug fix
+#       * build: Changes that affect the build system or external dependencies
+#       * chore: A non-functional/non-logic change that doesn't change style (e.g. README update)
+#       * ci: Changes to our CI configuration files and scripts
+#       * docs: Documentation only changes
+#       * style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+#       * refactor: A code change that neither fixes a bug nor adds a feature
+#       * perf: A code change that improves performance without altering behavior
+#       * test: Adding missing tests or correcting existing tests
+#
 #       Examples:
+#
 #       <subject>
 #       <ticket-id>--<subject>
 #       <user-initials>/<subject>
@@ -28,6 +45,7 @@
 #       <issue-type>/<user-initials>/<ticket-id>--<subject>
 #       <issue-type>-<issue-scope>/<user-initials>/<ticket-id>--<subject>
 #
+# OPTIONS:
 #       If `$PROJECT_TRACKER_URL` is set and <ticket-id> present:
 #           * A markdown reference link will be appended to the end of the commit message
 #           * [[<ticket-id>]] will be appended to <subject>
@@ -107,8 +125,10 @@ function parse() {
     if [[ -n ${PROJECT_TRACKER_URL:-} && -n ${ticket_id:-} ]]; then
         PROJECT_TRACKER_URL=$(sed -E 's/\/$//' <<<"${PROJECT_TRACKER_URL}")
         export REFERENCE="[${ticket_id}]: ${PROJECT_TRACKER_URL}/${ticket_id}"
+        # shellcheck disable=SC2016  # literal expression intended
         envsubst '${SUBJECT} ${REFERENCE}' <"${TEMPLATE_FILE}" >"${COMMIT_MSG_FILE}"
     else
+        # shellcheck disable=SC2016  # literal expression intended
         envsubst '${SUBJECT}' <"${TEMPLATE_FILE}" >"${COMMIT_MSG_FILE}"
     fi
 
@@ -118,7 +138,7 @@ function parse() {
 
 if [[ ${COMMIT_SOURCE} == "template" && -n "$(command -v envsubst)" ]]; then
     source "${HOME}/.dotfiles/bash.d/lib.sh"
-    COMMIT_TYPES="${COMMIT_TYPES:-feat|fix|build|chore|ci|docs|style|refactor|perf|test}"
+    COMMIT_TYPES="${COMMIT_TYPES:-^feat|^fix|^build|^chore|^ci|^docs|^style|^refactor|^perf|^test}"
     USER_INITIALS="${USER_INITIALS:-rf}"
     CUR_BRANCH="${CUR_BRANCH:-$(git branch --show-current)}"
     TEMPLATE_FILE="${HOME}/$(git config commit.template | sed -E "s/^~//")"

@@ -1,4 +1,5 @@
 # shellcheck shell=bash
+# shellcheck disable=SC1091
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
@@ -110,6 +111,20 @@ function lpy() {
 # ------------------------------------------------
 # Initialize pyenv (https://github.com/pyenv/pyenv)
 # ------------------------------------------------
+# export PYENV_ROOT="$HOME/.pyenv"
+# export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
+# export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+#
+# set +ua
+#
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+# pyenv virtualenvwrapper_lazy
+# bind -f ~/.inputrc
+# add_to_path "prepend" "$(which pyenv) prefix"
+#
+# set -ua
+
 function pyenv_init() {
     export PYENV_ROOT="$HOME/.pyenv"
     export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
@@ -117,9 +132,7 @@ function pyenv_init() {
 
     set +ua
 
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-    pyenv virtualenvwrapper_lazy
+    source "${HOME}/.dotfiles/bash-init/pyenv.sh"
 
     set -ua
 
@@ -129,15 +142,16 @@ function pyenv_init() {
     fi
 
     add_to_path "prepend" "$(which pyenv) prefix"
-
     export PYENV_INITALIZED=1
 }
 
-function pyenv() {
-    if [[ -z "${PYENV_INITALIZED:-}" ]]; then
-        unset -f pyenv
-        pyenv_init
-    fi
-
-    "$(which pyenv)" "$@"
-}
+# function pyenv() {
+#     if [[ -z "${PYENV_INITALIZED:-}" || "${1:-}" == "init" ]]; then
+#         printf_callout "Initizliaing pyenv environment..."
+#         pyenv_init
+#     fi
+#
+#     if [[ "${1:-}" != "init" ]]; then
+#         "$(which pyenv)" "$@"
+#     fi
+# }

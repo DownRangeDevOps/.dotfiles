@@ -3,7 +3,7 @@ local M = {}
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
-
+-- vim.env.PATH = vim.env.PATH .. vim.env.HOME .. "/.local/share/nvim/mason/bin/"
 vim.env.EDITOR="nvr -cc split" -- prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
@@ -49,8 +49,13 @@ vim.opt.viewoptions = table.concat({
 -- Providers
 vim.g.node_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/neovim-node-host"
 vim.g.perl_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/perl"
-vim.g.python3_host_prog = vim.env.HOME .. "/.pyenv/shims/python"
-vim.g.ruby_host_prog = vim.env.HOME .. "/.rbenv/shims/neovim-ruby-host"
+vim.g.python3_host_prog = "/Users/xjxf277/.pyenv/versions/3.11.5/bin/python"
+
+-- Use rbenv bins
+vim.env.GEM_HOME = vim.fn.trim(vim.fn.system("rbenv which gem"))
+vim.env.GEM_PATH = vim.env.GEM_HOME
+vim.env.PATH = vim.fn.trim(vim.fn.system("rbenv which ruby")):gsub("/ruby$", "") .. ":" .. vim.env.PATH
+vim.g.ruby_host_prog = vim.fn.system("rbenv which neovim-ruby-host")
 
 -- Files
 vim.g.fileencoding = "ucs-bom,utf-8,latin1"
@@ -134,7 +139,10 @@ vim.opt.foldenable = false
 
 -- Terminal
 -- :help guicursor
--- vim.opt.shell = vim.env.SHELL .. "--login"
+-- vim.opt.shell = table.concat({
+--     vim.env.SHELL,
+--     "--login",
+-- }, " ")
 vim.opt.termguicolors = true
 vim.opt.guicursor = table.concat({
     "n-c-v-sm:block",
@@ -157,6 +165,11 @@ vim.opt.shiftwidth = 4
 -- Spelling
 vim.opt.spell = true
 vim.opt.spelllang = "en_us"
+
+-- ----------------------------------------------
+-- Plugins
+-- ----------------------------------------------
+vim.lsp.set_log_level("off")
 
 local script_path = function()
     local str = debug.getinfo(2, "S").source:sub(2)

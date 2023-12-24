@@ -29,6 +29,7 @@ function set_path() {
         prepend+=("${HOMEBREW_PREFIX}/opt")                # Homebrew
         prepend+=("${HOMEBREW_PREFIX}/opt/ncurses/bin")    # Homebrew ncurses
         prepend+=("${HOMEBREW_PREFIX}/opt/gnu-getopt/bin") # GNU get-opt
+        prepend+=("${HOME}/.rd/bin")                       # Rancher desktop
 
         for tool in "${gnu_libexec_bins[@]}"; do
             prepend+=("${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin") # Homebrew gnu tools

@@ -51,5 +51,29 @@ function validate_all_modules() {
 }
 
 function terraform_plan() {
-    terraform plan "$@" 2>&1 | less -XFR
+    local tmpfile
+    tmpfile=$(mktmp)
+
+    terraform plan "$@" "2>${tmpfile}" | bat "$(<"${tmpfile}")"
+}
+
+function parse_plan_diff() {
+    local file="change-log.tfplan"
+    local patterns=("destroyed" "created" "replaced" "forces replacement")
+
+    if [[ -f ${file} ]]; then
+        if ! prompt_to_continue "${file} exists, overwrite?"; then
+            return 6
+        fi
+    fi
+
+    true >|"${file}"
+
+    for pat in "${patterns[@]}"; do
+        {
+            printf "%s\n" "==== ${pat^^}"
+            rg -N "$pat" plan.txt
+            printf "\n"
+        } >>"${file}"
+    done
 }

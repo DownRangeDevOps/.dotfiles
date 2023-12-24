@@ -222,12 +222,13 @@ function git_project_path() { # TODO: do I need this? have git_project_root
 
 # logging
 function git_log() {
-    local options="atsni"
-    local long_options="all,truncate-subject,subject-only,no-merges,include-upstream"
+    local options="atsnid"
+    local long_options="all,truncate-subject,subject-only,no-merges,include-upstream,date"
     local all=false
     local subject_only=false
     local colorize_signing_status=false
     local include_upstream=false
+    local date_fmt="%cr"
     local git_args=(
         "--color"
         "--graph"
@@ -271,6 +272,10 @@ function git_log() {
             include_upstream=true
             shift
             ;;
+        -d | --date)
+            date_fmt="%cd"
+            shift
+            ;;
         --)
             shift
             break
@@ -282,6 +287,7 @@ function git_log() {
         esac
     done
 
+    # https://git-scm.com/docs/git-log#_pretty_formats
     # %C(...): color
     # %x09: tab
     # %h: short hash
@@ -293,7 +299,7 @@ function git_log() {
     if ${subject_only}; then
         format="• %C(yellow)%s%C(reset)"
     else
-        format="%x09%C(blue)%h ${signature_status}%C(reset)-%C(auto)%d %C(yellow)%<(72${truncate_subject})%s %C(blue)[%cn - %cr]%C(reset)"
+        format="%x09%C(blue)%h ${signature_status}%C(reset)-%C(auto)%d %C(yellow)%<(72${truncate_subject})%s %C(blue)[%cn - ${date_fmt}]%C(reset)"
     fi
 
     git_args+=("--format=format:${format}")
@@ -620,6 +626,7 @@ function git_checkout_and_update() {
         git pull --prune
     fi
 }
+
 function git_fuzzy_checkout() {
     if [[ -n ${1:-} ]]; then
         git checkout "${@}"
@@ -639,6 +646,12 @@ function git_delete_merged_branches() {
     local cur_branch
     local local_branches
     local remote_branches
+    local main_branch
+
+    main_branch="$(__git_master_or_main)"
+
+    printf_callout "Switching to ${main_branch}..."
+    git_checkout_and_update "${main_branch}"
 
     printf_callout "Fetching updates..."
     git fetch --prune &>/dev/null
@@ -691,7 +704,7 @@ function git_nuke_branch() {
         return 1
     fi
 
-    git remote | xargs -L1 -I remote git push --delete remote "$@" 2>/dev/null
+    git remote | xargs -L1 -I {} git push --delete remote "$@" 2>/dev/null
     git branch -D "$@" 2>/dev/null
 }
 
@@ -701,6 +714,10 @@ function git_nuke_cur_branch() {
 
     git remote | xargs -L1 -I remote git push --delete remote "${BRANCH}"
     git branch -D "${BRANCH}"
+}
+
+function gh_pr_update() {
+    gh pr edit --body "$(git_log_copy --print)"
 }
 
 function git_log_copy() {
@@ -717,7 +734,7 @@ function git_log_copy() {
     pbcopy <"${tmpfile}"
 
     if [[ ${1:-} == "--print" || ${1:-} == "-p" ]]; then
-        printf "%s" "$(<"${tmpfile}")"
+        printf "%s\n" "$(<"${tmpfile}")"
     fi
 
     rm -rf "${tmpfile}"

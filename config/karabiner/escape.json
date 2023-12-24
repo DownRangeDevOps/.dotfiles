@@ -21,7 +21,7 @@
               "type": "device_if",
               "identifiers": [
                 {
-                  "is_built_in_keyboard": false
+                  "product_id": 64007
                 }
               ]
             }
@@ -52,7 +52,7 @@
               "type": "device_if",
               "identifiers": [
                 {
-                  "is_built_in_keyboard": false
+                  "product_id": 64007
                 }
               ]
             }
@@ -81,7 +81,7 @@
               "type": "device_if",
               "identifiers": [
                 {
-                  "is_built_in_keyboard": false
+                  "product_id": 64007
                 }
               ]
             }
@@ -108,7 +108,7 @@
               "type": "device_if",
               "identifiers": [
                 {
-                  "is_built_in_keyboard": false
+                  "product_id": 64007
                 }
               ]
             }
@@ -139,7 +139,7 @@
               "type": "device_if",
               "identifiers": [
                 {
-                  "is_built_in_keyboard": false
+                  "product_id": 64007
                 }
               ]
             }

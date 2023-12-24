@@ -31,7 +31,7 @@ if [[ ${DEBUG:-} -eq 1 ]]; then
     log debug ""
     log debug "[${BASH_SOURCE[0]}]"
 else
-    log_sh_args=( "info" "warn" "error" "debug" )
+    log_sh_args=("info" "warn" "error" "debug")
     function log() {
         if [[ "${log_sh_args[*]}" =~ ${1:-} ]]; then
             true
@@ -50,7 +50,7 @@ fi
 set -uao pipefail
 
 # Disable flow control commands (keeps C-s from freezing everything)
-stty -ixon 2> /dev/null
+stty -ixon 2>/dev/null
 
 # Load everything else
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
@@ -73,9 +73,8 @@ if [[ -f "${HOME}/.bashrc" ]]; then
     fi
 fi
 
-# +u: Allow unbound variables
-# +a: Don't export functions to sub-sells
-set +ua
+# Disable strictness
+set +uao pipefail
 
 log debug "[$(basename "${BASH_SOURCE[0]}")]: Done, .bash_profile loaded."
 

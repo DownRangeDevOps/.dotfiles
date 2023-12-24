@@ -122,7 +122,7 @@ function safe_source() {
     )
 
     case ${1:-} in
-    -h|--help)
+    -h | --help)
         printf "%s\n" "${help_msg[@]}"
         return 0
         ;;
@@ -195,5 +195,5 @@ function fix_missing_newline() {
 }
 
 function egrep() {
-    grep --xtended-regexp "$@"
+    grep --extended-regexp "$@"
 }

@@ -83,15 +83,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- ----------------------------------------------
 -- Filetype
 -- ----------------------------------------------
--- reset config that may have been changed by plugins
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    group = ui,
-    pattern = "*",
-    callback = function()
-        require("user-config")
-    end
-})
-
 -- bash files with no extension
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
@@ -132,7 +123,7 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         "*.helm.yaml",
     },
     callback = function()
-        vim.cmd.setfiletype("helm")
+        vim.cmd.set("ft=helm")
         vim.cmd.setlocal([[commentstring={{/*\ %s\ */}}]])
     end,
 })
@@ -142,14 +133,18 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
     pattern = "terraform",
-    callback = function() vim.bo.commentstring = "# %s" end,
+    callback = function()
+        vim.bo.commentstring = "# %s"
+    end,
 })
 
 -- terraform vars
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
     pattern = "terraform-vars",
-    callback = function() vim.treesitter.start(0, "terraform") end,
+    callback = function()
+        vim.treesitter.start(0, "hcl")
+    end,
 })
 
 -- files that use tab indentation
@@ -168,47 +163,12 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end
 })
 
--- clean ui filetypes
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    group = ui,
-    pattern = {
-        "Trouble",
-        "checkhealth",
-        "git",
-        "help",
-        "lspinfo",
-        "man",
-        "packer",
-        "qf",
-        "term",
-        "toggleterm",
-        "",
-    },
-    callback = function()
-        vim.wo.colorcolumn = false
-        vim.wo.cursorline = false
-        vim.wo.foldcolumn = "auto"
-        vim.wo.list = false
-        vim.wo.number = false
-        vim.wo.relativenumber = false
-        vim.wo.signcolumn = "auto"
-        vim.wo.spell = false
-        vim.wo.statuscolumn = ""
-
-        local numbers_exception_ft = { help = true, }
-
-        if numbers_exception_ft[vim.bo.filetype] then
-            vim.wo.number = true
-            vim.wo.relativenumber = true
-        end
-    end
-})
-
--- terminals
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
     pattern = "term",
-    command = "startinsert",
+    callback = function()
+        vim.cmd.startinsert()
+    end,
 })
 
 -- ----------------------------------------------
@@ -324,3 +284,61 @@ vim.api.nvim_create_autocmd({
             require("lint").try_lint()
         end
     })
+
+-- ----------------------------------------------
+-- Last
+-- ----------------------------------------------
+-- reset config that may have been changed by plugins
+vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+    group = ui,
+    pattern = "*",
+    callback = function()
+        require("user-config")
+    end
+})
+
+-- clean ui filetypes
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = {
+        "Trouble",
+        "checkhealth",
+        "git",
+        "help",
+        "lspinfo",
+        "man",
+        "packer",
+        "qf",
+        "term",
+        "toggleterm",
+    },
+    callback = function()
+        vim.wo.colorcolumn = false
+        vim.wo.cursorline = false
+        vim.wo.foldcolumn = "auto"
+        vim.wo.list = false
+        vim.wo.number = false
+        vim.wo.relativenumber = false
+        vim.wo.signcolumn = "auto"
+        vim.wo.spell = false
+        vim.wo.statuscolumn = ""
+
+        local numbers_exception_ft = { help = true, }
+
+        if numbers_exception_ft[vim.bo.filetype] then
+            vim.wo.number = true
+            vim.wo.relativenumber = true
+        end
+    end
+})
+
+-- terminals
+vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter" }, {
+    group = ui,
+    pattern = "*",
+    callback = function()
+        vim.wo.spell = false
+        vim.wo.number = false
+        vim.wo.relativenumber = false
+    end,
+})
