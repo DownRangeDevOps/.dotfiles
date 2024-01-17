@@ -274,6 +274,7 @@ map("n", "<leader>w", function()
     local modifiable = vim.bo.modifiable
     if modifiable then
         vim.cmd.write()
+        vim.cmd("LspRestart")
         vim.defer_fn(function() vim.cmd.echon("''") end, 750)
     end
 end, { silent = true, group = "file", desc = "write to file" })
@@ -353,8 +354,10 @@ local gitsigns_maps = function(bufnr)
     vim.keymap.set("n", "<leader>n", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
     vim.keymap.set("n", "<leader>hp", require("gitsigns").preview_hunk, { buffer = bufnr, desc = "preview hunk" })
     vim.keymap.set("n", "<leader>hu", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
-    vim.keymap.set("n", "<leader>ha", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
-    vim.keymap.set("n", "<leader>ba", require("gitsigns").stage_buffer, { buffer = bufnr, desc = "stage hunk" })
+    vim.keymap.set("n", "<leader>sh", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
+    vim.keymap.set("n", "<leader>sb", require("gitsigns").stage_buffer, { buffer = bufnr, desc = "stage hunk" })
+    vim.keymap.set("n", "<leader>rh", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
+    vim.keymap.set("n", "<leader>rb", require("gitsigns").reset_buffer, { buffer = bufnr, desc = "reset hunk" })
 end
 M.gitsigns_maps = gitsigns_maps
 
@@ -513,9 +516,9 @@ map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions()
 map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { group = "ts", desc = "goto implementation" })
 map("n", "<leader>fr", function() require("telescope.builtin").lsp_references() end, { group = "ts", desc = "find references" })
 map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { group = "ts", desc = "fuzzy quickfix" })
-map("n", "<leader>/", function()
+map("n", "/", function()
     require("telescope.builtin").current_buffer_fuzzy_find(
-        require("telescope.themes").get_dropdown { winblend = 10, previewer = false, })
+        require("telescope.themes").get_ivy({ previewer = false, }))
 end, { group = "ts", desc = "fuzzy in current buffer" })
 map("n", "<leader>fe", function() require("telescope.builtin").diagnostics() end, { group = "ts", desc = "fuzzy errors" })
 

@@ -31,6 +31,9 @@ function __git_add_completion_to_aliases() {
         # merge
         __git_complete gm _git_merge
         __git_complete git_rebase_merge_and_push _git_merge
+
+        # rebase
+        __git_complete grb _git_branch
     fi
 }
 __git_add_completion_to_aliases
@@ -623,6 +626,7 @@ function git_checkout_and_update() {
     msg=$(git checkout "${1:--}")
 
     if [[ ${msg} =~ "behind" ]]; then
+        printf_callout "Pulling changes from the remote..."
         git pull --prune
     fi
 }
@@ -648,16 +652,16 @@ function git_delete_merged_branches() {
     local remote_branches
     local main_branch
 
+    cur_branch=$(git rev-parse --abbrev-ref HEAD)
     main_branch="$(__git_master_or_main)"
 
     printf_callout "Switching to ${main_branch}..."
     git_checkout_and_update "${main_branch}"
 
+    printf "\n"
     printf_callout "Fetching updates..."
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
-
-    cur_branch=$(git rev-parse --abbrev-ref HEAD)
 
     readarray -t local_branches < <(__git_get_merged_branches |
         grep --extended-regexp --invert-match "^\s*remotes/origin/" |
@@ -689,10 +693,12 @@ function git_delete_merged_branches() {
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
+        git checkout "${cur_branch}" &>/dev/null
 
         printf_callout "Done."
-        printf_warning 'Everyone should run `git fetch --prune` to sync with this remote.'
+        printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
+        git checkout "${cur_branch}" &>/dev/null
         printf_warning "No merged branches to delete."
     fi
 }
@@ -716,16 +722,45 @@ function git_nuke_cur_branch() {
     git branch -D "${BRANCH}"
 }
 
-function gh_pr_update() {
-    gh pr edit --body "$(git_log_copy --print)"
+function gh_create_pr() {
+    local base_branch
+    local log_content
+    local title
+
+    base_branch=$(git_get_branch_base_ref | sed -E "s,^origin/,,")
+    log_content="$(git_log_copy --print)"
+    title=$(
+        head -1 <<<"$log_content" |
+            sed -E "s/^## //" |
+            sed -E "s/\[\[/[/" |
+            sed -E "s/\]\]/]/" |
+            sed -E "s/ \(.*\)$//"
+    )
+
+    gh pr create --title "${title}" --body "${log_content}" --base "${base_branch}"
+}
+
+function gh_update_pr() {
+    local log_content
+    local title
+
+    printf_callout "Updating PR body..."
+
+    log_content="$(git_log_copy --print)"
+    title=$(
+        head -1 <<<"$log_content" |
+            sed -E "s/^## //" |
+            sed -E "s/\[\[/[/" |
+            sed -E "s/\]\]/]/" |
+            sed -E "s/ \(.*\)$//"
+    )
+
+    gh pr edit --title "${title}" --body "${log_content}"
 }
 
 function git_log_copy() {
     local tmpfile
     tmpfile="$(mktemp)"
-
-    printf_callout "Fetching updates..." 1>&2
-    git fetch
 
     for commit in $(git_get_commits_by_this_branch); do
         git log -1 --format="## %s (%h)%n%n%b" "${commit}" >>"${tmpfile}"
@@ -751,7 +786,7 @@ function git_checkout_ticket() {
     __git_checkout -b "${TICKET}"
 }
 
-function git_open_pull_request() {
+function gitlab_open_pull_request() {
     # open a pull request for the current branch
     # Real URL example: https://gitlab.com/${ORG_NAME}/${PROJECT_NAME}/${REPO_NAME}/-/merge_requests/new?merge_request%5Bsource_branch%5D=feature%2Frf%2FEN-4597--docker-add-health-check
 

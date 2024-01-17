@@ -244,16 +244,16 @@ alias gcnv="git commit --gpg-sign --no-verify"
 alias gcp="git cherry-pick -x" # -x: add "cherry-picked from..." message
 alias gcpu="git_commit_and_push"
 alias gfu="git_fixup"
-alias gqf="ga --update && gc --amend --no-edit && gfpo"
+alias gqf="git add --update && git commit --amend --no-edit && gfpo"
 alias gst="git stash"
 
 # rebasing
 alias grb="git rebase --interactive --autosquash"
 alias grba="git rebase --abort"
 alias grbc="git rebase --continue"
-alias grbd="gf && git rebase --interactive --autosquash origin/develop"
-alias grbm="gf && git rebase --interactive --autosquash origin/\$(__git_master_or_main)"
-alias grbs="gf && git rebase --interactive --autosquash \$(git merge-base HEAD origin/\$(__git_master_or_main))"
+alias grbd="git fetch --prune && git rebase --interactive --autosquash origin/develop"
+alias grbm="git fetch --prune && git rebase --interactive --autosquash origin/\$(__git_master_or_main)"
+alias grbs="git fetch --prune && git rebase --interactive --autosquash \$(git merge-base HEAD origin/\$(__git_master_or_main))"
 
 # merging
 alias gm="git_rebase_merge_and_push"
@@ -261,8 +261,7 @@ alias gmerged="git_get_merged_branches"
 
 # pushing
 alias gpu="git_push"
-alias gfp="git fetch --prune && git push origin --force-with-lease HEAD"
-alias gfpo=gfp # deprecated
+alias gfpo="git fetch --prune && git push origin --force-with-lease HEAD"
 alias gfpa="git_push --force-update-refs"
 
 # repository info
@@ -280,7 +279,13 @@ alias gnukethis="git_nuke_cur_branch"
 alias opr="git_open_pull_request"
 
 # gh
-alias ghpru=gh_pr_update
+alias upr="\
+    git fetch --prune && \
+    git add --update && \
+    git commit --amend --no-edit && \
+    git push origin --force-with-lease HEAD && \
+    gh_update_pr"
+alias cpr="gh_create_pr"
 
 # ------------------------------------------------
 #  homebrew
