@@ -27,16 +27,18 @@ return {
             position = "current",
             noremap = true,
             nowait = true,
+            -- configure popup windows
+            popup = {
+                size = {
+                    height = "20",
+                    width = "50"
+                },
+                position = "30%"
+            }
         },
         filesystem = {
-            window = {
-                mappings = {
-                    ["A"] = { "add_directory", config = { show_path = "relative" } },
-                    ["a"] = { "add", config = { show_path = "relative" } },
-                    ["c"] = { "copy", config = { show_path = "relative" } },
-                    ["m"] = { "move", config = { show_path = "relative" } },
-                    ["-"] = "navigate_up",
-                    ["<CR>"] =  function(state)
+            commands = {
+                expand_node = function(state)
                         local origin_file = vim.fn.getreg("#")
 
                         state.commands["open"](state)
@@ -45,6 +47,15 @@ return {
                             vim.fn.setreg("#", origin_file)
                         end
                     end,
+            },
+            window = {
+                mappings = {
+                    ["A"] = { "add_directory", config = { show_path = "relative" } },
+                    ["a"] = { "add", config = { show_path = "relative" } },
+                    ["c"] = { "copy", config = { show_path = "relative" } },
+                    ["m"] = { "move", config = { show_path = "relative" } },
+                    ["-"] = "navigate_up",
+                    ["<CR>"] = "expand_node",
                 },
             },
             filtered_items = {

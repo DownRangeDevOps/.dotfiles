@@ -26,7 +26,7 @@ return {
             history = {},
             mappings = {},
             vimgrep_arguments = {
-                "rg",
+                vim.env.HOMEBREW_PREFIX .. "/bin/rg",
                 -- required
                 "--color=never",
                 "--no-heading",
@@ -38,7 +38,8 @@ return {
                 "--smart-case",
                 "--hidden",
                 "--no-config",
-                "--glob='!.git'",
+                "--glob=!.git/",
+                "--glob=!**/.terraform/",
             }
         },
     },

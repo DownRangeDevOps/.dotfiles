@@ -24,10 +24,23 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- ----------------------------------------------
 -- Neovim
 -- ----------------------------------------------
-vim.api.nvim_create_autocmd("CursorHold", {
+vim.api.nvim_create_autocmd({"CursorHold", "FocusGained"}, {
     group = nvim,
     pattern = "*",
-    command = "checktime" -- auto-reload from disk
+    callback = function()
+        if vim.fn.mode ~= "c" then
+            vim.cmd.checktime() -- auto-reload from disk
+        end
+    end
+})
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+    group = nvim,
+    pattern = "*",
+    callback = function()
+        vim.cmd.echohl("WarningMsg File changed on disk. Buffer reloaded.")
+        vim.defer_fn(function() vim.cmd.echohl("None") end, 750)
+    end
 })
 
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -175,25 +188,25 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 -- User
 -- ----------------------------------------------
 -- Auto-Save after trimming trailing whitespace
-vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-    group = user,
-    pattern = "*",
-    callback = function()
-        if vim.g.auto_save
-            and vim.api.nvim_buf_get_option(0, "buftype") == ""
-            and vim.api.nvim_buf_get_option(0, "buftype") ~= "nowrite"
-            and vim.api.nvim_buf_get_option(0, "modifiable")
-            and vim.fn.expand("%") ~= ""
-        then
-
-            MiniTrailspace.trim()
-            MiniTrailspace.trim_last_lines()
-
-            vim.cmd.write()
-            vim.defer_fn(function() vim.cmd.echon("''") end, 750)
-        end
-    end
-})
+-- vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+--     group = user,
+--     pattern = "*",
+--     callback = function()
+--         if vim.g.auto_save
+--             and vim.api.nvim_buf_get_option(0, "buftype") == ""
+--             and vim.api.nvim_buf_get_option(0, "buftype") ~= "nowrite"
+--             and vim.api.nvim_buf_get_option(0, "modifiable")
+--             and vim.fn.expand("%") ~= ""
+--         then
+--
+--             MiniTrailspace.trim()
+--             MiniTrailspace.trim_last_lines()
+--
+--             vim.cmd.write()
+--             vim.defer_fn(function() vim.cmd.echon("''") end, 750)
+--         end
+--     end
+-- })
 
 -- markdown.nvim wip
 -- vim.api.nvim_create_autocmd({ "FileType" }, {

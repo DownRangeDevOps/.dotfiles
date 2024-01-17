@@ -51,29 +51,31 @@ function validate_all_modules() {
 }
 
 function terraform_plan() {
-    local tmpfile
-    tmpfile=$(mktmp)
-
-    terraform plan "$@" "2>${tmpfile}" | bat "$(<"${tmpfile}")"
+    # local tmpfile
+    # tmpfile=$(mktmp)
+    #
+    # terraform plan "$@" "2>${tmpfile}" | bat "$(<"${tmpfile}")"
+    terraform plan "$@"
 }
 
 function parse_plan_diff() {
-    local file="change-log.tfplan"
+    local infile="${1:-tfplan}"
+    local outfile="${2:-"change-log.tfplan"}"
     local patterns=("destroyed" "created" "replaced" "forces replacement")
 
-    if [[ -f ${file} ]]; then
-        if ! prompt_to_continue "${file} exists, overwrite?"; then
+    if [[ -f ${outfile} ]]; then
+        if ! prompt_to_continue "${outfile} exists, overwrite?"; then
             return 6
         fi
     fi
 
-    true >|"${file}"
+    true >|"${outfile}"
 
     for pat in "${patterns[@]}"; do
         {
             printf "%s\n" "==== ${pat^^}"
-            rg -N "$pat" plan.txt
+            rg -N "$pat" "${infile}"
             printf "\n"
-        } >>"${file}"
+        } >>"${outfile}"
     done
 }

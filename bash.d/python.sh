@@ -111,19 +111,19 @@ function lpy() {
 # ------------------------------------------------
 # Initialize pyenv (https://github.com/pyenv/pyenv)
 # ------------------------------------------------
-# export PYENV_ROOT="$HOME/.pyenv"
-# export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
-# export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-#
-# set +ua
-#
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-# pyenv virtualenvwrapper_lazy
-# bind -f ~/.inputrc
-# add_to_path "prepend" "$(which pyenv) prefix"
-#
-# set -ua
+export PYENV_ROOT="$HOME/.pyenv"
+export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+
+set +ua
+
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+pyenv virtualenvwrapper_lazy
+bind -f ~/.inputrc
+add_to_path "prepend" "$(which pyenv) prefix"
+
+set -ua
 
 function pyenv_init() {
     export PYENV_ROOT="$HOME/.pyenv"

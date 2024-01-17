@@ -32,9 +32,9 @@
 	<integer>1</integer>
 	<key>Coprocess MRU</key>
 	<array>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py j</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
-		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py h</string>
