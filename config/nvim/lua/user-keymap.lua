@@ -374,7 +374,7 @@ local set_magic_prefix = function(keymap, search_prefix)
 end
 
 map("n", "*", "*N", { group = "gen", desc = "find word at cur" })
-map("n", "/", "/\\v\\c", { group = "gen", desc = "regex search" })
+map("n", "<leader>/", "/\\v\\c", { group = "gen", desc = "regex search" })
 map("c", "%", function() set_magic_prefix("%", "%s/\\v\\c") end, { group = "gen", desc = "regex replace" })
 map("c", "%%", function() set_magic_prefix("%%", "s/\\v\\c") end, { group = "gen", desc = "regex replace visual" })
 map("n", "<leader>rw", ":%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>", { group = "txt", desc = "replace current word" })
@@ -523,7 +523,6 @@ map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions()
 map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { group = "ts", desc = "goto implementation" })
 map("n", "<leader>fr", function() require("telescope.builtin").lsp_references() end, { group = "ts", desc = "find references" })
 map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { group = "ts", desc = "fuzzy quickfix" })
-map("n", "<leader>/", "/", { group = "misc", desc = "default serach" })
 map("n", "/", function()
     require("telescope.builtin").current_buffer_fuzzy_find(
         require("telescope.themes").get_ivy({ previewer = false, }))

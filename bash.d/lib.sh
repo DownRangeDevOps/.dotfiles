@@ -4,8 +4,8 @@ if [[ -n "${DEBUG:-}" ]]; then
     [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
     set -ua
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading printing helpers..."
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading printing helpers..."
 fi
 
 # Colors
@@ -84,7 +84,7 @@ function prompt_to_continue() {
         return 0
     else
         printf "\n%s\n\n" "${BLUE}${2:-Ok, exiting.}${RESET}"
-        [[ $0 == "${BASH_SOURCE[0]}" ]] && exit 3 || return 3
+        [[ $0 == "${BASH_SOURCE[0]:-${(%):-%x}}" ]] && exit 3 || return 3
     fi
 }
 
@@ -153,6 +153,29 @@ function add_to_path() {
         return 1
     fi
 
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    case "${position}" in
+    prepend)
+        for new_path in "${paths[@]}"; do
+            if [[ ! ${PATH} == *${new_path}* ]]; then
+                export PATH="${new_path}:${PATH}"
+            fi
+        done
+        ;;
+    append)
+        for new_path in "${paths[@]}"; do
+            if [[ ! ${PATH} == *${new_path}* ]]; then
+                export PATH="${PATH}:${new_path}"
+            fi
+        done
+        ;;
+    *)
+        echo 2
+        printf_error "${help_msg}"
+        return 1
+        ;;
+    esac
+else
     case "${position}" in
     prepend)
         for new_path in "${paths[@]}"; do
@@ -174,6 +197,7 @@ function add_to_path() {
         return 1
         ;;
     esac
+fi
 }
 
 function join() {

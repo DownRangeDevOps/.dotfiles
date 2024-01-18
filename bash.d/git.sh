@@ -2,7 +2,7 @@
 
 if [[ -n ${DEBUG:-} ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
@@ -51,7 +51,7 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 #  Private
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading private functions..."
 fi
 
 # Repository information
@@ -59,7 +59,7 @@ function __git_is_repo() {
     if [[ -n ${1:-} ]]; then
         git -C "$1" rev-parse --show-toplevel 2>/dev/null
     else
-        git rev-parse 2>/dev/null
+        git rev-parse --show-toplevel &>/dev/null
     fi
 }
 
@@ -122,8 +122,8 @@ function __git_show_branch_state() {
     local branch
     local icon
 
-    branch="$(git rev-parse --abbrev-ref HEAD)"
-    icon="$(__git_parse_dirty)"
+    branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+    icon="$(__git_parse_dirty 2>/dev/null)"
 
     if [[ ${branch} == "HEAD" && $(git rev-parse --is-bare-repository) == "true" ]]; then
         branch="bare"
@@ -184,7 +184,7 @@ function __git_get_merged_branches() {
 #  Public
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading public functions..."
 fi
 
 # Info

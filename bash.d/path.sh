@@ -2,14 +2,16 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 function set_path() {
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Resetting \$PATH"
+        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Resetting \$PATH"
     fi
 
+    local tool
+    local compiler
     local prepend=()
     local append=()
     local gnu_libexec_bins=(
@@ -36,8 +38,8 @@ function set_path() {
             prepend+=("${HOMEBREW_PREFIX}/opt/${tool}/libexec/gnubin") # Homebrew gnu tools
         done
 
-        for path in "${compilers[@]}"; do
-            prepend+=("${HOMEBREW_PREFIX}/opt/${path}") # llvm
+        for compiler in "${compilers[@]}"; do
+            prepend+=("${HOMEBREW_PREFIX}/opt/${compiler}") # llvm
         done
 
     fi

@@ -2,7 +2,7 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
@@ -10,7 +10,7 @@ fi
 # ------------------------------------------------
 function cargo() {
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading config..."
     fi
 
     unset -f cargo
@@ -18,5 +18,5 @@ function cargo() {
     # shellcheck disable=SC1090,SC1091
     safe_source "$HOME/.cargo/env"
 
-    $(which cargo) "$@"
+    command cargo "$@"
 }

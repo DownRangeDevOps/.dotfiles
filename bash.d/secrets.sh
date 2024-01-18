@@ -2,7 +2,7 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # shellcheck disable=SC1090,SC1091

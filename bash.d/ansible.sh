@@ -2,7 +2,7 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
@@ -16,7 +16,7 @@ export BITBUCKET_SSH_KEY="${HOME}/.ssh/id_rsa"
 #  helpers
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 fi
 
 function ade() {

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-eval "$($(which pyenv) init -)"
-eval "$($(which pyenv) virtualenv-init -)"
-$(which pyenv) virtualenvwrapper_lazy
+eval "$(comand pyenv init -)"
+eval "$(command pyenv virtualenv-init -)"
+command pyenv virtualenvwrapper_lazy
