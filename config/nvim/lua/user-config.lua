@@ -8,16 +8,16 @@ vim.env.EDITOR="nvr -cc split" -- prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
 
-vim.opt.lazyredraw = true
-vim.opt.mouse = "a"
-vim.opt.secure = true
-vim.opt.swapfile = false
-vim.opt.timeoutlen = 500
-vim.opt.undodir = os.getenv("HOME") .. "/.nvim/undo/"
-vim.opt.undofile = true
-vim.opt.updatetime = 250
+vim.o.lazyredraw = true
+vim.o.mouse = "a"
+vim.o.secure = true
+vim.o.swapfile = false
+vim.o.timeoutlen = 500
+vim.o.undodir = os.getenv("HOME") .. "/.nvim/undo/"
+vim.o.undofile = true
+vim.o.updatetime = 250
 
-vim.opt.grepprg = table.concat({
+vim.o.grepprg = table.concat({
     "${HOMEBREW_PREFIX}/bin/rg",
     " --follow",
     " --hidden",
@@ -30,7 +30,7 @@ vim.opt.grepprg = table.concat({
     " $@",
 }, ",")
 
-vim.opt.diffopt = table.concat({
+vim.o.diffopt = table.concat({
     "filler",
     "context:100",
     "iwhiteall",
@@ -39,7 +39,7 @@ vim.opt.diffopt = table.concat({
     "algorithm:histogram",
 }, ",")
 
-vim.opt.viewoptions = table.concat({
+vim.o.viewoptions = table.concat({
     "cursor",
     "folds",
     "slash",
@@ -59,24 +59,24 @@ vim.g.ruby_host_prog = vim.fn.system("rbenv which neovim-ruby-host")
 
 -- Files
 vim.g.fileencoding = "ucs-bom,utf-8,latin1"
-vim.opt.bomb = false
-vim.opt.autochdir = false
-vim.opt.browsedir = "current"
-vim.opt.autoread = true
-vim.opt.autowriteall = false
-vim.opt.autowrite = false
-vim.opt.backup = false
-vim.opt.encoding = "utf-8"
-vim.opt.fixendofline = true
+vim.o.bomb = false
+vim.o.autochdir = false
+vim.o.browsedir = "current"
+vim.o.autoread = true
+vim.o.autowriteall = false
+vim.o.autowrite = false
+vim.o.backup = false
+vim.o.encoding = "utf-8"
+vim.o.fixendofline = true
 
 -- Vim command line completion
-vim.opt.completeopt = "menu,menuone,noinsert,noselect"
-vim.opt.fileignorecase = true
+vim.o.completeopt = "menu,menuone,noinsert,noselect"
+vim.o.fileignorecase = true
 vim.g.wildmenu = true
 vim.g.wildigorecase = false
-vim.opt.wildmode = "longest,full"
+vim.o.wildmode = "longest,full"
 vim.opt.wildoptions:append("fuzzy,tagfile")
-vim.opt.wildignore = table.concat({
+vim.o.wildignore = table.concat({
     "*/node_modules/*",
     "_site",
     "*.pyc",
@@ -104,22 +104,22 @@ vim.opt.wildignore = table.concat({
 -- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
-vim.opt.autoindent = true
-vim.opt.backspace = "indent,eol,start" -- Make backspace behave in a sane manner.
-vim.opt.colorcolumn = "80"
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
-vim.opt.hidden = true
-vim.opt.hlsearch = true
-vim.opt.incsearch = true
-vim.opt.number = true
-vim.opt.numberwidth = 5
-vim.opt.relativenumber = true
-vim.opt.scrolloff = 8
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-vim.opt.list = true
-vim.opt.listchars = table.concat({
+vim.o.autoindent = true
+vim.o.backspace = "indent,eol,start" -- Make backspace behave in a sane manner.
+vim.o.colorcolumn = "80"
+vim.o.cursorline = true
+vim.o.cursorlineopt = "number"
+vim.o.hidden = true
+vim.o.hlsearch = true
+vim.o.incsearch = true
+vim.o.number = true
+vim.o.numberwidth = 5
+vim.o.relativenumber = true
+vim.o.scrolloff = 8
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.list = true
+vim.o.listchars = table.concat({
     "tab:⇢•",
     "precedes:«",
     "extends:»",
@@ -128,23 +128,24 @@ vim.opt.listchars = table.concat({
 }, ",")
 
 -- Line wrapping
-vim.opt.showbreak = "↳ " -- show wrapped lines
-vim.opt.wrap = false
+vim.o.showbreak = "↳ " -- show wrapped lines
+vim.o.wrap = false
+vim.o.linebreak = true
 
 -- Folding (nvim-ufo)
-vim.opt.foldcolumn = "1"
-vim.opt.foldlevel = 99
-vim.opt.foldlevelstart = 99
-vim.opt.foldenable = false
+vim.o.foldcolumn = "1"
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = false
 
 -- Terminal
 -- :help guicursor
--- vim.opt.shell = table.concat({
+-- vim.o.shell = table.concat({
 --     vim.env.SHELL,
 --     "--login",
 -- }, " ")
-vim.opt.termguicolors = true
-vim.opt.guicursor = table.concat({
+vim.o.termguicolors = true
+vim.o.guicursor = table.concat({
     "n-c-v-sm:block",
     "i-ci-ve:ver25",
     "r-cr-o:hor20",
@@ -158,13 +159,13 @@ vim.opt.guicursor = table.concat({
 vim.g.EditorConfig_exclude_patterns = { "fugitive://.\\*", "scp://.\\*" }
 
 -- Insert
-vim.opt.shiftround = true
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 4
+vim.o.shiftround = true
+vim.o.expandtab = true
+vim.o.shiftwidth = 4
 
 -- Spelling
-vim.opt.spell = true
-vim.opt.spelllang = "en_us"
+vim.o.spell = true
+vim.o.spelllang = "en_us"
 
 -- ----------------------------------------------
 -- Plugins

@@ -24,11 +24,11 @@ function __ps1_prompt() {
     time="$(date +%R)"
     aws_vault=" $(__get_aws_vault) "
     virtualenv_name=" $(__get_virtualenv_name) "
-    tf_workspace=" $(__get_terraform_workspace) "
+    # tf_workspace=" $(__get_terraform_workspace) "  # I never use workspaces
     shell_lvl="$(is_subsh)"
 
     local info
-    info="$(printf "%s" "${aws_vault}${virtualenv_name}${tf_workspace}" | trim)"
+    info="$(printf "%s" "${aws_vault}${virtualenv_name}" | trim)"
 
     if [[ -n ${info} ]]; then
         info="(${info}) "

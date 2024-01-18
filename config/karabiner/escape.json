@@ -67,7 +67,8 @@
           "from": {
             "key_code": "escape",
             "modifiers": {
-              "mandatory": ["control"]
+              "mandatory": ["control"],
+              "optional" : ["shift"]
             }
           },
           "to": [

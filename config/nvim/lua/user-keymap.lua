@@ -480,14 +480,21 @@ map("n", "<C-p>", function()
 end, { group = "ts", desc = "fuzzy git files" })
 map("i", "<C-n>", function() require("telescope.actions").cycle_history_next() end, { group = "ts", desc = "history next" })
 map("i", "<C-p>", function() require("telescope.actions").cycle_history_prev() end, { group = "ts", desc = "history prev" })
-map("n", "<leader>ff", function() require("telescope.builtin").find_files({ hidden = true, no_ignore = true }) end, { group = "ts", desc = "fuzzy files" })
 map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { group = "ts", desc = "fuzzy recent files" })
 map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { group = "ts", desc = "fuzzy help" })
 map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { group = "ts", desc = "fuzzy manpage" })
-map("n", "<leader>rg", function()
-    local cwd = require("mini.misc").find_root(0, { ".git", "Makefile" })
+map("n", "<leader>ff", function()
     local opts = {
-        cwd = cwd,
+        cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
+        hidden = true,
+        no_ignore = true
+    }
+
+    require("telescope.builtin").find_files(opts)
+end, { group = "ts", desc = "fuzzy files" })
+map("n", "<leader>rg", function()
+    local opts = {
+        cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
         grep_open_files = false,
     }
 
@@ -516,6 +523,7 @@ map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions()
 map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { group = "ts", desc = "goto implementation" })
 map("n", "<leader>fr", function() require("telescope.builtin").lsp_references() end, { group = "ts", desc = "find references" })
 map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { group = "ts", desc = "fuzzy quickfix" })
+map("n", "<leader>/", "/", { group = "misc", desc = "default serach" })
 map("n", "/", function()
     require("telescope.builtin").current_buffer_fuzzy_find(
         require("telescope.themes").get_ivy({ previewer = false, }))

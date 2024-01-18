@@ -57,7 +57,7 @@ fi
 # Repository information
 function __git_is_repo() {
     if [[ -n ${1:-} ]]; then
-        git -C "$1" rev-parse 2>/dev/null
+        git -C "$1" rev-parse --show-toplevel 2>/dev/null
     else
         git rev-parse 2>/dev/null
     fi
@@ -122,11 +122,11 @@ function __git_show_branch_state() {
     local branch
     local icon
 
-    if [[ $(git rev-parse --is-bare-repository) == "true" ]]; then
+    branch="$(git rev-parse --abbrev-ref HEAD)"
+    icon="$(__git_parse_dirty)"
+
+    if [[ ${branch} == "HEAD" && $(git rev-parse --is-bare-repository) == "true" ]]; then
         branch="bare"
-    else
-        branch="$(git rev-parse --abbrev-ref HEAD)"
-        icon="$(__git_parse_dirty)"
     fi
 
     printf "%s" "${branch}${icon}"
