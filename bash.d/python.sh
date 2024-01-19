@@ -116,18 +116,29 @@ export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
 set +ua
+if [[ -z "${ZSH_VERSION}" ]]; then
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    pyenv virtualenvwrapper_lazy
 
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-pyenv virtualenvwrapper_lazy
-
-if [[ -z "${ZSH_VERSION:-}" && -f "${HOME}/.inputrc" ]]; then
-    bind -f ~/.inputrc
-fi
+    if [[ -z "${ZSH_VERSION:-}" && -f "${HOME}/.inputrc" ]]; then
+        bind -f ~/.inputrc
+    fi
 
 pyenv_prefix="$(pyenv prefix)"
 add_to_path "prepend" "${pyenv_prefix}"
-
+else
+    # Lazy load pyenv
+    if type pyenv > /dev/null; then
+        function pyenv() {
+            unset -f pyenv
+            eval "$(command pyenv init -)"
+            eval "$(pyenv virtualenv-init -)"
+            pyenv virtualenvwrapper_lazy
+            pyenv "$@"
+        }
+    fi
+fi
 set -ua
 
 function pyenv_init() {

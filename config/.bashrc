@@ -1,13 +1,12 @@
 # shellcheck shell=bash
 # .bashrc
-
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     autoload -U +X bashcompinit && bashcompinit
     autoload -U +X compinit && compinit
 fi
 
 # shellcheck disable=SC1090
-source ~/.dotfiles/bash.d/.termrc
+source ~/.dotfiles/bash.d/.zsh_termrc
 
 # ------------------------------------------------
 #  bash
@@ -247,13 +246,9 @@ alias gnukethis="git_nuke_cur_branch"
 alias opr="git_open_pull_request"
 
 # gh
-alias upr="\
-    git fetch --prune && \
-    git add --update && \
-    git commit --amend --no-edit && \
-    git push origin --force-with-lease HEAD && \
-    gh_update_pr"
-alias cpr="gh_create_pr"
+alias pr="gh_pr"
+alias cpr="pr"
+alias upr="pr"
 
 # ------------------------------------------------
 #  homebrew

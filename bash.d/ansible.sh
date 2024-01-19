@@ -42,7 +42,12 @@ function aes() {
         return 3
     fi
 
-    read -p "String to encrypt: " -sr
+    if [[ -z "${ZSH_VERSION}" ]]; then
+        read -p "${BLUE}${1:-String to encrypt:} ${RESET}" -sr
+    else
+        read -sr "REPLY?${BLUE}${1:-String to encrypt:} ${RESET}"
+    fi
+
 
     ansible-vault encrypt_string --vault-id "${HOME}/.ansible/vault-passwords/${1}" -n "$2" "${REPLY}" |
         sed 's/^  */  /' |

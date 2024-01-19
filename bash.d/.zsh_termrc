@@ -45,8 +45,4 @@ if [[ -z "${ZSH_VERSION:-}" ]]; then
     # Search history with arrows, up: \e[A, down: \e[B
     bind '"\e[A": history-search-backward'
     bind '"\e[B": history-search-forward'
-
-    # Use vi mode on command line
-    set -o vi
-    bind '"jj":vi-movement-mode'
 fi

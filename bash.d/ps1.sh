@@ -49,10 +49,8 @@ function __ps1_prompt() {
     fi
 }
 
-if [[ -z "${ZSH_VERSION:-}" ]]; then
-    if [[ ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then
-        PROMPT_COMMAND="${PROMPT_COMMAND:-}history -a ~/.bash_history; history -r ~/.bash_history; __ps1_prompt"
-    fi
+if [[ -z "${ZSH_VERSION:-}" &&  ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then
+    PROMPT_COMMAND="${PROMPT_COMMAND:-}history -a ~/.bash_history; history -r ~/.bash_history; __ps1_prompt"
 else
     precmd() { __ps1_prompt; }
 fi

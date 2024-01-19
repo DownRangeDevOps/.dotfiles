@@ -78,7 +78,12 @@ function printf_callout() {
 
 # UI
 function prompt_to_continue() {
-    read -p "${BLUE}${1:-Continue?} (y)[es|no] ${RESET}" -n 1 -r
+    if [[ -z "${ZSH_VERSION}" ]]; then
+        read -p "${BLUE}${1:-Continue?} (y)[es|no] ${RESET}" -n 1 -r
+    else
+        read -kr "REPLY?${BLUE}${1:-Continue?} (y)[es|no] ${RESET}"
+    fi
+
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         printf "\n\n"
         return 0

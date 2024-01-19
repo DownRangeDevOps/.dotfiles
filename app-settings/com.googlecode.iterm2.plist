@@ -4506,7 +4506,7 @@
 	<key>DimInactiveSplitPanes</key>
 	<false/>
 	<key>DimOnlyText</key>
-	<false/>
+	<true/>
 	<key>DisableFullscreenTransparency</key>
 	<true/>
 	<key>EnableRendezvous</key>
@@ -6737,7 +6737,7 @@ Password Manager</string>
 	<key>SoundForEsc</key>
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
-	<real>0.098201553918308163</real>
+	<real>0.30131612461005569</real>
 	<key>StretchTabsToFillBar</key>
 	<false/>
 	<key>SwitchTabModifier</key>
