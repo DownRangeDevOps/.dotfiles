@@ -2,7 +2,7 @@
 
 if [[ -n ${DEBUG:-} ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
@@ -51,15 +51,15 @@ complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
 #  Private
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading private functions..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading private functions..."
 fi
 
 # Repository information
 function __git_is_repo() {
     if [[ -n ${1:-} ]]; then
-        git -C "$1" rev-parse --show-toplevel 2>/dev/null
+        git -C "$1" rev-parse --show-toplevel &>/dev/null
     else
-        git rev-parse 2>/dev/null
+        git rev-parse --show-toplevel &>/dev/null
     fi
 }
 
@@ -122,8 +122,8 @@ function __git_show_branch_state() {
     local branch
     local icon
 
-    branch="$(git rev-parse --abbrev-ref HEAD)"
-    icon="$(__git_parse_dirty)"
+    branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+    icon="$(__git_parse_dirty 2>/dev/null)"
 
     if [[ ${branch} == "HEAD" && $(git rev-parse --is-bare-repository) == "true" ]]; then
         branch="bare"
@@ -184,7 +184,7 @@ function __git_get_merged_branches() {
 #  Public
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading public functions..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading public functions..."
 fi
 
 # Info
@@ -722,7 +722,17 @@ function git_nuke_cur_branch() {
     git branch -D "${BRANCH}"
 }
 
-function gh_create_pr() {
+function gh_check_for_pr() {
+    results="$(gh pr list --head "$(git_get_cur_branch_name)" --state open | tail -1)"
+
+    if [[ "${results}" == "*no pull requests*" ]]; then
+        printf "%s" "false"
+    else
+        printf "%s" "true"
+    fi
+}
+
+function gh_pr() {
     local base_branch
     local log_content
     local title
@@ -737,25 +747,23 @@ function gh_create_pr() {
             sed -E "s/ \(.*\)$//"
     )
 
-    gh pr create --title "${title}" --body "${log_content}" --base "${base_branch}"
-}
+    if [[ "$(gh_check_for_pr)" == "true" ]]; then
+        printf_callout "Updating pull request..."
+        gh pr edit --title "${title}" --body "${log_content}"
+    else
+        printf_callout "Creating pull request..."
 
-function gh_update_pr() {
-    local log_content
-    local title
+        git fetch --prune
 
-    printf_callout "Updating PR body..."
+        if [[ ! "$(git status 2>/dev/null | tail -1)" == "*nothing to commit*" ]]; then
+            git add --update
+            git commit --amend --no-edit
+        fi
 
-    log_content="$(git_log_copy --print)"
-    title=$(
-        head -1 <<<"$log_content" |
-            sed -E "s/^## //" |
-            sed -E "s/\[\[/[/" |
-            sed -E "s/\]\]/]/" |
-            sed -E "s/ \(.*\)$//"
-    )
+        git push origin --force-with-lease HEAD
 
-    gh pr edit --title "${title}" --body "${log_content}"
+        gh pr create --title "${title}" --body "${log_content}" --base "${base_branch}"
+    fi
 }
 
 function git_log_copy() {

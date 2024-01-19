@@ -1,51 +1,18 @@
 # shellcheck shell=bash
 # .bashrc
-
-if [[ -n ${DEBUG:-} ]]; then
-    set +ua
-    # shellcheck disable=SC1091
-    [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
-    set -ua
-    log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    autoload -U +X bashcompinit && bashcompinit
+    autoload -U +X compinit && compinit
 fi
 
-# ------------------------------------------------
-#  Terminal
-# ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring terminal..."
-fi
-
-# Use my terminfo
-export TERMINFO=~/.local/share/terminfo
-export TERMINFO_DIRS=~/.local/share/terminfo
-
-# History
-export HISTSIZE=10000
-export HISTFILESIZE=100000
-export HISTFILE=~/.bash_history
-export HISTCONTROL=ignoreboth:erasedups # don't put duplicate lines in the history
-
-ulimit -n 1024        # increase limit on open files (default: 256)
-shopt -s histappend   # append
-shopt -s checkwinsize # check the win size after each command and update if necessary
-history -a            # append
-history -n            # read new lines and append
-
-# Search history with arrows, up: \e[A, down: \e[B
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
-
-# Use vi mode on command line
-set -o vi
-bind '"jj":vi-movement-mode'
+# shellcheck disable=SC1090
+source ~/.dotfiles/bash.d/.zsh_termrc
 
 # ------------------------------------------------
 #  bash
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating BASH aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating BASH aliases..."
 fi
 
 # auto on yubiswitch
@@ -103,7 +70,7 @@ alias wget="wget -c"               # resume downloads
 #  ansible
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Ansible aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Ansible aliases..."
 fi
 
 # ansible vault shortcuts
@@ -113,7 +80,7 @@ alias avv='ansible-vault view'
 #  aws vault
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating aws-vault aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating aws-vault aliases..."
 fi
 
 alias av="aws-vault"
@@ -124,7 +91,7 @@ alias avl="aws-vault list"
 #  docker
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Docker aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Docker aliases..."
 fi
 
 alias d="docker"
@@ -191,7 +158,7 @@ alias dc="docker compose"
 #  git
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating git aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating git aliases..."
 fi
 
 # general
@@ -279,19 +246,15 @@ alias gnukethis="git_nuke_cur_branch"
 alias opr="git_open_pull_request"
 
 # gh
-alias upr="\
-    git fetch --prune && \
-    git add --update && \
-    git commit --amend --no-edit && \
-    git push origin --force-with-lease HEAD && \
-    gh_update_pr"
-alias cpr="gh_create_pr"
+alias pr="gh_pr"
+alias cpr="pr"
+alias upr="pr"
 
 # ------------------------------------------------
 #  homebrew
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Homebrew alises..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Homebrew alises..."
 fi
 
 # avoid linking against any shims
@@ -302,7 +265,7 @@ alias brew='env PATH=${NO_SHIMS_PATH} brew'
 #  kubernetes
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Kubernetes aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Kubernetes aliases..."
 fi
 
 alias k="kubectl"
@@ -311,7 +274,7 @@ alias k="kubectl"
 #  macos
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating MacOS aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating MacOS aliases..."
 fi
 
 alias flushdns='sudo killall -HUP mDNSResponder'
@@ -325,7 +288,7 @@ alias fixflash='sudo killall coreaudiod'
 #  terraform
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Creating Terraform aliases..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Terraform aliases..."
 fi
 
 alias tf="terraform"
@@ -373,31 +336,30 @@ alias pyenvinit="eval \"\$(pyenv init -)\"; eval \"\$(pyenv virtualenv-init -)\"
 #  direnv
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Initalizing direnv..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Initalizing direnv..."
 fi
 
 set +ua
-eval "$(direnv hook bash)"
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    eval "$(direnv hook zsh)"
+else
+    eval "$(direnv hook bash)"
+fi
 set -ua
 
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: .bashrc done..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: .bashrc done..."
 fi
 
 # ------------------------------------------------
 # Non-login shells
 # ------------------------------------------------
 # Load/reload .inputrc
-if [[ -f "${HOME}/.inputrc" ]]; then
+if [[ -z "${ZSH_VERSION:-}" && -f "${HOME}/.inputrc" ]]; then
     bind -f ~/.inputrc
 fi
 
 # ------------------------------------------------
 # Externally managed
 # ------------------------------------------------
-
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/xjxf277/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-
 set +ua

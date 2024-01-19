@@ -1,10 +1,18 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    autoload -U +X bashcompinit && bashcompinit
+    autoload -U +X compinit && compinit
+fi
 
 # Reset path to always start fresh
 export PATH=""
 
 set +ua
-source /etc/profile # Set default paths
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    source /etc/zprofile
+else
+    source /etc/profile # Set default paths
+fi
 set -ua
 
 # Set base Homebrew paths
@@ -21,6 +29,8 @@ export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 
 # Load logger or overload with no-op
 if [[ ${DEBUG:-} -eq 1 ]]; then
+
+    # We need to use `basename` from Homebrew for `log.sh`
     function basename() {
         "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/basename" "$@"
     }
@@ -29,7 +39,7 @@ if [[ ${DEBUG:-} -eq 1 ]]; then
     [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
     set -ua
     log debug ""
-    log debug "[${BASH_SOURCE[0]}]"
+    log debug "[${BASH_SOURCE[0]:-${(%):-%x}}]"
 else
     log_sh_args=("info" "warn" "error" "debug")
     function log() {
@@ -53,7 +63,7 @@ set -uao pipefail
 stty -ixon 2>/dev/null
 
 # Load everything else
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 
 [[ -f "${BASH_D_PATH}/lib.sh" ]] && source "${BASH_D_PATH}/lib.sh"
 safe_source "${BASH_D_PATH}/path.sh"
@@ -63,19 +73,20 @@ safe_source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 # .bashrc
 if [[ -f "${HOME}/.bashrc" ]]; then
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading .bashrc..."
+        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .bashrc..."
     fi
 
     safe_source "${HOME}/.bashrc"
 
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Done."
+        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
     fi
 fi
 
 # Disable strictness
-set +uao pipefail
+set +o pipefail
+set +ua
 
-log debug "[$(basename "${BASH_SOURCE[0]}")]: Done, .bash_profile loaded."
+log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done, .bash_profile loaded."
 
 # vi: ft=sh

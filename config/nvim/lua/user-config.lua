@@ -140,10 +140,10 @@ vim.o.foldenable = false
 
 -- Terminal
 -- :help guicursor
--- vim.o.shell = table.concat({
---     vim.env.SHELL,
---     "--login",
--- }, " ")
+vim.o.shell = table.concat({
+    vim.env.HOMEBREW_PREFIX .. "/bin/zsh",
+    "--login",
+}, " ")
 vim.o.termguicolors = true
 vim.o.guicursor = table.concat({
     "n-c-v-sm:block",

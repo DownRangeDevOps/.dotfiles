@@ -3,7 +3,8 @@
 .envrc
 
 # local misc files
-notes.md
+ignore_*
+*.tmp.tf
 
 ## --- MacOS
 .DS_Store

@@ -374,7 +374,7 @@ local set_magic_prefix = function(keymap, search_prefix)
 end
 
 map("n", "*", "*N", { group = "gen", desc = "find word at cur" })
-map("n", "/", "/\\v\\c", { group = "gen", desc = "regex search" })
+map("n", "<leader>/", "/\\v\\c", { group = "gen", desc = "regex search" })
 map("c", "%", function() set_magic_prefix("%", "%s/\\v\\c") end, { group = "gen", desc = "regex replace" })
 map("c", "%%", function() set_magic_prefix("%%", "s/\\v\\c") end, { group = "gen", desc = "regex replace visual" })
 map("n", "<leader>rw", ":%smagic/\\<<C-r><C-w>\\>//gI<left><left><left>", { group = "txt", desc = "replace current word" })
@@ -481,7 +481,6 @@ end, { group = "ts", desc = "fuzzy git files" })
 map("i", "<C-n>", function() require("telescope.actions").cycle_history_next() end, { group = "ts", desc = "history next" })
 map("i", "<C-p>", function() require("telescope.actions").cycle_history_prev() end, { group = "ts", desc = "history prev" })
 map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { group = "ts", desc = "fuzzy recent files" })
-map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { group = "ts", desc = "fuzzy help" })
 map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { group = "ts", desc = "fuzzy manpage" })
 map("n", "<leader>ff", function()
     local opts = {
@@ -492,6 +491,9 @@ map("n", "<leader>ff", function()
 
     require("telescope.builtin").find_files(opts)
 end, { group = "ts", desc = "fuzzy files" })
+
+-- strings
+map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { group = "ts", desc = "fuzzy help" })
 map("n", "<leader>rg", function()
     local opts = {
         cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
@@ -500,9 +502,19 @@ map("n", "<leader>rg", function()
 
     require("telescope.builtin").live_grep(opts)
 end, { group = "ts", desc = "ripgrep" })
+map("n", "<leader>fw", function()
+    local opts = {
+        cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
+        hidden = true,
+        no_ignore = true
+    }
 
--- strings
-map("n", "<leader>fw", function() require("telescope.builtin").grep_string() end, { group = "ts", desc = "fuzzy word" })
+    require("telescope.builtin").grep_string(opts)
+end, { group = "ts", desc = "fuzzy word" })
+map("n", "/", function()
+    require("telescope.builtin").current_buffer_fuzzy_find(
+        require("telescope.themes").get_ivy({ previewer = false, }))
+end, { group = "ts", desc = "fuzzy in current buffer" })
 
 -- diagnostics
 map("n", "<leader>e", vim.diagnostic.open_float, { group = "diag", desc = "show errors" })
@@ -523,11 +535,6 @@ map("n", "<leader>gd", function() require("telescope.builtin").lsp_definitions()
 map("n", "<leader>gi", function() require("telescope.builtin").lsp_implementations() end, { group = "ts", desc = "goto implementation" })
 map("n", "<leader>fr", function() require("telescope.builtin").lsp_references() end, { group = "ts", desc = "find references" })
 map("n", "<leader>qf", function() require("telescope.builtin").quickfix() end, { group = "ts", desc = "fuzzy quickfix" })
-map("n", "<leader>/", "/", { group = "misc", desc = "default serach" })
-map("n", "/", function()
-    require("telescope.builtin").current_buffer_fuzzy_find(
-        require("telescope.themes").get_ivy({ previewer = false, }))
-end, { group = "ts", desc = "fuzzy in current buffer" })
 map("n", "<leader>fe", function() require("telescope.builtin").diagnostics() end, { group = "ts", desc = "fuzzy errors" })
 
 -- LSP keymaps

@@ -26,6 +26,7 @@
 	commitGraph = true
 	hooksPath = /Users/xjxf277/.dotfiles/config/git/.git-template/hooks/
 	untrackedCache = true
+	fscache = true
 [init]
 	templateDir = ~/.dotfiles/config/git/.git-template
 	defaultBranch = main
@@ -85,3 +86,5 @@
 [mergetool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
 	trustExitCode = true
+[index]
+	version = 4

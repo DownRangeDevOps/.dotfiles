@@ -3,14 +3,14 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading config..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading config..."
 fi
 
 export BETTER_EXCEPTIONS=1 # python better exceptions
@@ -21,14 +21,14 @@ export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
 
 function pipx() { # TODO: make lazy auto-completion loader
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing pipx completions..."
+        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Initializing pipx completions..."
     fi
 
     unset -f pipx
 
     eval "$(register-python-argcomplete pipx)" # bash auto-completion
 
-    $(which pipx) "$@"
+    command pipx "$@"
 }
 
 # ------------------------------------------------
@@ -43,7 +43,7 @@ function pipx() { # TODO: make lazy auto-completion loader
 #  helpers
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 fi
 
 function __get_virtualenv_name() {
@@ -116,13 +116,29 @@ export PIPENV_SHELL_EXPLICIT="${HOMEBREW_PREFIX}/bin/bash"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
 set +ua
+if [[ -z "${ZSH_VERSION}" ]]; then
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    pyenv virtualenvwrapper_lazy
 
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-pyenv virtualenvwrapper_lazy
-bind -f ~/.inputrc
-add_to_path "prepend" "$(which pyenv) prefix"
+    if [[ -z "${ZSH_VERSION:-}" && -f "${HOME}/.inputrc" ]]; then
+        bind -f ~/.inputrc
+    fi
 
+pyenv_prefix="$(pyenv prefix)"
+add_to_path "prepend" "${pyenv_prefix}"
+else
+    # Lazy load pyenv
+    if type pyenv > /dev/null; then
+        function pyenv() {
+            unset -f pyenv
+            eval "$(command pyenv init -)"
+            eval "$(pyenv virtualenv-init -)"
+            pyenv virtualenvwrapper_lazy
+            pyenv "$@"
+        }
+    fi
+fi
 set -ua
 
 function pyenv_init() {
@@ -137,11 +153,11 @@ function pyenv_init() {
     set -ua
 
     # Fix pyenv or one of it's extensions fucking up inputrc settings
-    if [[ -f "${HOME}/.inputrc" ]]; then
+    if [[ -z "${ZSH_VERSION:-}" && -f "${HOME}/.inputrc" ]]; then
         bind -f ~/.inputrc
     fi
 
-    add_to_path "prepend" "$(which pyenv) prefix"
+    add_to_path "prepend" "$(command pyenv prefix)"
     export PYENV_INITALIZED=1
 }
 
@@ -152,6 +168,6 @@ function pyenv_init() {
 #     fi
 #
 #     if [[ "${1:-}" != "init" ]]; then
-#         "$(which pyenv)" "$@"
+#         command pyenv "$@"
 #     fi
 # }

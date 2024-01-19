@@ -2,7 +2,7 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
@@ -24,6 +24,6 @@ function rbenv() {
     fi
 
     if [[ "${1:-}" != "init" ]]; then
-        "$(which rbenv)" "$@"
+        command rbenv "$@"
     fi
 }

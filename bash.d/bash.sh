@@ -2,14 +2,14 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring environment..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring environment..."
 fi
 
 # llvm
@@ -34,7 +34,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 #  helpers
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 fi
 
 function is_subsh() {
@@ -79,7 +79,7 @@ function list_dir() {
 #  utils
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring utils and loading util functions..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring utils and loading util functions..."
 fi
 
 function nvim() {
@@ -92,9 +92,9 @@ function nvim() {
     # fi
     #
     if [[ "${NVIM_SESSION_FILE_PATH:-}" ]]; then
-        "$(which nvim)" -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
+        command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
     else
-        "$(which nvim)" "$@"
+        command nvim "$@"
     fi
 }
 
@@ -128,33 +128,52 @@ function mysqlpw() {
 # bash.d
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Configuring bash completions..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring bash completions..."
 fi
 
 set +ua
 source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 
 # NOTE: overwrites PS1, source it before setting custom PS1
-source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/path.bash.inc"
-source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.bash.inc"
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/path.zsh.inc"
+    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.zsh.inc"
+else
+    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/path.bash.inc"
+    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.bash.inc"
+fi
 set -ua
 
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading bash.d files..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading bash.d files..."
 fi
 
-{
-    shopt -s nullglob # protect against empty dir
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    {
+        for file in "${BASH_D_PATH}"/*(N); do
+            if [[ ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
+                if [[ -n "${DEBUG:-}" ]]; then
+                    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading ${file} ..."
+                fi
 
-    for file in "${BASH_D_PATH}"/*; do
-        if [[ ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
-            if [[ -n "${DEBUG:-}" ]]; then
-                log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading ${file} ..."
+                safe_source "${file}"
             fi
+        done
+    }
+else
+    {
+        shopt -s nullglob # protect against empty dir
 
-            safe_source "${file}"
-        fi
-    done
+        for file in "${BASH_D_PATH}"/*; do
+            if [[ ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
+                if [[ -n "${DEBUG:-}" ]]; then
+                    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading ${file} ..."
+                fi
 
-    shopt -u nullglob # reset
-}
+                safe_source "${file}"
+            fi
+        done
+
+        shopt -u nullglob # reset
+    }
+fi

@@ -2,7 +2,7 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
@@ -10,7 +10,7 @@ fi
 # ------------------------------------------------
 function z() {
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]}")]: Initializing z..."
+        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Initializing z..."
     fi
 
     unset -f z

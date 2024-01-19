@@ -2,7 +2,7 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]}]"
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
 # ------------------------------------------------
@@ -16,7 +16,7 @@ export BITBUCKET_SSH_KEY="${HOME}/.ssh/id_rsa"
 #  helpers
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]}")]: Loading helpers..."
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 fi
 
 function ade() {
@@ -42,7 +42,12 @@ function aes() {
         return 3
     fi
 
-    read -p "String to encrypt: " -sr
+    if [[ -z "${ZSH_VERSION}" ]]; then
+        read -p "${BLUE}${1:-String to encrypt:} ${RESET}" -sr
+    else
+        read -sr "REPLY?${BLUE}${1:-String to encrypt:} ${RESET}"
+    fi
+
 
     ansible-vault encrypt_string --vault-id "${HOME}/.ansible/vault-passwords/${1}" -n "$2" "${REPLY}" |
         sed 's/^  */  /' |

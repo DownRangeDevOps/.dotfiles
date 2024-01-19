@@ -17,7 +17,7 @@ for level, icon in pairs(signs) do
 end
 
 vim.diagnostic.config({
-    underline = true,
+    underline = false,
     severity_sort = true,
     signs = true,
     virtual_text = {

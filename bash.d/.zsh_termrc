@@ -1,0 +1,48 @@
+# shellcheck shell=bash
+# Terminal setup
+
+if [[ -n ${DEBUG:-} ]]; then
+    set +ua
+    # shellcheck disable=SC1091
+    [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
+    set -ua
+    log debug ""
+    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+fi
+
+# ------------------------------------------------
+#  Terminal
+# ------------------------------------------------
+if [[ -n ${DEBUG:-} ]]; then
+    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring terminal..."
+fi
+
+# Use my terminfo
+export TERMINFO=~/.local/share/terminfo
+export TERMINFO_DIRS=~/.local/share/terminfo
+
+# History
+export HISTSIZE=100000
+export HISTFILESIZE=100000
+export HISTFILE=~/.histfile
+
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    setopt SHARE_HISTORY            # import old commands, append new, so all sessions have the same hist
+    setopt HIST_IGNORE_ALL_DUPS     # do not put duplicated command into history list
+    setopt HIST_SAVE_NO_DUPS        # omit older duplicates
+    setopt HIST_REDUCE_BLANKS       # remove unnecessary blanks
+else
+    export HISTCONTROL=ignoreboth:erasedups # don't put duplicate lines in the history
+    shopt -s histappend   # append
+    shopt -s checkwinsize # check the win size after each command and update if necessary
+    history -a            # append
+    history -n            # read new lines and append
+fi
+
+ulimit -n 1024        # increase limit on open files (default: 256)
+
+if [[ -z "${ZSH_VERSION:-}" ]]; then
+    # Search history with arrows, up: \e[A, down: \e[B
+    bind '"\e[A": history-search-backward'
+    bind '"\e[B": history-search-forward'
+fi
