@@ -725,7 +725,7 @@ function git_nuke_cur_branch() {
 function gh_check_for_pr() {
     results="$(gh pr list --head "$(git_get_cur_branch_name)" --state open | tail -1)"
 
-    if [[ "${results}" == "*no pull requests*" ]]; then
+    if [[ "${results}" == "*no pull requests*" || -z "${results}" ]]; then
         printf "%s" "false"
     else
         printf "%s" "true"
