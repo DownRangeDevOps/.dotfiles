@@ -5,6 +5,8 @@
 # local misc files
 ignore_*
 *.tmp.tf
+change-log.tfplan
+tfplan
 
 ## --- MacOS
 .DS_Store
@@ -185,12 +187,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
-env/
 venv/
-ENV/
-env.bak/
 venv.bak/
 
 # Spyder project settings

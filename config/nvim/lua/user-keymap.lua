@@ -165,6 +165,14 @@ map("n", "<Enter>", function()
         vim.api.nvim_feedkeys(keypress, "n", false)
     end
 end, { group = "gen", desc = "Enter"})
+map("n", "<C-C>", function()
+    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
+        vim.cmd.startinsert()
+        vim.api.nvim_feedkeys("", "n", false)
+    else
+        vim.api.nvim_feedkeys("", "n", false)
+    end
+end, { group = "gen", desc = "Enter"})
 map("n", "<leader>rc", function()
     for name,_ in pairs(package.loaded) do
         if name:match("^user-") and not name:match("^user-plugins") then
@@ -268,11 +276,12 @@ map("n", "<leader>L", function()
     vim.fn.setreg('+', path_with_line_num)
 end, { group = "txt", desc = "path to cur line from git root"})
 
-
 -- file/buffer management (auto-save, browser)
 map("n", "<leader>w", function()
     local modifiable = vim.bo.modifiable
     if modifiable then
+        MiniTrailspace.trim()
+        MiniTrailspace.trim_last_lines()
         vim.cmd.write()
         vim.cmd("LspRestart")
         vim.defer_fn(function() vim.cmd.echon("''") end, 750)
@@ -307,6 +316,7 @@ map("n", "<leader>mx", function()
         vim.cmd.echoerr('"' .. vim.fn.expand("%") .. ' is not a file"')
     end
 end, { group = "file", desc = "make file +x" })
+map("n", "<leader>fr", function() MiniMisc.find_root(0, { ".git", "Makefile"}) end, { group = "file", desc = "find project root"})
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
@@ -419,19 +429,7 @@ map("n", "<leader>nt", function() vim.cmd("tabnew") end, { group = "tab", desc =
 map("n", "gt", function() vim.cmd("BufferPick") end, { group = "tab", desc = "pick tab" })
 
 -- Terminal split management
-map("n", "`", function()
-    vim.cmd("ToggleTerm size=20 direction=horizontal name=tterm")
-end, { group = "gen", desc = "bottom term" })
-map("n", "<Esc>", function()
-    vim.cmd("ToggleTerm size=20 direction=horizontal name=tterm")
-end, { group = "gen", desc = "bottom term" })
-map("n", "<leader>`", function()
-    vim.cmd("ToggleTerm size=120 direction=vertical name=tterm")
-end, { group = "gen", desc = "vertical term" })
-map("n", "<leader><Esc>", function()
-    vim.cmd("ToggleTerm size=120 direction=vertical name=tterm")
-end, { group = "gen", desc = "vertical term" })
-
+-- see toggleterm.lua plugin config
 
 -- Split navigation and sizing
 map({ "n", "i" }, "<C-h>", "<Esc><C-w>h", { group = "nav", desc = "left window" })

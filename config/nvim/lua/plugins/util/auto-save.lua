@@ -28,7 +28,12 @@ return {
             enabling = nil, -- ran when enabling auto-save
             disabling = nil, -- ran when disabling auto-save
             before_asserting_save = nil, -- ran before checking `condition`
-            before_saving = nil, -- ran before doing the actual save
+
+            -- ran before doing the actual save
+            before_saving = function()
+                MiniTrailspace.trim()
+                MiniTrailspace.trim_last_lines()
+            end,
 
             -- ran after doing the actual save
             after_saving = function()

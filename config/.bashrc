@@ -1,5 +1,6 @@
 # shellcheck shell=bash
 # .bashrc
+
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     autoload -U +X bashcompinit && bashcompinit
     autoload -U +X compinit && compinit
@@ -22,7 +23,7 @@ alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 alias c="clear"
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
-alias sb='source ${HOME}/.bash_profile'
+alias sb="source \${HOME}/.bash_profile"
 
 # safety
 alias chown="chown --preserve-root"
@@ -165,7 +166,7 @@ fi
 alias g="git"
 alias gf="git fetch --prune"
 alias gp="git fetch --prune && git pull --rebase"
-alias gs="git status"
+alias gs="git status --short --branch"
 
 # repo/worktree
 alias gr="git remote"
@@ -193,12 +194,14 @@ alias gdd="git diff origin/develop..."
 alias gdm="git diff origin/\$(__git_master_or_main)..."
 
 # logging
+alias gll="git log --oneline"
 alias gl-="git_log"
 alias gL-="git_log --all"
 alias gl="git_log --truncate-subject"
 alias gL="git_log --all --truncate-subject"
 alias glm="git_log --subject-only"
 alias gstat="git_status_vs_master"
+alias glast="git log -1 HEAD --stat"
 alias gstatd="git_status_vs_develop"
 
 # committing
@@ -212,7 +215,7 @@ alias gcp="git cherry-pick -x" # -x: add "cherry-picked from..." message
 alias gcpu="git_commit_and_push"
 alias gfu="git_fixup"
 alias gqf="git add --update && git commit --amend --no-edit && gfpo"
-alias gst="git stash"
+alias gst="git stash --all"
 
 # rebasing
 alias grb="git rebase --interactive --autosquash"
@@ -359,7 +362,23 @@ if [[ -z "${ZSH_VERSION:-}" && -f "${HOME}/.inputrc" ]]; then
     bind -f ~/.inputrc
 fi
 
+# Source profile when aws-vault runs interactive shell
+if [[ -n "${AWS_VAULT:-}" && -z "${AWS_VAULT_LOGIN_SHELL_INITALIZED:-}" ]]; then
+    export AWS_VAULT_LOGIN_SHELL_INITALIZED=1
+
+    if [[ -n "${ZSH_VERSION}" ]]; then
+        # shellcheck disable=SC1090
+        [[ -f "${HOME}/.zprofile" ]] && source ~/.zprofile
+    else
+        # shellcheck disable=SC1090
+        [[ -f "${HOME}/.bash_profile" ]] && source ~/.bash_profile
+    fi
+fi
+
 # ------------------------------------------------
 # Externally managed
 # ------------------------------------------------
 set +ua
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform

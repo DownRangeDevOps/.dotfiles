@@ -61,6 +61,7 @@
 	autoupdate = false
 [branch]
 	autosetuprebase = always
+	sort = -committerdate
 [help]
 	autocorrect = 0
 [color]
@@ -78,6 +79,15 @@
 [maintenance]
 	auto = true
 	strategy = incremental
+	repo = /Users/xjxf277/Grainger/work/dbx/admin/main
+	repo = /Users/xjxf277/Grainger/work/dbx/data/alt
+	repo = /Users/xjxf277/Grainger/work/dbx/data/main
+	repo = /Users/xjxf277/Grainger/work/dbx/unity/main
+	repo = /Users/xjxf277/Grainger/work/dbx/infra/main
+	repo = /Users/xjxf277/.dotfiles
+	repo = /Users/xjxf277/Dev/Reference/Example-Ops
+	repo = /Users/xjxf277/Grainger/work/model-serving/main
+	repo = /Users/xjxf277/Grainger/work/hackathon/danswer/main
 [core "gc"]
 	writeCommitGraph = true
 [difftool "sourcetree"]
@@ -88,3 +98,7 @@
 	trustExitCode = true
 [index]
 	version = 4
+[alias]
+	push = push --signed
+    status = status --short --branch
+    stash = stash --all

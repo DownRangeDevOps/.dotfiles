@@ -52,9 +52,6 @@ rules:
   # disallow implicit null values
   empty-values: enable
 
-  # disallow infinity, NaN, scientific notion, and implicit decimals
-  flow-values: enable
-
   # disallow arbitrary leading spaces before list values
   hyphens:
     max-spaces-after: 1

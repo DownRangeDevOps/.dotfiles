@@ -23,7 +23,7 @@ return {
         -- Valid options are 'left' (the default), 'previous', and 'right'
         focus_on_close = 'left',
 
-        hide = { extensions = false, inactive = true }, -- Hide inactive buffers and file extensions. Other options are `alternate`, `current`, and `visible`.
+        hide = { extensions = false, inactive = false }, -- Hide inactive buffers and file extensions. Other options are `alternate`, `current`, and `visible`.
         highlight_alternate = false, -- Disable highlighting alternate buffers
         highlight_inactive_file_icons = false, -- Disable highlighting file icons in inactive buffers
 
@@ -37,8 +37,8 @@ return {
             button = '',
             -- Enables / disables diagnostic symbols
             diagnostics = {
-                [vim.diagnostic.severity.ERROR] = { enabled = true, icon = 'ﬀ' },
-                [vim.diagnostic.severity.WARN] = { enabled = true },
+                [vim.diagnostic.severity.ERROR] = { enabled = true, icon = "" },
+                [vim.diagnostic.severity.WARN] = { enabled = true, icon = "" },
                 [vim.diagnostic.severity.INFO] = { enabled = true },
                 [vim.diagnostic.severity.HINT] = { enabled = true },
             },
