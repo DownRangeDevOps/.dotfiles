@@ -1,21 +1,6 @@
 -- ----------------------------------------------
 -- Helpers
 -- ----------------------------------------------
--- Toggle auto-save
-vim.api.nvim_create_user_command(
-    "AutoSaveToggle",
-    function()
-        local switch = not vim.g.auto_save
-        local msg = switch and "enabled" or "disabled"
-
-        vim.g.auto_save = not switch
-
-        vim.cmd.echon("'AutoSave " .. msg .. "'")
-        vim.fn.timer_start(1000, function() vim.cmd.echon("''") end)
-    end,
-    { desc = "Toggle AutoSave" }
-)
-
 -- Clear registers
 vim.api.nvim_create_user_command(
     "ClearRegisters",
@@ -82,6 +67,7 @@ vim.api.nvim_create_user_command("Tffr", function()
     vim.cmd("silent! !cd $(git rev-parse --show-toplevel 2>/dev/null) && terraform fmt -recursive && cd -")
     vim.cmd.edit()
 end, { desc = "terraform recursive fmt"})
+
 -- ----------------------------------------------
 -- Typos
 -- ----------------------------------------------

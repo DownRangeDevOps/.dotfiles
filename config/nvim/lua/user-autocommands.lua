@@ -301,15 +301,6 @@ vim.api.nvim_create_autocmd({
 -- ----------------------------------------------
 -- Last
 -- ----------------------------------------------
--- reset config that may have been changed by plugins
-vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
-    group = ui,
-    pattern = "*",
-    callback = function()
-        require("user-config")
-    end
-})
-
 -- clean ui filetypes
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
@@ -354,4 +345,13 @@ vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter" }, {
         vim.wo.number = false
         vim.wo.relativenumber = false
     end,
+})
+
+-- reset config that may have been changed by plugins
+vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+    group = ui,
+    pattern = "*",
+    callback = function()
+        require("user-config")
+    end
 })

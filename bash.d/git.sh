@@ -319,6 +319,7 @@ function git_log() {
                 -e "s/\(([XY])\)/(${BOLD}${WHITE}(\1${RESET}${BLUE})/g" |
             LESS -SFXR
     else
+        printf "%s\n" "${git_args[@]}"
         git log "${git_args[@]}" "$@" | LESS -SFXR
     fi
 }
@@ -451,7 +452,11 @@ function git_push() {
     else
         case $1 in
         "--force-update-refs")
-            readarray -t refs < <(get_branch_refs_between_head_and_main)
+            if [[ -n "${ZSH_VERSION}" ]]; then
+                refs=(${(f)"$(get_branch_refs_between_head_and_main)"})
+            else
+                readarray -t refs < <(get_branch_refs_between_head_and_main)
+            fi
 
             git push \
                 --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
@@ -534,10 +539,19 @@ function get_branch_refs_between_head_and_main() {
     git fetch --prune
 
     main_ref=$(__git_master_or_main)
-    readarray -t commit_shas < <(git log --format="%H" --no-merges HEAD "^origin/${main_ref}")
+    if [[ -n "${ZSH_VERSION}" ]]; then
+        commit_shas=(${(f)"$(git log --format="%H" --no-merges HEAD "^origin/${main_ref}")"})
+    else
+        readarray -t commit_shas < <(git log --format="%H" --no-merges HEAD "^origin/${main_ref}")
+    fi
 
     for sha in "${commit_shas[@]}"; do
-        readarray -t tmp < <(git branch --contains "${sha}" | sed -E "s/^[\* ]+//")
+        if [[ -n "${ZSH_VERSION}" ]]; then
+            tmp=(${(f)"$(git branch --contains "${sha}" | sed -E "s/^[\* ]+//")"})
+        else
+            readarray -t tmp < <(git branch --contains "${sha}" | sed -E "s/^[\* ]+//")
+        fi
+
         refs+=("${tmp[@]}")
     done
 
@@ -663,6 +677,15 @@ function git_delete_merged_branches() {
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
+    if [[ -n "${ZSH_VERSION}" ]]; then
+        local_branches=(${(f)"$(__git_get_merged_branches |
+            grep --extended-regexp --invert-match "^\s*remotes/origin/" |
+            grep --extended-regexp --invert-match "${cur_branch}")"})
+
+        remote_branches=(${(f)"$(__git_get_merged_branches |
+            grep --extended-regexp "^\s*remotes/origin/" |
+            sed --regexp-extended "s/^\s*remotes\/origin\///g")"})
+    else
     readarray -t local_branches < <(__git_get_merged_branches |
         grep --extended-regexp --invert-match "^\s*remotes/origin/" |
         grep --extended-regexp --invert-match "${cur_branch}")
@@ -670,6 +693,7 @@ function git_delete_merged_branches() {
     readarray -t remote_branches < <(__git_get_merged_branches |
         grep --extended-regexp "^\s*remotes/origin/" |
         sed --regexp-extended "s/^\s*remotes\/origin\///g")
+    fi
 
     if [[ ${#local_branches[@]} -gt 0 || ${#remote_branches[@]} -gt 0 ]]; then
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
@@ -749,6 +773,8 @@ function gh_pr() {
 
     if [[ "$(gh_check_for_pr)" == "true" ]]; then
         printf_callout "Updating pull request..."
+        git fetch --prune
+        git push origin --force-with-lease HEAD
         gh pr edit --title "${title}" --body "${log_content}"
     else
         printf_callout "Creating pull request..."

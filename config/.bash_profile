@@ -1,4 +1,5 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
+
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     autoload -U +X bashcompinit && bashcompinit
     autoload -U +X compinit && compinit
@@ -71,15 +72,29 @@ safe_source "${BASH_D_PATH}/bash.sh"
 safe_source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 
 # .bashrc
-if [[ -f "${HOME}/.bashrc" ]]; then
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .bashrc..."
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    if [[ -f "${HOME}/.zshrc" ]]; then
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .zshrc..."
+        fi
+
+        safe_source "${HOME}/.zshrc"
+
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
+        fi
     fi
+else
+    if [[ -f "${HOME}/.bashrc" ]]; then
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .bashrc..."
+        fi
 
-    safe_source "${HOME}/.bashrc"
+        safe_source "${HOME}/.bashrc"
 
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
+        fi
     fi
 fi
 
@@ -90,3 +105,5 @@ set +ua
 log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done, .bash_profile loaded."
 
 # vi: ft=sh
+
+complete -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform

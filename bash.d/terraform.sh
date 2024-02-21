@@ -59,22 +59,20 @@ function terraform_plan() {
 }
 
 function parse_plan_diff() {
-    local infile="${1:-tfplan}"
+    local infile="${1:-"tfplan"}"
     local outfile="${2:-"change-log.tfplan"}"
     local patterns=("destroyed" "created" "replaced" "forces replacement")
-
-    if [[ -f ${outfile} ]]; then
-        if ! prompt_to_continue "${outfile} exists, overwrite?"; then
-            return 6
-        fi
-    fi
 
     true >|"${outfile}"
 
     for pat in "${patterns[@]}"; do
         {
-            printf "%s\n" "==== ${pat^^}"
-            rg -N "$pat" "${infile}"
+            if [[ -n "${ZSH_VERSION}" ]]; then
+                printf "%s\n" "==== ${pat:u}"
+            else
+                printf "%s\n" "==== ${pat^^}"
+            fi
+            rg -N "${pat}" "${infile}" | sed -E "s/( will | must ).*//"
             printf "\n"
         } >>"${outfile}"
     done

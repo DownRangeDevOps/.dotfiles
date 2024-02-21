@@ -43,6 +43,18 @@ ulimit -n 1024        # increase limit on open files (default: 256)
 
 if [[ -z "${ZSH_VERSION:-}" ]]; then
     # Search history with arrows, up: \e[A, down: \e[B
-    bind '"\e[A": history-search-backward'
-    bind '"\e[B": history-search-forward'
+    # bind '"\e[A": history-search-backward'
+    # bind '"\e[B": history-search-forward'
+    for direction (up down) {
+    autoload "${direction}-line-or-beginning-search"
+    zle -N "${direction}-line-or-beginning-search"
+    key="${terminfo}[kcu${direction}[1]1]"
+
+    for key ("${key}" "${key/O/[}")
+        bindkey "${key}" "${direction}-line-or-beginning-search"
+    }
+
+    if ((original_buffer_length == 0)); then
+        CURSOR=$#BUFFER
+    fi
 fi

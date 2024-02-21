@@ -43,7 +43,7 @@ function __ps1_prompt() {
     fi
 
     if [[ -n "${ZSH_VERSION:-}" ]]; then
-        PS1="${time:-}${shell_lvl:-}${info:-} ${CYAN}→ ${RESET}"
+        PS1="${time:-}${shell_lvl:-}${info:-}${CYAN}→ ${RESET}"
     else
         PS1="${time:-}${shell_lvl:-}${info:-} \[${CYAN}\]→ \[${RESET}\]"
     fi
