@@ -166,7 +166,7 @@ fi
 alias g="git"
 alias gf="git fetch --prune"
 alias gp="git fetch --prune && git pull --rebase"
-alias gs="git status --short --branch"
+alias gs="git status --branch"
 
 # repo/worktree
 alias gr="git remote"
@@ -190,8 +190,8 @@ alias gdmb="git_delete_merged_branches"
 # diff
 alias gd1="git diff HEAD~"
 alias gd="git diff"
-alias gdd="git diff origin/develop..."
-alias gdm="git diff origin/\$(__git_master_or_main)..."
+alias gdd="__git_diff_develop"
+alias gdm="__git_diff_master"
 
 # logging
 alias gll="git log --oneline"

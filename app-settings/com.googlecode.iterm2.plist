@@ -32,10 +32,10 @@
 	<integer>1</integer>
 	<key>Coprocess MRU</key>
 	<array>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py j</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
-		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py j</string>
@@ -5759,7 +5759,7 @@ Password Manager</string>
 			<key>Use Non-ASCII Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
-			<real>1.6100000000000001</real>
+			<real>1.6000000000000001</real>
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>

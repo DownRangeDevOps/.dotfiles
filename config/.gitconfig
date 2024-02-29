@@ -100,5 +100,5 @@
 	version = 4
 [alias]
 	push = push --signed
-    status = status --short --branch
+    status = status --branch
     stash = stash --all

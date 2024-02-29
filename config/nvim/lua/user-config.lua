@@ -112,13 +112,16 @@ vim.o.cursorlineopt = "number"
 vim.o.hidden = true
 vim.o.hlsearch = true
 vim.o.incsearch = true
+vim.o.list = true
 vim.o.number = true
 vim.o.numberwidth = 5
 vim.o.relativenumber = true
 vim.o.scrolloff = 8
+vim.o.showtabline = 2
 vim.o.splitbelow = true
 vim.o.splitright = true
-vim.o.list = true
+vim.opt.sessionoptions:append("tabpages","globals")
+
 vim.o.listchars = table.concat({
     "tab:⇢•",
     "precedes:«",

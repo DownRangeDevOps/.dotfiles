@@ -215,6 +215,12 @@ map("c", "q:", ":")
 map("c", "q/", "/")
 map("c", "q/", "?")
 
+-- Yanky
+map({"n", "x"}, "p", "<Plug>(YankyPutAfter)", { group = "gen", desc = "paste" })
+map({"n", "x"}, "P", "<Plug>(YankyPutBefore)", { group = "gen", desc = "paste before" })
+map({"n", "x"}, "<c-m>", "<Plug>(YankyPreviousEntry)", { group = "gen", desc = "yanky prev" })
+map({"n", "x"}, "<c-n>", "<Plug>(YankyNextEntry)", { group = "gen", desc = "yanky next" })
+
 -- Karen without Karenness
 -- Copy/paste to/from system clipboard
 map("v", "<LeftRelease>", '"+y<LeftRelease>', { group = "gen", desc = "copy on mouse select" })
@@ -225,10 +231,10 @@ map("n", "<leader>p", '"+p', { group = "gen", desc = "paste system clipboard" })
 map("n", "<leader>P", '"+P', { group = "gen", desc = "paste system clipboard" })
 
 -- paste (p/P)
-map("v", "p", '"_dgvp', { group = "txt", desc = "paste" })
-map("v", "P", '"_dgvP', { group = "txt", desc = "paste after" })
+-- map("v", "p", '"_dgvp', { group = "txt", desc = "paste" })
+-- map("v", "P", '"_dgvP', { group = "txt", desc = "paste before" })
 map("v", "<leader>p", "ygvp", { group = "txt", desc = "yank-paste after" })
-map("v", "<leader>P", "ygvP", { group = "txt", desc = "yank-paste after" })
+map("v", "<leader>P", "ygvP", { group = "txt", desc = "yank-paste before" })
 
 -- delete (d/D)
 map({ "n", "v" }, "d", '"_d', { group = "txt", desc = "delete" })

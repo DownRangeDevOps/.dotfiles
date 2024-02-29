@@ -170,6 +170,17 @@ function git_status_vs_develop() {
 }
 
 # diffing
+function __git_diff_develop() {
+    git diff ${@} origin/develop...
+}
+
+function __git_diff_master() {
+    local main_branch
+    main_branch="$(__git_master_or_main)"
+
+    git diff ${@} origin/${main_branch}...
+}
+
 function __git_diff_so_fancy_with_less() {
     git diff --color "${1:-@}" | diff-so-fancy | less --tabs=4 -RFX
 }
