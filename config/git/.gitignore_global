@@ -1,7 +1,4 @@
 ## --- Custom
-# direnv local
-.envrc
-
 # local misc files
 ignore_*
 *.tmp.tf

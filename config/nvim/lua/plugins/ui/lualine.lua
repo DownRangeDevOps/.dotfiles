@@ -47,13 +47,14 @@ return {
                 {
                     "branch",
                     fmt = function(str)
-                        local len = vim.api.nvim_strwidth(str)
+                        local branch_description = string.gsub(str, "^.*%-%-", "")
+                        local len = vim.api.nvim_strwidth(branch_description)
 
                         if len > 30 then
-                            str = ("...%s"):format(str:sub(len - 31, len))
+                            branch_description = ("%s..."):format(str:sub(len - 31, len))
                         end
 
-                        return str
+                        return branch_description
                     end,
                 },
                 "diff",

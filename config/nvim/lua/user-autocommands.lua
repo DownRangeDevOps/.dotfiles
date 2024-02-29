@@ -82,16 +82,16 @@ vim.api.nvim_create_autocmd({ "BufEnter", "TermEnter", "WinEnter", "TabEnter", "
 })
 
 -- Highlight on yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-    group = user,
-    pattern = "*",
-    callback = function()
-        vim.highlight.on_yank({
-            higroup = "Question",
-            timeout = 250,
-        })
-    end,
-})
+-- vim.api.nvim_create_autocmd("TextYankPost", {
+--     group = user,
+--     pattern = "*",
+--     callback = function()
+--         vim.highlight.on_yank({
+--             higroup = "Question",
+--             timeout = 250,
+--         })
+--     end,
+-- })
 
 -- ----------------------------------------------
 -- Filetype
