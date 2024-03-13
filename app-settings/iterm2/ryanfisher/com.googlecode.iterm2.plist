@@ -6809,11 +6809,11 @@ Password Manager</string>
 				<key>Saved Window Type</key>
 				<integer>13</integer>
 				<key>Screen</key>
-				<integer>1</integer>
+				<integer>2</integer>
 				<key>Scroller Width</key>
 				<real>0.0</real>
 				<key>Selected Tab Index</key>
-				<integer>6</integer>
+				<integer>0</integer>
 				<key>Tabs</key>
 				<array>
 					<dict>
@@ -7206,7 +7206,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>107BC36A-9C45-42EF-B065-059A01B5E8A5</string>
+											<string>2F110234-995A-43F0-AC2F-81AE7600B83C</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -7988,7 +7988,7 @@ Password Manager</string>
 										<key>height</key>
 										<real>1356</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2558</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -8003,7 +8003,7 @@ Password Manager</string>
 								<key>height</key>
 								<real>1356</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2558</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -8405,7 +8405,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>EE7189B6-1AB9-48D1-A8EE-88CCD44CF6E6</string>
+											<string>328B701B-6B1D-4EF4-A61C-744830DC236C</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -9185,7 +9185,7 @@ Password Manager</string>
 										<key>height</key>
 										<real>1356</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2558</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -9200,7 +9200,7 @@ Password Manager</string>
 								<key>height</key>
 								<real>1356</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2558</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -9602,7 +9602,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>71EB42CA-6406-44DC-B689-0869DB9E790B</string>
+											<string>054487C9-639C-4B48-B9A0-7779D8017908</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10384,7 +10384,7 @@ Password Manager</string>
 										<key>height</key>
 										<real>1356</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2558</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -10399,7 +10399,7 @@ Password Manager</string>
 								<key>height</key>
 								<real>1356</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2558</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -10801,7 +10801,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>E2A8EDAB-153B-4BB5-816F-6E9BEC74E52D</string>
+											<string>8222F71F-A4A7-453B-A131-032843A45F33</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11583,7 +11583,7 @@ Password Manager</string>
 										<key>height</key>
 										<real>1356</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2558</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -11598,7 +11598,7 @@ Password Manager</string>
 								<key>height</key>
 								<real>1356</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2558</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -11614,7 +11614,7 @@ Password Manager</string>
 						<key>Root</key>
 						<dict>
 							<key>Splitter ID</key>
-							<string>E689B789-5578-41D4-A7FE-28C251C5BF31</string>
+							<string>DB118498-7A13-4606-A923-21AA2595793F</string>
 							<key>Subviews</key>
 							<array>
 								<dict>
@@ -12000,7 +12000,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>CD5B24CB-CE1F-4562-8675-AF7CAD61E2B9</string>
+											<string>AB49A590-403E-4533-86BA-B4B367B4E46F</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -12723,7 +12723,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/ryanfisher/dev/downrange-devops/startup-werx</string>
+											<string>/Users/ryanfisher/dev/career</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -12756,7 +12756,7 @@ Password Manager</string>
 										<key>Rows</key>
 										<integer>54</integer>
 										<key>Session GUID</key>
-										<string>2D7E2359-6F53-4443-98A1-AB2640259BA6</string>
+										<string>7C1EBCD5-18A0-402F-A1F3-305690333DC3</string>
 										<key>Short Lived Single Use</key>
 										<false/>
 										<key>Should Expect Current Dir Updates</key>
@@ -12780,7 +12780,7 @@ Password Manager</string>
 										<key>height</key>
 										<real>1356</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2558</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -12795,7 +12795,7 @@ Password Manager</string>
 								<key>height</key>
 								<real>1356</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2558</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -12805,7 +12805,7 @@ Password Manager</string>
 							<false/>
 						</dict>
 						<key>Tab GUID</key>
-						<string>2478E2C2-B774-416D-94C7-A458FA87C62E</string>
+						<string>DF60EE34-8FDD-418F-97E6-410EA539BEEA</string>
 					</dict>
 					<dict>
 						<key>Root</key>
@@ -13197,7 +13197,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>611E5D23-3754-45F3-ACAB-15B0A4AE77D9</string>
+											<string>889DD090-35A2-4B32-947D-A50AB5BFFE27</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -13977,7 +13977,7 @@ Password Manager</string>
 										<key>height</key>
 										<real>1356</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2558</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -13992,7 +13992,7 @@ Password Manager</string>
 								<key>height</key>
 								<real>1356</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2558</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -14328,13 +14328,13 @@ Password Manager</string>
 												<key>Alpha Component</key>
 												<real>1</real>
 												<key>Blue Component</key>
-												<real>0.83529412746429443</real>
+												<real>0.92549020051956177</real>
 												<key>Color Space</key>
 												<string>sRGB</string>
 												<key>Green Component</key>
-												<real>0.88627451658248901</real>
+												<real>0.78039216995239258</real>
 												<key>Red Component</key>
-												<real>0.58039218187332153</real>
+												<real>0.45490199327468872</real>
 											</dict>
 											<key>Cursor Guide Color</key>
 											<dict>
@@ -14394,7 +14394,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>931D3496-CD1E-4DF6-A2F0-E4F1D8FD662C</string>
+											<string>602BB815-5538-4E41-90E8-8B9A3BA0691B</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -15117,7 +15117,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/ryanfisher/dev/downrange-devops/startup-werx</string>
+											<string>/Users/ryanfisher/dev/grainger/gtg-mlops-infra-core</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -15140,6 +15140,7 @@ Password Manager</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Cursor Color</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -15173,7 +15174,7 @@ Password Manager</string>
 										<key>height</key>
 										<real>1356</real>
 										<key>width</key>
-										<real>2560</real>
+										<real>2558</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -15188,7 +15189,7 @@ Password Manager</string>
 								<key>height</key>
 								<real>1356</real>
 								<key>width</key>
-								<real>2560</real>
+								<real>2558</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -15231,7 +15232,7 @@ Password Manager</string>
 				<key>Use Transparency</key>
 				<true/>
 				<key>Width</key>
-				<real>2560</real>
+				<real>2558</real>
 				<key>Window Type</key>
 				<integer>13</integer>
 				<key>X Origin</key>

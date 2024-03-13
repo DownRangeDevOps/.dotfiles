@@ -9,10 +9,11 @@ fi
 export PATH=""
 
 set +ua
+# Set default paths
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     source /etc/zprofile
 else
-    source /etc/profile # Set default paths
+    source /etc/profile
 fi
 set -ua
 
