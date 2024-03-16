@@ -32,9 +32,9 @@
 	<integer>1</integer>
 	<key>Coprocess MRU</key>
 	<array>
+		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py h</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py j</string>
-		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py k</string>
 		<string>~/.config/nvim/plugged/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py l</string>
 		<string>~/.vim/bundle/vim-iterm2-navigator/switch.py h</string>
@@ -6813,7 +6813,7 @@ Password Manager</string>
 				<key>Scroller Width</key>
 				<real>0.0</real>
 				<key>Selected Tab Index</key>
-				<integer>0</integer>
+				<integer>6</integer>
 				<key>Tabs</key>
 				<array>
 					<dict>
@@ -7206,7 +7206,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>2F110234-995A-43F0-AC2F-81AE7600B83C</string>
+											<string>0FC9DFC7-797C-4F36-BAE3-25A1714CB792</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -8405,7 +8405,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>328B701B-6B1D-4EF4-A61C-744830DC236C</string>
+											<string>68F08AD8-69BE-4A5D-B463-FBC863DF2EB7</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -9602,7 +9602,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>054487C9-639C-4B48-B9A0-7779D8017908</string>
+											<string>108CC075-1064-4B6E-A086-0B5EF1406777</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10801,7 +10801,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>8222F71F-A4A7-453B-A131-032843A45F33</string>
+											<string>42B1BCA3-1BE1-4B0D-8D09-CAA5D5CA8F6B</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -12000,7 +12000,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>AB49A590-403E-4533-86BA-B4B367B4E46F</string>
+											<string>03196148-E031-456F-9E34-D659D15AA1B7</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -12723,7 +12723,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/ryanfisher/dev/career</string>
+											<string>/Users/ryanfisher/dev/downrange-devops/startup-werx</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -13197,7 +13197,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>889DD090-35A2-4B32-947D-A50AB5BFFE27</string>
+											<string>CEA407AB-0D18-48DF-A893-3C439F47FFCD</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -14394,7 +14394,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>602BB815-5538-4E41-90E8-8B9A3BA0691B</string>
+											<string>74262797-E5F4-4695-BC02-07C9DFF7FF7D</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>

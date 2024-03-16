@@ -1,5 +1,7 @@
 # shellcheck shell=bash
-# .bashrc
+
+# Globals
+export PERSONAL_LAPTOP_USER="ryanfisher"
 
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     autoload -U +X bashcompinit && bashcompinit

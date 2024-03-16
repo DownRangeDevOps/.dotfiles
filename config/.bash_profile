@@ -24,6 +24,9 @@ else
     eval "$(/usr/local/bin/brew shellenv)"
 fi
 
+# Source Homebrew GitHub token
+if [[ -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then source ~/.bash_secrets; fi
+
 # Globals
 export DOTFILES_PREFIX="${HOME}/.dotfiles"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
