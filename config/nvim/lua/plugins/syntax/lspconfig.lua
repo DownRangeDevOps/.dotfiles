@@ -33,7 +33,6 @@ return {
                                     "rubocop",
                                     "ruff",
                                     "shellcheck",
-                                    "tfsec",
                                     "vint",
                                     "yamllint",
                                 },
@@ -48,25 +47,24 @@ return {
 
 
                         -- Initalize nvim-lint
-                        local lint = require("lint")
+                        local linters_by_ft = require("lint").linters_by_ft
                         local mypy = require("lint").linters.mypy
 
-                        table.insert(mypy.args, "--python-executable $(which python)")
-
+                        table.insert(mypy.args, "--python-executable /Users/xjxf277/.pyenv/shims/python")
 
                         -- Linters that run on specific paths/all filetypes are controlled
                         -- with autocommands. See `user-autocommands.lua`.
                         --
                         local linter_to_ft = {
-                            [ "ansible.yaml" ] = { "ansible-lint", },
-                            go                 = { "revive", },
-                            json               = { "jsonlint", },
-                            python             = { "mypy", },
+                            -- [ "ansible.yaml" ] = { "ansible-lint" },
+                            go                 = { "revive" },
+                            json               = { "jsonlint" },
+                            python             = { "mypy" },
                             -- TODO: implement it, only markdownlint supported -- markdown           = { "markdownlint-cli2", },
-                            sh                 = { "shellcheck", },
-                            terraform          = { "tflint", "tfsec", },
-                            vim                = { "vint", },
-                            yaml               = { "yamllint", },
+                            sh                 = { "shellcheck" },
+                            terraform          = { "tflint" },
+                            vim                = { "vint" },
+                            yaml               = { "yamllint" },
                             -- ◍ djlint: Django, Go, Nunjucks, Twig, Handlebars, Mustache, Angular, Jinja
                         }
 
@@ -99,35 +97,28 @@ return {
                             "typescript",
                         }
 
-                        for ft, _ in pairs(linter_to_ft) do
-                            if snyk[ft] then
-                                table.insert(linter_to_ft[ft], "snyk")
-                            end
+                        -- for ft, _ in pairs(linter_to_ft) do
+                        --     if snyk[ft] then
+                        --         table.insert(linter_to_ft[ft], "snyk")
+                        --     end
+                        --
+                        --     if trivy[ft] then
+                        --         table.insert(linter_to_ft[ft], "trivy")
+                        --     end
+                        -- end
 
-                            if trivy[ft] then
-                                table.insert(linter_to_ft[ft], "trivy")
-                            end
-                        end
-
-                        for ft, _ in pairs(snyk) do
-                            if not linter_to_ft[ft] then
-                                linter_to_ft[ft] = { "snyk" }
-                            end
-                        end
-
-                        for ft, _ in pairs(trivy) do
-                            if not linter_to_ft[ft] then
-                                linter_to_ft[ft] = { "trivy" }
-                            end
+                        -- merge with default config
+                        for type, linters in pairs(linter_to_ft) do
+                            linters_by_ft[type] = linters
                         end
 
                         -- linters for all filetypes
-                        for ft, _ in pairs(linter_to_ft) do
-                            table.insert(linter_to_ft[ft], "editorconfig-checker")
-                            table.insert(linter_to_ft[ft], "codespell")
+                        for ft, _ in pairs(linters_by_ft) do
+                            table.insert(linters_by_ft[ft], "editorconfig-checker")
+                            table.insert(linters_by_ft[ft], "codespell")
                         end
 
-                        lint.linters_by_ft = linter_to_ft
+                        linters_by_ft = linter_to_ft
                     end,
                 },
             },
@@ -146,3 +137,5 @@ return {
         { "j-hui/fidget.nvim", tag = "legacy", lazy = true, config = true, event = "LspAttach" },
     },
 }
+
+-- local lspconfig = require('lspconfig')

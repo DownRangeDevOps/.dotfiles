@@ -349,7 +349,7 @@ function git_fixup() {
     git log -n 50 --pretty=format:"%h %s" --no-merges |
         fzf |
         awk '{print $1}' |
-        xargs -o git commit --no-verify --fixup
+        xargs -o git commit --fixup
     git rebase --interactive "${merge_base}"
 }
 

@@ -1,4 +1,4 @@
--- ----------------------------------------------
+-- ------------------------˚----------------------
 -- toggleterm (https://github.com/akinsho/toggleterm.nvim)
 -- :help toggleterm
 -- ----------------------------------------------
@@ -11,59 +11,60 @@ return {
     init = function()
         local Terminal = require("toggleterm.terminal").Terminal
 
-        local _tterm_horizontal = Terminal:new({
-            cmd = "${HOMEBREW_PREFIX}/bin/zsh --login; source ${HOME}/.bash_profile",
+        local horizontal = Terminal:new({
+            cmd = "zsh --login",
             direction = "horizontal",
             name="tterm",
             hidden = false,
         })
 
-        local _tterm_vertical = Terminal:new({
-            cmd = "${HOMEBREW_PREFIX}/bin/zsh --login; source ${HOME}/.bash_profile",
+        local vertical = Terminal:new({
+            cmd = "zsh --login",
             direction = "vertical",
             name="tterm",
             hidden = false,
         })
 
-        function horz_toggle()
-            _tterm_horizontal:toggle(20)
+        local function horz_toggle()
+            if vertical:is_open() then
+                vertical:close()
+            else
+                horizontal:toggle(20)
+            end
         end
 
-        function vert_toggle()
-            _tterm_vertical:toggle(120)
+        local function vert_toggle()
+            if horizontal:is_open() then
+                horizontal:close()
+            else
+                vertical:toggle(120)
+            end
         end
 
-        keymap.map("n", "`", "<cmd>lua horz_toggle()<CR>", { group = "gen", desc = "bottom term" })
-        keymap.map("n", "<leader>`", "<cmd>lua vert_toggle()<CR>", { group = "gen", desc = "vertical term" })
+        keymap.map("n", "`", function() horz_toggle() end, { group = "gen", desc = "bottom term" })
+        keymap.map("n", "<leader>`", function() vert_toggle() end, { group = "gen", desc = "vertical term" })
     end,
     opts = {
-        -- size = function(term)
-        --     if term.direction == "horizontal" then
-        --         return 20
-        --     elseif term.direction == "vertical" then
-        --         return 120
-        --     end
-        -- end,
-        hide_numbers = true,
+        hide_numbers = false,
         shade_terminals = false,
         start_in_insert = true,
         insert_mappings = false,
         terminal_mappings = false,
-        presist_size = true,
-        presist_mode = true,
+        presist_size = false,
+        presist_mode = false,
         direction = "horizontal",
-        shell = vim.o.shell,
+        shell = "zsh --login",
         auto_scroll = true,
         border = "curve",
         highlights = {
             Normal = {
-                guibg = "#11111b"
+                guibg = "#030303"
             },
             NormalFloat = {
-                guibg = "#11111b"
+                guibg = "#030303"
             },
             FloatBorder = {
-                guibg = "#11111b"
+                guibg = "#030303"
             },
         },
     },

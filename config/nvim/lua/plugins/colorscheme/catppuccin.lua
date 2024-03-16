@@ -37,26 +37,22 @@ return {
 
                     CmpBorder = { fg = "#3e4145" },
                     ColorColumn = { bg = mocha.base },
-                    CurSearch = { fg = mocha.base, bg = mocha.green },
+                    CurSearch = { fg = mocha.crust, bg = mocha.green },
                     Cursor = { fg = mocha.crust, bg = mocha.sapphire },
                     lCursor = { fg = mocha.crust, bg = mocha.sapphire },
                     CursorLineNr = { fg = mocha.sapphire },
                     LineNr = { fg = mocha.surface1 },
                     MsgArea = { bg = mocha.crust },
                     Normal = { bg = mocha.mantle },
-                    Search = { fg = mocha.base, bg = mocha.sky },
+                    Search = { fg = mocha.crust, bg = mocha.overlay2 },
 
                     -- :help listcars
                     NonText = { fg = mocha.surface1 },
                     Whitespace = { fg = mocha.surface1 },
 
                     -- :help indent-blankline-highlights
-                    IndentBlanklineChar = { fg = mocha.surface0 },
-                    IndentBlanklineSpaceChar = { fg = mocha.surface1 },
-                    IndentBlanklineSpaceCharBlankline = { fg = mocha.surface1 },
-                    IndentBlanklineContextChar = { fg = mocha.surface2 },
-                    IndentBlanklineContextSpaceChar = { fg = mocha.surface2 },
-                    IndentBlanklineContextStart = { fg = mocha.surface1 },
+                    IblIndent = { fg = mocha.surface0 },
+                    IblScope = { fg = mocha.surface2 },
 
                     -- Folds
                     -- :help nvim-ufo

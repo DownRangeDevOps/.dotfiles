@@ -5,7 +5,11 @@
 	path = ~/.dotfiles/config/git/.gitconfig-grainger
 [includeIf "gitdir:/Users/xjxf277/"]
 	path = ~/.dotfiles/config/git/.gitconfig-grainger
+
+# Personal ssh key
 [includeIf "gitdir:/Users/ryanfisher/"]
+	path = ~/.dotfiles/config/git/.gitconfig-personal
+[includeIf "gitdir:/Users/xjxf277/Documents/"]
 	path = ~/.dotfiles/config/git/.gitconfig-personal
 [gpg]
 	format = ssh

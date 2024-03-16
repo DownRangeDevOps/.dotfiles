@@ -8,9 +8,9 @@ return {
     cmd = "Neotree",
     branch = "v3.x",
     dependencies = {
-        { "nvim-lua/plenary.nvim", name = "nvim-plenary", lazy = false },
-        { "nvim-tree/nvim-web-devicons", name = "nvim-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
-        { "MunifTanjim/nui.nvim", name = "nvim-nui", lazy = false },
+        { "nvim-lua/plenary.nvim", lazy = false },
+        { "nvim-tree/nvim-web-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
+        { "MunifTanjim/nui.nvim", lazy = false },
     },
     opts = {
         event_handlers = {
@@ -18,6 +18,14 @@ return {
                 event = "neo_tree_buffer_enter",
                 handler = function(arg)
                     vim.wo.colorcolumn = false
+                    vim.wo.number = true
+                    vim.wo.relativenumber = true
+                end,
+            },
+            {
+                event = "neo_tree_buffer_leave",
+                handler = function(arg)
+                    vim.wo.colorcolumn = true
                     vim.wo.number = true
                     vim.wo.relativenumber = true
                 end,

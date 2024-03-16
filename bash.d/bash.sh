@@ -37,6 +37,10 @@ if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 fi
 
+function find_replace() {
+    rg "$1" -l | xargs sed -i -E "s/\b$1\b/$2/g"
+}
+
 function is_subsh() {
     local shell_level="${SHLVL}"
 
@@ -92,6 +96,7 @@ function nvim() {
     # fi
     #
     if [[ "${NVIM_SESSION_FILE_PATH:-}" ]]; then
+        touch "${NVIM_SESSION_FILE_PATH:-}"
         command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
     else
         command nvim "$@"
