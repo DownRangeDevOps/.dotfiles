@@ -50,19 +50,24 @@ function validate_all_modules() {
     done
 }
 
-function terraform_plan() {
-    # local tmpfile
-    # tmpfile=$(mktmp)
-    #
-    # terraform plan "$@" "2>${tmpfile}" | bat "$(<"${tmpfile}")"
-    terraform plan "$@"
+function terraform_wrapper() {
+    if [[ "$1" == plan ]]; then
+        terraform "$@" | \
+            tee tfplan && \
+            ansifilter -i tfplan -o tfplan.nocolor && \
+            parse_plan_diff tfplan.nocolor
+    else
+        terraform "$@"
+    fi
 }
 
 function parse_plan_diff() {
     local infile="${1:-"tfplan"}"
+    local nocolorfile="${infile}.nocolor"
     local outfile="${2:-"change-log.tfplan"}"
     local patterns=("destroyed" "created" "replaced" "forces replacement")
 
+    ansifilter -i "${infile}" -o "${nocolorfile}"
     true >|"${outfile}"
 
     for pat in "${patterns[@]}"; do
@@ -72,7 +77,7 @@ function parse_plan_diff() {
             else
                 printf "%s\n" "==== ${pat^^}"
             fi
-            rg -N "${pat}" "${infile}" | sed -E "s/( will | must ).*//"
+            rg -N "\b${pat}\b" "${nocolorfile}" | sed -E "s/( will | must ).*//"
             printf "\n"
         } >>"${outfile}"
     done

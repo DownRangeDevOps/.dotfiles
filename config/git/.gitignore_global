@@ -1,4 +1,7 @@
 ## --- Custom
+# secrets
+.secrets
+
 # local misc files
 ignore_*
 *.tmp.tf

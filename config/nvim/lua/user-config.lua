@@ -134,6 +134,7 @@ vim.o.listchars = table.concat({
 vim.o.showbreak = "↳ " -- show wrapped lines
 vim.o.wrap = false
 vim.o.linebreak = true
+vim.o.breakindent = true
 
 -- Folding (nvim-ufo)
 vim.o.foldcolumn = "1"
@@ -143,11 +144,8 @@ vim.o.foldenable = false
 
 -- Terminal
 -- :help guicursor
-vim.o.shell = vim.env.HOMEBREW_PREFIX .. "/bin/zsh"
--- vim.o.shell = table.concat({
---     vim.env.HOMEBREW_PREFIX .. "/bin/zsh",
---     "--login",
--- }, " ")
+-- vim.o.shell = vim.env.HOMEBREW_PREFIX .. "/bin/zsh"
+vim.o.shell = "zsh"
 vim.o.termguicolors = true
 vim.o.guicursor = table.concat({
     "n-c-v-sm:block",

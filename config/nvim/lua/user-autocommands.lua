@@ -187,40 +187,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 -- ----------------------------------------------
 -- User
 -- ----------------------------------------------
--- Auto-Save after trimming trailing whitespace
--- vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
---     group = user,
---     pattern = "*",
---     callback = function()
---         if vim.g.auto_save
---             and vim.api.nvim_buf_get_option(0, "buftype") == ""
---             and vim.api.nvim_buf_get_option(0, "buftype") ~= "nowrite"
---             and vim.api.nvim_buf_get_option(0, "modifiable")
---             and vim.fn.expand("%") ~= ""
---         then
---
---             MiniTrailspace.trim()
---             MiniTrailspace.trim_last_lines()
---
---             vim.cmd.write()
---             vim.defer_fn(function() vim.cmd.echon("''") end, 750)
---         end
---     end
--- })
-
--- markdown.nvim wip
--- vim.api.nvim_create_autocmd({ "FileType" }, {
---     group = user,
---     pattern = "*",
---     callback = function()
---         if vim.api.nvim_buf_get_option(0, "filetype") == "markdown" then
---             vim.keymap.set("i", )
---         else
---         end
---     end,
---
--- })
-
 -- Fix shitty bullets plugin bindings, only one that does markdown bullets correctly
 vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     group = user,
@@ -275,28 +241,29 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
 -- ----------------------------------------------
 -- Plugins
 -- ----------------------------------------------
--- vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
---     group = plugin,
---     pattern = ".github/workflows/*", -- only run on YAML files in the `.github` dir
---     callback = function()
---         require("lint").try_lint("actionlint")
---     end
--- })
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
+    group = plugin,
+    pattern = ".github/*", -- only run on YAML files in the `.github` dir
+    callback = function()
+        require("lint").try_lint("actionlint")
+    end
+})
 
-vim.api.nvim_create_autocmd({
-    "BufWritePost",
-    "BufEnter",
-    "BufReadPost",
-    "BufNewFile",
-    -- "TextChanged",
-},
+vim.api.nvim_create_autocmd(
+    {
+        "BufWritePost",
+        "BufEnter",
+        "BufReadPost",
+        "BufNewFile",
+    },
     {
         group = plugin,
         pattern = "*",
         callback = function()
             require("lint").try_lint()
         end
-    })
+    }
+)
 
 -- ----------------------------------------------
 -- Last
@@ -327,12 +294,28 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         vim.wo.spell = false
         vim.wo.statuscolumn = ""
 
-        local numbers_exception_ft = { help = true, }
+        local numbers_exception_ft = {
+            help = true,
+            toggleterm = true,
+        }
 
         if numbers_exception_ft[vim.bo.filetype] then
             vim.wo.number = true
             vim.wo.relativenumber = true
         end
+    end
+})
+
+-- Git commit messages
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = { "gitcommit" },
+    callback = function()
+        vim.wo.colorcolumn = true
+        vim.wo.list = true
+        vim.wo.number = true
+        vim.wo.relativenumber = true
+        vim.wo.spell = true
     end
 })
 
@@ -352,6 +335,15 @@ vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
     group = ui,
     pattern = "*",
     callback = function()
-        require("user-config")
+        vim.cmd.luafile(vim.fn.expand("~") .. "/.dotfiles/config/nvim/lua/user-config.lua")
+    end
+})
+
+-- maximize window height on start... Probably a toggle term issue
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
+    group = ui,
+    pattern = "*",
+    callback = function()
+        vim.cmd.wincmd("_")
     end
 })

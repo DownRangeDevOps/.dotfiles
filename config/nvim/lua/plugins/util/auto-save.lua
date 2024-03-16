@@ -1,5 +1,5 @@
 -- ----------------------------------------------
--- auto-save.nvim (https://github.com/roobert/auto-save.nvim)
+-- auto-save.nvim (https://github.com/Pocco81/auto-save.nvim)
 -- :help auto-save.nvim
 -- ----------------------------------------------
 return {

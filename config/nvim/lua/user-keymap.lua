@@ -283,16 +283,28 @@ map("n", "<leader>L", function()
 end, { group = "txt", desc = "path to cur line from git root"})
 
 -- file/buffer management (auto-save, browser)
-map("n", "<leader>w", function()
+local save_if_modifiable = function()
     local modifiable = vim.bo.modifiable
     if modifiable then
         MiniTrailspace.trim()
         MiniTrailspace.trim_last_lines()
-        vim.cmd.write()
-        vim.cmd("LspRestart")
-        vim.defer_fn(function() vim.cmd.echon("''") end, 750)
+
+        local status, err = pcall(function() vim.cmd.write() end)
+
+        if not status then
+            if err:match("No file name") then
+                vim.defer_fn(function() vim.api.nvim_err_write("No file name\n") end, 250)
+            else
+                vim.cmd.echoe(err)
+            end
+        else
+            vim.cmd("LspRestart")
+            vim.defer_fn(function() vim.cmd.echon("''") end, 750)
+        end
     end
-end, { silent = true, group = "file", desc = "write to file" })
+end
+map("n", "<leader>w", function() save_if_modifiable() end, { silent = true, group = "file", desc = "write/save" })
+map("n", "<leader>W", function() save_if_modifiable() vim.cmd.quit() end, { silent = true, group = "file", desc = "write/save, quit" })
 map("n", "<leader>rf", function()
     vim.cmd("e")
     vim.print(vim.fn.expand("%:t") .. " reloaded...")
@@ -424,7 +436,7 @@ map("n", "<leader>Q", function()
         vim.cmd.write()
     end
 
-    vim.cmd("quit")
+    vim.cmd("bw!")
 end, { silent = true, group = "gen", desc = "write quit" })
 
 -- Tab management (barbar.nvim)
@@ -453,6 +465,8 @@ map("n", "˚", function() vim.cmd.resize("+4") end, { group = "nav", desc = "inc
 map("n", "∆", function() vim.cmd.resize("-4") end, { group = "nav", desc = "decrease win height" })
 map("n", "˙", function() vim.cmd("vertical resize +4") end, { group = "nav", desc = "increase win width" })
 map("n", "¬", function() vim.cmd("vertical resize -4") end, { group = "nav", desc = "decrease win width" })
+map("n", "–", function() vim.cmd.wincmd("_") end, { group = "nav", desc = "maximize window height" })
+
 
 -- Tab navigation
 map("", "<leader>˙", function() vim.cmd.tabprevious() end, { group = "nav", desc = "prev window" })

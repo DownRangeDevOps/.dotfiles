@@ -6,9 +6,6 @@ if [[ -n "${ZSH_VERSION:-}" ]]; then
     autoload -U +X compinit && compinit
 fi
 
-# shellcheck disable=SC1090
-source ~/.dotfiles/bash.d/.zsh_termrc
-
 # ------------------------------------------------
 #  bash
 # ------------------------------------------------
@@ -66,6 +63,7 @@ alias fping="ping -c 100 -s.2"
 alias header="curl -I"             # get server headers
 alias headerc="curl -I --compress" # does server support gzip / mod_deflate?
 alias wget="wget -c"               # resume downloads
+alias fr="find_replace"
 
 # ------------------------------------------------
 #  ansible
@@ -231,7 +229,7 @@ alias gmerged="git_get_merged_branches"
 
 # pushing
 alias gpu="git_push"
-alias gfpo="git fetch --prune && git push origin --force-with-lease HEAD"
+alias gfpo="git fetch --prune && git push --force-with-lease --set-upstream \$(git config --default origin --get clone.defaultRemoteName) HEAD"
 alias gfpa="git_push --force-update-refs"
 
 # repository info
@@ -294,31 +292,31 @@ if [[ -n ${DEBUG:-} ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Terraform aliases..."
 fi
 
-alias tf="terraform"
-alias tfV="terraform version"
-alias tfa="terraform apply"
-alias tfc="terraform console"
-alias tfd="terraform destroy"
-alias tfdb="terraform debug"
-alias tfe="terraform env"
-alias tff="terraform fmt"
+alias tf="terraform_wrapper"
+alias tfV="terraform_wrapper version"
+alias tfa="terraform_wrapper apply"
+alias tfc="terraform_wrapper console"
+alias tfd="terraform_wrapper destroy"
+alias tfdb="terraform_wrapper debug"
+alias tfe="terraform_wrapper env"
+alias tff="terraform_wrapper fmt"
 alias tffr="cd \$(git_project_root) && terraform fmt -recursive && cd -"
-alias tfg="terraform get"
-alias tfgr="terraform graph"
-alias tfi="terraform init"
-alias tfim="terraform import"
-alias tfo="terraform output"
-alias tfp="terraform_plan"
-alias tfpu="terraform push"
-alias tfpv="terraform providers"
-alias tfr="terraform refresh"
-alias tfs="terraform show"
-alias tft="terraform taint"
-alias tfu="terraform untaint"
-alias tfug="terraform 0.12upgrade"
-alias tful="terraform force-unlock"
-alias tfv="terraform validate"
-alias tfw="terraform workspace"
+alias tfg="terraform_wrapper get"
+alias tfgr="terraform_wrapper graph"
+alias tfi="terraform_wrapper init"
+alias tfim="terraform_wrapper import"
+alias tfo="terraform_wrapper output"
+alias tfp="terraform_wrapper plan"
+alias tfpu="terraform_wrapper push"
+alias tfpv="terraform_wrapper providers"
+alias tfr="terraform_wrapper refresh"
+alias tfs="terraform_wrapper show"
+alias tft="terraform_wrapper taint"
+alias tfu="terraform_wrapper untaint"
+alias tfug="terraform_wrapper 0.12upgrade"
+alias tful="terraform_wrapper force-unlock"
+alias tfv="terraform_wrapper validate"
+alias tfw="terraform_wrapper workspace"
 
 # project naviation
 # alias cdp="cd \$(pwd | sed -e \"s|\(.*/projects\)/[^/]*/\(.*\)$|\1/production/\2/|\")"
@@ -382,3 +380,6 @@ set +ua
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform
+
+# shellcheck disable=SC1090
+source ~/.dotfiles/bash.d/.termrc
