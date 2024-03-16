@@ -330,7 +330,6 @@ function git_log() {
                 -e "s/\(([XY])\)/(${BOLD}${WHITE}(\1${RESET}${BLUE})/g" |
             LESS -SFXR
     else
-        printf "%s\n" "${git_args[@]}"
         git log "${git_args[@]}" "$@" | LESS -SFXR
     fi
 }

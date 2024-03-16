@@ -28,7 +28,6 @@
 	pager = delta # less -JRS
 	fsmonitor = true
 	commitGraph = true
-	hooksPath = /Users/xjxf277/.dotfiles/config/git/.git-template/hooks/
 	untrackedCache = true
 	fscache = true
 [init]

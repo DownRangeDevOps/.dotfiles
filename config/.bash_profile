@@ -9,10 +9,11 @@ fi
 export PATH=""
 
 set +ua
+# Set default paths
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     source /etc/zprofile
 else
-    source /etc/profile # Set default paths
+    source /etc/profile
 fi
 set -ua
 
@@ -22,6 +23,9 @@ if [[ $(uname -m) == "arm64" ]]; then
 else
     eval "$(/usr/local/bin/brew shellenv)"
 fi
+
+# Source Homebrew GitHub token
+if [[ -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then source ~/.bash_secrets; fi
 
 # Globals
 export DOTFILES_PREFIX="${HOME}/.dotfiles"
