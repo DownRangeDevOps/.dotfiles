@@ -27,7 +27,7 @@ function __get_terraform_workspace() {
         workspace="$(terraform workspace show 2>/dev/null)"
 
         if [[ "${workspace}" != "default" ]]; then
-            printf "%s" "tf:${workspace}"
+            printf "%s" "${workspace}"
         fi
     fi
 }
@@ -52,23 +52,25 @@ function validate_all_modules() {
 
 function terraform_wrapper() {
     if [[ "$1" == plan ]]; then
-        terraform "$@" | \
-            tee tfplan && \
-            ansifilter -i tfplan -o tfplan.nocolor && \
-            parse_plan_diff tfplan.nocolor
+        terraform "$@" |& tee tfplan.log
+        parse_plan_diff tfplan.log
     else
         terraform "$@"
     fi
 }
 
 function parse_plan_diff() {
-    local infile="${1:-"tfplan"}"
+    local infile="${1:-"tfplan.log"}"
     local nocolorfile="${infile}.nocolor"
     local outfile="${2:-"change-log.tfplan"}"
     local patterns=("destroyed" "created" "replaced" "forces replacement")
 
-    ansifilter -i "${infile}" -o "${nocolorfile}"
-    true >|"${outfile}"
+    ansifilter --input="${infile}" --output="${nocolorfile}"
+    sed -i -E "1,/^$/d" "${nocolorfile}"
+
+    true >| "${outfile}"
+    printf "%s\n\n" "Plan created: $(date)" >> "${outfile}"
+
 
     for pat in "${patterns[@]}"; do
         {
@@ -81,4 +83,15 @@ function parse_plan_diff() {
             printf "\n"
         } >>"${outfile}"
     done
+
+    if [[ -n "${TF_VAR_tenant:-}" ]]; then
+        infile="${TF_VAR_tenant:-}.${infile}"
+        mv -f "${outfile}" "${TF_VAR_tenant:-}.${outfile}"
+    fi
+
+    rm -f "${infile}"
+    mv -f "${nocolorfile}" "${infile}"
 }
+
+# function terraform_foce_unlock() {
+# }

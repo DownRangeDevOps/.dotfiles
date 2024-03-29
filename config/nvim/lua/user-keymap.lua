@@ -313,10 +313,10 @@ end, { silent = true, group = "file", desc = "reload file" })
 map("n", "<leader>u", vim.cmd.UndotreeToggle, { group = "file", desc = "open undo-tree" })
 map("n", "<leader>1", function()
     vim.cmd("Neotree action=focus source=filesystem position=current toggle reveal")
-end, { silent = true, group = "file", desc = "open browser" })
+end, { silent = true, group = "file", desc = "open file browser" })
 map("n", "<leader>2", function()
-    vim.cmd("Neotree action=show source=filesystem position=left toggle reveal")
-end, { silent = true, group = "file", desc = "open sidebar browser" })
+    vim.cmd("Neotree action=show source=buffers position=current toggle reveal")
+end, { silent = true, group = "file", desc = "open buffer browser" })
 map({ "n", "v" }, "-", function()
     if vim.api.nvim_buf_get_option(0, "filetype") == "neo-tree" then
         vim.fn.feedkeys("<BS>")
@@ -420,23 +420,28 @@ end, { silent = true, group = "gen", desc = "toggle zoom" })
 map("n", "<leader>\\", function() vim.cmd("vsplit") end, { silent = true, group = "gen", desc = "vsplit" })
 map("n", "<leader>-", function() vim.cmd("split") end, { silent = true, group = "gen", desc = "split" })
 map("n", "<leader>q", function()
-    if vim.api.nvim_buf_get_option(0, "modifiable") then
+    local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+    local filename = vim.api.nvim_buf_get_name(0)
+
+    if modifiable and #filename > 0 then
         vim.cmd.write()
     end
 
-    vim.cmd.buffer("#")
-    vim.cmd.bwipeout("#")
+    vim.cmd.bp()
 
     if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
         vim.cmd.startinsert()
     end
-end, { silent = true, group = "gen", desc = "save, open alt buf, wipe" })
+end, { silent = true, group = "gen", desc = "save, open alt buf" })
 map("n", "<leader>Q", function()
-    if vim.api.nvim_buf_get_option(0, "modifiable") then
+    local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+    local filename = vim.api.nvim_buf_get_name(0)
+
+    if modifiable and #filename > 0 then
         vim.cmd.write()
     end
 
-    vim.cmd("bw!")
+    vim.cmd.quit()
 end, { silent = true, group = "gen", desc = "write quit" })
 
 -- Tab management (barbar.nvim)
@@ -545,7 +550,7 @@ map("n", "]d", vim.diagnostic.goto_next, { group = "diag", desc = "next message"
 map("n", "<leader>t", function() vim.cmd.TroubleToggle() end, { group = "lsp", desc = "toggle trouble" })
 
 -- others
-map("n", "<leader><space>", function() require("telescope.builtin").buffers() end, { group = "ts", desc = "fuzzy buffers" })
+map("n", "<leader>fb", function() require("telescope.builtin").buffers() end, { group = "ts", desc = "fuzzy buffers" })
 map("n", '<leader>f"', function() require("telescope.builtin").marks() end, { group = "ts", desc = "fuzzy marks" })
 map("n", "<leader>gh", function() vim.print("not implemented") end, { group = "ts", desc = "fuzzy help" })
 map("n", "<leader>fk", function() require("telescope.builtin").keymaps() end, { group = "ts", desc = "fuzzy keymaps" })

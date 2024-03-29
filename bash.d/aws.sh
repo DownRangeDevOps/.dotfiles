@@ -36,7 +36,3 @@ function aws-vault() {
 
     command aws-vault "$@"
 }
-
-function __get_aws_vault() {
-    [[ -n ${AWS_VAULT:-} ]] && printf "%s" "aws:${AWS_VAULT}"
-}

@@ -10,7 +10,7 @@ return {
     -- init = vim.cmd("UfoEnable"),
     opts = {
         provider_selector = function() return { "treesitter", "indent" } end,
-        close_fold_kinds = { "imports", "comments" },
+        close_fold_kinds_for_ft = { "imports", "comments" },
     },
     dependencies = {
         { "kevinhwang91/promise-async", name = "nvim-promise-async", lazy = true }

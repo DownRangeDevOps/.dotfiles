@@ -9,40 +9,36 @@ return {
     -- cmd = "ToggleTerm",
     version = "*",
     init = function()
-        local Terminal = require("toggleterm.terminal").Terminal
-
-        local horizontal = Terminal:new({
+        local term = require("toggleterm.terminal").Terminal:new({
             cmd = "zsh --login",
-            direction = "horizontal",
-            name="tterm",
+            name = "main",
             hidden = false,
+            on_open = function(term)
+                term:send("source ~/.bash_profile; clear")
+            end,
         })
 
-        local vertical = Terminal:new({
-            cmd = "zsh --login",
-            direction = "vertical",
-            name="tterm",
-            hidden = false,
-        })
-
-        local function horz_toggle()
-            if vertical:is_open() then
-                vertical:close()
+        local function toggle(direction)
+            if term:is_open() then
+                term:close()
             else
-                horizontal:toggle(20)
+                local one_third_height = vim.fn.floor(vim.o.lines / 3)
+                local min_height = 12
+
+                local one_third_width = vim.fn.floor(vim.o.columns / 3)
+                local min_width = 100
+
+                term.direction = direction
+                if direction == "horizontal" then
+                    term:toggle(math.max(one_third_height, min_height))
+                else
+                    term:toggle(math.max(one_third_width, min_width))
+                end
             end
         end
 
-        local function vert_toggle()
-            if horizontal:is_open() then
-                horizontal:close()
-            else
-                vertical:toggle(120)
-            end
-        end
-
-        keymap.map("n", "`", function() horz_toggle() end, { group = "gen", desc = "bottom term" })
-        keymap.map("n", "<leader>`", function() vert_toggle() end, { group = "gen", desc = "vertical term" })
+        keymap.map("n", "`", function() toggle("horizontal") end, { group = "gen", desc = "bottom term" })
+        keymap.map("n", "<leader>`", function() toggle("vertical") end, { group = "gen", desc = "vertical term" })
     end,
     opts = {
         hide_numbers = false,
