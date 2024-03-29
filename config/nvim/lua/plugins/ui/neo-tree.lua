@@ -6,31 +6,17 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     lazy = true,
     cmd = "Neotree",
-    branch = "v3.x",
+    tag = "3.20", -- 3.21 has a bug, goes back to altfile and throws nui error
     dependencies = {
         { "nvim-lua/plenary.nvim", lazy = false },
         { "nvim-tree/nvim-web-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
         { "MunifTanjim/nui.nvim", lazy = false },
     },
     opts = {
-        event_handlers = {
-            {
-                event = "neo_tree_buffer_enter",
-                handler = function(arg)
-                    vim.wo.colorcolumn = false
-                    vim.wo.number = true
-                    vim.wo.relativenumber = true
-                end,
-            },
-            {
-                event = "neo_tree_buffer_leave",
-                handler = function(arg)
-                    vim.wo.colorcolumn = true
-                    vim.wo.number = true
-                    vim.wo.relativenumber = true
-                end,
-            }
-        },
+        enable_normal_mode_for_inputs = true,
+        popup_border_style = "rounded",
+        use_popups_for_input = false, -- use vim input since I can't change width
+        event_handlers = {},
         window = {
             position = "current",
             noremap = true,
@@ -38,10 +24,23 @@ return {
             -- configure popup windows
             popup = {
                 size = {
-                    height = "20",
-                    width = "50"
+                    height = "10",
+                    width = "90%",
                 },
-                position = "30%"
+                position = {
+                    row = "50%",
+                    col = "1"
+                }
+            },
+            floating = {
+                size = {
+                    height = "10",
+                    width = "90%",
+                },
+                position = {
+                    row = "50%",
+                    col = "1"
+                }
             }
         },
         filesystem = {
@@ -49,11 +48,11 @@ return {
                 expand_node = function(state)
                         local origin_file = vim.fn.getreg("#")
 
-                        state.commands["open"](state)
-
                         if origin_file ~= "" then
                             vim.fn.setreg("#", origin_file)
                         end
+
+                        state.commands["open"](state)
                     end,
             },
             window = {

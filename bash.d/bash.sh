@@ -44,7 +44,7 @@ function find_replace() {
 function is_subsh() {
     local shell_level="${SHLVL}"
 
-    if [[ -n "${NVIM_LOG_FILE:-}" ]]; then
+    if [[ -n "${NVIM:-}" ]]; then
         shell_level="$((SHLVL - 1))"
     fi
 

@@ -23,6 +23,11 @@ function __git_add_completion_to_aliases() {
         __git_complete gnuke _git_branch
         __git_complete git_nuke_branch _git_branch
 
+        # diff
+        __git_complete  gd _git_diff
+        __git_complete  gdd _git_diff
+        __git_complete  gdm _git_diff
+
         # checkout
         __git_complete gco _git_checkout
         __git_complete git_fuzzy_checkout _git_checkout
@@ -134,15 +139,15 @@ function __git_show_branch_state() {
 
 function __git_parse_dirty() {
     case $(git status 2>/dev/null) in
-    *"Changes not staged for commit"*)
-        printf "%s\n" " ${RED}✗"
-        ;;
-    *"Changes to be committed"*)
-        printf "%s\n" " ${YELLOW}✗"
-        ;;
-    *"nothing to commit"*)
-        printf "%s\n" " ${GREEN}✔︎"
-        ;;
+        *"Changes not staged for commit"*)
+            printf "%s\n" " ${RED}✗${RESET}"
+            ;;
+        *"Changes to be committed"*)
+            printf "%s\n" " ${YELLOW}✗${RESET}"
+            ;;
+        *"nothing to commit"*)
+            printf "%s\n" " ${GREEN}✔︎${RESET}"
+            ;;
     esac
 }
 

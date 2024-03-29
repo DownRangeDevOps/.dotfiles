@@ -81,18 +81,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "TermEnter", "WinEnter", "TabEnter", "
     end
 })
 
--- Highlight on yank
--- vim.api.nvim_create_autocmd("TextYankPost", {
---     group = user,
---     pattern = "*",
---     callback = function()
---         vim.highlight.on_yank({
---             higroup = "Question",
---             timeout = 250,
---         })
---     end,
--- })
-
 -- ----------------------------------------------
 -- Filetype
 -- ----------------------------------------------
@@ -108,8 +96,10 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 -- git commit message
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
-    pattern = "COMMIT_EDITMSG",
+    pattern = {"COMMIT_EDITMSG", "gitcommit"},
     callback = function()
+        vim.wo.colorcolumn = "72"
+        vim.wo.list = true
         vim.wo.number = true
         vim.wo.relativenumber = true
         vim.wo.spell = true
@@ -241,29 +231,39 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
 -- ----------------------------------------------
 -- Plugins
 -- ----------------------------------------------
-vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufReadPost", "BufNewFile", }, {
+vim.api.nvim_create_autocmd({
+        "BufEnter",
+        "InsertLeave",
+        "TextChanged",
+}, {
     group = plugin,
     pattern = ".github/*", -- only run on YAML files in the `.github` dir
     callback = function()
-        require("lint").try_lint("actionlint")
+        local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+        local filename = vim.api.nvim_buf_get_name(0)
+
+        if modifiable and #filename > 0 then
+            require("lint").try_lint("actionlint")
+        end
     end
 })
 
-vim.api.nvim_create_autocmd(
-    {
-        "BufWritePost",
-        "BufEnter",
-        "BufReadPost",
-        "BufNewFile",
-    },
-    {
-        group = plugin,
-        pattern = "*",
-        callback = function()
+vim.api.nvim_create_autocmd({
+    "BufEnter",
+    "InsertLeave",
+    "TextChanged",
+}, {
+    group = plugin,
+    pattern = "*",
+    callback = function()
+        local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+        local filename = vim.api.nvim_buf_get_name(0)
+
+        if modifiable and #filename > 0 then
             require("lint").try_lint()
         end
-    }
-)
+    end
+})
 
 -- ----------------------------------------------
 -- Last
@@ -296,26 +296,12 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
         local numbers_exception_ft = {
             help = true,
-            toggleterm = true,
         }
 
         if numbers_exception_ft[vim.bo.filetype] then
             vim.wo.number = true
             vim.wo.relativenumber = true
         end
-    end
-})
-
--- Git commit messages
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    group = ui,
-    pattern = { "gitcommit" },
-    callback = function()
-        vim.wo.colorcolumn = true
-        vim.wo.list = true
-        vim.wo.number = true
-        vim.wo.relativenumber = true
-        vim.wo.spell = true
     end
 })
 
@@ -328,15 +314,6 @@ vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter" }, {
         vim.wo.number = false
         vim.wo.relativenumber = false
     end,
-})
-
--- reset config that may have been changed by plugins
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-    group = ui,
-    pattern = "*",
-    callback = function()
-        vim.cmd.luafile(vim.fn.expand("~") .. "/.dotfiles/config/nvim/lua/user-config.lua")
-    end
 })
 
 -- maximize window height on start... Probably a toggle term issue
