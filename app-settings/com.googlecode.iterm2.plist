@@ -26,6 +26,8 @@
 	<true/>
 	<key>ClosingTmuxWindowKillsTmuxWindows_selection</key>
 	<integer>1</integer>
+	<key>Command</key>
+	<string></string>
 	<key>CommandSelection</key>
 	<true/>
 	<key>Control</key>
@@ -4981,7 +4983,7 @@ Password Manager</string>
 			<key>Columns</key>
 			<integer>21</integer>
 			<key>Command</key>
-			<string>/usr/local/bin/bash --login</string>
+			<string>/opt/homebrew/bin/zsh --login</string>
 			<key>Cursor Boost</key>
 			<real>0.0</real>
 			<key>Cursor Color</key>

@@ -11,13 +11,9 @@ fi
 # ------------------------------------------------
 #  bash
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating BASH aliases..."
-fi
-
 # auto on yubiswitch
-alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
-alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
+# alias ssh="osascript -e 'tell application \"yubiswitch\" to KeyOn' && ssh"
+# alias scp="osascript -e 'tell application \"yubiswitch\" to KeyOn' && scp"
 
 alias c="clear"
 alias genpasswd="openssl rand -base64 32"
@@ -70,20 +66,12 @@ alias fr="find_replace"
 # ------------------------------------------------
 #  ansible
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Ansible aliases..."
-fi
-
 # ansible vault shortcuts
 alias avv='ansible-vault view'
 
 # ------------------------------------------------
 #  aws vault
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating aws-vault aliases..."
-fi
-
 alias av="aws-vault"
 alias ave="aws-vault exec"
 alias avl="aws-vault list"
@@ -91,10 +79,6 @@ alias avl="aws-vault list"
 # ------------------------------------------------
 #  docker
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Docker aliases..."
-fi
-
 alias d="docker"
 alias dV="docker version"
 alias da="docker attach"
@@ -158,10 +142,6 @@ alias dc="docker compose"
 # ------------------------------------------------
 #  git
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating git aliases..."
-fi
-
 # general
 alias g="git"
 alias gf="git fetch --prune"
@@ -256,10 +236,6 @@ alias upr="pr"
 # ------------------------------------------------
 #  homebrew
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Homebrew alises..."
-fi
-
 # avoid linking against any shims
 NO_SHIMS_PATH=$(printf "%s" "${PATH}" | sed -E 's,.*shims[^:]*:,,g')
 alias brew='env PATH=${NO_SHIMS_PATH} brew'
@@ -267,19 +243,11 @@ alias brew='env PATH=${NO_SHIMS_PATH} brew'
 # ------------------------------------------------
 #  kubernetes
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Kubernetes aliases..."
-fi
-
 alias k="kubectl"
 
 # ------------------------------------------------
 #  macos
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating MacOS aliases..."
-fi
-
 alias flushdns='sudo killall -HUP mDNSResponder'
 alias showfiles='defaults write com.apple.finder AppleShowAllFiles true; killall Finder'
 alias hidefiles='defaults write com.apple.finder AppleShowAllFiles false; killall Finder'
@@ -290,10 +258,6 @@ alias fixflash='sudo killall coreaudiod'
 # ------------------------------------------------
 #  terraform
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Creating Terraform aliases..."
-fi
-
 alias tf="terraform_wrapper"
 alias tfV="terraform_wrapper version"
 alias tfa="terraform_wrapper apply"
@@ -302,7 +266,7 @@ alias tfd="terraform_wrapper destroy"
 alias tfdb="terraform_wrapper debug"
 alias tfe="terraform_wrapper env"
 alias tff="terraform_wrapper fmt"
-alias tffr="cd \$(git_project_root) && terraform fmt -recursive && cd -"
+alias tffr="cd \$(git_project_root); terraform fmt -recursive; cd -"
 alias tfg="terraform_wrapper get"
 alias tfgr="terraform_wrapper graph"
 alias tfi="terraform_wrapper init"
@@ -338,10 +302,6 @@ alias pyenvinit="eval \"\$(pyenv init -)\"; eval \"\$(pyenv virtualenv-init -)\"
 # ------------------------------------------------
 #  direnv
 # ------------------------------------------------
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Initalizing direnv..."
-fi
-
 set +ua
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     eval "$(direnv hook zsh)"
@@ -350,18 +310,9 @@ else
 fi
 set -ua
 
-if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: .bashrc done..."
-fi
-
 # ------------------------------------------------
 # Non-login shells
 # ------------------------------------------------
-# Load/reload .inputrc
-if [[ -z "${ZSH_VERSION:-}" && -f "${HOME}/.inputrc" ]]; then
-    bind -f ~/.inputrc
-fi
-
 # Source profile when aws-vault runs interactive shell
 if [[ -n "${AWS_VAULT:-}" && -z "${AWS_VAULT_LOGIN_SHELL_INITALIZED:-}" ]]; then
     export AWS_VAULT_LOGIN_SHELL_INITALIZED=1

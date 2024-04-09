@@ -749,7 +749,7 @@ function git_nuke_branch() {
         return 1
     fi
 
-    git remote | xargs -L1 -I {} git push --delete remote "$@" 2>/dev/null
+    git remote | xargs -L1 -I {} git push --delete origin "$@" 2>/dev/null
     git branch -D "$@" 2>/dev/null
 }
 

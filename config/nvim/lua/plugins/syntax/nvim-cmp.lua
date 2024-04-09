@@ -102,10 +102,12 @@ return {
 
             sources = {
                 { name = "nvim_lsp" },
+                { name = 'nvim_lsp_signature_help' },
+                { name = 'treesitter' },
+                { name = "buffer" },
+                { name = "copilot", group_index = 2 },
                 { name = "luasnip" },
                 -- { name = "ultisnips" },
-                { name = "copilot", group_index = 2 },
-                { name = "buffer" },
                 { name = "path", option = { trailing_slash = true, } },
                 { name = "git" },
             },

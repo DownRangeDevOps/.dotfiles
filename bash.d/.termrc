@@ -1,6 +1,5 @@
 # shellcheck shell=bash
 # Terminal setup
-
 if [[ -n ${DEBUG:-} ]]; then
     set +ua
     # shellcheck disable=SC1091
@@ -38,8 +37,6 @@ else
     history -a            # append
     history -n            # read new lines and append
 fi
-
-ulimit -n 1024        # increase limit on open files (default: 256)
 
 if [[ -z "${ZSH_VERSION:-}" ]]; then
     # Search history with arrows, up: \e[A, down: \e[B
