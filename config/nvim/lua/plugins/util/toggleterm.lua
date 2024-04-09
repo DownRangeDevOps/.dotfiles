@@ -9,12 +9,16 @@ return {
     -- cmd = "ToggleTerm",
     version = "*",
     init = function()
+        local initialized = false
         local term = require("toggleterm.terminal").Terminal:new({
             cmd = "zsh --login",
             name = "main",
             hidden = false,
             on_open = function(term)
-                term:send("source ~/.bash_profile; clear")
+                if not initialized then
+                    term:send("source ~/.bash_profile; clear")
+                    initialized = true
+                end
             end,
         })
 

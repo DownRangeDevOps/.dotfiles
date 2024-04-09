@@ -96,7 +96,10 @@ function nvim() {
     # fi
     #
     if [[ "${NVIM_SESSION_FILE_PATH:-}" ]]; then
-        touch "${NVIM_SESSION_FILE_PATH:-}"
+        if [[ ! -f "${NVIM_SESSION_FILE_PATH:-}" ]]; then
+            touch "${NVIM_SESSION_FILE_PATH}"
+        fi
+
         command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
     else
         command nvim "$@"

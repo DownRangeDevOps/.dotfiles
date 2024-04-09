@@ -16,7 +16,15 @@ return {
         enable_normal_mode_for_inputs = true,
         popup_border_style = "rounded",
         use_popups_for_input = false, -- use vim input since I can't change width
-        event_handlers = {},
+        event_handlers = {
+            {
+                event = "neo_tree_buffer_enter",
+                handler = function(arg)
+                    vim.wo.number = true
+                    vim.wo.relativenumber = true
+                end
+            },
+        },
         window = {
             position = "current",
             noremap = true,
@@ -48,11 +56,11 @@ return {
                 expand_node = function(state)
                         local origin_file = vim.fn.getreg("#")
 
+                        state.commands["open"](state)
+
                         if origin_file ~= "" then
                             vim.fn.setreg("#", origin_file)
                         end
-
-                        state.commands["open"](state)
                     end,
             },
             window = {

@@ -1,6 +1,40 @@
 -- ----------------------------------------------
 -- Helpers
 -- ----------------------------------------------
+-- Open all project files in hidden buffers so that they are available to Copilot context
+vim.api.nvim_create_user_command(
+    "LoadProjectFiles",
+    function()
+        local res
+        local files = {}
+        local handle, err = io.popen("rg --files")
+        local function is_regular_file(path)
+            local stat = vim.loop.fs_stat(path)
+            return stat and stat.type == "file"
+        end
+
+        if handle then
+            res = handle:read("*a")
+            handle:close()
+
+            for line in res:gmatch("[^\r\n]+") do
+                table.insert(files, line)
+            end
+
+            for _, path in ipairs(files) do
+                if path ~= "" and is_regular_file(path) then
+                    vim.api.nvim_command("badd " .. path)
+                end
+            end
+
+            vim.print("Project files loaded.")
+        else
+            vim.print(err)
+        end
+    end,
+    { desc = "Open all project files" }
+)
+
 -- Clear registers
 vim.api.nvim_create_user_command(
     "ClearRegisters",

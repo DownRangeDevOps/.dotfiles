@@ -1,6 +1,7 @@
 [user]
 	name = Ryan Fisher
 	gpgkey = 4AEE18F83AFDEB23 # github.com webflow
+	email = ryan.fisher@grainger.com
 [includeIf "gitdir:/Users/ryanfisher/dev/grainger"]
 	path = ~/.dotfiles/config/git/.gitconfig-grainger
 [includeIf "gitdir:/Users/xjxf277/"]
@@ -103,5 +104,5 @@
 	version = 4
 [alias]
 	push = push --signed
-    status = status --branch
-    stash = stash --all
+	status = status --branch
+	stash = stash --all
