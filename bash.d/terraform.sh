@@ -59,6 +59,14 @@ function terraform_wrapper() {
     fi
 }
 
+function terraform_fmt_project() {
+    local cur_dir="${PWD}"
+
+    cd "$(git_project_root)" || return 1
+    terraform fmt -recursive
+    cd "${cur_dir}" || return 1
+}
+
 function parse_plan_diff() {
     local infile="${1:-"tfplan.log"}"
     local nocolorfile="${infile}.nocolor"

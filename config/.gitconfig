@@ -96,9 +96,9 @@
 	writeCommitGraph = true
 [difftool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
-	path = 
+	path =
 [mergetool "sourcetree"]
-	cmd = nvim -f -c DiffviewOpen
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [index]
 	version = 4

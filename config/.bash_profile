@@ -1,4 +1,31 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
+# Load .bashrc
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    if [[ -f "${HOME}/.zshrc" ]]; then
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .zshrc..."
+        fi
+
+        source "${HOME}/.zshrc"
+
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
+        fi
+    fi
+else
+    if [[ -f "${HOME}/.bashrc" ]]; then
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .bashrc..."
+        fi
+
+        source "${HOME}/.bashrc"
+
+        if [[ -n "${DEBUG:-}" ]]; then
+            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
+        fi
+    fi
+fi
+
 
 # Reset path to always start fresh
 export PATH=""
