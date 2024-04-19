@@ -237,13 +237,16 @@ vim.api.nvim_create_autocmd({
         "TextChanged",
 }, {
     group = plugin,
-    pattern = ".github/*", -- only run on YAML files in the `.github` dir
+    pattern = ".github/*/*", -- only run on YAML files in the `.github` dir
     callback = function()
         local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
         local filename = vim.api.nvim_buf_get_name(0)
 
         if modifiable and #filename > 0 then
-            require("lint").try_lint("actionlint")
+            local lint = require("lint")
+
+            lint.linters.actionlint.args = { "-config-file", ".github/actionlint.yml" }
+            lint.try_lint("actionlint")
         end
     end
 })

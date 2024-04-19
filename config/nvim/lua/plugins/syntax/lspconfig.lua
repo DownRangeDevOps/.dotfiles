@@ -45,7 +45,6 @@ return {
                         vim.g.mason_ruby_path = vim.fn.trim(vim.fn.system("rbenv which ruby"))
                         vim.g.mason_gem_path = vim.fn.trim(vim.fn.system("rbenv which gem"))
 
-
                         -- Initalize nvim-lint
                         local linters_by_ft = require("lint").linters_by_ft
                         local mypy = require("lint").linters.mypy

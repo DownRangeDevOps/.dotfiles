@@ -2,7 +2,7 @@
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [${BASH_SOURCE[0]:-$0}]"
 fi
 
 # ------------------------------------------------
