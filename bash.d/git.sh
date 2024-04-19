@@ -789,7 +789,10 @@ function gh_pr() {
     if [[ "$(gh_check_for_pr)" == "true" ]]; then
         printf_callout "Updating pull request..."
         git fetch --prune
-        git push origin --force-with-lease HEAD
+        git push origin \
+            --force-with-lease \
+            --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
+            HEAD
         gh pr edit --title "${title}" --body "${log_content}"
     else
         printf_callout "Creating pull request..."
@@ -801,7 +804,10 @@ function gh_pr() {
             git commit --amend --no-edit
         fi
 
-        git push origin --force-with-lease HEAD
+        git push origin \
+            --force-with-lease \
+            --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
+            HEAD
 
         gh pr create --title "${title}" --body "${log_content}" --base "${base_branch}"
     fi

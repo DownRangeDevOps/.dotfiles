@@ -495,7 +495,9 @@ map("n", "zm", function() require("ufo").closeFoldsWith() end, { group = "ui", d
 -- :help telescope.builtin
 -- files
 map("n", "<C-p>", function()
-    if is_git_repo() then
+    if vim.bo.filetype == "TelescopePrompt" then
+        require("telescope.builtin").resume()
+    elseif is_git_repo() then
         require("telescope.builtin").git_files({ show_untracked = true })
     else
         require("telescope.builtin").find_files()
@@ -529,7 +531,7 @@ map("n", "<leader>fw", function()
     local opts = {
         cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
         hidden = true,
-        no_ignore = true
+        no_ignore = true,
     }
 
     require("telescope.builtin").grep_string(opts)
