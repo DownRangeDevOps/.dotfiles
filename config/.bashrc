@@ -1,5 +1,8 @@
 # shellcheck shell=bash
 
+BASHRC_SOURCED="${BASHRC_SOURCED:-0}"
+export BASHRC_SOURCED=$((BASHRC_SOURCED + 1))
+
 # Globals
 export PERSONAL_LAPTOP_USER="ryanfisher"
 
@@ -30,9 +33,9 @@ alias cp="cp -i"
 set -o noclobber
 
 # tmux & tmuxinator
-alias tmux='tmux -2'              # force 256 colors in tmux
-alias tks='tmux kill-session -t ' # easy kill tmux session
-alias rc='reattach-to-user-namespace pbcopy'
+alias tmux="tmux -2"             # force 256 colors in tmux
+alias tks="tmux kill-session -t" # easy kill tmux session
+alias rc="reattach-to-user-namespace pbcopy"
 
 # info
 alias ls="list_dir"
@@ -266,7 +269,7 @@ alias tfd="terraform_wrapper destroy"
 alias tfdb="terraform_wrapper debug"
 alias tfe="terraform_wrapper env"
 alias tff="terraform_wrapper fmt"
-alias tffr="cd \$(git_project_root); terraform fmt -recursive; cd -"
+alias tffr="terraform_fmt_project"
 alias tfg="terraform_wrapper get"
 alias tfgr="terraform_wrapper graph"
 alias tfi="terraform_wrapper init"

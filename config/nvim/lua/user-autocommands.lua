@@ -47,7 +47,11 @@ vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
     pattern = "*",
     callback = function()
-        local session_file_path = vim.env.NVIM_SESSION_FILE_PATH -- set by .envrc
+        -- maximize window height on start... Probably a toggle term issue
+        vim.cmd.wincmd("_")
+
+        -- set by .envrc
+        local session_file_path = vim.env.NVIM_SESSION_FILE_PATH
 
         if session_file_path then
             vim.cmd("silent Obsession " .. session_file_path)
@@ -87,7 +91,10 @@ vim.api.nvim_create_autocmd({ "BufEnter", "TermEnter", "WinEnter", "TabEnter", "
 -- bash files with no extension
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
-    pattern = { ".envrc", ".bashrc", },
+    pattern = {
+        ".envrc",
+        ".bashrc",
+    },
     callback = function()
         vim.cmd.set("ft=sh")
     end
@@ -185,13 +192,13 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
         local bullets_mappings = {
             promote = { mode = "i", lhs = "<C-d>", rhs = function()
                 vim.cmd("BulletPromote")
-                vim.cmd.stopinsert()
-                vim.fn.feedkeys("A ")
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-o>$", true, false, true), "n", false)
+                vim.api.nvim_feedkeys(" ", "i", true)
             end, opts = { group = "list", desc = "bullets promote" } },
             demote = { mode = "i", lhs = "<C-t>", rhs = function()
                 vim.cmd("BulletDemote")
-                vim.cmd.stopinsert()
-                vim.fn.feedkeys("A ")
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-o>$", true, false, true), "n", false)
+                vim.api.nvim_feedkeys(" ", "i", true)
             end, opts = { group = "list", desc = "bullets demote" } },
 
             vpromote   = { mode = "v", lhs  = "<C-d>",    rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },
@@ -308,7 +315,20 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end
 })
 
--- terminals
+-- Git commit messages
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    group = ui,
+    pattern = { "gitcommit" },
+    callback = function()
+        vim.wo.colorcolumn = true
+        vim.wo.list = true
+        vim.wo.number = true
+        vim.wo.relativenumber = true
+        vim.wo.spell = true
+    end
+})
+
+-- Terminals
 vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter" }, {
     group = ui,
     pattern = "*",
