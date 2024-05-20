@@ -238,11 +238,7 @@ vim.api.nvim_create_autocmd({ "WinEnter" }, {
 -- ----------------------------------------------
 -- Plugins
 -- ----------------------------------------------
-vim.api.nvim_create_autocmd({
-        "BufEnter",
-        "InsertLeave",
-        "TextChanged",
-}, {
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     group = plugin,
     pattern = ".github/*/*", -- only run on YAML files in the `.github` dir
     callback = function()
@@ -258,11 +254,7 @@ vim.api.nvim_create_autocmd({
     end
 })
 
-vim.api.nvim_create_autocmd({
-    "BufEnter",
-    "InsertLeave",
-    "TextChanged",
-}, {
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     group = plugin,
     pattern = "*",
     callback = function()

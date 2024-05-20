@@ -64,22 +64,22 @@ function __ps1_prompt() {
     cli_time_str="$(awk '{$1=$1;print}' <<< "${cli_time[*]}")"
 
     if [[ -n "${git_branch_state:-}" ]]; then
-        printf "%s\n" "${YELLOW}${path_with_tilde}${RESET} on ${MAGENTA}${git_branch_state:-}${RESET}"
+        printf "%s\n" "${BLUE}┏${BOLD}[${RESET} ${YELLOW}${path_with_tilde}${BLUE} ${BOLD}]${RESET}${BLUE}━${BOLD}[${RESET} ${MAGENTA}${git_branch_state:-} ${BLUE}${BOLD}]${RESET}"
     else
-        printf "%s\n" "${YELLOW}${path_with_tilde}${RESET}"
+        printf "%s\n" "${BLUE}┏[ ${YELLOW}${path_with_tilde} ${BLUE}]${RESET}"
     fi
 
     if [[ -n "${cli_info_str:-}" ]]; then
-        printf "%s\n" "(${cli_info_str})"
+        printf "%s\n" "${BLUE}┣${BOLD}[${RESET} ${cli_time_str:-} ${BLUE}${BOLD}]${BLUE}━${BOLD}[ ${RESET}${cli_info_str}${BOLD}${BLUE} ]${RESET}"
+    else
+        printf "%s\n" "${BLUE}┣${BOLD}[${RESET} ${cli_time_str:-} ${BLUE}${BOLD}]${RESET}"
     fi
 
     if [[ -n "${ZSH_VERSION:-}" ]]; then
-        PS1="${cli_time_str:-} ${CYAN}→ ${RESET}"
+        PS1="${BLUE}┗❱ ${RESET}"
     else
-        PS1="${cli_time_str:-} \[${CYAN}\]→ \[${RESET}\]"
+        PS1="\[${BLUE}\]┗❱ \[${RESET}\]"
     fi
-
-    printf "%s" "cli_info_str: ${PS1}"
 }
 
 if [[ -z "${ZSH_VERSION:-}" &&  ! "${PROMPT_COMMAND:-}" =~ __ps1_prompt ]]; then

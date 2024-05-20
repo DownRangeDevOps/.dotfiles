@@ -14,8 +14,11 @@ vim.api.nvim_create_user_command(
         end
 
         if handle then
+            vim.cmd("WipeAllBuffers")
+
             res = handle:read("*a")
             handle:close()
+
 
             for line in res:gmatch("[^\r\n]+") do
                 table.insert(files, line)
@@ -102,6 +105,13 @@ vim.api.nvim_create_user_command("Tffr", function()
     vim.cmd.edit()
 end, { desc = "terraform recursive fmt"})
 
+vim.api.nvim_create_user_command("TfMovedFrom", function()
+    vim.cmd("s/\\v\\c[^#]+# (.*)/moved {\r  from = \1\r}\r/")
+end, { desc = "Create Terraform moved block with 'from' entry"})
+
+vim.api.nvim_create_user_command("TfMovedTo", function()
+    vim.cmd("s/\\v\\c[^#]+# (.*)/  to = \1")
+end, { desc = "Create Terraform moved block 'to' entry"})
 -- ----------------------------------------------
 -- Typos
 -- ----------------------------------------------

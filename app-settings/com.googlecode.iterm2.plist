@@ -4701,6 +4701,8 @@ Password Manager</string>
 			<string>Recycle</string>
 			<key>Allow Title Reporting</key>
 			<false/>
+			<key>Allow modifyOtherKeys</key>
+			<true/>
 			<key>Ambiguous Double Width</key>
 			<false/>
 			<key>Ansi 0 Color</key>
@@ -6815,11 +6817,11 @@ Password Manager</string>
 				<key>Saved Window Type</key>
 				<integer>13</integer>
 				<key>Screen</key>
-				<integer>2</integer>
+				<integer>1</integer>
 				<key>Scroller Width</key>
 				<real>0.0</real>
 				<key>Selected Tab Index</key>
-				<integer>4</integer>
+				<integer>3</integer>
 				<key>Tabs</key>
 				<array>
 					<dict>
@@ -7138,7 +7140,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -7212,7 +7214,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>87DDEBB5-97F7-4B23-801F-18937D9AE4BA</string>
+											<string>0A4A4E0B-D029-41BD-8DBC-0A1704FDA0E2</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -8335,7 +8337,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -8409,7 +8411,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>227780EA-DE97-465D-BA3C-54273BCDE5D7</string>
+											<string>AAC2C447-275E-4A2C-A1D5-F34E64D9E11C</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -9220,7 +9222,7 @@ Password Manager</string>
 						<key>Root</key>
 						<dict>
 							<key>Splitter ID</key>
-							<string>39BF8979-B0A3-460C-982C-612C598F9A30</string>
+							<string>D947E349-1A58-4841-AE66-1C843116F15B</string>
 							<key>Subviews</key>
 							<array>
 								<dict>
@@ -9532,7 +9534,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -9606,7 +9608,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>C19B05F2-D22F-4DA2-AFC2-E00EBD12A531</string>
+											<string>3385A94E-45A3-4839-B6C5-11A51456A7C9</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10329,7 +10331,7 @@ Password Manager</string>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict/>
@@ -10362,7 +10364,7 @@ Password Manager</string>
 										<key>Rows</key>
 										<integer>56</integer>
 										<key>Session GUID</key>
-										<string>1787DD9E-A9BD-4E2F-8835-4FB79CCC8E81</string>
+										<string>491B552E-DFA4-47B8-87E2-D57D9208660A</string>
 										<key>Short Lived Single Use</key>
 										<false/>
 										<key>Should Expect Current Dir Updates</key>
@@ -10411,7 +10413,7 @@ Password Manager</string>
 							<false/>
 						</dict>
 						<key>Tab GUID</key>
-						<string>B02111AB-99D0-4666-BF7D-854E7F639C3A</string>
+						<string>2C333A18-C81D-4694-92BB-C29A2A2FDAA8</string>
 					</dict>
 					<dict>
 						<key>Root</key>
@@ -10729,7 +10731,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -10803,7 +10805,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>D87FFEF1-5405-4228-9E1C-5A719398FB6A</string>
+											<string>C6A7502D-EE68-4425-A487-AF6812AD2BC5</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11926,7 +11928,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -12000,7 +12002,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>6B256B80-F21D-43BA-88B9-D7B99A0DA1B4</string>
+											<string>BF3B07CA-6951-424F-9682-6B99401A25F9</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -13123,7 +13125,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -13197,7 +13199,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>BA11511D-C246-4E3C-AFE1-1A62573ED792</string>
+											<string>0D5261DA-14DC-4192-94A1-C0CC1565A2C3</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -14320,7 +14322,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -14394,7 +14396,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>1BDDE908-EF3A-41EE-98B7-CA24744E9958</string>
+											<string>5003D76E-0513-4AF3-BAAA-655FC6440D70</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -15517,7 +15519,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/usr/local/bin/bash --login</string>
+											<string>/opt/homebrew/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -15591,7 +15593,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>9C721917-1C15-4393-806B-89276AABC151</string>
+											<string>62420F82-708E-4DD2-9756-FEE79318F3B9</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>

@@ -87,7 +87,7 @@ function parse_plan_diff() {
             else
                 printf "%s\n" "==== ${pat^^}"
             fi
-            rg -N "\b${pat}\b" "${nocolorfile}" | sed -E "s/( will | must ).*//"
+            rg -N "#.*\b${pat}\b$" "${nocolorfile}" | sed -E "s/( will | must ).*//"
             printf "\n"
         } >>"${outfile}"
     done

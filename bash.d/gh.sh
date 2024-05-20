@@ -14,8 +14,9 @@ function ghpr() {
 
     glc --print >|"${tmpfile}"
 
-    title="$(git log -1 --format='%s')"
     base=$(git_get_branch_base_ref | sed -E "s/^origin\///")
+    title="$(git log --reverse --format='%s' "${base}"..HEAD | head -1)"
+    echo $title
 
     if [[ -n "${CODEOWNERS:-}" ]]; then
         args+=("--add-assignee" "${CODEOWNERS}")
