@@ -468,8 +468,8 @@ map("t", "<C-l>", "<C-\\><C-n><C-w>l", { group = "nav", desc = "right window" })
 -- my iTerm is setup to send mac ⌥ (option) key instead of meta, which will look like gibberish to most
 map("n", "˚", function() vim.cmd.resize("+4") end, { group = "nav", desc = "increase win height" })
 map("n", "∆", function() vim.cmd.resize("-4") end, { group = "nav", desc = "decrease win height" })
-map("n", "˙", function() vim.cmd("vertical resize +4") end, { group = "nav", desc = "increase win width" })
-map("n", "¬", function() vim.cmd("vertical resize -4") end, { group = "nav", desc = "decrease win width" })
+map("n", "˙", function() vim.cmd("vertical resize +8") end, { group = "nav", desc = "increase win width" })
+map("n", "¬", function() vim.cmd("vertical resize -8") end, { group = "nav", desc = "decrease win width" })
 map("n", "–", function() vim.cmd.wincmd("_") end, { group = "nav", desc = "maximize window height" })
 
 

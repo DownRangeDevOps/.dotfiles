@@ -321,10 +321,15 @@ function git_log() {
         format="%x09%C(blue)%h ${signature_status}%C(reset)-%C(auto)%d %C(yellow)%<(72${truncate_subject})%s %C(blue)[%cn - ${date_fmt}]%C(reset)"
     fi
 
+    # if ${all}; then git_args+=("--branches" "--remotes" "--tags"); fi
+    if ${all}; then git_args+=("--all" "--exclude=refs/dangling/*"); fi
+
     git_args+=("--format=format:${format}")
 
     if ! ${include_upstream}; then git_args+=("--exclude=refs/remotes/upstream/*"); fi
-    if ${all}; then git_args+=("--all"); fi
+
+    # debugging
+    # echo "${git_args[@]}"
 
     if ${colorize_signing_status}; then
         git log "${git_args[@]}" "$@" |
@@ -701,13 +706,12 @@ function git_delete_merged_branches() {
             grep --extended-regexp "^\s*remotes/origin/" |
             sed --regexp-extended "s/^\s*remotes\/origin\///g")"})
     else
-    readarray -t local_branches < <(__git_get_merged_branches |
-        grep --extended-regexp --invert-match "^\s*remotes/origin/" |
-        grep --extended-regexp --invert-match "${cur_branch}")
+        readarray -t local_branches < <(__git_get_merged_branches |
+            grep --extended-regexp --invert-match "^\s*remotes/origin/")
 
-    readarray -t remote_branches < <(__git_get_merged_branches |
-        grep --extended-regexp "^\s*remotes/origin/" |
-        sed --regexp-extended "s/^\s*remotes\/origin\///g")
+        readarray -t remote_branches < <(__git_get_merged_branches |
+            grep --extended-regexp "^\s*remotes/origin/" |
+            sed --regexp-extended "s/^\s*remotes\/origin\///g")
     fi
 
     if [[ ${#local_branches[@]} -gt 0 || ${#remote_branches[@]} -gt 0 ]]; then
@@ -732,12 +736,13 @@ function git_delete_merged_branches() {
 
         git fetch --prune &>/dev/null
         git remote prune origin &>/dev/null
-        git checkout "${cur_branch}" &>/dev/null
+
+        git checkout "${cur_branch}"
 
         printf_callout "Done."
         printf_warning "Everyone should run \`git fetch --prune\` to sync with this remote."
     else
-        git checkout "${cur_branch}" &>/dev/null
+        git checkout "${cur_branch}"
         printf_warning "No merged branches to delete."
     fi
 }
@@ -773,27 +778,37 @@ function gh_check_for_pr() {
 
 function gh_pr() {
     local base_branch
-    local log_content
-    local title
+    local local_base_branch
+    local first_commit_subject
+    local pr_title
+    local pr_body
+    local args
 
-    base_branch=$(git_get_branch_base_ref | sed -E "s,^origin/,,")
-    log_content="$(git_log_copy --print)"
-    title=$(
-        head -1 <<<"$log_content" |
-            sed -E "s/^## //" |
-            sed -E "s/\[\[/[/" |
-            sed -E "s/\]\]/]/" |
-            sed -E "s/ \(.*\)$//"
+    local_base_branch=$(git_get_branch_base_ref)
+    remote_base_branch=$(sed -E "s,^origin/,," <<< "${local_base_branch}")
+
+    first_commit_subject="$(git log --reverse --format='%s' "${local_base_branch}..HEAD" | head -1)"
+    pr_title=$(sed -E "s/\[\[/[/" <<<"${first_commit_subject}" | sed -E "s/\]\]/]/")
+    pr_body_file="$(mktemp -p /tmp)"
+
+    git_log_copy --print >| "${pr_body_file}"
+
+    args=(
+        "--title"
+        "${pr_title}"
+        "--body-file"
+        "${pr_body_file}"
     )
 
     if [[ "$(gh_check_for_pr)" == "true" ]]; then
         printf_callout "Updating pull request..."
         git fetch --prune
-        git push origin \
+        git push "$(git config --default origin --get clone.defaultRemoteName)" \
+            --set-upstream \
             --force-with-lease \
-            --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
             HEAD
-        gh pr edit --title "${title}" --body "${log_content}"
+
+        gh pr edit "${args[@]}"
     else
         printf_callout "Creating pull request..."
 
@@ -804,13 +819,20 @@ function gh_pr() {
             git commit --amend --no-edit
         fi
 
-        git push origin \
+        git push "$(git config --default origin --get clone.defaultRemoteName)" \
+            --set-upstream \
             --force-with-lease \
-            --set-upstream "$(git config --default origin --get clone.defaultRemoteName)" \
             HEAD
 
-        gh pr create --title "${title}" --body "${log_content}" --base "${base_branch}"
+        args+=(
+            "--base"
+            "${remote_base_branch}"
+        )
+
+        gh pr create "${args[@]}"
     fi
+
+    rm -f "${pr_body_file}"
 }
 
 function git_log_copy() {

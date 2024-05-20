@@ -93,7 +93,7 @@ function parse() {
     branch_type="${tmp[0]:-}"
     branch_scope="${tmp[1]:-}"
 
-    search_arr "[A-Za-z]+[0-9]+-[0-9]+" "${BRANCH_PARTS[@]}"
+    search_arr "[A-Za-z]+[0-9]*-[0-9]+" "${BRANCH_PARTS[@]}"
     BRANCH_PARTS=("${BRANCH_PARTS[@]}")
     ticket_id="${MATCH}"
 
