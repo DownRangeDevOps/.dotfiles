@@ -109,7 +109,7 @@ function parse_opts() {
     fi
 
     if ! parsed=$(getopt --options="${options}" --longoptions="${long_options}" --name "${script_name}" -- "${script_args[@]}"); then
-        printf_error "gitopts parsing error"
+        printf_error "getopt parsing error"
         return 2
     fi
 

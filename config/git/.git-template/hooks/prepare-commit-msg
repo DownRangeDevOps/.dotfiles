@@ -40,6 +40,8 @@
 #       <ticket-id>--<subject>
 #       <user-initials>/<subject>
 #       <user-initials>/<ticket-id>--<subject>
+#       <user-initials>/<issue-type>/<ticket-id>--<subject>
+#       <user-initials>/<issue-type>-<issue-scope>/<ticket-id>--<subject>
 #       <issue-type>/<user-initials>/<subject>
 #       <issue-type>-<issue-scope>/<user-initials>/<subject>
 #       <issue-type>/<user-initials>/<ticket-id>--<subject>
