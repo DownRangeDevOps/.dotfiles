@@ -419,7 +419,7 @@ map("n", "<leader>z", function()
 end, { silent = true, group = "gen", desc = "toggle zoom" })
 map("n", "<leader>\\", function() vim.cmd("vsplit") end, { silent = true, group = "gen", desc = "vsplit" })
 map("n", "<leader>-", function() vim.cmd("split") end, { silent = true, group = "gen", desc = "split" })
-map("n", "<leader>q", function()
+map("n", "<leader>Q", function()
     local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
     local filename = vim.api.nvim_buf_get_name(0)
 
@@ -433,7 +433,7 @@ map("n", "<leader>q", function()
         vim.cmd.startinsert()
     end
 end, { silent = true, group = "gen", desc = "save, open alt buf" })
-map("n", "<leader>Q", function()
+map("n", "<leader>q", function()
     local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
     local filename = vim.api.nvim_buf_get_name(0)
 

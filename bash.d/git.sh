@@ -301,7 +301,7 @@ function git_log() {
             ;;
         *)
             git_args+=("${1}")
-            shift
+            shift || break
             ;;
         esac
     done
