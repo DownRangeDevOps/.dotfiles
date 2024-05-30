@@ -112,6 +112,65 @@ end, { desc = "Create Terraform moved block with 'from' entry"})
 vim.api.nvim_create_user_command("TfMovedTo", function()
     vim.cmd("s/\\v\\c[^#]+# (.*)/  to = \1")
 end, { desc = "Create Terraform moved block 'to' entry"})
+
+-- Create a custom command that calls the transformation function
+vim.api.nvim_create_user_command("TfSingleMovedBlock", function()
+    local start_line = vim.fn.line("'<") - 1
+    local end_line = vim.fn.line("'>")
+    local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
+
+    if #lines == 2 then
+        local from = lines[1]:match("#%s*(.*)")
+        local to = lines[2]:match("#%s*(.*)")
+
+        if from and to then
+            vim.api.nvim_buf_set_lines(0, start_line, end_line, false, {
+                "moved {",
+                "  from = " .. from,
+                "  to = " .. to,
+                "}",
+                " ",
+            })
+        end
+    else
+        vim.cmd("echoe 'More than two lines selected, please select exactly two lines to transform'")
+    end
+end, { range = true })
+
+-- Create a custom command that calls the transformation function
+vim.api.nvim_create_user_command("TfMultipleMoveBlocks", function()
+  local start_line = vim.fn.line("'<") - 1
+  local end_line = vim.fn.line("'>")
+  local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
+
+  local block1, block2, moved_blocks = {}, {}, {}
+  local current_block = block1
+
+  for _, line in ipairs(lines) do
+    if line:match("^%s*#") then
+      table.insert(current_block, line:match("#%s*(.*)"))
+    elseif #current_block > 0 then
+      current_block = block2
+      table.insert(current_block, line:match("#%s*(.*)"))
+    end
+  end
+
+  if #block1 ~= #block2 then
+    print("Error: The selected blocks have a different number of lines.")
+    return
+  end
+
+  for i = 1, #block1 do
+    table.insert(moved_blocks, "moved {")
+    table.insert(moved_blocks, "  from = " .. block1[i])
+    table.insert(moved_blocks, "  to = " .. block2[i])
+    table.insert(moved_blocks, "}")
+    table.insert(moved_blocks, " ")
+  end
+
+  vim.api.nvim_buf_set_lines(0, start_line, end_line, false, moved_blocks)
+end, { range = true })
+
 -- ----------------------------------------------
 -- Typos
 -- ----------------------------------------------
