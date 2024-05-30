@@ -420,12 +420,12 @@ end, { silent = true, group = "gen", desc = "toggle zoom" })
 map("n", "<leader>\\", function() vim.cmd("vsplit") end, { silent = true, group = "gen", desc = "vsplit" })
 map("n", "<leader>-", function() vim.cmd("split") end, { silent = true, group = "gen", desc = "split" })
 map("n", "<leader>Q", function()
-    local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
-    local filename = vim.api.nvim_buf_get_name(0)
-
-    if modifiable and #filename > 0 then
-        vim.cmd.write()
-    end
+    -- local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+    -- local filename = vim.api.nvim_buf_get_name(0)
+    --
+    -- if modifiable and #filename > 0 then
+    --     vim.cmd.write()
+    -- end
 
     vim.cmd.bp()
 
@@ -434,13 +434,13 @@ map("n", "<leader>Q", function()
     end
 end, { silent = true, group = "gen", desc = "save, open alt buf" })
 map("n", "<leader>q", function()
-    local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
-    local filename = vim.api.nvim_buf_get_name(0)
-
-    if modifiable and #filename > 0 then
-        vim.cmd.write()
-    end
-
+    -- local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+    -- local filename = vim.api.nvim_buf_get_name(0)
+    --
+    -- if modifiable and #filename > 0 then
+    --     vim.cmd.write()
+    -- end
+    --
     vim.cmd.quit()
 end, { silent = true, group = "gen", desc = "write quit" })
 
