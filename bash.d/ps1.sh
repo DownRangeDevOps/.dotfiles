@@ -7,15 +7,22 @@ function __ps1_prompt() {
     local cli_element_order
     local cli_info_str
 
+    local aws_profile
     local aws_vault
     local git_branch_state
     local shell_lvl
-    local tf_env
+    local env
     local tf_workspace
     local time
     local virtualenv_name
 
     local path_with_tilde=${PWD/"${HOME}"/\~}
+
+    # shellcheck disable=SC2034
+    aws_profile="${AWS_PROFILE:-}"
+    if [[ -n "${aws_profile}" ]]; then
+        aws_profile="aws:${aws_profile}"
+    fi
 
     # shellcheck disable=SC2034
     aws_vault="${AWS_VAULT:-}"
@@ -30,9 +37,9 @@ function __ps1_prompt() {
     shell_lvl="$(is_subsh)"
 
     # shellcheck disable=SC2034
-    tf_env="${TF_VAR_tenant:-}"
-    if [[ -n "${tf_env}" ]]; then
-        tf_env="tfenv:${tf_env}"
+    env="${TF_VAR_tenant:-}"
+    if [[ -n "${env}" ]]; then
+        env="env:${env}"
     fi
 
     # shellcheck disable=SC2034
@@ -49,8 +56,9 @@ function __ps1_prompt() {
 
     cli_element_order=(
         "${virtualenv_name:-}"
+        "${aws_profile:-}"
         "${aws_vault:-}"
-        "${tf_env:-}"
+        "${env:-}"
         "${tf_workspace:-}"
     )
 

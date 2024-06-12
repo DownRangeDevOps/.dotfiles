@@ -503,6 +503,20 @@ map("n", "<C-p>", function()
         require("telescope.builtin").find_files()
     end
 end, { group = "ts", desc = "fuzzy git files" })
+map("n", "<C-S-p>", function()
+    local current_file_path = vim.fn.expand('%:p:h')
+
+    if vim.bo.filetype == "TelescopePrompt" then
+        require("telescope.builtin").resume()
+    elseif is_git_repo() then
+        require("telescope.builtin").git_files({
+            cws = current_file_path,
+            show_untracked = true,
+        })
+    else
+        require("telescope.builtin").find_files({ search_dirs = { current_file_path }})
+    end
+end, { group = "ts", desc = "fuzzy git files" })
 map("i", "<C-n>", function() require("telescope.actions").cycle_history_next() end, { group = "ts", desc = "history next" })
 map("i", "<C-p>", function() require("telescope.actions").cycle_history_prev() end, { group = "ts", desc = "history prev" })
 map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { group = "ts", desc = "fuzzy recent files" })
