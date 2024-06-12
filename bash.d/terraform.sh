@@ -53,7 +53,12 @@ function validate_all_modules() {
 function terraform_wrapper() {
     if [[ "$1" == plan ]]; then
         terraform "$@" |& tee tfplan.log
-        parse_plan_diff tfplan.log
+
+        if [[ -s tfplan.log ]]; then
+            parse_plan_diff tfplan.log
+        else
+            rm -f tfplan.log
+        fi
     else
         terraform "$@"
     fi
@@ -71,7 +76,7 @@ function parse_plan_diff() {
     local infile="${1:-"tfplan.log"}"
     local nocolorfile="${infile}.nocolor"
     local outfile="${2:-"change-log.tfplan"}"
-    local patterns=("destroyed" "created" "replaced" "forces replacement")
+    local patterns=("will be destroyed" "will not be destroyed" "created" "replaced" "forces replacement")
 
     ansifilter --input="${infile}" --output="${nocolorfile}"
     sed -i -E "1,/^$/d" "${nocolorfile}"
@@ -83,23 +88,60 @@ function parse_plan_diff() {
     for pat in "${patterns[@]}"; do
         {
             if [[ -n "${ZSH_VERSION}" ]]; then
-                printf "%s\n" "==== ${pat:u}"
+                printf "%s\n" "==== ${pat:u}:"
             else
-                printf "%s\n" "==== ${pat^^}"
+                printf "%s\n" "==== ${pat^^}:"
             fi
             rg -N "#.*\b${pat}\b$" "${nocolorfile}" | sed -E "s/( will | must ).*//"
             printf "\n"
         } >>"${outfile}"
     done
 
+    # printf "%s\n" "==== UPDATED:" >> "${outfile}"
+    # extract_update_sections "${nocolorfile}"
+
+    rm -f "${infile}"
+
     if [[ -n "${TF_VAR_tenant:-}" ]]; then
         infile="${TF_VAR_tenant:-}.${infile}"
         mv -f "${outfile}" "${TF_VAR_tenant:-}.${outfile}"
     fi
 
-    rm -f "${infile}"
     mv -f "${nocolorfile}" "${infile}"
 }
 
-# function terraform_foce_unlock() {
-# }
+function extract_update_sections() {
+    local plan_output="$1"
+    local in_block=false
+    local block_lines=()
+
+    while IFS= read -r line; do
+        if [[ "${line}" =~ "updated in-place"$ ]]; then
+            in_block=true
+            block_lines+=("${line}")
+        elif ${in_block}; then
+            if [[ -z "${line}" ]]; then
+                # We've reached a blank line, print the collected block
+                for blk_line in "${block_lines[@]}"; do
+                    if [[ "${blk_line}" =~ ^\s*# || "${blk_line}" =~ ^\s*~ ]]; then
+                        printf "%s\n" "${blk_line}"
+                    fi
+                done
+                printf "\n"
+                block_lines=()
+                in_block=false
+            else
+                block_lines+=("${line}")
+            fi
+        fi
+    done < "${plan_output}"
+
+    # Print any remaining block at the end of the file
+    if $in_block; then
+        for blk_line in "${block_lines[@]}"; do
+            if [[ "${blk_line}" =~ ^# || "${blk_line}" =~ ^~ ]]; then
+                printf "%s\n" "${blk_line}"
+            fi
+        done
+    fi
+}

@@ -2,7 +2,6 @@
 -- Vim user sovereign rights
 -- ----------------------------------------------
 return {
-    { "ThePrimeagen/harpoon",  lazy = false }, -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
     { "mbbill/undotree",       lazy = false }, -- Browse undo-tree (https://github.com/mbbill/undotree.git)
     { "tpope/vim-abolish",     lazy = false }, -- Fix typos and advanced case/conjugation sensitive replace (https://github.com/tpope/vim-abolish)
     { "tpope/vim-fugitive",    lazy = false }, -- Git manager (https://github.com/tpope/vim-fugitive)
@@ -11,6 +10,14 @@ return {
     { "tpope/vim-sleuth",      lazy = false }, -- Detect tabstop and shiftwidth automatically (https://github.com/tpope/vim-sleuth)
     { "tpope/vim-unimpaired",  lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
     { "windwp/nvim-autopairs", lazy = true, event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
+
+    -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        lazy = false,
+        dependencies = { "nvim-lua/plenary.nvim" }
+    },
 
     -- No-delay multi-key escape (https://github.com/max397574/better-escape.nvim)
     {
