@@ -286,7 +286,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         "toggleterm",
     },
     callback = function()
-        vim.wo.colorcolumn = false
+        vim.wo.colorcolumn = ""
         vim.wo.cursorline = false
         vim.wo.foldcolumn = "auto"
         vim.wo.list = false
@@ -312,7 +312,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
     pattern = { "gitcommit" },
     callback = function()
-        vim.wo.colorcolumn = true
+        vim.wo.colorcolumn = ""
         vim.wo.list = true
         vim.wo.number = true
         vim.wo.relativenumber = true

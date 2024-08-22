@@ -93,7 +93,12 @@ function parse() {
     BRANCH_PARTS=("${BRANCH_PARTS[@]}")
     mapfile -t tmp < <(awk NF=NF FS="-" OFS="\n" <<<"${MATCH}")
     branch_type="${tmp[0]:-}"
-    branch_scope="${tmp[1]:-}"
+
+    if [[ "${#tmp[@]}" -gt 1 ]]; then
+        branch_scope="${tmp[*]:1}"
+    else
+        branch_scope=""
+    fi
 
     search_arr "[A-Za-z]+[0-9]*-[0-9]+" "${BRANCH_PARTS[@]}"
     BRANCH_PARTS=("${BRANCH_PARTS[@]}")

@@ -122,7 +122,7 @@ local mason_lsp_required_servers = {
     "neocmake",
     "pylsp",
     "rubocop",
-    "ruby_ls",
+    "ruby_lsp",
     "ruff_lsp",
     "sqlls",
     "taplo",

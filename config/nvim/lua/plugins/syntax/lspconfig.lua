@@ -56,14 +56,14 @@ return {
                         --
                         local linter_to_ft = {
                             -- [ "ansible.yaml" ] = { "ansible-lint" },
-                            go                 = { "revive" },
-                            json               = { "jsonlint" },
-                            python             = { "mypy" },
+                            go        = { "revive" },
+                            json      = { "jsonlint" },
+                            python    = { "mypy" },
                             -- TODO: implement it, only markdownlint supported -- markdown           = { "markdownlint-cli2", },
-                            sh                 = { "shellcheck" },
-                            terraform          = { "tflint" },
-                            vim                = { "vint" },
-                            yaml               = { "yamllint" },
+                            sh        = { "shellcheck" },
+                            terraform = { "tflint" },
+                            vim       = { "vint" },
+                            yaml      = { "yamllint" },
                             -- ◍ djlint: Django, Go, Nunjucks, Twig, Handlebars, Mustache, Angular, Jinja
                         }
 
@@ -127,9 +127,30 @@ return {
         -- :help mason-lspconfig.nvim
         { "williamboman/mason-lspconfig.nvim", lazy = false, config = true },
 
-        -- NeoDev: lua-ls configuration for nvim runtime and api (https://github.com/folke/neodev.nvim)
-        -- :help neodev.nvim.txt
-        { "folke/neodev.nvim", lazy = true, ft = "lua", config = true },
+        -- LazyDev: lua-ls configuration for nvim runtime and api (https://github.com/folke/lazydev.nvim)
+        -- :help lazydev.nvim.txt
+        {
+            "folke/lazydev.nvim",
+            ft = "lua", -- only load on lua files
+            opts = {
+                library = {
+                    -- See the configuration section for more details
+                    -- Load luvit types when the `vim.uv` word is found
+                    { path = "luvit-meta/library", words = { "vim%.uv" } },
+                },
+            },
+        },
+        { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
+        { -- optional completion source for require statements and module annotations
+            "hrsh7th/nvim-cmp",
+            opts = function(_, opts)
+                opts.sources = opts.sources or {}
+                table.insert(opts.sources, {
+                    name = "lazydev",
+                    group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+                })
+            end,
+        },
 
         -- Fidget: LSP status updates (https://github.com/j-hui/fidget.nvim)
         -- :help fidget.txt
