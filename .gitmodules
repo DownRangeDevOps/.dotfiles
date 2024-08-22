@@ -16,3 +16,6 @@
 [submodule "external/test_helper/bats-files"]
 	path = external/test_helper/bats-files
 	url = https://github.com/bats-core/bats-assert.git
+[submodule "external/aws-tools"]
+	path = external/aws-tools
+	url = git@github.com:dryoni/aws-tools.git

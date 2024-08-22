@@ -292,14 +292,14 @@ local save_if_modifiable = function()
         local status, err = pcall(function() vim.cmd.write() end)
 
         if not status then
-            if err:match("No file name") then
+            if err and err:match("No file name") then
                 vim.defer_fn(function() vim.api.nvim_err_write("No file name\n") end, 250)
             else
                 vim.cmd.echoe(err)
             end
-        else
-            vim.cmd("LspRestart")
-            vim.defer_fn(function() vim.cmd.echon("''") end, 750)
+        -- else
+        --     vim.cmd("LspRestart")
+        --     vim.defer_fn(function() vim.cmd.echon("''") end, 750)
         end
     end
 end

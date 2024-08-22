@@ -777,17 +777,28 @@ function gh_check_for_pr() {
 }
 
 function gh_pr() {
-    local base_branch
+    local origin_base_branch
     local local_base_branch
     local first_commit_subject
     local pr_title
-    local pr_body
     local args
 
-    local_base_branch=$(git_get_branch_base_ref)
-    remote_base_branch=$(sed -E "s,^origin/,," <<< "${local_base_branch}")
+    git fetch --prune
 
-    first_commit_subject="$(git log --reverse --format='%s' "${local_base_branch}..HEAD" | head -1)"
+    if [[ ! "$(git status 2>/dev/null | tail -1)" == "*nothing to commit*" ]]; then
+        git add --update
+        git commit --amend --no-edit
+    fi
+
+    git push "$(git config --default origin --get clone.defaultRemoteName)" \
+        --set-upstream \
+        --force-with-lease \
+        HEAD
+
+    origin_base_branch=$(git_get_branch_base_ref)
+    local_base_branch=$(sed -E "s,^origin/,," <<< "${origin_base_branch}")
+
+    first_commit_subject="$(git log --reverse --format='%s' "${origin_base_branch}..HEAD" | head -1)"
     pr_title=$(sed -E "s/\[\[/[/" <<<"${first_commit_subject}" | sed -E "s/\]\]/]/")
     pr_body_file="$(mktemp -p /tmp)"
 
@@ -802,31 +813,13 @@ function gh_pr() {
 
     if [[ "$(gh_check_for_pr)" == "true" ]]; then
         printf_callout "Updating pull request..."
-        git fetch --prune
-        git push "$(git config --default origin --get clone.defaultRemoteName)" \
-            --set-upstream \
-            --force-with-lease \
-            HEAD
-
         gh pr edit "${args[@]}"
     else
         printf_callout "Creating pull request..."
 
-        git fetch --prune
-
-        if [[ ! "$(git status 2>/dev/null | tail -1)" == "*nothing to commit*" ]]; then
-            git add --update
-            git commit --amend --no-edit
-        fi
-
-        git push "$(git config --default origin --get clone.defaultRemoteName)" \
-            --set-upstream \
-            --force-with-lease \
-            HEAD
-
         args+=(
             "--base"
-            "${remote_base_branch}"
+            "${local_base_branch}"
         )
 
         gh pr create "${args[@]}"

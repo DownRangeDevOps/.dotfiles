@@ -38,7 +38,7 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 function find_replace() {
-    rg "$1" -l | xargs sed -i -E "s/\b$1\b/$2/g"
+    rg "$1" --files-with-matches --follow | xargs sed --in-place --follow-symlinks --regexp-extended "s/\b$1\b/$2/g"
 }
 
 function is_subsh() {
