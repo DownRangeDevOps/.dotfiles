@@ -29,7 +29,7 @@ function __git_add_completion_to_aliases() {
         __git_complete  gdm _git_diff
 
         # checkout
-        __git_complete gco _git_checkout
+        __git_complete gco _git_branch
         __git_complete git_fuzzy_checkout _git_checkout
         __git_complete grb _git_checkout
 
