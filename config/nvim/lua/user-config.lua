@@ -49,7 +49,7 @@ vim.o.viewoptions = table.concat({
 -- Providers
 vim.g.node_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/neovim-node-host"
 vim.g.perl_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/perl"
-vim.g.python3_host_prog = "/Users/xjxf277/.pyenv/versions/3.11.5/bin/python"
+vim.g.python3_host_prog = "/Users/xjxf277/.asdf/shims/python"
 
 -- Use rbenv bins
 vim.env.GEM_HOME = vim.fn.trim(vim.fn.system("rbenv which gem"))

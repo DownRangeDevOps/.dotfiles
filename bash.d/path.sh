@@ -42,6 +42,7 @@ function set_path() {
             prepend+=("${HOMEBREW_PREFIX}/opt/${compiler}") # llvm
         done
 
+        prepend+=("${HOME}/.asdf/shims")
     fi
 
     prepend+=("/Applications/SnowSQL.app/Contents/MacOS") # SnowSQL
@@ -49,7 +50,7 @@ function set_path() {
     append+=("${HOME}/.local/bin")   # Ansible
     append+=("${HOME}/.cargo/bin")   # rust
 
-    if [[ -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then append+=("/usr/local/mysql/bin"); fi # mysql
+    if [[ -n "${PERSONAL_LAPTOP_USER:-}" && -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then append+=("/usr/local/mysql/bin"); fi # mysql
 
 
     add_to_path prepend "${prepend[@]}"

@@ -1,15 +1,9 @@
 # shellcheck shell=bash
-
 BASHRC_SOURCED="${BASHRC_SOURCED:-0}"
 export BASHRC_SOURCED=$((BASHRC_SOURCED + 1))
 
 # Globals
 export PERSONAL_LAPTOP_USER="ryanfisher"
-
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    autoload -U +X bashcompinit && bashcompinit
-    autoload -U +X compinit && compinit
-fi
 
 # ------------------------------------------------
 #  bash
@@ -21,7 +15,7 @@ fi
 alias c="clear"
 alias genpasswd="openssl rand -base64 32"
 alias myip="curl icanhazip.com"
-alias sb="source \${HOME}/.bash_profile"
+alias sb="source \${HOME}/.zprofile && source \${HOME}/.zshrc"
 
 # safety
 alias chown="chown --preserve-root"
@@ -303,18 +297,17 @@ alias tfia=init_all_modules
 alias tfva=validate_all_modules
 
 # ------------------------------------------------
-#  pyenv init
-# ------------------------------------------------
-alias pyenvinit="eval \"\$(pyenv init -)\"; eval \"\$(pyenv virtualenv-init -)\"; pyenv virtualenvwrapper_lazy"
-
-# ------------------------------------------------
 #  direnv
 # ------------------------------------------------
 set +ua
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    eval "$(direnv hook zsh)"
+if [[ -f "/opt/homebrew/bin/direnv" ]]; then
+    if [[ -n "${ZSH_VERSION:-}" ]]; then
+        eval "$(/opt/homebrew/bin/direnv hook zsh)"
+    else
+        eval "$(/opt/homebrew/bin/direnv hook bash)"
+    fi
 else
-    eval "$(direnv hook bash)"
+    printf_warning "WARNING: direnv is not installed, skipping hook initialization."
 fi
 set -ua
 
@@ -338,9 +331,6 @@ fi
 # Externally managed
 # ------------------------------------------------
 set +ua
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform
 
 # shellcheck disable=SC1090
 source ~/.dotfiles/bash.d/.termrc

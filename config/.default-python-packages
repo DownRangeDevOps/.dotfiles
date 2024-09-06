@@ -1,0 +1,7 @@
+# shellcheck shell=bash
+
+# ------------------------------------------------
+#  default python packages (https://github.com/asdf-community/asdf-python#default-python-packages)
+# ------------------------------------------------
+virtualenvwrapper
+pynvim

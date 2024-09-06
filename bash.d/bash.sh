@@ -13,7 +13,7 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 # llvm
-export LDFLAGS="-L${HOMEBREW_PREFIX}/opt/llvm/lib -L${HOMEBREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${HOMEBREW_PREFIX}/opt/llvm/lib/c++"
+# export LDFLAGS="-L${HOMEBREW_PREFIX}/opt/llvm/lib -L${HOMEBREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${HOMEBREW_PREFIX}/opt/llvm/lib/c++"
 export CPPFLAGS="-I${HOMEBREW_PREFIX}/opt/llvm/include -I${HOMEBREW_PREFIX}/opt/llvm/include/c++/v1/"
 export LLVM_INCLUDE_FLAGS="-L${HOMEBREW_PREFIX}/"
 
@@ -87,14 +87,6 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 function nvim() {
-    # if [[ -n ${RBENV_INITALIZED:-} ]]; then
-    #     rbenv_init &>/dev/null
-    # fi
-    #
-    # if [[ -n "${PYENV_INITALIZED:-}" ]]; then
-    #     pyenv_init &>/dev/null
-    # fi
-    #
     if [[ "${NVIM_SESSION_FILE_PATH:-}" ]]; then
         if [[ ! -f "${NVIM_SESSION_FILE_PATH:-}" ]]; then
             touch "${NVIM_SESSION_FILE_PATH}"
@@ -140,7 +132,6 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 set +ua
-source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 
 # NOTE: overwrites PS1, source it before setting custom PS1
 if [[ -n "${ZSH_VERSION:-}" ]]; then
