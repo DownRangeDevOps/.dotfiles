@@ -31,6 +31,11 @@ function pipx() { # TODO: make lazy auto-completion loader
     command pipx "$@"
 }
 
+# Virtualenv/Wrapper
+export WORKON_HOME="${HOME}/.virtualenvs"
+export VIRTUALENVWRAPPER_PYTHON="${HOME}/.asdf/shims/python"
+export VIRTUALENVWRAPPER_VIRTUALENV="${HOME}/.local/bin/virtualenv"
+
 # ------------------------------------------------
 #  overloads
 # ------------------------------------------------

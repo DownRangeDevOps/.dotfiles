@@ -1,0 +1,6 @@
+# shellcheck shell=bash
+
+# ------------------------------------------------
+#  Default Ruby gems (https://github.com/asdf-vm/asdf-ruby#default-gems)
+# ------------------------------------------------
+neovim

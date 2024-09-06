@@ -1,32 +1,4 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
-# Load .bashrc
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    if [[ -f "${HOME}/.zshrc" ]]; then
-        if [[ -n "${DEBUG:-}" ]]; then
-            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .zshrc..."
-        fi
-
-        source "${HOME}/.zshrc"
-
-        if [[ -n "${DEBUG:-}" ]]; then
-            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
-        fi
-    fi
-else
-    if [[ -f "${HOME}/.bashrc" ]]; then
-        if [[ -n "${DEBUG:-}" ]]; then
-            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading .bashrc..."
-        fi
-
-        source "${HOME}/.bashrc"
-
-        if [[ -n "${DEBUG:-}" ]]; then
-            log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done."
-        fi
-    fi
-fi
-
-
 # Reset path to always start fresh
 export PATH=""
 
@@ -46,8 +18,18 @@ else
     eval "$(/usr/local/bin/brew shellenv)"
 fi
 
+# Load completions
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    FPATH="${HOMEBREW_PREFIX}/share/zsh/site-functions:${FPATH}"
+
+    autoload -U +X bashcompinit && bashcompinit
+    autoload -U +X compinit && compinit
+    complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform
+
+fi
+
 # Source Homebrew GitHub token
-if [[ -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then source ~/.bash_secrets; fi
+if [[ -n "${PERSONAL_LAPTOP_USER:-}" && -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then source ~/.bash_secrets; fi
 
 # Globals
 export DOTFILES_PREFIX="${HOME}/.dotfiles"
@@ -94,16 +76,17 @@ log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 
 [[ -f "${BASH_D_PATH}/lib.sh" ]] && source "${BASH_D_PATH}/lib.sh"
 
-# Source .bashrc
-if [[ -n "${ZSH_VERSION:-}" && -f "${HOME}/.zshrc" ]]; then
-    safe_source "${HOME}/.zshrc"
-elif [[ -f "${HOME}/.bashrc" ]]; then
-    safe_source "${HOME}/.bashrc"
-fi
-
 safe_source "${BASH_D_PATH}/path.sh"
 safe_source "${BASH_D_PATH}/bash.sh"
-safe_source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+# safe_source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+
+# Set up Homebrew ZSH completions
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+    autoload -Uz compinit
+    compinit
+fi
 
 # Disable strictness
 set +uao pipefail
@@ -114,3 +97,6 @@ log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done, .bash_profile lo
 
 # added by Snowflake SnowSQL installer v1.2
 export PATH=/Applications/SnowSQL.app/Contents/MacOS:$PATH
+
+# Set up Virtualenv Wrapper
+safe_source "${HOME}/.local/bin/virtualenvwrapper_lazy.sh"
