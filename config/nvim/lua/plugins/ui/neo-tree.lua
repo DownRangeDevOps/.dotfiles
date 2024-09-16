@@ -6,14 +6,13 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     lazy = true,
     cmd = "Neotree",
-    tag = "3.20", -- 3.21 has a bug, goes back to altfile and throws nui error
+    -- tag = "3.20", -- 3.21 has a bug, goes back to altfile and throws nui error
     dependencies = {
         { "nvim-lua/plenary.nvim", lazy = false },
         { "nvim-tree/nvim-web-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
         { "MunifTanjim/nui.nvim", lazy = false },
     },
     opts = {
-        enable_normal_mode_for_inputs = true,
         popup_border_style = "rounded",
         use_popups_for_input = false, -- use vim input since I can't change width
         event_handlers = {
@@ -23,6 +22,13 @@ return {
                     vim.wo.number = true
                     vim.wo.relativenumber = true
                 end
+            },
+            {
+                event = "neo_tree_popup_input_ready",
+                ---@param input NuiInput
+                handler = function(input)
+                    vim.cmd("stopinsert") -- enter input popup with normal mode by default.
+                end,
             },
         },
         window = {

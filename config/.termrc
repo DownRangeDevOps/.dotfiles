@@ -1,4 +1,3 @@
-# shellcheck shell=bash
 # Terminal setup
 if [[ -n ${DEBUG:-} ]]; then
     set +ua
@@ -43,15 +42,17 @@ if [[ -z "${ZSH_VERSION:-}" ]]; then
     # bind '"\e[A": history-search-backward'
     # bind '"\e[B": history-search-forward'
     for direction (up down) {
-    autoload "${direction}-line-or-beginning-search"
-    zle -N "${direction}-line-or-beginning-search"
-    key="${terminfo}[kcu${direction}[1]1]"
+        autoload "${direction}-line-or-beginning-search"
+        zle -N "${direction}-line-or-beginning-search"
+        key="${terminfo}[kcu${direction}[1]1]"
 
-    for key ("${key}" "${key/O/[}")
-        bindkey "${key}" "${direction}-line-or-beginning-search"
+        for key ("${key}" "${key/O/[}")
+            bindkey "${key}" "${direction}-line-or-beginning-search"
     }
 
     if ((original_buffer_length == 0)); then
         CURSOR=$#BUFFER
     fi
 fi
+
+# vim: ft=zsh

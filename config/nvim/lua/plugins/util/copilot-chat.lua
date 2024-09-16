@@ -10,6 +10,7 @@ return {
             { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
             { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
         },
+        build = "make tiktoken",
         opts = {
             -- defaults
             -- debug = false,                                                   -- Enable debug logging

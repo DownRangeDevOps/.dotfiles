@@ -5,6 +5,13 @@ export BASHRC_SOURCED=$((BASHRC_SOURCED + 1))
 # Globals
 export PERSONAL_LAPTOP_USER="ryanfisher"
 
+# Set base Homebrew paths
+if [[ $(uname -m) == "arm64" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 # ------------------------------------------------
 #  bash
 # ------------------------------------------------
@@ -239,8 +246,7 @@ alias upr="pr"
 #  homebrew
 # ------------------------------------------------
 # avoid linking against any shims
-NO_SHIMS_PATH=$(printf "%s" "${PATH}" | sed -E 's,.*shims[^:]*:,,g')
-alias brew='env PATH=${NO_SHIMS_PATH} brew'
+# alias brew='env PATH=$(printf "%s" "${PATH}" | sed -E 's,.*shims[^:]*:,,g') brew'
 
 # ------------------------------------------------
 #  kubernetes
@@ -333,4 +339,7 @@ fi
 set +ua
 
 # shellcheck disable=SC1090
-source ~/.dotfiles/bash.d/.termrc
+source ~/.dotfiles/config/.termrc
+
+# Enable ASDF
+"${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
