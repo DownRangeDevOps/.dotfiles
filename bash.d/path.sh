@@ -26,6 +26,7 @@ function set_path() {
     local compilers=("llvm/bin")
 
     if [[ -n ${HOMEBREW_PREFIX} ]]; then
+        prepend+=("${HOME}/.asdf/shims")
         prepend+=("${HOMEBREW_PREFIX}/lib")                # Homebrew
         prepend+=("${HOMEBREW_PREFIX}/include")            # Homebrew
         prepend+=("${HOMEBREW_PREFIX}/opt")                # Homebrew
@@ -42,7 +43,6 @@ function set_path() {
             prepend+=("${HOMEBREW_PREFIX}/opt/${compiler}") # llvm
         done
 
-        prepend+=("${HOME}/.asdf/shims")
     fi
 
     prepend+=("/Applications/SnowSQL.app/Contents/MacOS") # SnowSQL

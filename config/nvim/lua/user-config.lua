@@ -46,16 +46,8 @@ vim.o.viewoptions = table.concat({
     "unix",
 }, ",")
 
--- Providers
-vim.g.node_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/neovim-node-host"
-vim.g.perl_host_prog = vim.env.HOMEBREW_PREFIX .. "/bin/perl"
-vim.g.python3_host_prog = "/Users/xjxf277/.asdf/shims/python"
-
--- Use rbenv bins
-vim.env.GEM_HOME = vim.fn.trim(vim.fn.system("rbenv which gem"))
-vim.env.GEM_PATH = vim.env.GEM_HOME
-vim.env.PATH = vim.fn.trim(vim.fn.system("rbenv which ruby")):gsub("/ruby$", "") .. ":" .. vim.env.PATH
-vim.g.ruby_host_prog = vim.fn.system("rbenv which neovim-ruby-host")
+-- Ensure ASDF shims are in the path
+vim.env.PATH = os.getenv("HOME") .. "/.asdf/shims:" .. vim.env.PATH
 
 -- Files
 vim.g.fileencoding = "ucs-bom,utf-8,latin1"

@@ -128,9 +128,7 @@ local mason_lsp_required_servers = {
     "taplo",
     "terraformls",
     "tflint",
-    "tsserver",
-    "vimls",
-    "yamlls",
+    "vimls", "yamlls",
 }
 
 -- Language server customizations

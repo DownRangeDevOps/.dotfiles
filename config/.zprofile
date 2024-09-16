@@ -1,4 +1,8 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
+
+# Uncomment to use the profiling module (`zprof`)
+# zmodload zsh/zprof
+
 # Reset path to always start fresh
 export PATH=""
 
@@ -16,16 +20,6 @@ if [[ $(uname -m) == "arm64" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 else
     eval "$(/usr/local/bin/brew shellenv)"
-fi
-
-# Load completions
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    FPATH="${HOMEBREW_PREFIX}/share/zsh/site-functions:${FPATH}"
-
-    autoload -U +X bashcompinit && bashcompinit
-    autoload -U +X compinit && compinit
-    complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform
-
 fi
 
 # Source Homebrew GitHub token
@@ -83,9 +77,31 @@ safe_source "${BASH_D_PATH}/bash.sh"
 # Set up Homebrew ZSH completions
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+fi
 
-    autoload -Uz compinit
-    compinit
+# Load completions
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    FPATH="${HOMEBREW_PREFIX}/share/zsh/site-functions:${FPATH}"
+
+    # Load and initialize Zsh completion system
+    # Builtin docs: https://linux.die.net/man/1/zshbuiltins
+    # -U: Load the function without aliasing
+    # -z: Only load `zsh` functions
+    # +X: Only load functions when used
+    # -C: Skip security checks
+    autoload -Uz +X compinit && compinit -C -d "${HOME}/.zcompdump"
+
+    # Set up caching for completions to avoid repeated processing
+    zstyle ':completion:*' use-cache on
+    zstyle ':completion:*' cache-path ~/.zsh/cache
+
+    # Enable Bash completion compatibility
+    autoload -U +X bashcompinit && bashcompinit
+
+    # Set up completion for Terraform
+    # -o nospace prevents a space from being added after the completion
+    complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform
+
 fi
 
 # Disable strictness

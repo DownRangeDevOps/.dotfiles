@@ -294,12 +294,10 @@ local save_if_modifiable = function()
         if not status then
             if err and err:match("No file name") then
                 vim.defer_fn(function() vim.api.nvim_err_write("No file name\n") end, 250)
-            else
-                vim.cmd.echoe(err)
             end
-        -- else
-        --     vim.cmd("LspRestart")
-        --     vim.defer_fn(function() vim.cmd.echon("''") end, 750)
+        else
+            vim.cmd("LspRestart")
+            vim.defer_fn(function() vim.cmd.echon("''") end, 750)
         end
     end
 end
@@ -446,8 +444,8 @@ end, { silent = true, group = "gen", desc = "write quit" })
 
 -- Tab management (barbar.nvim)
 map("n", "<leader>tc", function() vim.cmd.tabclose() end, { group = "tab", desc = "close tab" })
-map("n", "<leader>tp", function() vim.cmd("BufferPrevious") end, { group = "tab", desc = "prev tab" })
-map("n", "<leader>tn", function() vim.cmd("BufferNext") end, { group = "tab", desc = "next tab" })
+map("n", "<leader>tp", function() vim.cmd("tabprevious") end, { group = "tab", desc = "prev tab" })
+map("n", "<leader>tn", function() vim.cmd("tabnext") end, { group = "tab", desc = "next tab" })
 map("n", "<leader>nt", function() vim.cmd("tabnew") end, { group = "tab", desc = "new tab" })
 map("n", "gt", function() vim.cmd("BufferPick") end, { group = "tab", desc = "pick tab" })
 
@@ -503,22 +501,11 @@ map("n", "<C-p>", function()
         require("telescope.builtin").find_files()
     end
 end, { group = "ts", desc = "fuzzy git files" })
-map("n", "<C-S-p>", function()
-    local current_file_path = vim.fn.expand('%:p:h')
-
+map("i", "<C-p>", function()
     if vim.bo.filetype == "TelescopePrompt" then
         require("telescope.builtin").resume()
-    elseif is_git_repo() then
-        require("telescope.builtin").git_files({
-            cws = current_file_path,
-            show_untracked = true,
-        })
-    else
-        require("telescope.builtin").find_files({ search_dirs = { current_file_path }})
     end
-end, { group = "ts", desc = "fuzzy git files" })
-map("i", "<C-n>", function() require("telescope.actions").cycle_history_next() end, { group = "ts", desc = "history next" })
-map("i", "<C-p>", function() require("telescope.actions").cycle_history_prev() end, { group = "ts", desc = "history prev" })
+end, { group = "ts", desc = "telescope resume if open" })
 map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { group = "ts", desc = "fuzzy recent files" })
 map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { group = "ts", desc = "fuzzy manpage" })
 map("n", "<leader>ff", function()

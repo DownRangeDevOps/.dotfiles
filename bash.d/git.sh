@@ -628,12 +628,7 @@ function git_init() {
 }
 
 function git_add() {
-    git_root="$(git_project_root)"
-
     (
-        cd "${git_root}" || exit 1
-        git add "$@"
-
         local changed_files
         changed_files="$(git status --short --no-renames | cut -d ' ' -f 3-)"
 
