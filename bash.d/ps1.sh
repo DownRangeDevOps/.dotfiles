@@ -36,7 +36,7 @@ function __ps1_prompt() {
         "${tf_workspace}"
     )
 
-    cli_info_str="$(printf "%s" "${cli_element_order[@]}" | tr -s ' ')"
+    cli_info_str="$(printf "%s " "${cli_element_order[@]}" | xargs)"
 
     cli_time=(
         "${time}"

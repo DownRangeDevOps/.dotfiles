@@ -98,12 +98,23 @@ vim.api.nvim_create_user_command(
 vim.api.nvim_create_user_command("Tff", function()
     vim.cmd("silent! !terraform fmt %:p")
     vim.cmd.edit()
-end, { desc = "terraform fmt"})
+end, { desc = "Run Terraform formatter on current file"})
+
+vim.api.nvim_create_user_command("Black", function()
+    vim.cmd("silent! !black %:p")
+    vim.cmd("silent! !docformatter --in-place --wrap-summaries 72 --wrap-descriptions 72 %:p")
+    vim.cmd.edit()
+end, { desc = "run Black and doc formatter on the current file"})
+
+vim.api.nvim_create_user_command("Prettier", function()
+    vim.cmd("silent! !prettier --write %:p")
+    vim.cmd.edit()
+end, { desc = "run Prettier formatter on the current file"})
 
 vim.api.nvim_create_user_command("Tffr", function()
     vim.cmd("silent! !cd $(git rev-parse --show-toplevel 2>/dev/null) && terraform fmt -recursive && cd -")
     vim.cmd.edit()
-end, { desc = "terraform recursive fmt"})
+end, { desc = "Run Terraform formatter recursively from the project root"})
 
 vim.api.nvim_create_user_command("TfMovedFrom", function()
     vim.cmd("s/\\v\\c[^#]+# (.*)/moved {\r  from = \1\r}\r/")

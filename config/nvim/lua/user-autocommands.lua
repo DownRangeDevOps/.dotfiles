@@ -54,6 +54,17 @@ vim.api.nvim_create_autocmd("VimEnter", {
         local session_file_path = vim.env.NVIM_SESSION_FILE_PATH
 
         if session_file_path then
+            local session_dir = session_file_path:match("(.*/)")
+
+            if session_dir and vim.fn.isdirectory(session_dir) == 0 then
+                os.execute("mkdir --parents " .. session_dir)
+
+                if vim.fn.filereadable(session_file_path) == 0 then
+                    os.execute("rm -rf" .. session_file_path)
+                    os.execute("touch " .. session_file_path)
+                end
+            end
+
             vim.cmd("silent Obsession " .. session_file_path)
         end
     end

@@ -74,7 +74,7 @@
             "key_code": "escape",
             "modifiers": {
               "mandatory": ["control"],
-              "optional" : ["shift"]
+              "optional": ["shift"]
             }
           },
           "to": [

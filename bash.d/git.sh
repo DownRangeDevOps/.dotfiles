@@ -120,7 +120,7 @@ function __git_master_or_main() {
 }
 
 function git_get_cur_branch_name() {
-    git rev-parse --abbrev-ref HEAD
+    git rev-parse --abbrev-ref HEAD | tee >(pbcopy)
 }
 
 function __git_show_branch_state() {
@@ -329,7 +329,7 @@ function git_log() {
     if ! ${include_upstream}; then git_args+=("--exclude=refs/remotes/upstream/*"); fi
 
     # debugging
-    # echo "${git_args[@]}"
+    # printf "%b" "${git_args[@]}" "\n"
 
     if ${colorize_signing_status}; then
         git log "${git_args[@]}" "$@" |
@@ -780,15 +780,19 @@ function gh_pr() {
 
     git fetch --prune
 
-    if [[ ! "$(git status 2>/dev/null | tail -1)" == "*nothing to commit*" ]]; then
-        git add --update
-        git commit --amend --no-edit
-    fi
+    # if [[ ! "$(git status 2>/dev/null | tail -1)" == "*nothing to commit*" ]]; then
+    #     git add --update
+    #     git commit --amend --no-edit
+    # fi
 
     git push "$(git config --default origin --get clone.defaultRemoteName)" \
         --set-upstream \
         --force-with-lease \
         HEAD
+
+    local git_push_status=$?
+
+    git fetch --prune
 
     origin_base_branch=$(git_get_branch_base_ref)
     local_base_branch=$(sed -E "s,^origin/,," <<< "${origin_base_branch}")
@@ -806,18 +810,20 @@ function gh_pr() {
         "${pr_body_file}"
     )
 
-    if [[ "$(gh_check_for_pr)" == "true" ]]; then
-        printf_callout "Updating pull request..."
-        gh pr edit "${args[@]}"
-    else
-        printf_callout "Creating pull request..."
+    if [[ ${git_push_status} -eq 0 ]]; then
+        if [[ "$(gh_check_for_pr)" == "true" ]]; then
+            printf_callout "Updating pull request..."
+            gh pr edit "${args[@]}"
+        else
+            printf_callout "Creating pull request..."
 
-        args+=(
-            "--base"
-            "${local_base_branch}"
-        )
+            args+=(
+                "--base"
+                "${local_base_branch}"
+            )
 
-        gh pr create "${args[@]}"
+            gh pr create "${args[@]}"
+        fi
     fi
 
     rm -f "${pr_body_file}"
@@ -865,3 +871,5 @@ function gitlab_open_pull_request() {
     glc
     open "${HOST}/${ROUTE}?${QUERY}"
 }
+
+# vim: set ft=zsh
