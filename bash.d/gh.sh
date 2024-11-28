@@ -92,3 +92,5 @@ function ghpr() {
 #         gh "$@"
 #     fi
 # }
+
+# vim: set ft=zsh

@@ -1,6 +1,10 @@
 ## --- Custom
+# local configs
+.vimspector.json
+
 # secrets
 .secrets
+.secrets.envrc
 
 # local misc files
 ignore_*

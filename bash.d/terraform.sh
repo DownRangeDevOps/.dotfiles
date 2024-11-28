@@ -79,9 +79,12 @@ function parse_plan_diff() {
     local patterns=("will be destroyed" "will not be destroyed" "created" "replaced" "forces replacement")
 
     ansifilter --input="${infile}" --output="${nocolorfile}"
-    sed -i -E "1,/^$/d" "${nocolorfile}"
+    sed -i -E "1,/^$/d" "${nocolorfile}" # remove state refresh logging
 
-    true >| "${outfile}"
+    rm -f "raw-${infile}"
+    cp -f "${nocolorfile}" "raw-${infile}"
+
+    true >| "${outfile}" # create or truncate the file
     printf "%s\n\n" "Plan created: $(date)" >> "${outfile}"
 
 

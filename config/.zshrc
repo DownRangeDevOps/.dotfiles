@@ -76,7 +76,7 @@ alias avv='ansible-vault view'
 # ------------------------------------------------
 #  Granted
 # ------------------------------------------------
-alias assume=". assume"
+alias assume='source $(asdf which assume)'
 
 # ------------------------------------------------
 #  aws vault
@@ -306,14 +306,17 @@ alias tfva=validate_all_modules
 #  direnv
 # ------------------------------------------------
 set +ua
-if [[ -f "/opt/homebrew/bin/direnv" ]]; then
-    if [[ -n "${ZSH_VERSION:-}" ]]; then
-        eval "$(/opt/homebrew/bin/direnv hook zsh)"
+direnv_path="$(command -v direnv)"
+asdf_direnv_path="${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+
+if [[ -n "${direnv_path}" ]]; then
+    if [[ -f "${asdf_direnv_path}" ]]; then
+        source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
     else
-        eval "$(/opt/homebrew/bin/direnv hook bash)"
+        printf_warning "WARNING: direnv is setup, run \`asdf direnv setup --shell <shell> --version latest\`."
     fi
 else
-    printf_warning "WARNING: direnv is not installed, skipping hook initialization."
+    printf_warning "WARNING: direnv is not installed, run \`asdf install direnv latest\` to install."
 fi
 set -ua
 
@@ -343,3 +346,11 @@ source ~/.dotfiles/config/.termrc
 
 # Enable ASDF
 "${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
+
+# ZScaler
+export REQUESTS_CA_BUNDLE=/Users/xjxf277/.zscaler/certs.pem
+export SSL_CERT_FILE=/Users/xjxf277/.zscaler/certs.pem
+export NODE_EXTRA_CA_CERTS=/Users/xjxf277/.zscaler/certs.pem
+export CURL_CA_BUNDLE=/Users/xjxf277/.zscaler/certs.pem
+export ca_certificate=/Users/xjxf277/.zscaler/certs.pem
+export AWS_CA_BUNDLE=/Users/xjxf277/.zscaler/certs.pem
