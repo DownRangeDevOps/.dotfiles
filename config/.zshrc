@@ -346,11 +346,3 @@ source ~/.dotfiles/config/.termrc
 
 # Enable ASDF
 "${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
-
-# ZScaler
-export REQUESTS_CA_BUNDLE=/Users/xjxf277/.zscaler/certs.pem
-export SSL_CERT_FILE=/Users/xjxf277/.zscaler/certs.pem
-export NODE_EXTRA_CA_CERTS=/Users/xjxf277/.zscaler/certs.pem
-export CURL_CA_BUNDLE=/Users/xjxf277/.zscaler/certs.pem
-export ca_certificate=/Users/xjxf277/.zscaler/certs.pem
-export AWS_CA_BUNDLE=/Users/xjxf277/.zscaler/certs.pem
