@@ -329,7 +329,7 @@ function git_log() {
     if ! ${include_upstream}; then git_args+=("--exclude=refs/remotes/upstream/*"); fi
 
     # debugging
-    # printf "%b" "${git_args[@]}" "\n"
+    printf "%b " "${git_args[@]}" "\n"
 
     if ${colorize_signing_status}; then
         git log "${git_args[@]}" "$@" |

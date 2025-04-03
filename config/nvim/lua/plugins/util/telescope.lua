@@ -2,13 +2,13 @@
 -- Telescope: Fuzzy Finder (https://github.com/nvim-telescope/telescope.nvim)
 -- :help telescope.nvim
 -- ----------------------------------------------
-local function is_git_repo()
-    if os.execute("git rev-parse") == 0 then
-        return true
-    else
-        return false
-    end
-end
+-- local function is_git_repo()
+--     if os.execute("git rev-parse") == 0 then
+--         return true
+--     else
+--         return false
+--     end
+-- end
 
 return {
     "nvim-telescope/telescope.nvim",
@@ -16,7 +16,7 @@ return {
     lazy = false,
     config = true,
     dependencies = {
-        { "nvim-lua/plenary.nvim", lazy = false }, -- https://github.com/nvim-lua/plenary.nvim
+        { "nvim-lua/plenary.nvim", branch = "master", lazy = false }, -- https://github.com/nvim-lua/plenary.nvim
         { "nvim-tree/nvim-web-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
         { "nvim-telescope/telescope-fzf-native.nvim", lazy = false, build = "make", } -- https://github.com/nvim-telescope/telescope-fzf-native.nvim
     },
