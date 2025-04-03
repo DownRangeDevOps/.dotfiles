@@ -7,7 +7,7 @@ return {
     lazy = true,
     event = "InsertEnter",
     dependencies = {
-        { "nvim-lua/plenary.nvim", name = "nvim-plenary", lazy = false },
+        { "nvim-lua/plenary.nvim", branch = "master", name = "nvim-plenary", lazy = false },
         { "nvim-treesitter/nvim-treesitter", name = "nvim-treesitter", lazy = false },
     },
     config = true,

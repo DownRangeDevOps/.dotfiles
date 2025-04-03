@@ -1,0 +1,150 @@
+{
+  "title": "Custom App Navigation Modifier",
+  "rules": [
+    {
+      "description": "Left Control to Custom App Navigation Modifier",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_control",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "app_nav_mode",
+                "value": 1
+              }
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "set_variable": {
+                "name": "app_nav_mode",
+                "value": 0
+              }
+            }
+          ],
+          "to_if_alone": [
+            {
+              "key_code": "escape"
+            }
+          ]
+        },
+        {
+          "description": "App Nav Mode + J to focus iTerm2",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "app_nav_mode",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "j",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open -a 'iTerm'"
+            }
+          ]
+        },
+        {
+          "description": "App Nav Mode + K to focus Arc Browser",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "app_nav_mode",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open -a 'Arc'"
+            }
+          ]
+        },
+        {
+          "description": "App Nav Mode + L to focus Slack",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "app_nav_mode",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open -a 'Slack'"
+            }
+          ]
+        },
+        {
+          "description": "App Nav Mode + Semicolon to focus Microsoft Teams",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "app_nav_mode",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "semicolon",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open -a 'Microsoft Teams'"
+            }
+          ]
+        },
+        {
+          "description": "App Nav Mode + Quote to focus Dash",
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "app_nav_mode",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "quote",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open -a 'Dash'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

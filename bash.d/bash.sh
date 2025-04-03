@@ -12,9 +12,23 @@ if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring environment..."
 fi
 
+# openssl
+LDFLAGS_ARR=(
+    "-L${HOMEBREW_PREFIX}/opt/openssl@3/lib"
+    "-L${HOMEBREW_PREFIX}/opt/llvm/lib/unwind -lunwind"
+    "-L${HOMEBREW_PREFIX}/opt/llvm/lib/c++"
+    "-L${HOMEBREW_PREFIX}/opt/llvm/lib"
+)
+CPPFLAGS_ARR=(
+    "-I${HOMEBREW_PREFIX}/opt/openssl@3/include"
+    "-I${HOMEBREW_PREFIX}/opt/llvm/include"
+    "-I${HOMEBREW_PREFIX}/opt/llvm/include/c++/v1/"
+)
+export LDFLAGS="${LDFLAGS_ARR[*]}"
+export CPPFLAGS="${CPPFLAGS_ARR[*]}"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig"
+
 # llvm
-# export LDFLAGS="-L${HOMEBREW_PREFIX}/opt/llvm/lib -L${HOMEBREW_PREFIX}/opt/llvm/lib/c++ -Wl,-rpath,${HOMEBREW_PREFIX}/opt/llvm/lib/c++"
-export CPPFLAGS="-I${HOMEBREW_PREFIX}/opt/llvm/include -I${HOMEBREW_PREFIX}/opt/llvm/include/c++/v1/"
 export LLVM_INCLUDE_FLAGS="-L${HOMEBREW_PREFIX}/"
 
 # config
@@ -22,6 +36,8 @@ export AWS_ASSUME_ROLE_TTL=1h
 export AWS_SESSION_TTL=12h
 export ECLIPSE_HOME=/Applications/Eclipse.app/Contents/Eclipse/
 export EDITOR=nvim
+JAVA_HOME="$(asdf where java)"
+export JAVA_HOME
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
 export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
 

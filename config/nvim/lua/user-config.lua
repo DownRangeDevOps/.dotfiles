@@ -109,6 +109,7 @@ vim.o.number = true
 vim.o.numberwidth = 5
 vim.o.relativenumber = true
 vim.o.scrolloff = 8
+vim.o.scrollback = 100000
 vim.o.showtabline = 2
 vim.o.splitbelow = true
 vim.o.splitright = true

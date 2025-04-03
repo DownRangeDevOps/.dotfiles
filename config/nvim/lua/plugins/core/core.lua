@@ -16,7 +16,7 @@ return {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
         lazy = false,
-        dependencies = { "nvim-lua/plenary.nvim" }
+        dependencies = { "nvim-lua/plenary.nvim", branch = "master" }
     },
 
     -- No-delay multi-key escape (https://github.com/max397574/better-escape.nvim)

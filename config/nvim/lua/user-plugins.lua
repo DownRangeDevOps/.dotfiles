@@ -123,12 +123,12 @@ local mason_lsp_required_servers = {
     "pylsp",
     "rubocop",
     "ruby_lsp",
-    "ruff_lsp",
-    "sqlls",
+    "sqllg",
     "taplo",
     "terraformls",
     "tflint",
-    "vimls", "yamlls",
+    "vimls",
+    "yamlls",
 }
 
 -- Language server customizations
@@ -197,7 +197,12 @@ local mason_lsp_server_configs = {
     },
 }
 
-mason_lspconfig.setup({ ensure_installed = mason_lsp_required_servers, })
+mason_lspconfig.setup(
+    {
+        ensure_installed = mason_lsp_required_servers,
+        automatic_installation = false,
+    }
+)
 
 mason_lspconfig.setup_handlers {
     function(server_name)

@@ -49,7 +49,7 @@ return {
                         local linters_by_ft = require("lint").linters_by_ft
                         local mypy = require("lint").linters.mypy
 
-                        table.insert(mypy.args, "--python-executable /Users/xjxf277/.pyenv/shims/python")
+                        table.insert(mypy.args, "--python-executable ${HOME}/.asdf/shims/python")
 
                         -- Linters that run on specific paths/all filetypes are controlled
                         -- with autocommands. See `user-autocommands.lua`.

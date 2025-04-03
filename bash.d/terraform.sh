@@ -76,7 +76,14 @@ function parse_plan_diff() {
     local infile="${1:-"tfplan.log"}"
     local nocolorfile="${infile}.nocolor"
     local outfile="${2:-"change-log.tfplan"}"
-    local patterns=("will be destroyed" "will not be destroyed" "created" "replaced" "forces replacement")
+    local patterns=(
+        "will be destroyed"
+        "will not be destroyed"
+        "created"
+        "will be updated in-place"
+        "replaced"
+        "forces replacement"
+    )
 
     ansifilter --input="${infile}" --output="${nocolorfile}"
     sed -i -E "1,/^$/d" "${nocolorfile}" # remove state refresh logging
@@ -85,7 +92,8 @@ function parse_plan_diff() {
     cp -f "${nocolorfile}" "raw-${infile}"
 
     true >| "${outfile}" # create or truncate the file
-    printf "%s\n\n" "Plan created: $(date)" >> "${outfile}"
+    printf "%s\n" "Plan created: $(date)" >> "${outfile}"
+    printf "%s\n\n" "$(rg '^(Plan:\s|No changes)')" >> "${outfile}"
 
 
     for pat in "${patterns[@]}"; do
@@ -95,7 +103,7 @@ function parse_plan_diff() {
             else
                 printf "%s\n" "==== ${pat^^}:"
             fi
-            rg -N "#.*\b${pat}\b$" "${nocolorfile}" | sed -E "s/( will | must ).*//"
+            rg "#.*\b${pat}\b$" "${nocolorfile}" | sed -E "s/( will | must ).*//"
             printf "\n"
         } >>"${outfile}"
     done

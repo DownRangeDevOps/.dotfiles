@@ -346,3 +346,4 @@ source ~/.dotfiles/config/.termrc
 
 # Enable ASDF
 "${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
+ASDF_PYAPP_DEFAULT_PYTHON_PATH="${HOME}/.asdf/shims/python"

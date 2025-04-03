@@ -15,9 +15,10 @@ fi
 
 export BETTER_EXCEPTIONS=1 # python better exceptions
 export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
+export PYENV_ROOT="${HOMEBREW_PREFIX}/bin/pyenv"
 
 # Pipx
-export PIPX_DEFAULT_PYTHON="${HOME}/.pyenv/shims/python"
+export PIPX_DEFAULT_PYTHON="${HOME}/.asdf/shims/python"
 
 function pipx() { # TODO: make lazy auto-completion loader
     if [[ -n "${DEBUG:-}" ]]; then
