@@ -163,9 +163,10 @@ if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading bash.d files..."
 fi
 
+# Source the remaining `bash.d/*.sh` files
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     {
-        for file in "${BASH_D_PATH}"/*(N); do
+        for file in "${BASH_D_PATH}"/*(N.); do
             if [[ ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
                 if [[ -n "${DEBUG:-}" ]]; then
                     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading ${file} ..."
@@ -180,7 +181,7 @@ else
         shopt -s nullglob # protect against empty dir
 
         for file in "${BASH_D_PATH}"/*; do
-            if [[ ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
+            if [[ -f "${file}" && ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
                 if [[ -n "${DEBUG:-}" ]]; then
                     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading ${file} ..."
                 fi

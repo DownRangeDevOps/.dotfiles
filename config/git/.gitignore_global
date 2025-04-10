@@ -1,6 +1,7 @@
 ## --- Custom
 # local configs
 .vimspector.json
+.vale.ini
 
 # secrets
 .secrets

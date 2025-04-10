@@ -49,6 +49,9 @@ vim.o.viewoptions = table.concat({
 -- Ensure ASDF shims are in the path
 vim.env.PATH = os.getenv("HOME") .. "/.asdf/shims:" .. vim.env.PATH
 
+-- Add the asdf luarocks path to package.cpath
+package.cpath = package.cpath .. ";~/.asdf/installs/lua/5.1/luarocks/lib/lua/5.1/?.so"
+
 -- Files
 vim.g.fileencoding = "ucs-bom,utf-8,latin1"
 vim.o.bomb = false

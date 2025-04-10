@@ -106,111 +106,33 @@ local mason_lspconfig = require("mason-lspconfig")
 
 -- Ensure these language servers are installed:
 local mason_lsp_required_servers = {
-    "ansiblels",
-    "bashls",
-    "cssls",
-    "docker_compose_language_service",
-    "dockerls",
-    "gopls",
-    "helm_ls",
-    "html",
-    "jqls",
-    "jsonls",
-    "lemminx",
-    "lua_ls",
-    "marksman",
-    "neocmake",
-    "pylsp",
-    "rubocop",
-    "ruby_lsp",
-    "sqllg",
-    "taplo",
-    "terraformls",
-    "tflint",
-    "vimls",
-    "yamlls",
-}
-
--- Language server customizations
--- help: mason-lspconfig-automatic-server-setup
--- help: mason-lspconfig.setup_handlers()
-local mason_lsp_server_configs = {
-    lua_ls = { -- https://github.com/LuaLS/lua-language-server/wiki/Diagnostics
-        Lua = {
-            filetypes = "lua", -- filetypes the language server will attach to
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-            diagnostics = {
-                globals = { "vim", }
-            },
-        },
-    },
-    ltex = {
-        ltex = {
-            root_dir = "~/.local/share/nvim/mason/packages/ltex-ls",
-            language = "en-US",
-        },
-    },
-    pylsp = {
-        pylsp = {
-            plugins = {
-                -- formatters
-                autopep8 = { enabled = false },
-                black = { enabled = true },
-                pyls_isort = { enabled = true },
-                yapf = { enabled = false },
-
-                -- linters
-                flake8 = { enabled = false },
-                mccabe = { enabled = true },
-                pycodestyle = { enabled = false },
-                pydocstyle = { enabled = false },
-                pyflakes = { enabled = false },
-                pylint = { enabled = false },
-                python_lsp_ruff = { enabled = true },
-
-                -- type checkers
-                pylsp_mypy = { enabled = true },
-
-                -- auto-completion
-                jedi_completion = {
-                    enabled = true,
-                    fuzzy = true,
-                    include_params = true,
-                    include_class_objects = true,
-                    include_function_objects = true,
-                },
-                jedi_definition = {
-                    enabled = true,
-                    follow_imports = true,
-                    follow_builtin_imports = true,
-                    follow_builtin_deffinitions = true,
-                },
-                rope_autoimport = {
-                    enabled = true,
-                    completions = { enabled = true },
-                    code_actions = { enabled = true },
-                },
-                rope_completion = { enabled = true },
-            },
-        },
-    },
-}
-
-mason_lspconfig.setup(
-    {
-        ensure_installed = mason_lsp_required_servers,
-        automatic_installation = false,
-    }
-)
-
-mason_lspconfig.setup_handlers {
-    function(server_name)
-        require("lspconfig")[server_name].setup {
-            capabilities = capabilities,
-            on_attach = keymap.lsp_maps,
-            settings = mason_lsp_server_configs[server_name],
-            filetypes = (mason_lsp_server_configs[server_name] or {}).filetypes,
-        }
-    end
+    -- "ansible-language-server",
+    -- "bash-language-server",
+    -- "css-lsp",
+    -- "docker-compose-language-service",
+    -- "dockerfile-language-server",
+    -- "eslint-lsp",
+    -- "gopls",
+    -- "helm-ls",
+    -- "html-lsp",
+    -- "jq-lsp",
+    -- "json-lsp",
+    -- "lemminx",
+    -- "ltex-ls",
+    -- "lua-language-server",
+    -- "marksman",
+    -- "neocmakelsp",
+    -- "nginx-language-server",
+    -- "python-lsp-server",
+    -- "rubocop",
+    -- "ruby-lsp",
+    -- "ruff",
+    -- "sqlls",
+    -- "taplo",
+    -- "terraform-ls",
+    -- "tflint",
+    -- "typescript-language-server",
+    -- "vale-ls",
+    -- "vim-language-server",
+    -- "yaml-language-server",
 }
