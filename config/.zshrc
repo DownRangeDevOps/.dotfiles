@@ -347,3 +347,10 @@ source ~/.dotfiles/config/.termrc
 # Enable ASDF
 "${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
 ASDF_PYAPP_DEFAULT_PYTHON_PATH="${HOME}/.asdf/shims/python"
+
+# Use Starship for my shell prompt
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    eval "$(starship init zsh)"
+else
+    eval "$(starship init bash)"
+fi

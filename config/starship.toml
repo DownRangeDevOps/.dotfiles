@@ -1,0 +1,347 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+# Starship configuration matching the custom PS1 function
+# format = """
+# $directory\
+# $git_branch\
+# $git_status\
+# $git_commit\
+# $line_break\
+# $time\
+# $shlvl\
+# $aws\
+# $aws_profile\
+# $terraform\
+# $python\
+# $line_break\
+# $character
+# """
+
+format = """
+$singularity\
+$kubernetes\
+$directory\
+$vcsh\
+$fossil_branch\
+$fossil_metrics\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$hg_branch\
+$pijul_channel\
+$line_break\
+$jobs\
+$time\
+$aws\
+$aws_profile\
+$terraform\
+$docker_context\
+$package\
+$c\
+$cmake\
+$cobol\
+$daml\
+$dart\
+$deno\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$fennel\
+$gleam\
+$golang\
+$guix_shell\
+$haskell\
+$haxe\
+$helm\
+$java\
+$julia\
+$kotlin\
+$gradle\
+$lua\
+$nim\
+$nodejs\
+$ocaml\
+$opa\
+$perl\
+$php\
+$pulumi\
+$purescript\
+$python\
+$quarto\
+$raku\
+$rlang\
+$red\
+$ruby\
+$rust\
+$scala\
+$solidity\
+$swift\
+$typst\
+$vlang\
+$vagrant\
+$zig\
+$buf\
+$conda\
+$meson\
+$spack\
+$gcloud\
+$openstack\
+$azure\
+$nats\
+$crystal\
+$sudo\
+$status\
+$os\
+$container\
+$shell\
+$line_break\
+$character
+"""
+
+# ---------- PROMPT CUSTOMIZATION ----------
+
+# Line 1 beginning character
+[directory]
+format = '[$path]($style)[$read_only]($read_only_style) '
+style = "bold yellow"
+truncation_length = 0
+truncation_symbol = "…/"
+truncate_to_repo = false
+read_only = " 󰌾"
+read_only_style = "bold red"
+
+# Git branch display
+[git_branch]
+# format = "[](blue)[ $symbol $branch ](magenta)[](blue)"
+symbol = " "
+
+# Git status display
+[git_status]
+format = "[$ahead_behind$all_status ](bold red)"
+
+[git_commit]
+tag_symbol = '  '
+
+# Git status symbols
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+style = "bold magenta"
+rebase = '[REBASING](bold blue)'
+cherry_pick = '[PICKING](bold red)'
+merge = '[MERGING](bold yellow)'
+revert = '[REVERTING](bold green)'
+bisect = '[MERGING](bold green)'
+
+# Second line time display
+[time]
+disabled = false
+format = "[┣](blue) [$time ](bold blue)"
+style = "default"
+time_format = "%R"
+
+# Shell level display
+[shlvl]
+disabled = false
+format = '($shlvl) '
+threshold = 3
+
+# AWS profile display
+[aws]
+format = "[aws:$profile ](blue)"
+
+# GCloud project display
+[gcloud]
+format ="on [$symbol$account(@$domain)(\\($region\\))]($style) "
+detect_env_vars = ["IS_GCLOUD_PROJECT"]
+
+# Environment display
+# [env_var.TF_VAR_tenant]
+# format = "[env:$env_value ](default)"
+# style = "default"
+# variable = "TF_VAR_tenant"
+
+# Terraform workspace display
+[terraform]
+format = "[tf:$version in $workspace ](purple)"
+version_format = "v${raw}"
+detect_folders = [".terraform"]
+
+# Python virtual environment display
+[python]
+format = "[$symbol$virtualenv ](default)"
+style = "default"
+symbol = " "
+
+# Final character for prompt
+[character]
+format = "[┗❱](blue) "
+success_symbol = ""
+error_symbol = ""
+
+[buf]
+symbol = " "
+
+[c]
+symbol = " "
+
+[cmake]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[crystal]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[docker_context]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[fennel]
+symbol = " "
+
+[fossil_branch]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = " "
+
+[hg_branch]
+symbol = " "
+
+[hostname]
+ssh_symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[kotlin]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[memory_usage]
+symbol = "󰍛 "
+
+[meson]
+symbol = "󰔷 "
+
+[nim]
+symbol = "󰆥 "
+
+[nix_shell]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[ocaml]
+symbol = " "
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+AlmaLinux = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CachyOS = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Kali = " "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+Nobara = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+RockyLinux = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Void = " "
+Windows = "󰍲 "
+
+[package]
+symbol = "󰏗 "
+
+[perl]
+symbol = " "
+
+[php]
+symbol = " "
+
+[pijul_channel]
+symbol = " "
+
+[rlang]
+symbol = "󰟔 "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = "󱘗 "
+
+[scala]
+symbol = " "
+
+[swift]
+symbol = " "
+
+[zig]
+symbol = " "
+
+[gradle]
+symbol = " "
