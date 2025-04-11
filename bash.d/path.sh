@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2296
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
@@ -52,6 +52,11 @@ function set_path() {
 
     if [[ -n "${PERSONAL_LAPTOP_USER:-}" && -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then append+=("/usr/local/mysql/bin"); fi # mysql
 
+    # Reverse the arrays so they're added to `$PATH` in the priority they are arranged here
+    # Note: zsh only, but I'm no longer using bash as my shell
+
+    prepend=("${(Oa@)prepend}")
+    append=("${(Oa@)append}")
 
     add_to_path prepend "${prepend[@]}"
     add_to_path append "${append[@]}"

@@ -1,4 +1,4 @@
-# shellcheck shell=bash disable=SC1090,SC1091,SC2034  # SC2034: ignore globals that are set for use elsewhere
+# shellcheck shell=bash disable=SC1090,SC1091,SC2034,SC2296
 if [[ -n "${DEBUG:-}" ]]; then
     set +ua
     [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
