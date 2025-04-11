@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2296
 
 function ghpr() {
     local options="uc"
@@ -16,7 +16,6 @@ function ghpr() {
 
     base=$(git_get_branch_base_ref | sed -E "s/^origin\///")
     title="$(git log --reverse --format='%s' "${base}"..HEAD | head -1)"
-    echo $title
 
     if [[ -n "${CODEOWNERS:-}" ]]; then
         args+=("--add-assignee" "${CODEOWNERS}")

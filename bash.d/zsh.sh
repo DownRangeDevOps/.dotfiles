@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2296
 
 # Search history with arrows, up: \e[A, down: \e[B
 autoload -U history-search-end

@@ -6,7 +6,7 @@ java adoptopenjdk-jre-24.0.0+36
 julia 1.11.4
 k9s 0.50.0
 kubeconform 0.6.7
-kubectl 1.27.16
+kubectl 1.32.3
 kubectx 0.9.5
 lua 5.1
 nodejs 23.10.0

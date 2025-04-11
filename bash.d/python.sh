@@ -1,5 +1,4 @@
-# shellcheck shell=bash
-# shellcheck disable=SC1091
+# shellcheck shell=bash disable=SC2296,SC1091
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""

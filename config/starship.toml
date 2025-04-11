@@ -42,7 +42,6 @@ $aws\
 $aws_profile\
 $terraform\
 $docker_context\
-$package\
 $c\
 $cmake\
 $cobol\
@@ -119,12 +118,47 @@ read_only_style = "bold red"
 
 # Git branch display
 [git_branch]
-# format = "[](blue)[ $symbol $branch ](magenta)[](blue)"
 symbol = " "
 
 # Git status display
 [git_status]
-format = "[$ahead_behind$all_status ](bold red)"
+# format = '$diverged(bold red)$untracked(bold red)$modified(bold red)'
+modified = "✗(bold yellow)"
+untracked = "⌀(bold red)"
+up_to_date = "✔︎(bold green)"
+conflicted = ''
+ahead = '⇡${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+behind = '⇣${count}'
+stashed = ''
+staged = '[ ++$count](green)'
+renamed = ''
+deleted = ''
+
+# [custom.git_status]
+# command = """
+# '
+# RED="[31m"
+# GREEN="[32m"
+# YELLOW="[33m"
+# RESET="(B[m"
+#
+# case $(git status 2>/dev/null) in
+#   *"Changes not staged for commit"*)
+#     printf "%b" "${RED}✗${RESET}"
+#     ;;
+#   *"Changes to be committed"*)
+#     printf "%b" "${YELLOW}✗${RESET}"
+#     ;;
+#   *"nothing to commit"*)
+#     printf "%b" " ${GREEN}✔︎${RESET}"
+#     ;;
+# esac
+# '
+# """
+# when = "git rev-parse --is-inside-work-tree 2>/dev/null"
+# format = "$output"
+# shell = ["bash", "-c"]
 
 [git_commit]
 tag_symbol = '  '
@@ -169,7 +203,7 @@ detect_env_vars = ["IS_GCLOUD_PROJECT"]
 
 # Terraform workspace display
 [terraform]
-format = "[tf:$version in $workspace ](purple)"
+format = "[tf:$version in $workspace ](#9e7ece)"
 version_format = "v${raw}"
 detect_folders = [".terraform"]
 
@@ -181,9 +215,8 @@ symbol = " "
 
 # Final character for prompt
 [character]
-format = "[┗❱](blue) "
-success_symbol = ""
-error_symbol = ""
+success_symbol = "[┗❱](blue) "
+error_symbol = "[┗❱](red) "
 
 [buf]
 symbol = " "
@@ -314,7 +347,7 @@ Void = " "
 Windows = "󰍲 "
 
 [package]
-symbol = "󰏗 "
+disabled = true
 
 [perl]
 symbol = " "

@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2296
 
 if [[ -n ${DEBUG:-} ]]; then
     log debug ""
@@ -140,13 +140,13 @@ function __git_show_branch_state() {
 function __git_parse_dirty() {
     case $(git status 2>/dev/null) in
         *"Changes not staged for commit"*)
-            printf "%s\n" " ${RED}✗${RESET}"
+            printf "%b" "${RED}✗${RESET}"
             ;;
         *"Changes to be committed"*)
-            printf "%s\n" " ${YELLOW}✗${RESET}"
+            printf "%b" "${YELLOW}✗${RESET}"
             ;;
         *"nothing to commit"*)
-            printf "%s\n" " ${GREEN}✔︎${RESET}"
+            printf "%b" " ${GREEN}✔︎${RESET}"
             ;;
     esac
 }
