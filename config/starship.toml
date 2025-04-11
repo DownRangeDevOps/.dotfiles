@@ -22,9 +22,9 @@ add_newline = true
 # """
 
 format = """
+$directory\
 $singularity\
 $kubernetes\
-$directory\
 $vcsh\
 $fossil_branch\
 $fossil_metrics\
@@ -108,6 +108,7 @@ $character
 
 # Line 1 beginning character
 [directory]
+disabled = false
 format = '[$path]($style)[$read_only]($read_only_style) '
 style = "bold yellow"
 truncation_length = 0
@@ -118,14 +119,16 @@ read_only_style = "bold red"
 
 # Git branch display
 [git_branch]
+disabled = false
 symbol = " "
 
 # Git status display
 [git_status]
 # format = '$diverged(bold red)$untracked(bold red)$modified(bold red)'
-modified = "✗(bold yellow)"
-untracked = "⌀(bold red)"
-up_to_date = "✔︎(bold green)"
+disabled = false
+modified = "✗(yellow)"
+untracked = "⌀(red)"
+up_to_date = "✔︎(green)"
 conflicted = ''
 ahead = '⇡${count}'
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'
@@ -161,10 +164,12 @@ deleted = ''
 # shell = ["bash", "-c"]
 
 [git_commit]
+disabled = false
 tag_symbol = '  '
 
 # Git status symbols
 [git_state]
+disabled = false
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
 style = "bold magenta"
 rebase = '[REBASING](bold blue)'
@@ -177,7 +182,6 @@ bisect = '[MERGING](bold green)'
 [time]
 disabled = false
 format = "[┣](blue) [$time ](bold blue)"
-style = "default"
 time_format = "%R"
 
 # Shell level display
@@ -188,12 +192,16 @@ threshold = 3
 
 # AWS profile display
 [aws]
-format = "[aws:$profile ](blue)"
+disabled = false
+format = "[aws:$profile ]($style)"
+style = "bold blue"
 
 # GCloud project display
 [gcloud]
+disabled = false
 format ="on [$symbol$account(@$domain)(\\($region\\))]($style) "
 detect_env_vars = ["IS_GCLOUD_PROJECT"]
+style = "bold blue"
 
 # Environment display
 # [env_var.TF_VAR_tenant]
@@ -203,18 +211,28 @@ detect_env_vars = ["IS_GCLOUD_PROJECT"]
 
 # Terraform workspace display
 [terraform]
-format = "[tf:$version in $workspace ](#9e7ece)"
+disabled = false
+format = "[tf:$version in $workspace ]($style)"
 version_format = "v${raw}"
 detect_folders = [".terraform"]
+style = "#9e7ece"
 
 # Python virtual environment display
 [python]
-format = "[$symbol$virtualenv ](default)"
-style = "default"
+disabled = false
+format = "[$symbol$virtualenv ]($style)"
+style = "bold green"
 symbol = " "
+
+# Kubernetes namespace display
+[kubernetes]
+disabled = false
+format='on [$symbol$context \($namespace\) ]($style)'
+style='bold yellow'
 
 # Final character for prompt
 [character]
+disabled = false
 success_symbol = "[┗❱](blue) "
 error_symbol = "[┗❱](red) "
 
