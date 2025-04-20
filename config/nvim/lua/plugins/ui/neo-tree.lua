@@ -10,7 +10,7 @@ return {
     dependencies = {
         { "nvim-lua/plenary.nvim", branch = "master", lazy = false },
         { "nvim-tree/nvim-web-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
-        { "MunifTanjim/nui.nvim", lazy = false },
+        { "MunifTanjim/nui.nvim",        lazy = false },
     },
     opts = {
         popup_border_style = "rounded",
@@ -58,16 +58,22 @@ return {
             }
         },
         filesystem = {
+            last_modified = {
+                enabled        = true,
+                format         = "relitive",
+                width          = 20,
+                required_width = 88,
+            },
             commands = {
                 expand_node = function(state)
-                        local origin_file = vim.fn.getreg("#")
+                    local origin_file = vim.fn.getreg("#")
 
-                        state.commands["open"](state)
+                    state.commands["open"](state)
 
-                        if origin_file ~= "" then
-                            vim.fn.setreg("#", origin_file)
-                        end
-                    end,
+                    if origin_file ~= "" then
+                        vim.fn.setreg("#", origin_file)
+                    end
+                end,
             },
             window = {
                 mappings = {
