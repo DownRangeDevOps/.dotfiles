@@ -36,8 +36,8 @@ $git_status\
 $hg_branch\
 $pijul_channel\
 $line_break\
+$hostname\
 $jobs\
-$time\
 $aws\
 $aws_profile\
 $terraform\
@@ -105,6 +105,8 @@ $character
 """
 
 # ---------- PROMPT CUSTOMIZATION ----------
+[package]
+disabled = true
 
 # Line 1 beginning character
 [directory]
@@ -178,17 +180,28 @@ merge = '[MERGING](bold yellow)'
 revert = '[REVERTING](bold green)'
 bisect = '[MERGING](bold green)'
 
+[hg_branch]
+symbol = " "
+
 # Second line time display
 [time]
-disabled = false
+disabled = true
 format = "[┣](blue) [$time ](bold blue)"
 time_format = "%R"
+
+[memory_usage]
+disabled = true
+symbol = "󰍛 "
 
 # Shell level display
 [shlvl]
 disabled = false
 format = '($shlvl) '
 threshold = 3
+
+[hostname]
+ssh_only = true
+ssh_symbol = " "
 
 # AWS profile display
 [aws]
@@ -224,6 +237,10 @@ format = "[$symbol$virtualenv ]($style)"
 style = "bold green"
 symbol = " "
 
+[docker_context]
+disabled = false
+symbol = " "
+
 # Kubernetes namespace display
 [kubernetes]
 disabled = false
@@ -254,9 +271,6 @@ symbol = " "
 [dart]
 symbol = " "
 
-[docker_context]
-symbol = " "
-
 [elixir]
 symbol = " "
 
@@ -281,12 +295,6 @@ symbol = " "
 [haxe]
 symbol = " "
 
-[hg_branch]
-symbol = " "
-
-[hostname]
-ssh_symbol = " "
-
 [java]
 symbol = " "
 
@@ -298,9 +306,6 @@ symbol = " "
 
 [lua]
 symbol = " "
-
-[memory_usage]
-symbol = "󰍛 "
 
 [meson]
 symbol = "󰔷 "
@@ -363,9 +368,6 @@ Ubuntu = " "
 Unknown = " "
 Void = " "
 Windows = "󰍲 "
-
-[package]
-disabled = true
 
 [perl]
 symbol = " "

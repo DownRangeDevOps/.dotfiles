@@ -6,7 +6,6 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     lazy = true,
     cmd = "Neotree",
-    -- tag = "3.20", -- 3.21 has a bug, goes back to altfile and throws nui error
     dependencies = {
         { "nvim-lua/plenary.nvim", branch = "master", lazy = false },
         { "nvim-tree/nvim-web-devicons", lazy = false }, -- https://github.com/nvim-tree/nvim-web-devicons
