@@ -9,7 +9,7 @@ return {
     version = "*",
     init = function()
         local term = require("toggleterm.terminal").Terminal:new({
-            cmd = "zsh --login",
+            cmd = "zsh",
             name = "main",
             hidden = false,
         })
@@ -45,7 +45,7 @@ return {
         presist_size = false,
         presist_mode = false,
         direction = "horizontal",
-        shell = "zsh --login",
+        shell = "zsh",
         auto_scroll = true,
         border = "curve",
         highlights = {

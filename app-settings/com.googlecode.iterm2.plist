@@ -4997,7 +4997,7 @@ Password Manager</string>
 			<key>Columns</key>
 			<integer>21</integer>
 			<key>Command</key>
-			<string>/opt/homebrew/bin/zsh --login</string>
+			<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 			<key>Cursor Boost</key>
 			<real>0.0</real>
 			<key>Cursor Color</key>
@@ -7104,6 +7104,8 @@ Password Manager</string>
 	<integer>12</integer>
 	<key>RightOption</key>
 	<integer>3</integer>
+	<key>RunJobsInServers</key>
+	<false/>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -7189,7 +7191,7 @@ Password Manager</string>
 				<key>Has Toolbelt</key>
 				<false/>
 				<key>Height</key>
-				<real>2113</real>
+				<real>1079</real>
 				<key>Hide After Opening</key>
 				<false/>
 				<key>Hiding Toolbelt Should Resize Window</key>
@@ -7201,11 +7203,9 @@ Password Manager</string>
 				<key>Saved Window Type</key>
 				<integer>13</integer>
 				<key>Screen</key>
-				<integer>1</integer>
-				<key>Scroller Width</key>
-				<real>0.0</real>
-				<key>Selected Tab Index</key>
 				<integer>0</integer>
+				<key>Selected Tab Index</key>
+				<integer>9</integer>
 				<key>Tabs</key>
 				<array>
 					<dict>
@@ -7528,7 +7528,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -7536,13 +7536,13 @@ Password Manager</string>
 												<key>Alpha Component</key>
 												<real>1</real>
 												<key>Blue Component</key>
-												<real>0.92549020051956177</real>
+												<real>0.92549019607843142</real>
 												<key>Color Space</key>
 												<string>P3</string>
 												<key>Green Component</key>
-												<real>0.78039216995239258</real>
+												<real>0.7803921568627451</real>
 												<key>Red Component</key>
-												<real>0.45490196347236633</real>
+												<real>0.45490196078431372</real>
 											</dict>
 											<key>Cursor Guide Color</key>
 											<dict>
@@ -7604,7 +7604,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>3EBF85F0-2058-46AC-A26C-11BCEE9978E9</string>
+											<string>E23C80F7-56D8-4439-BC0F-48CA693B496B</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -7668,7 +7668,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -8126,7 +8126,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array>
 											<string>nvim</string>
@@ -8136,9 +8136,34 @@ Password Manager</string>
 											<string>nvim</string>
 											<string>clear</string>
 											<string>clear</string>
+											<string>gs</string>
+											<string>nvim</string>
+											<string>sb</string>
+											<string>nvim</string>
+											<string>nvim</string>
 										</array>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
@@ -8243,6 +8268,126 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -8257,11 +8402,9 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
-											<string>Cursor Color</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -8269,7 +8412,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>15CBFF73-3088-4B6A-8661-0139DEBBAEB3</string>
 										<key>Short Lived Single Use</key>
@@ -8293,9 +8436,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -8308,9 +8451,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -8642,7 +8785,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -8650,13 +8793,13 @@ Password Manager</string>
 												<key>Alpha Component</key>
 												<real>1</real>
 												<key>Blue Component</key>
-												<real>0.92549019607843142</real>
+												<real>0.92549020051956177</real>
 												<key>Color Space</key>
 												<string>P3</string>
 												<key>Green Component</key>
-												<real>0.7803921568627451</real>
+												<real>0.78039216995239258</real>
 												<key>Red Component</key>
-												<real>0.45490196078431372</real>
+												<real>0.45490196347236633</real>
 											</dict>
 											<key>Cursor Guide Color</key>
 											<dict>
@@ -8718,7 +8861,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>2AFF13BA-7A03-45DE-BEDA-C6BF1FB495F9</string>
+											<string>EE156B05-0685-4969-85FD-1CB3C9963A5B</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -8782,7 +8925,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -9240,7 +9383,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array>
 											<string>python -m pipx ensurepath</string>
@@ -9297,6 +9440,20 @@ Password Manager</string>
 											<string>nvim</string>
 											<string>clear</string>
 											<string>nvim</string>
+											<string>cd ~</string>
+											<string>asdf plugin remove direnv gcloud markdownlint-cli2 pipx pre-commit starship vault</string>
+											<string>brew install direnv</string>
+											<string>sb</string>
+											<string>asdf plugin remove direnv gcloud markdownlint-cli2 pipx pre-commit starship vault</string>
+											<string>asdf plugin remove gcloud markdownlint-cli2 pipx pre-commit starship vault</string>
+											<string>asdf plugin remove markdownlint-cli2 pipx pre-commit starship vault</string>
+											<string>asdf plugin remove pipx pre-commit starship vault</string>
+											<string>asdf plugin list</string>
+											<string>brew install google-cloud-sdk</string>
+											<string>brew info direnv</string>
+											<string>nvim</string>
+											<string>cd ~/.dotfiles</string>
+											<string>rg "HEAD"</string>
 										</array>
 										<key>Directories</key>
 										<array>
@@ -9366,11 +9523,36 @@ Password Manager</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 										</array>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict>
@@ -9379,6 +9561,156 @@ Password Manager</string>
 										</dict>
 										<key>Hosts</key>
 										<array>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 											<dict>
 												<key>Host name</key>
 												<string>J0LQPP7M7X</string>
@@ -9789,10 +10121,10 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Cursor Color</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -9800,9 +10132,9 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
-										<string>7B89BAF2-2DD3-43B0-AAF4-F282B7C8F245</string>
+										<string>8F8FEAA9-996D-4C84-A710-F1CBEE503C9B</string>
 										<key>Short Lived Single Use</key>
 										<false/>
 										<key>Should Expect Current Dir Updates</key>
@@ -9815,7 +10147,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/Grainger/work/dbx/infra/main</string>
+										<string>/Users/xjxf277/.dotfiles</string>
 										<key>Working Directory Poller Disabled</key>
 										<true/>
 									</dict>
@@ -9824,9 +10156,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -9839,9 +10171,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -10173,7 +10505,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -10249,7 +10581,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>D789A15E-6230-4DC6-AF96-6836A57E59B3</string>
+											<string>8CAC6611-789F-4741-9810-0DE302EE76CF</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10313,7 +10645,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -10771,7 +11103,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array>
 											<string>sb</string>
@@ -10798,6 +11130,12 @@ Password Manager</string>
 										</array>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
@@ -11028,6 +11366,42 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -11042,10 +11416,9 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
-											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Name</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -11053,7 +11426,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>254EB73D-E49C-4582-814E-11CE31E1E9AF</string>
 										<key>Short Lived Single Use</key>
@@ -11077,9 +11450,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -11092,9 +11465,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -11426,7 +11799,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -11502,7 +11875,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>2634CBA7-EB47-4823-BCCE-A1CD6FA7BC50</string>
+											<string>E9419878-C713-482E-B75E-B4969FCEE6BE</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11566,7 +11939,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -12024,11 +12397,17 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
@@ -12084,6 +12463,42 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -12098,11 +12513,10 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Cursor Guide Color</string>
-											<string>Allow Title Setting</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Cursor Guide Color</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -12110,7 +12524,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>5B9D5B40-8840-4CB2-A113-8EDB4D1C9AB1</string>
 										<key>Short Lived Single Use</key>
@@ -12134,9 +12548,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -12149,9 +12563,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -12483,7 +12897,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -12559,7 +12973,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>A5FEFCD9-E375-4F6B-97EC-6431274B322E</string>
+											<string>6D990074-612E-4101-926A-7F5FDCCBE7FE</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -12623,7 +13037,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -13081,7 +13495,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array>
 											<string>sb</string>
@@ -13090,6 +13504,12 @@ Password Manager</string>
 										</array>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
@@ -13166,6 +13586,42 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -13180,7 +13636,6 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
@@ -13192,7 +13647,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>4B9B7761-6F60-4F67-AB9D-B8160B68F795</string>
 										<key>Short Lived Single Use</key>
@@ -13216,9 +13671,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -13231,9 +13686,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -13565,7 +14020,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -13641,7 +14096,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>E8DD3284-2F25-49E5-B034-752FDDA91144</string>
+											<string>196F9461-EE6E-4F0A-91E2-D0C9DA14DF76</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -13705,7 +14160,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -14163,7 +14618,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array>
 											<string>nvim</string>
@@ -14191,6 +14646,12 @@ Password Manager</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/docs</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/docs</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/docs</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
@@ -14303,6 +14764,42 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -14317,7 +14814,6 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
 											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
@@ -14329,7 +14825,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>5C0DD873-A108-49F0-A1E0-0FA9C80A6F66</string>
 										<key>Short Lived Single Use</key>
@@ -14353,9 +14849,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -14368,9 +14864,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -14702,7 +15198,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -14778,7 +15274,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>9D3BE888-3948-41FF-A777-A3DA8AA3E47E</string>
+											<string>7ED8A703-09EA-44E0-9D4B-BB8EE4D40097</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -14842,7 +15338,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -15300,11 +15796,17 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
 											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
 											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
 											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
@@ -15360,6 +15862,42 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -15374,10 +15912,9 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
-											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Name</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -15385,7 +15922,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>3A2ED41D-605F-4EED-BA86-D8FE10A5BE31</string>
 										<key>Short Lived Single Use</key>
@@ -15409,9 +15946,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -15424,9 +15961,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -15758,7 +16295,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -15834,7 +16371,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>5A9E25BD-7FE9-48A3-86B2-7A91EA6D8872</string>
+											<string>5B6390FC-B2D4-4D36-A59B-76FA0384030C</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -15898,7 +16435,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -16356,11 +16893,17 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
 											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
 											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
 											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
@@ -16416,6 +16959,42 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -16430,10 +17009,9 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
-											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Name</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -16441,7 +17019,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>A685D7A2-916D-4F7F-9ED2-73B6789CDF50</string>
 										<key>Short Lived Single Use</key>
@@ -16465,9 +17043,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -16480,9 +17058,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -16814,7 +17392,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -16890,7 +17468,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>BC9A5CC4-EE41-4070-97C5-09FBDDB52401</string>
+											<string>B8C4E917-3D9F-43C2-AE8B-478089BB60CA</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -16954,7 +17532,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -17412,11 +17990,17 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
 											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
 											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
 											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
@@ -17472,6 +18056,42 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -17486,10 +18106,9 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Allow Title Setting</string>
-											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Name</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -17497,7 +18116,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
 										<string>FB3EF3CC-BE23-40A8-8E42-9C635CDB43A3</string>
 										<key>Short Lived Single Use</key>
@@ -17521,9 +18140,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -17536,9 +18155,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -17554,7 +18173,7 @@ Password Manager</string>
 						<key>Root</key>
 						<dict>
 							<key>Splitter ID</key>
-							<string>A90F0426-1210-451A-A13D-889E839DF779</string>
+							<string>B82D7552-9C9E-4903-A9FC-4F3DC35FBD1C</string>
 							<key>Subviews</key>
 							<array>
 								<dict>
@@ -17870,7 +18489,7 @@ Password Manager</string>
 											<key>Columns</key>
 											<integer>21</integer>
 											<key>Command</key>
-											<string>/opt/homebrew/bin/zsh --login</string>
+											<string>${HOMEBREW_PREFIX}/bin/zsh --login</string>
 											<key>Cursor Boost</key>
 											<real>0.0</real>
 											<key>Cursor Color</key>
@@ -17946,7 +18565,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>3486410E-39B7-4D3D-A049-5AC2B574B2EC</string>
+											<string>3AA05C2E-B0C4-4ACC-87AF-CD3D1C9E7111</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -18004,19 +18623,17 @@ Password Manager</string>
 											<key>Mouse Reporting</key>
 											<true/>
 											<key>Name</key>
-											<string>Fabric</string>
+											<string>Default</string>
 											<key>Non Ascii Font</key>
 											<string>InconsolataGoNFM 18</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 20</string>
+											<string>InconsolataGoNFM 14</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
 											<integer>0</integer>
-											<key>Original Guid</key>
-											<string>3AA05C2E-B0C4-4ACC-87AF-CD3D1C9E7111</string>
 											<key>Place Prompt at First Column</key>
 											<true/>
 											<key>Prompt Before Closing 2</key>
@@ -18468,78 +19085,18 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>383</integer>
+										<integer>245</integer>
 										<key>Commands</key>
-										<array>
-											<string>cd ../Documents/</string>
-											<string>mkdir youtube-transcripts</string>
-											<string>cd youtube-transcripts</string>
-											<string>ll</string>
-											<string>yt-dlp --write-auto-sub --skip-download --sub-lang en https://youtu.be/XT_6Lvkhxvo?si=1QXJBTWNw43YBA5o</string>
-											<string>which yt-dlp</string>
-											<string>yt-dlp --write-auto-sub --skip-download --sub-lang en 'https://youtu.be/XT_6Lvkhxvo?si=1QXJBTWNw43YBA5o'</string>
-											<string>ll</string>
-											<string>mv 'Dr. Becky Kennedy： Protocols for Excellent Parenting &amp; Improving Relationships of All Kinds [XT_6Lvkhxvo].en.vtt' huberman-interview-dr-becky-kennedy-parenting.vtt</string>
-											<string>ll</string>
-											<string>head huberman-interview-dr-becky-kennedy-parenting.vtt</string>
-											<string>nvim</string>
-											<string>nvim</string>
-											<string>nvim</string>
-											<string>nvim</string>
-											<string>nvim</string>
-											<string>nvim</string>
-											<string>nvim</string>
-											<string>cd ~/Documents/Fabric</string>
-											<string>ll</string>
-											<string>ll</string>
-											<string>ll</string>
-											<string>cd ~/Documents/Fabric</string>
-											<string>sb</string>
-											<string>fabric -y "https://www.youtube.com/watch?v=IdTMDpizis8&amp;t=139s" --stream --pattern extract_wisdom_distinct | tee jocko-good.md</string>
-											<string>antidote -h</string>
-											<string>antidote init</string>
-											<string>antidote load</string>
-											<string>fabric -y "https://youtu.be/q-_hwD1jNK4?si=z0DUlHLysg77Io-r" --stream --pattern extract_wisdom_distinct | tee hormozi-ich-2025-strategies.md</string>
-										</array>
+										<array/>
 										<key>Directories</key>
 										<array>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
-											<string>/Users/xjxf277/Documents</string>
-											<string>/Users/xjxf277/Documents</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
-											<string>/</string>
-											<string>/</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
-											<string>/Users/xjxf277/Documents/Fabric</string>
 										</array>
 										<key>Environment</key>
 										<dict>
 											<key>PWD</key>
-											<string>/Users/xjxf277/Documents/youtube-transcripts</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 										</dict>
 										<key>Hostname to Shell</key>
 										<dict>
@@ -18548,186 +19105,6 @@ Password Manager</string>
 										</dict>
 										<key>Hosts</key>
 										<array>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
-											<dict>
-												<key>Host name</key>
-												<string>J0LQPP7M7X</string>
-												<key>User name</key>
-												<string>xjxf277</string>
-											</dict>
 											<dict>
 												<key>Host name</key>
 												<string>J0LQPP7M7X</string>
@@ -18752,22 +19129,15 @@ Password Manager</string>
 											<key>window title stack</key>
 											<array/>
 										</dict>
-										<key>Overridden Fields</key>
-										<array>
-											<string>Allow Title Setting</string>
-											<string>Name</string>
-											<string>Original Guid</string>
-											<string>Guid</string>
-										</array>
 										<key>Program</key>
 										<dict>
 											<key>Type</key>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>60</integer>
+										<integer>41</integer>
 										<key>Session GUID</key>
-										<string>35BB5718-C745-48AA-BD1D-788F5C01D5B6</string>
+										<string>8C55516C-B3D6-455E-B2B8-505AFB5BF758</string>
 										<key>Short Lived Single Use</key>
 										<false/>
 										<key>Should Expect Current Dir Updates</key>
@@ -18780,7 +19150,7 @@ Password Manager</string>
 											<string>$$</string>
 										</dict>
 										<key>Working Directory</key>
-										<string>/Users/xjxf277/Documents/Fabric</string>
+										<string>/Users/xjxf277/.dotfiles</string>
 										<key>Working Directory Poller Disabled</key>
 										<true/>
 									</dict>
@@ -18789,9 +19159,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>2044</real>
+										<real>1010</real>
 										<key>width</key>
-										<real>3840</real>
+										<real>1728</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -18804,9 +19174,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>2044</real>
+								<real>1010</real>
 								<key>width</key>
-								<real>3840</real>
+								<real>1728</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -18816,7 +19186,7 @@ Password Manager</string>
 							<false/>
 						</dict>
 						<key>Tab GUID</key>
-						<string>AAEF3AA5-7575-4F49-9D61-6E20C96A835B</string>
+						<string>29E246CF-0B66-476A-9CC8-A01D56BE01EF</string>
 					</dict>
 				</array>
 				<key>TerminalGuid</key>
@@ -18849,13 +19219,13 @@ Password Manager</string>
 				<key>Use Transparency</key>
 				<true/>
 				<key>Width</key>
-				<real>3840</real>
+				<real>1728</real>
 				<key>Window Type</key>
 				<integer>13</integer>
 				<key>X Origin</key>
-				<real>1127</real>
+				<real>0.0</real>
 				<key>Y Origin</key>
-				<real>1351</real>
+				<real>0.0</real>
 			</dict>
 		</array>
 	</dict>

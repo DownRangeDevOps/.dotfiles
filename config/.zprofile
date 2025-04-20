@@ -1,59 +1,4 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
-# .zprofile
-
-# Uncomment to use the profiling module (`zprof`)
-# zmodload zsh/zprof
-
-# Reset path to always start fresh
-export PATH=""
-
-set +ua
-# Set default paths
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    source /etc/zprofile
-else
-    source /etc/profile
-fi
-set -ua
-
-# Set base Homebrew paths
-if [[ $(uname -m) == "arm64" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-else
-    eval "$(/usr/local/bin/brew shellenv)"
-fi
-
-# Source Homebrew GitHub token
-if [[ -n "${PERSONAL_LAPTOP_USER:-}" && -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then source ~/.bash_secrets; fi
-
-# Globals
-export DOTFILES_PREFIX="${HOME}/.dotfiles"
-export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
-export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
-
-# Load logger or overload with no-op
-if [[ ${DEBUG:-} -eq 1 ]]; then
-
-    # We need to use `basename` from Homebrew for `log.sh`
-    function basename() {
-        "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/basename" "$@"
-    }
-
-    set +ua
-    [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
-    set -ua
-    log debug ""
-    log debug "[${BASH_SOURCE[0]:-${(%):-%x}}]"
-else
-    log_sh_args=("info" "warn" "error" "debug")
-    function log() {
-        if [[ "${log_sh_args[*]}" =~ ${1:-} ]]; then
-            true
-        else
-            log "$@"
-        fi
-    }
-fi
 
 # -a: Export all functions to make them available in sub-shells
 # -u: We should not use unbound variables
@@ -63,60 +8,92 @@ fi
 # will export functions and throw errors
 set -uao pipefail
 
-# Disable flow control commands (keeps C-s from freezing everything)
-stty -ixon 2>/dev/null
+# Uncomment to use the profiling module (`zprof`)
+# zmodload zsh/zprof
 
-# Load everything else
-log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
+# Globals
+export PERSONAL_LAPTOP_USER="ryanfisher"
+export DOTFILES_PREFIX="${HOME}/.dotfiles"
+export CONFIG_FILES_PREFIX="${DOTFILES_PREFIX}/config"
+export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
+export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 
+# Vale global config
+export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
+export VALE_STYLES_PATH="${HOME}/.dotfiles/config/vale/styles"
+
+# Reset path to always start fresh
+export PATH=""
+
+# Disable strictness
+set +ua
+
+# Set default paths
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    source /etc/zprofile
+else
+    source /etc/profile
+fi
+
+# Set base Homebrew paths
+if [[ $(uname -m) == "arm64" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+
+# ------------------------------------------------
+# Dependencies
+# ------------------------------------------------
 [[ -f "${BASH_D_PATH}/lib.sh" ]] && source "${BASH_D_PATH}/lib.sh"
 
 safe_source "${BASH_D_PATH}/path.sh"
 safe_source "${BASH_D_PATH}/bash.sh"
+safe_source "${CONFIG_FILES_PREFIX}/.zaliases"
+
+# log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done, .bash_profile loaded."
 
 # ------------------------------------------------
-# Set up Homebrew ZSH completions
+# fzf Catppuccin theme
 # ------------------------------------------------
-if type brew &>/dev/null; then
-    # Add Homebrew's completions to FPATH
-    FPATH="$(brew --prefix)/share/zsh-completions:${FPATH}"
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+--color=selected-bg:#45475a \
+--color=border:#313244,label:#cdd6f4"
 
-    # Builtin docs: https://linux.die.net/man/1/zshbuiltins
-    # -U: Load the function without aliasing
-    # -z: Only load `zsh` functions
-    # -C: Skip security checks
+# ------------------------------------------------
+# Set up Virtualenv Wrapper
+# ------------------------------------------------
+if type virtualenvwrapper.sh &>/dev/null; then
+    export WORKON_HOME="${HOME}/.virtualenvs"
+    VIRTUALENVWRAPPER_PYTHON="$(asdf which python)"
+    export VIRTUALENVWRAPPER_PYTHON
+    export VIRTUALENVWRAPPER_VIRTUALENV="${HOMEBREW_PREFIX}/bin/virtualenv"
+    export VIRTUALENVWRAPPER_VIRTUALENV_ARGS="--no-site-packages"
+    export VIRTUALENVWRAPPER_HOOK_DIR="${HOME}/.virtualenvs/bin"
 
-    # Only initialize completions if not already initialized
-    # This avoids double initialization
-    if [[ -n "${ZSH_VERSION:-}" ]]; then
-        # Load and initialize Zsh completion system once
-        autoload -Uz compinit
-        compinit -C -d "${HOME}/.zcompdump"
-
-        # Make compdef available
-        autoload -Uz compdef
-
-        # Set up caching for completions
-        zstyle ':completion:*' use-cache on
-        zstyle ':completion:*' cache-path ~/.zsh/cache
-    fi
+    source "${HOMEBREW_PREFIX}/bin/virtualenvwrapper.sh"
+else
+    # shellcheck disable=SC2016
+    printf_warning 'virtualenv does not not seem to be installed (`brew install virtualenv virtualenvwrapper`)'
 fi
 
-# Disable strictness
-set +uao pipefail
-
+# ------------------------------------------------
+#  Granted
+# ------------------------------------------------
+alias assume='source $(asdf which assume)'
 
 # ------------------------------------------------
 #  Set up direnv shell hook
 # ------------------------------------------------
-set +ua
 if [[ -n "$(command -v direnv)" ]]; then
     eval "$("${HOMEBREW_PREFIX}/bin/direnv" hook zsh)"
 else
     print_warnining 'direnv does not seem to be installed (`brew install direnv`)'
 fi
-set -ua
 
 # ------------------------------------------------
 # Enable ASDF
@@ -128,22 +105,5 @@ else
     printf_warning 'ASDF does not seem to be installed: `brew install asdf`'
 fi
 
-# ------------------------------------------------
-# Use Starship for my shell prompt
-# ------------------------------------------------
-if [[ -n "$(command -v starship)" ]]; then
-    if [[ -n "${ZSH_VERSION:-}" ]]; then
-        eval "$("${HOMEBREW_PREFIX}/bin/starship" init zsh)"
-    else
-        eval "$("${HOMEBREW_PREFIX}/bin/starship" init bash)"
-    fi
-else
-    printf_warning 'Starship does not seem to be installed: `brew install starship`'
-fi
-
-log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done, .bash_profile loaded."
-
-# Unset strict options, we only care about our code
-set +ua
-
+export ZSH_PROFILE_SOURCED=1
 # vim: ft=zsh
