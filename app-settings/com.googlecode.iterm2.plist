@@ -5137,7 +5137,7 @@ Password Manager</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>InconsolataGoNFM 14</string>
+			<string>InconsolataGoNFM 16</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<true/>
 			<key>Option Key Sends</key>
@@ -5584,7 +5584,7 @@ Password Manager</string>
 			<key>Use libtickit protocol</key>
 			<true/>
 			<key>Vertical Spacing</key>
-			<real>1.6000000000000001</real>
+			<real>1.3999999999999999</real>
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
@@ -7191,7 +7191,7 @@ Password Manager</string>
 				<key>Has Toolbelt</key>
 				<false/>
 				<key>Height</key>
-				<real>1079</real>
+				<real>1225</real>
 				<key>Hide After Opening</key>
 				<false/>
 				<key>Hiding Toolbelt Should Resize Window</key>
@@ -7203,7 +7203,9 @@ Password Manager</string>
 				<key>Saved Window Type</key>
 				<integer>13</integer>
 				<key>Screen</key>
-				<integer>0</integer>
+				<integer>2</integer>
+				<key>Scroller Width</key>
+				<real>0.0</real>
 				<key>Selected Tab Index</key>
 				<integer>9</integer>
 				<key>Tabs</key>
@@ -7604,7 +7606,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>E23C80F7-56D8-4439-BC0F-48CA693B496B</string>
+											<string>E134B1CC-6D52-4BEA-89EA-027C96E1ED7F</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -7668,7 +7670,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -8117,7 +8119,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -8126,7 +8128,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array>
 											<string>nvim</string>
@@ -8144,6 +8146,8 @@ Password Manager</string>
 										</array>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
@@ -8388,6 +8392,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -8402,9 +8418,9 @@ Password Manager</string>
 										</dict>
 										<key>Overridden Fields</key>
 										<array>
-											<string>Name</string>
 											<string>Original Guid</string>
 											<string>Guid</string>
+											<string>Name</string>
 										</array>
 										<key>Program</key>
 										<dict>
@@ -8412,7 +8428,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>15CBFF73-3088-4B6A-8661-0139DEBBAEB3</string>
 										<key>Short Lived Single Use</key>
@@ -8436,9 +8452,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -8451,9 +8467,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -8861,7 +8877,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>EE156B05-0685-4969-85FD-1CB3C9963A5B</string>
+											<string>713B0CB4-33B9-4BC1-8ECE-BC1C7A373196</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -8925,7 +8941,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -9374,7 +9390,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -9383,7 +9399,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array>
 											<string>python -m pipx ensurepath</string>
@@ -9548,6 +9564,8 @@ Password Manager</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 										</array>
 										<key>Environment</key>
 										<dict>
@@ -9561,6 +9579,18 @@ Password Manager</string>
 										</dict>
 										<key>Hosts</key>
 										<array>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 											<dict>
 												<key>Host name</key>
 												<string>J0LQPP7M7X</string>
@@ -10132,7 +10162,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>8F8FEAA9-996D-4C84-A710-F1CBEE503C9B</string>
 										<key>Short Lived Single Use</key>
@@ -10156,9 +10186,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -10171,9 +10201,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -10581,7 +10611,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>8CAC6611-789F-4741-9810-0DE302EE76CF</string>
+											<string>78E40B61-62BC-4EED-B2F6-34DF1F11D206</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -10645,7 +10675,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -11094,7 +11124,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -11103,7 +11133,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array>
 											<string>sb</string>
@@ -11130,6 +11160,8 @@ Password Manager</string>
 										</array>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/data/main</string>
@@ -11402,6 +11434,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -11426,7 +11470,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>254EB73D-E49C-4582-814E-11CE31E1E9AF</string>
 										<key>Short Lived Single Use</key>
@@ -11450,9 +11494,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -11465,9 +11509,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -11875,7 +11919,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>E9419878-C713-482E-B75E-B4969FCEE6BE</string>
+											<string>D662491C-18F7-4A3D-8B4B-23E26CD3277D</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -11939,7 +11983,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -12388,7 +12432,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -12397,11 +12441,13 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/unity/main</string>
@@ -12499,6 +12545,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -12524,7 +12582,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>5B9D5B40-8840-4CB2-A113-8EDB4D1C9AB1</string>
 										<key>Short Lived Single Use</key>
@@ -12548,9 +12606,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -12563,9 +12621,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -12973,7 +13031,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>6D990074-612E-4101-926A-7F5FDCCBE7FE</string>
+											<string>71798ADF-FA0D-4222-9F22-A43AFE53B623</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -13037,7 +13095,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -13486,7 +13544,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -13495,7 +13553,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array>
 											<string>sb</string>
@@ -13504,6 +13562,8 @@ Password Manager</string>
 										</array>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
+											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
 											<string>/Users/xjxf277/Grainger/work/dbx/admin/main</string>
@@ -13622,6 +13682,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -13647,7 +13719,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>4B9B7761-6F60-4F67-AB9D-B8160B68F795</string>
 										<key>Short Lived Single Use</key>
@@ -13671,9 +13743,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -13686,9 +13758,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -14096,7 +14168,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>196F9461-EE6E-4F0A-91E2-D0C9DA14DF76</string>
+											<string>9F87492D-827D-4994-8767-393E6AC2C658</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -14160,7 +14232,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -14609,7 +14681,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -14618,7 +14690,7 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array>
 											<string>nvim</string>
@@ -14655,6 +14727,8 @@ Password Manager</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
 											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
+											<string>/Users/xjxf277/Grainger/work/vnext/service-migration/cons-svc-sf-api/main</string>
 										</array>
 										<key>Environment</key>
 										<dict>
@@ -14668,6 +14742,18 @@ Password Manager</string>
 										</dict>
 										<key>Hosts</key>
 										<array>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 											<dict>
 												<key>Host name</key>
 												<string>J0LQPP7M7X</string>
@@ -14825,7 +14911,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>5C0DD873-A108-49F0-A1E0-0FA9C80A6F66</string>
 										<key>Short Lived Single Use</key>
@@ -14849,9 +14935,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -14864,9 +14950,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -15274,7 +15360,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>7ED8A703-09EA-44E0-9D4B-BB8EE4D40097</string>
+											<string>6965FE01-295D-4CBB-AAA1-C9EB009572E0</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -15338,7 +15424,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -15787,7 +15873,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -15796,11 +15882,13 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
+											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
 											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
 											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
 											<string>/Users/xjxf277/Grainger/work/hackathon/danswer/main</string>
@@ -15898,6 +15986,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -15922,7 +16022,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>3A2ED41D-605F-4EED-BA86-D8FE10A5BE31</string>
 										<key>Short Lived Single Use</key>
@@ -15946,9 +16046,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -15961,9 +16061,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -16371,7 +16471,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>5B6390FC-B2D4-4D36-A59B-76FA0384030C</string>
+											<string>91A68644-67BF-4735-8DF8-CC0A0CDE8F82</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -16435,7 +16535,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -16884,7 +16984,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -16893,11 +16993,13 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
+											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
 											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
 											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
 											<string>/Users/xjxf277/Grainger/work/model-serving/main</string>
@@ -16995,6 +17097,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -17019,7 +17133,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>A685D7A2-916D-4F7F-9ED2-73B6789CDF50</string>
 										<key>Short Lived Single Use</key>
@@ -17043,9 +17157,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -17058,9 +17172,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -17468,7 +17582,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>B8C4E917-3D9F-43C2-AE8B-478089BB60CA</string>
+											<string>53EF3DA8-1E6F-40E6-B3CC-18A15A5BF106</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -17532,7 +17646,7 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
@@ -17981,7 +18095,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -17990,11 +18104,13 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
 										<array/>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
+											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
 											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
 											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
 											<string>/Users/xjxf277/Dev/Reference/Example-Ops</string>
@@ -18092,6 +18208,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -18116,7 +18244,7 @@ Password Manager</string>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>FB3EF3CC-BE23-40A8-8E42-9C635CDB43A3</string>
 										<key>Short Lived Single Use</key>
@@ -18140,9 +18268,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -18155,9 +18283,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -18565,7 +18693,7 @@ Password Manager</string>
 												<real>0.80392158031463623</real>
 											</dict>
 											<key>Guid</key>
-											<string>3AA05C2E-B0C4-4ACC-87AF-CD3D1C9E7111</string>
+											<string>0036A1DC-54E6-471D-BAD2-0CE0FD7A0056</string>
 											<key>Hide After Opening</key>
 											<false/>
 											<key>Horizontal Spacing</key>
@@ -18629,11 +18757,13 @@ Password Manager</string>
 											<key>Non-ASCII Anti Aliased</key>
 											<true/>
 											<key>Normal Font</key>
-											<string>InconsolataGoNFM 14</string>
+											<string>InconsolataGoNFM 16</string>
 											<key>Only The Default BG Color Uses Transparency</key>
 											<true/>
 											<key>Option Key Sends</key>
 											<integer>0</integer>
+											<key>Original Guid</key>
+											<string>3AA05C2E-B0C4-4ACC-87AF-CD3D1C9E7111</string>
 											<key>Place Prompt at First Column</key>
 											<true/>
 											<key>Prompt Before Closing 2</key>
@@ -19076,7 +19206,7 @@ Password Manager</string>
 											<key>Use libtickit protocol</key>
 											<true/>
 											<key>Vertical Spacing</key>
-											<real>1.6000000000000001</real>
+											<real>1.3999999999999999</real>
 											<key>Visual Bell</key>
 											<true/>
 											<key>Window Type</key>
@@ -19085,11 +19215,15 @@ Password Manager</string>
 											<string>/Users/ryanfisher</string>
 										</dict>
 										<key>Columns</key>
-										<integer>245</integer>
+										<integer>374</integer>
 										<key>Commands</key>
-										<array/>
+										<array>
+											<string>nvim</string>
+										</array>
 										<key>Directories</key>
 										<array>
+											<string>/Users/xjxf277/.dotfiles</string>
+											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 											<string>/Users/xjxf277/.dotfiles</string>
 										</array>
@@ -19117,6 +19251,18 @@ Password Manager</string>
 												<key>User name</key>
 												<string>xjxf277</string>
 											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
+											<dict>
+												<key>Host name</key>
+												<string>J0LQPP7M7X</string>
+												<key>User name</key>
+												<string>xjxf277</string>
+											</dict>
 										</array>
 										<key>Is UTF-8</key>
 										<true/>
@@ -19129,13 +19275,18 @@ Password Manager</string>
 											<key>window title stack</key>
 											<array/>
 										</dict>
+										<key>Overridden Fields</key>
+										<array>
+											<string>Original Guid</string>
+											<string>Guid</string>
+										</array>
 										<key>Program</key>
 										<dict>
 											<key>Type</key>
 											<string>Shell Launcher</string>
 										</dict>
 										<key>Rows</key>
-										<integer>41</integer>
+										<integer>48</integer>
 										<key>Session GUID</key>
 										<string>8C55516C-B3D6-455E-B2B8-505AFB5BF758</string>
 										<key>Short Lived Single Use</key>
@@ -19159,9 +19310,9 @@ Password Manager</string>
 									<key>frame</key>
 									<dict>
 										<key>height</key>
-										<real>1010</real>
+										<real>1156</real>
 										<key>width</key>
-										<real>1728</real>
+										<real>3002</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -19174,9 +19325,9 @@ Password Manager</string>
 							<key>frame</key>
 							<dict>
 								<key>height</key>
-								<real>1010</real>
+								<real>1156</real>
 								<key>width</key>
-								<real>1728</real>
+								<real>3002</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -19219,13 +19370,13 @@ Password Manager</string>
 				<key>Use Transparency</key>
 				<true/>
 				<key>Width</key>
-				<real>1728</real>
+				<real>3002</real>
 				<key>Window Type</key>
 				<integer>13</integer>
 				<key>X Origin</key>
-				<real>0.0</real>
+				<real>1127</real>
 				<key>Y Origin</key>
-				<real>0.0</real>
+				<real>2239</real>
 			</dict>
 		</array>
 	</dict>
