@@ -80,7 +80,7 @@ function list_dir() {
     fi
 
     if [[ -f ${eza} ]]; then
-        lsopts+=("--icons=auto" "--header" "--modified" "--git")
+        lsopts+=("--icons=auto" "--header" "--modified" "--git" "--smart-group" "--binary" "--time-style=relative")
         ${eza} "${lsopts[@]}" "$@"
     else
         lsopts+=("--no-group" "--size" "--human-readable")
