@@ -50,7 +50,7 @@ rules:
     max-end: 0
 
   # disallow implicit null values
-  empty-values: enable
+  empty-values: disable
 
   # disallow arbitrary leading spaces before list values
   hyphens:

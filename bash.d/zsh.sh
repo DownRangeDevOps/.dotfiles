@@ -7,25 +7,12 @@ zle -N history-beginning-search-forward-end history-search-end
 bindkey "\e[A" history-beginning-search-backward
 bindkey "\e[B" history-beginning-search-forward
 
-export ZPLUG_HOME="${HOMEBREW_PREFIX}/opt/zplug"
-export ANTIDOTE_HOME=~/.cache/antidote
-
-set +ua
-# shellcheck disable=SC1091
-if [[ -f "${HOMEBREW_PREFIX}/opt/antidote/share/antidote/antidote.zsh" ]]; then
-    source "${HOMEBREW_PREFIX}/opt/antidote/share/antidote/antidote.zsh"
-    antidote load # requires symlink ~/.zsh_plugins.txt -> ../config/.zsh_plugins.txt
-fi
-set -ua
-
-
 # ------------------------------------------------
 #  Plugins
 # ------------------------------------------------
 
 # zsh-vi-mode
 # https://github.com/jeffreytse/zsh-vi-mode#-usage
-export ZVM_VI_ESCAPE_BINDKEY=jj
 
 # The plugin will auto execute this zvm_after_select_vi_mode function
 function zvm_after_select_vi_mode() {
@@ -48,3 +35,14 @@ function zvm_after_select_vi_mode() {
         ;;
     esac
 }
+
+function zvm_config() {
+    ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+    ZVM_VI_INSERT_ESCAPE_BINDKEY=j
+
+    zvm_init
+}
+
+# source ~/zsh-vi-mode.zsh
+
+# vim: ft=zsh

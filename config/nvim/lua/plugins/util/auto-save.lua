@@ -4,6 +4,7 @@
 -- ----------------------------------------------
 return {
     "pocco81/auto-save.nvim",
+    dependencies = {"neovim/nvim-lspconfig"},
     opts = {
         enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
         execution_message = {
@@ -31,13 +32,18 @@ return {
 
             -- ran before doing the actual save
             before_saving = function()
-                MiniTrailspace.trim()
-                MiniTrailspace.trim_last_lines()
+                local mini_trailspace = require("mini.trailspace")
+
+                mini_trailspace.trim()
+                mini_trailspace.trim_last_lines()
             end,
 
             -- ran after doing the actual save
             after_saving = function()
+                local lint = require("lint")
+
                 vim.cmd("LspRestart")
+                lint.try_lint()
             end
         }
     }

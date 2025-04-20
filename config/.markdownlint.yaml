@@ -1,0 +1,62 @@
+---
+default: true
+
+# MD001 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md001---heading-levels-should-only-increment-by-one-level-at-a-time)
+heading-increment: true
+
+# MD003 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md003---heading-style)j
+heading-style:
+  style: atx
+
+# MD004 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md004---unordered-list-style)
+ul-style:
+  style: asterisk
+
+# MD005 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md005---inconsistent-indentation-for-list-items-at-the-same-level)
+list-indent: true
+
+# MD007 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md007---unordered-list-indentation)
+ul-indent:
+  indent: 2
+
+# MD010 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md010---hard-tabs)
+no-hard-tabs:
+  spaces_per_tab: 2
+
+# MD011 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/md003.md)
+no-reversed-links: true
+
+# MD013 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md013---line-length)
+line-length:
+  line_length: 88
+  code_blocks: true
+  code_block_line_length: 88
+  tables: false
+
+# MD022: (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md022---headings-should-be-surrounded-by-blank-lines)
+blanks-around-headings:
+  lines_above: 1
+  lines_below: 1
+
+# MD024 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md024---multiple-headings-with-the-same-content)
+no-duplicate-heading:
+  siblings_only: true
+
+# MD029 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md029---ordered-list-item-prefix)
+ol-prefix:
+  style: ordered
+
+# MD033 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md033---inline-html)
+no-inline-html:
+  allowed_elements:
+    - br
+    - details
+    - summary
+
+# MD046 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md033---inline-html)
+code-block-style:
+  style: fenced
+
+# MD048 (https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/Rules.md#md033---inline-html)
+code-fence-style:
+  style: backtick

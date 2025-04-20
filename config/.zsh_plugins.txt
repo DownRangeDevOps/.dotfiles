@@ -1,1 +1,1 @@
-jeffreytse/zsh-vi-mode
+# No plugins for now

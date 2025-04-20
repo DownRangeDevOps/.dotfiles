@@ -1,0 +1,57 @@
+# Minimal .zshrc to troubleshoot errors
+# Start with basic ZSH settings
+setopt appendhistory
+unsetopt beep
+bindkey -v
+
+# Load ZSH completion system
+autoload -Uz compinit
+compinit
+
+# Make compdef available
+autoload -Uz compdef
+
+# Enable ZLE
+zmodload zsh/zle
+
+# Define a basic zle-keymap-select function
+function zle-keymap-select() {
+    zle reset-prompt
+}
+zle -N zle-keymap-select
+
+# Set up Homebrew paths
+if [[ $(uname -m) == "arm64" ]]; then
+    export HOMEBREW_PREFIX="/opt/homebrew"
+    export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+    export HOMEBREW_REPOSITORY="/opt/homebrew"
+    export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+    export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+    export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+    export FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
+else
+    export HOMEBREW_PREFIX="/usr/local"
+    export HOMEBREW_CELLAR="/usr/local/Cellar"
+    export HOMEBREW_REPOSITORY="/usr/local"
+    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+    export MANPATH="/usr/local/share/man${MANPATH+:$MANPATH}:"
+    export INFOPATH="/usr/local/share/info:${INFOPATH:-}"
+    export FPATH="/usr/local/share/zsh/site-functions:$FPATH"
+fi
+
+# Source basic environment variables
+export DOTFILES_PREFIX="${HOME}/.dotfiles"
+export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
+export PATH="${DOTFILES_PREFIX}/bin:${PATH}"
+
+# Set up terminal history
+export HISTSIZE=100000
+export HISTFILESIZE=100000
+export HISTFILE=~/.histfile
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+
+# That's it for the minimal configuration
+echo "Minimal .zshrc loaded successfully!"

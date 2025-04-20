@@ -40,6 +40,7 @@ JAVA_HOME="$(asdf where java)"
 export JAVA_HOME
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
 export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
+export VALUE_CONFIG_PATH="${HOME}/config/vale/.vale.ini"
 
 # fzf (https://github.com/junegunn/fzf)
 export FZF_DEFAULT_OPTS="--history=${HOME}/.fzf_history"
@@ -127,8 +128,12 @@ function rg() {
         "$@"
 }
 
+function markdownlint-cli2() {
+    command markdownlint-cli2 --config ~/.markdownlint.yaml "$@"
+}
+
 function yamlfix() {
-    command yamlfix -c ~/.yamlfix.toml "$@"
+    command yamlfix --config-file ~/.yamlfix.toml "$@"
 }
 
 # Generate password hash for MySQL
@@ -143,22 +148,6 @@ function mysqlpw() {
 # ------------------------------------------------
 # bash.d
 # ------------------------------------------------
-if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring bash completions..."
-fi
-
-set +ua
-
-# NOTE: overwrites PS1, source it before setting custom PS1
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/path.zsh.inc"
-    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.zsh.inc"
-else
-    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/path.bash.inc"
-    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.bash.inc"
-fi
-set -ua
-
 if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading bash.d files..."
 fi

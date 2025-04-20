@@ -22,19 +22,23 @@ return {
             nmap <Leader>c <cmd>call vimspector#Continue()<CR>
         ]])
 
-        vim.fn.sign_define('vimspectorBP', {
-            text = '●',
-            texthl = 'WarningMsg',
-        })
+        -- Create a namespace for Vimspector
+        local vimspector_ns = vim.api.nvim_create_namespace("vimspector")
 
-        vim.fn.sign_define('vimspectorBPCond', {
-            text = '◆',
-            texthl = 'WarningMsg',
-        })
-
-        vim.fn.sign_define('vimspectorCurrentLine', {
-            text = '▶',
-            texthl = 'MatchParen',
-        })
+        -- Define custom signs through vim.diagnostic.config()
+        vim.diagnostic.config({
+            signs = {
+                text = {
+                    [vim.diagnostic.severity.ERROR] = '●',   -- For vimspectorBP
+                    [vim.diagnostic.severity.WARN] = '◆',    -- For vimspectorBPCond
+                    [vim.diagnostic.severity.INFO] = '▶',    -- For vimspectorCurrentLine
+                },
+                texthl = {
+                    [vim.diagnostic.severity.ERROR] = 'WarningMsg',
+                    [vim.diagnostic.severity.WARN] = 'WarningMsg',
+                    [vim.diagnostic.severity.INFO] = 'MatchParen',
+                }
+            }
+        }, vimspector_ns)
     end,
 }

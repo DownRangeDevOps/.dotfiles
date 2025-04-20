@@ -19,40 +19,4 @@ fi
 export TERMINFO=~/.local/share/terminfo
 export TERMINFO_DIRS=~/.local/share/terminfo
 
-# History
-export HISTSIZE=100000
-export HISTFILESIZE=100000
-export HISTFILE=~/.histfile
-
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    setopt SHARE_HISTORY            # import old commands, append new, so all sessions have the same hist
-    setopt HIST_IGNORE_ALL_DUPS     # do not put duplicated command into history list
-    setopt HIST_SAVE_NO_DUPS        # omit older duplicates
-    setopt HIST_REDUCE_BLANKS       # remove unnecessary blanks
-else
-    export HISTCONTROL=ignoreboth:erasedups # don't put duplicate lines in the history
-    shopt -s histappend   # append
-    shopt -s checkwinsize # check the win size after each command and update if necessary
-    history -a            # append
-    history -n            # read new lines and append
-fi
-
-if [[ -z "${ZSH_VERSION:-}" ]]; then
-    # Search history with arrows, up: \e[A, down: \e[B
-    # bind '"\e[A": history-search-backward'
-    # bind '"\e[B": history-search-forward'
-    for direction (up down) {
-        autoload "${direction}-line-or-beginning-search"
-        zle -N "${direction}-line-or-beginning-search"
-        key="${terminfo}[kcu${direction}[1]1]"
-
-        for key ("${key}" "${key/O/[}")
-            bindkey "${key}" "${direction}-line-or-beginning-search"
-    }
-
-    if ((original_buffer_length == 0)); then
-        CURSOR=$#BUFFER
-    fi
-fi
-
 # vim: ft=zsh

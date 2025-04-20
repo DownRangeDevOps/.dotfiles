@@ -1,8 +1,14 @@
-# shellcheck shell=bash disable=SC2296
+# shellcheck shell=bash disable=SC2296,SC1091
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
     log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+fi
+
+# Doing this here so that the paths are not placed in front of everything in `set_path`
+if [[ -n ${HOMEBREW_PREFIX} && -n "$(command -v gcloud)" ]]; then
+    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.zsh.inc" # gcloud completions
+    source "${HOMEBREW_PREFIX}/google-cloud-sdk/path.zsh.inc"             # add gcloud bins to path
 fi
 
 function set_path() {
@@ -44,8 +50,6 @@ function set_path() {
         done
 
     fi
-
-    prepend+=("/Applications/SnowSQL.app/Contents/MacOS") # SnowSQL
 
     append+=("${HOME}/.local/bin")   # Ansible
     append+=("${HOME}/.cargo/bin")   # rust

@@ -1,0 +1,6 @@
+{
+  "bullets": "*",
+  "maxdepth": 1,
+  "firsth1": false,
+  "slugify": true
+}

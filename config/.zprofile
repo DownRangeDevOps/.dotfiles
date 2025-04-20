@@ -1,4 +1,5 @@
 # shellcheck shell=bash disable=SC1090,SC1091  # ignore refusal to follow dynamic paths
+# .zprofile
 
 # Uncomment to use the profiling module (`zprof`)
 # zmodload zsh/zprof
@@ -72,47 +73,77 @@ log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 
 safe_source "${BASH_D_PATH}/path.sh"
 safe_source "${BASH_D_PATH}/bash.sh"
-# safe_source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 
+# ------------------------------------------------
 # Set up Homebrew ZSH completions
+# ------------------------------------------------
 if type brew &>/dev/null; then
-    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-fi
+    # Add Homebrew's completions to FPATH
+    FPATH="$(brew --prefix)/share/zsh-completions:${FPATH}"
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
-# Load completions
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    FPATH="${HOMEBREW_PREFIX}/share/zsh/site-functions:${FPATH}"
-
-    # Load and initialize Zsh completion system
     # Builtin docs: https://linux.die.net/man/1/zshbuiltins
     # -U: Load the function without aliasing
     # -z: Only load `zsh` functions
-    # +X: Only load functions when used
     # -C: Skip security checks
-    autoload -Uz +X compinit && compinit -C -d "${HOME}/.zcompdump"
 
-    # Set up caching for completions to avoid repeated processing
-    zstyle ':completion:*' use-cache on
-    zstyle ':completion:*' cache-path ~/.zsh/cache
+    # Only initialize completions if not already initialized
+    # This avoids double initialization
+    if [[ -n "${ZSH_VERSION:-}" ]]; then
+        # Load and initialize Zsh completion system once
+        autoload -Uz compinit
+        compinit -C -d "${HOME}/.zcompdump"
 
-    # Enable Bash completion compatibility
-    autoload -U +X bashcompinit && bashcompinit
+        # Make compdef available
+        autoload -Uz compdef
 
-    # Set up completion for Terraform
-    # -o nospace prevents a space from being added after the completion
-    complete -o nospace -C /opt/homebrew/Cellar/tfenv/3.0.0/versions/1.6.0/terraform terraform
-
+        # Set up caching for completions
+        zstyle ':completion:*' use-cache on
+        zstyle ':completion:*' cache-path ~/.zsh/cache
+    fi
 fi
 
 # Disable strictness
 set +uao pipefail
 
+
+# ------------------------------------------------
+#  Set up direnv shell hook
+# ------------------------------------------------
+set +ua
+if [[ -n "$(command -v direnv)" ]]; then
+    eval "$("${HOMEBREW_PREFIX}/bin/direnv" hook zsh)"
+else
+    print_warnining 'direnv does not seem to be installed (`brew install direnv`)'
+fi
+set -ua
+
+# ------------------------------------------------
+# Enable ASDF
+# ------------------------------------------------
+if [[ -n "$(command -v asdf)" ]]; then
+    "${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
+    ASDF_PYAPP_DEFAULT_PYTHON_PATH="${HOME}/.asdf/shims/python"
+else
+    printf_warning 'ASDF does not seem to be installed: `brew install asdf`'
+fi
+
+# ------------------------------------------------
+# Use Starship for my shell prompt
+# ------------------------------------------------
+if [[ -n "$(command -v starship)" ]]; then
+    if [[ -n "${ZSH_VERSION:-}" ]]; then
+        eval "$("${HOMEBREW_PREFIX}/bin/starship" init zsh)"
+    else
+        eval "$("${HOMEBREW_PREFIX}/bin/starship" init bash)"
+    fi
+else
+    printf_warning 'Starship does not seem to be installed: `brew install starship`'
+fi
+
 log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done, .bash_profile loaded."
 
-# vi: ft=zsh
+# Unset strict options, we only care about our code
+set +ua
 
-# added by Snowflake SnowSQL installer v1.2
-export PATH=/Applications/SnowSQL.app/Contents/MacOS:$PATH
-
-# Set up Virtualenv Wrapper
-safe_source "${HOME}/.local/bin/virtualenvwrapper_lazy.sh"
+# vim: ft=zsh

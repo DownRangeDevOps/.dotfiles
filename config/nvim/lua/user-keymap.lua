@@ -285,15 +285,18 @@ end, { group = "txt", desc = "path to cur line from git root"})
 -- file/buffer management (auto-save, browser)
 local save_if_modifiable = function()
     local modifiable = vim.bo.modifiable
+    local mini_trailspace = require("mini.trailspace")
+    local notify = require("notify")
+
     if modifiable then
-        MiniTrailspace.trim()
-        MiniTrailspace.trim_last_lines()
+        mini_trailspace.trim()
+        mini_trailspace.trim_last_lines()
 
         local status, err = pcall(function() vim.cmd.write() end)
 
         if not status then
             if err and err:match("No file name") then
-                vim.defer_fn(function() vim.api.nvim_err_write("No file name\n") end, 250)
+                vim.defer_fn(function() notify("No file name", "WARN") end, 250)
             end
         else
             vim.cmd("LspRestart")
@@ -316,7 +319,7 @@ map("n", "<leader>2", function()
     vim.cmd("Neotree action=show source=buffers position=current toggle reveal")
 end, { silent = true, group = "file", desc = "open buffer browser" })
 map({ "n", "v" }, "-", function()
-    if vim.api.nvim_buf_get_option(0, "filetype") == "neo-tree" then
+    if vim.api.nvim_get_option_value("filetype", {scope = "local", buf = 0}) == "neo-tree" then
         vim.fn.feedkeys("<BS>")
     else
         vim.fn.feedkeys("-")
@@ -376,8 +379,8 @@ map("n", "<leader>lgff", function() vim.cmd("LazyGitFilterCurrentFile") end, { g
 -- :help gitsigns.txt
 map("n", "<C-e>", "5<C-e>", { group = "nav", desc = "scroll down 5 lines" })
 local gitsigns_maps = function(bufnr)
-    vim.keymap.set("n", "<leader>p", require("gitsigns").prev_hunk, { buffer = bufnr, desc = "go prev hunk" })
-    vim.keymap.set("n", "<leader>n", require("gitsigns").next_hunk, { buffer = bufnr, desc = "go next hunk" })
+    vim.keymap.set("n", "<leader>p", require("gitsigns").nav_hunk("prev", { preview = true }), { buffer = bufnr, desc = "go prev hunk" })
+    vim.keymap.set("n", "<leader>n", require("gitsigns").nav_hunk("next", { preview = true }), { buffer = bufnr, desc = "go next hunk" })
     vim.keymap.set("n", "<leader>hp", require("gitsigns").preview_hunk, { buffer = bufnr, desc = "preview hunk" })
     vim.keymap.set("n", "<leader>hu", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
     vim.keymap.set("n", "<leader>sh", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
@@ -427,7 +430,7 @@ map("n", "<leader>Q", function()
 
     vim.cmd.bp()
 
-    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
+    if vim.api.nvim_get_option_value("buftype", {scope = "local", buf = 0}) == "terminal" then
         vim.cmd.startinsert()
     end
 end, { silent = true, group = "gen", desc = "save, open alt buf" })
@@ -545,8 +548,8 @@ end, { group = "ts", desc = "fuzzy in current buffer" })
 -- diagnostics
 map("n", "<leader>e", vim.diagnostic.open_float, { group = "diag", desc = "show errors" })
 map("n", "<leader>E", vim.diagnostic.setloclist, { group = "diag", desc = "open error list" })
-map("n", "[d", vim.diagnostic.goto_prev, { group = "diag", desc = "previous message" })
-map("n", "]d", vim.diagnostic.goto_next, { group = "diag", desc = "next message" })
+map("n", "[d", function() vim.diagnostic.get_pref() end, { group = "diag", desc = "previous message" })
+map("n", "]d", function() vim.diagnostic.get_next() end, { group = "diag", desc = "next message" })
 
 -- trouble
 -- :help trouble.nvim.txt

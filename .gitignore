@@ -13,3 +13,7 @@ bin/docopts*
 # Neovim sessions
 config/nvim/sessions/**
 !config/nvim/sessions/.gitkeep
+
+# Vale downloads
+config/vale/**
+!config/vale/.vale.ini
