@@ -4,6 +4,9 @@ export BASHRC_SOURCED=$((BASHRC_SOURCED + 1))
 
 # Globals
 export PERSONAL_LAPTOP_USER="ryanfisher"
+export DOTFILES_PREFIX="${HOME}/.dotfiles"
+export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
+export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 
 # Set base Homebrew paths
 if [[ $(uname -m) == "arm64" ]]; then
@@ -11,6 +14,9 @@ if [[ $(uname -m) == "arm64" ]]; then
 else
     eval "$(/usr/local/bin/brew shellenv)"
 fi
+
+# Source dependencies in case this is a non-login shell
+[[ -f "${BASH_D_PATH}/lib.sh" ]] && source "${BASH_D_PATH}/lib.sh"
 
 # ------------------------------------------------
 #  bash
@@ -311,34 +317,13 @@ alias tfva=validate_all_modules
 # ------------------------------------------------
 set +ua
 direnv_path="$(command -v direnv)"
-asdf_direnv_path="${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
 
 if [[ -n "${direnv_path}" ]]; then
-    if [[ -f "${asdf_direnv_path}" ]]; then
-        source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
-    else
-        printf_warning "WARNING: direnv is setup, run \`asdf direnv setup --shell <shell> --version latest\`."
-    fi
+    eval "$(direnv hook zsh)"
 else
-    printf_warning "WARNING: direnv is not installed, run \`asdf install direnv latest\` to install."
+    print_warnining 'direnv does not seem to be installed (`brew install direnv`)'
 fi
 set -ua
-
-# ------------------------------------------------
-# Non-login shells
-# ------------------------------------------------
-# Source profile when aws-vault runs interactive shell
-if [[ -n "${AWS_VAULT:-}" && -z "${AWS_VAULT_LOGIN_SHELL_INITALIZED:-}" ]]; then
-    export AWS_VAULT_LOGIN_SHELL_INITALIZED=1
-
-    if [[ -n "${ZSH_VERSION}" ]]; then
-        # shellcheck disable=SC1090
-        [[ -f "${HOME}/.zprofile" ]] && source ~/.zprofile
-    else
-        # shellcheck disable=SC1090
-        [[ -f "${HOME}/.bash_profile" ]] && source ~/.bash_profile
-    fi
-fi
 
 # ------------------------------------------------
 # fzf Catppuccin theme
@@ -363,8 +348,12 @@ source ~/.dotfiles/config/.termrc
 ASDF_PYAPP_DEFAULT_PYTHON_PATH="${HOME}/.asdf/shims/python"
 
 # Use Starship for my shell prompt
-if [[ -n "${ZSH_VERSION:-}" ]]; then
-    eval "$(starship init zsh)"
+if [[ -n "$(command -v starship)" ]]; then
+    if [[ -n "${ZSH_VERSION:-}" ]]; then
+        eval "$(starship init zsh)"
+    else
+        eval "$(starship init bash)"
+    fi
 else
-    eval "$(starship init bash)"
+    print_warning 'Starship does not seem to be installed: `brew install starship`'
 fi

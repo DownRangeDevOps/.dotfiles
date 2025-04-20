@@ -1,5 +1,3 @@
-local keymap = require("user-keymap")
-
 -- ----------------------------------------------
 -- Install Lazy.nvim (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-installation
@@ -26,8 +24,8 @@ vim.opt.rtp:prepend(lazypath)
 -- ----------------------------------------------
 require("lazy").setup({
     { import = "plugins.util" },
-    { import = "plugins.syntax" },
     { import = "plugins.ui" },
+    { import = "plugins.syntax" },
     { import = "plugins.core" },
     { import = "plugins.colorscheme" },
 }, {
