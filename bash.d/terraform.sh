@@ -12,8 +12,6 @@ if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading config..."
 fi
 
-complete -C "${HOMEBREW_PREFIX}/bin/terraform" terraform
-
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------

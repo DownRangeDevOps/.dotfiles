@@ -43,15 +43,6 @@ function __git_add_completion_to_aliases() {
 }
 __git_add_completion_to_aliases
 
-function __git_wrap_gnuke() {
-    # add git checkout completion
-    declare -f -F __git_func_wrap >/dev/null
-    if [[ -n $? ]]; then
-        __git_func_wrap _git_checkout
-    fi
-}
-complete -o bashdefault -o default -o nospace -F __git_wrap_gnuke gnuke
-
 # ------------------------------------------------
 #  Private
 # ------------------------------------------------

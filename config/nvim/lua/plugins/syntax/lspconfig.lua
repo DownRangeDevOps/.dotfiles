@@ -4,7 +4,7 @@
 -- ----------------------------------------------
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 local keymap = require("user-keymap")
-vim.lsp.set_log_level("debug")
+-- vim.lsp.set_log_level("debug")
 
 -- Language server customizations
 -- help: mason-lspconfig-automatic-server-setup

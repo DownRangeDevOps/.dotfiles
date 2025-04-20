@@ -3,40 +3,44 @@
 -- :help diagnostics.txt
 -- ----------------------------------------------
 
--- Custom diagnostic signs
+-- Custom diagnostic signs with their icons
 local signs = {
-    Error = "",
-    Hint = "",
-    Info = "",
-    Warn = "",
+    [vim.diagnostic.severity.ERROR] = "",
+    [vim.diagnostic.severity.HINT] = "",
+    [vim.diagnostic.severity.INFO] = "",
+    [vim.diagnostic.severity.WARN] = "",
 }
 
-for level, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. level
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
+-- Map severity levels to highlight groups
+local severity_to_hl = {
+    [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+    [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+    [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+    [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+}
 
+-- Configure the diagnostic system
 vim.diagnostic.config({
     underline = false,
-    severity_sort = true,
-    signs = true,
     virtual_text = {
-        source = false, -- bool, "always", "if_many"
+        source = true,
         spacing = 2,
-        prefix = "",
-        format = function(diagnostic)
-            local icon = "●"
-            if diagnostic.severity == vim.diagnostic.severity.ERROR then icon = signs.Error end
-            if diagnostic.severity == vim.diagnostic.severity.HINT then icon = signs.Hint end
-            if diagnostic.severity == vim.diagnostic.severity.INFO then icon = signs.Info end
-            if diagnostic.severity == vim.diagnostic.severity.WARN then icon = signs.Warn end
-
-            return icon .. " " .. diagnostic.message
+        prefix = function(diagnostic)
+            -- Use the icon directly based on severity
+            return signs[diagnostic.severity] or "●"
         end,
     },
+    severity_sort = true,
+    signs = {
+        text = signs,
+        texthl = severity_to_hl,
+        numhl = severity_to_hl
+    },
     float = {
-        source = "always",  -- bool, "always", "if_many"
-        show_header = true,
+        source = true,
+        severity_sort = true,
+        scope = "line",
+        header = nil,
         border = "rounded",
         focusable = false,
     },

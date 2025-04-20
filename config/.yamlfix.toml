@@ -1,20 +1,20 @@
-[yamlfix]
+[tool.yamlfix]
 # Force double quotes for all strings
 quote_type = "double"
 
-# Conform with PEP8 indentation (4 spaces)
 # Maintain the same indentation as in the source file
 indent_mapping = 2
 indent_sequence = 2
 indent_offset = 0
 
 # Maintain same line width as the source (don't wrap)
-line_width = 999
+line_length = 999
 
 # Rules for line breaks
 whitelines = 1
 start_whitelines = 0
 end_whitelines = 0
+section_whitelines = 1
 
 # Always include document start marker
 explicit_start = true
@@ -26,14 +26,15 @@ explicit_end = false
 line_ending = "\n"
 
 # Disable flow style for mappings and sequences
-sequence_style = "block"
-mapping_style = "block"
+sequence_style = false
 
-# Trailing spaces
+# Disallow duplicate keys
+allow_duplicate_keys = false
+
+# Enforce comment style
 comments_require_starting_space = true
 comments_min_spaces_from_content = 2
+comments_whitelines = 1
 
 # Enable preserving key ordering to match yamllint
 preserve_key_ordering = true
-
-# vim ft=confini

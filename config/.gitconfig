@@ -31,6 +31,7 @@
 	commitGraph = true
 	untrackedCache = true
 	fscache = true
+	fsmonitorDaemonTimeout = 1800
 [init]
 	templateDir = ~/.dotfiles/config/git/.git-template
 	defaultBranch = main

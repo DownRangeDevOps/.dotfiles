@@ -1,6 +1,5 @@
 # shellcheck shell=bash
-BASHRC_SOURCED="${BASHRC_SOURCED:-0}"
-export BASHRC_SOURCED=$((BASHRC_SOURCED + 1))
+# .zshrc
 
 # Globals
 export PERSONAL_LAPTOP_USER="ryanfisher"
@@ -8,15 +7,91 @@ export DOTFILES_PREFIX="${HOME}/.dotfiles"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 
-# Set base Homebrew paths
-if [[ $(uname -m) == "arm64" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+# Vale global config
+export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
+export VALE_STYLES_PATH="${HOME}/.dotfiles/config/vale/styles"
+
+# ------------------------------------------------
+# Set up terminal
+# ------------------------------------------------
+
+# shellcheck disable=SC1090
+source ~/.dotfiles/config/.termrc
+
+# History
+export HISTSIZE=500000
+export HISTFILESIZE=500000
+
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+    setopt SHARE_HISTORY            # import old commands, append new, so all sessions have the same hist
+    setopt HIST_IGNORE_ALL_DUPS     # do not put duplicated command into history list
+    setopt HIST_SAVE_NO_DUPS        # omit older duplicates
+    setopt HIST_REDUCE_BLANKS       # remove unnecessary blanks
 else
-    eval "$(/usr/local/bin/brew shellenv)"
+    export HISTCONTROL=ignoreboth:erasedups # don't put duplicate lines in the history
+    shopt -s histappend   # append
+    shopt -s checkwinsize # check the win size after each command and update if necessary
+    history -a            # append
+    history -n            # read new lines and append
 fi
 
+if [[ -z "${ZSH_VERSION:-}" ]]; then
+    # Search history with arrows, up: \e[A, down: \e[B
+    # bind '"\e[A": history-search-backward'
+    # bind '"\e[B": history-search-forward'
+    for direction (up down) {
+        autoload "${direction}-line-or-beginning-search"
+        zle -N "${direction}-line-or-beginning-search"
+        key="${terminfo}[kcu${direction}[1]1]"
+
+        for key ("${key}" "${key/O/[}")
+            bindkey "${key}" "${direction}-line-or-beginning-search"
+    }
+
+    if ((original_buffer_length == 0)); then
+        CURSOR=$#BUFFER
+    fi
+fi
+
+# ------------------------------------------------
+# Set base Homebrew paths
+# ------------------------------------------------
+if [[ -n "$(command -v brew)" ]]; then
+    if [[ $(uname -m) == "arm64" ]]; then
+        # Source brew shellenv but with safer FPATH handling
+        BREW_OUTPUT=$(/opt/homebrew/bin/brew shellenv | grep -v "fpath")
+        eval "$BREW_OUTPUT"
+
+        # Add Homebrew completions to FPATH manually
+        FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
+    else
+        # Source brew shellenv but with safer FPATH handling
+        BREW_OUTPUT=$(/usr/local/bin/brew shellenv | grep -v "fpath")
+        eval "$BREW_OUTPUT"
+
+        # Add Homebrew completions to FPATH manually
+        FPATH="/usr/local/share/zsh/site-functions:$FPATH"
+    fi
+fi
+
+# ------------------------------------------------
+# Load ZSH completion system after setting up FPATH
+# ------------------------------------------------
+autoload -Uz compinit
+compinit
+
+# Make compdef available
+autoload -Uz compdef
+
+# ------------------------------------------------
 # Source dependencies in case this is a non-login shell
+# ------------------------------------------------
 [[ -f "${BASH_D_PATH}/lib.sh" ]] && source "${BASH_D_PATH}/lib.sh"
+
+# ------------------------------------------------
+#  general
+# ------------------------------------------------
+alias fabric="fabric-ai"
 
 # ------------------------------------------------
 #  bash
@@ -80,22 +155,6 @@ alias fr="find_replace"
 alias avv='ansible-vault view'
 
 # ------------------------------------------------
-#  Granted
-# ------------------------------------------------
-alias assume='source $(asdf which assume)'
-
-# ------------------------------------------------
-#  Granted
-# ------------------------------------------------
-
-# ------------------------------------------------
-#  aws vault
-# ------------------------------------------------
-alias av="aws-vault"
-alias ave="aws-vault exec"
-alias avl="aws-vault list"
-
-# ------------------------------------------------
 #  docker
 # ------------------------------------------------
 alias d="docker"
@@ -157,6 +216,77 @@ alias dsp="docker system prune"
 
 # docker compose
 alias dc="docker compose"
+
+# ------------------------------------------------
+#  kubectl
+# ------------------------------------------------
+alias k="kubectl"
+alias kgp="kubectl get pods"
+alias kgpw="kubectl get pods -o wide"
+alias kgpa="kubectl get pods --all-namespaces"
+alias kgd="kubectl get deployments"
+alias kgs="kubectl get services"
+alias kgn="kubectl get nodes"
+alias kgno="kubectl get nodes -o wide"
+alias kgns="kubectl get namespaces"
+alias kcf="kubectl create -f"
+alias kaf="kubectl apply -f"
+alias kdf="kubectl delete -f"
+alias kdp="kubectl describe pod"
+alias kdd="kubectl describe deployment"
+alias kds="kubectl describe service"
+alias kdn="kubectl describe node"
+alias kex="kubectl exec -it"
+alias klo="kubectl logs"
+alias klof="kubectl logs -f"
+alias ked="kubectl edit deployment"
+alias kep="kubectl edit pod"
+alias kdel="kubectl delete"
+alias kpf="kubectl port-forward"
+alias kga="kubectl get all"
+alias kgc="kubectl get configmaps"
+alias kgs="kubectl get secrets"
+alias ktc="kubectl top pod --containers"
+alias ktn="kubectl top nodes"
+alias ktp="kubectl top pods"
+alias ka="kubectl apply"
+
+# Helpers
+alias kpurge="kubectl delete pods --field-selector status.phase=Failed --all-namespaces"
+alias kwatchp="kubectl get pods -o wide --watch"
+alias krolln="kubectl rollout restart deployment"
+alias krh="kubectl rollout history"
+alias krs="kubectl rollout status"
+alias kru="kubectl rollout undo"
+alias ksc="kubectl scale"
+
+# ------------------------------------------------
+#  kubectx & kubens
+# ------------------------------------------------
+alias kx="kubectx"
+alias kxg="kubectx | grep"
+alias kns="kubens"
+alias knsg="kubens | grep"
+alias kcd="kubectx && kubens"  # Change both context and namespace interactively
+alias kctx="kubectx"
+alias ksc="kubectx -c"  # Show current context
+alias ksn="kubens -c"   # Show current namespace
+alias kxd="kubectx docker-desktop"
+alias kxm="kubectx minikube"
+
+# ------------------------------------------------
+#  k9s
+# ------------------------------------------------
+alias k9="k9s"
+alias k9a="k9s --all-namespaces"
+alias k9c="k9s --context"
+alias k9n="k9s --namespace"
+alias k9p="k9s --command pod"
+alias k9d="k9s --command deploy"
+alias k9s="k9s --command svc"
+alias k9h="k9s help"
+alias k9l="k9s info"  # List keyboard shortcuts and available resources
+alias k9r="k9s --readonly"
 
 # ------------------------------------------------
 #  git
@@ -313,15 +443,36 @@ alias tfia=init_all_modules
 alias tfva=validate_all_modules
 
 # ------------------------------------------------
-#  direnv
+#  Granted
 # ------------------------------------------------
-set +ua
-direnv_path="$(command -v direnv)"
+alias assume='source $(asdf which assume)'
 
-if [[ -n "${direnv_path}" ]]; then
-    eval "$(direnv hook zsh)"
-else
-    print_warnining 'direnv does not seem to be installed (`brew install direnv`)'
+# ------------------------------------------------
+# Load antidote
+# ------------------------------------------------
+export ANTIDOTE_HOME="${HOME}/.cache/antidote"
+
+set +ua
+# shellcheck disable=SC1091
+if [[ -n "${ZSH_VERSION:-}" && -f "${HOMEBREW_PREFIX}/opt/antidote/share/antidote/antidote.zsh" ]]; then
+    # Load antidote directly rather than using autoload
+    source "${HOMEBREW_PREFIX}/opt/antidote/share/antidote/antidote.zsh"
+
+    # Set the root name of the plugins files (.txt and .zsh) antidote will use.
+    zsh_plugins="${HOME}/.zsh_plugins"
+
+    # Create a new plugins file if it doesn't exist.
+    if [[ ! -f "${zsh_plugins}.txt" ]]; then
+        touch "${zsh_plugins}.txt"
+    fi
+
+    # Generate a new static file whenever .zsh_plugins.txt is updated.
+    if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
+        antidote bundle <${zsh_plugins}.txt >|${zsh_plugins}.zsh
+    fi
+
+    # Source your static plugins file.
+    source ${zsh_plugins}.zsh
 fi
 set -ua
 
@@ -336,24 +487,25 @@ export FZF_DEFAULT_OPTS=" \
 --color=border:#313244,label:#cdd6f4"
 
 # ------------------------------------------------
-# Externally managed
+# Set up Virtualenv Wrapper
 # ------------------------------------------------
 set +ua
+if type virtualenvwrapper.sh &>/dev/null; then
+    export WORKON_HOME="${HOME}/.virtualenvs"
+    VIRTUALENVWRAPPER_PYTHON="$(asdf which python)"
+    export VIRTUALENVWRAPPER_PYTHON
+    export VIRTUALENVWRAPPER_VIRTUALENV="${HOMEBREW_PREFIX}/bin/virtualenv"
+    export VIRTUALENVWRAPPER_VIRTUALENV_ARGS="--no-site-packages"
+    export VIRTUALENVWRAPPER_HOOK_DIR="${HOME}/.virtualenvs/bin"
 
-# shellcheck disable=SC1090
-source ~/.dotfiles/config/.termrc
-
-# Enable ASDF
-"${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
-ASDF_PYAPP_DEFAULT_PYTHON_PATH="${HOME}/.asdf/shims/python"
-
-# Use Starship for my shell prompt
-if [[ -n "$(command -v starship)" ]]; then
-    if [[ -n "${ZSH_VERSION:-}" ]]; then
-        eval "$(starship init zsh)"
-    else
-        eval "$(starship init bash)"
-    fi
+    source "${HOMEBREW_PREFIX}/bin/virtualenvwrapper.sh"
 else
-    print_warning 'Starship does not seem to be installed: `brew install starship`'
+    # shellcheck disable=SC2016
+    printf_warning 'virtualenv does not not seem to be installed (`brew install virtualenv virtualenvwrapper`)'
 fi
+set -ua
+
+# Unset strict options, we only care about our code
+set +ua
+
+# vim: ft=zsh

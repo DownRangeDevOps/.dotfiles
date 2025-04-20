@@ -14,27 +14,10 @@ fi
 
 export BETTER_EXCEPTIONS=1 # python better exceptions
 export PTPYTHON_CONFIG_HOME="${HOME}/.config/ptpython/"
-export PYENV_ROOT="${HOMEBREW_PREFIX}/bin/pyenv"
 
 # Pipx
 export PIPX_DEFAULT_PYTHON="${HOME}/.asdf/shims/python"
-
-function pipx() { # TODO: make lazy auto-completion loader
-    if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Initializing pipx completions..."
-    fi
-
-    unset -f pipx
-
-    eval "$(register-python-argcomplete pipx)" # bash auto-completion
-
-    command pipx "$@"
-}
-
-# Virtualenv/Wrapper
-export WORKON_HOME="${HOME}/.virtualenvs"
-export VIRTUALENVWRAPPER_PYTHON="${HOME}/.asdf/shims/python"
-export VIRTUALENVWRAPPER_VIRTUALENV="${HOME}/.local/bin/virtualenv"
+eval "$(register-python-argcomplete --shell zsh pipx)" # auto-completion
 
 # ------------------------------------------------
 #  overloads
@@ -50,12 +33,6 @@ export VIRTUALENVWRAPPER_VIRTUALENV="${HOME}/.local/bin/virtualenv"
 if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
 fi
-
-function __get_virtualenv_name() {
-    if [[ ${VIRTUAL_ENV:-} ]]; then
-        printf "%s\n" "$(basename "$VIRTUAL_ENV")"
-    fi
-}
 
 # Megalinter helper
 function run_mega_linter_python() {
