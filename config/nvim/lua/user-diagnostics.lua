@@ -5,10 +5,11 @@
 
 -- Custom diagnostic signs with their icons
 local signs = {
-    [vim.diagnostic.severity.ERROR] = "",
+    [vim.diagnostic.severity.ERROR] = "",
     [vim.diagnostic.severity.HINT] = "",
-    [vim.diagnostic.severity.INFO] = "",
-    [vim.diagnostic.severity.WARN] = "",
+    [vim.diagnostic.severity.INFO] = "",
+    [vim.diagnostic.severity.WARN] = "",
+
 }
 
 -- Map severity levels to highlight groups
@@ -22,15 +23,14 @@ local severity_to_hl = {
 -- Configure the diagnostic system
 vim.diagnostic.config({
     underline = false,
+    severity_sort = true,
     virtual_text = {
         source = true,
         spacing = 2,
         prefix = function(diagnostic)
-            -- Use the icon directly based on severity
             return signs[diagnostic.severity] or "●"
         end,
     },
-    severity_sort = true,
     signs = {
         text = signs,
         texthl = severity_to_hl,

@@ -113,10 +113,10 @@ return {
         config = function()
             require("mini.misc").setup()
 
-            local MiniMisc = require("mini.misc")
+            local misc = require("mini.misc")
 
-            MiniMisc.setup_auto_root({ ".git", "Makefile" }) -- id root dir
-            MiniMisc.setup_restore_cursor({
+            misc.setup_auto_root(MISC_PROJECT_MARKERS)
+            misc.setup_restore_cursor({
                 center = true,
                 ignore_filetype = { "gitcommit", "gitrebase" }
             })

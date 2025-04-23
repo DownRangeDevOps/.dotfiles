@@ -1,6 +1,3 @@
--- local conf = require("config")
-local keymap = require("user-keymap")
-
 -- ----------------------------------------------
 -- Auto-command Groups
 -- ----------------------------------------------
@@ -8,38 +5,30 @@ local nvim = vim.api.nvim_create_augroup("NVIM", { clear = true })
 local ui = vim.api.nvim_create_augroup("UI", { clear = true })
 local user = vim.api.nvim_create_augroup("USER", { clear = true })
 local plugin = vim.api.nvim_create_augroup("PLUGIN", { clear = true })
+local easy_quit_group = vim.api.nvim_create_augroup("EasyQuit", { clear = true })
 
--- ----------------------------------------------
--- Plugins
--- ----------------------------------------------
--- setup nested comments on attach
-vim.api.nvim_create_autocmd("BufEnter", {
-    group = plugin,
-    pattern = "*",
-    callback = function()
-        pcall(require('mini.misc').use_nested_comments)
-    end,
-})
 
 -- ----------------------------------------------
 -- Neovim
 -- ----------------------------------------------
+-- auto-reload from disk
 vim.api.nvim_create_autocmd({"CursorHold", "FocusGained"}, {
     group = nvim,
     pattern = "*",
     callback = function()
         if vim.fn.mode ~= "c" then
-            vim.cmd.checktime() -- auto-reload from disk
+            vim.cmd.checktime()
         end
     end
 })
 
+-- Warn when a file was changed outside of nvim
+local notify = require("notify")
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
     group = nvim,
     pattern = "*",
     callback = function()
-        vim.cmd.echohl("WarningMsg File changed on disk. Buffer reloaded.")
-        vim.defer_fn(function() vim.cmd.echohl("None") end, 750)
+        notify("WarningMsg File changed on disk. Buffer reloaded.", "warn")
     end
 })
 
@@ -53,16 +42,18 @@ vim.api.nvim_create_autocmd("VimEnter", {
         -- set by .envrc
         local session_file_path = vim.env.NVIM_SESSION_FILE_PATH
 
+        -- Ensure the session path and file exist and are readable
         if session_file_path then
             local session_dir = session_file_path:match("(.*/)")
 
             if session_dir and vim.fn.isdirectory(session_dir) == 0 then
                 os.execute("mkdir --parents " .. session_dir)
+                os.execute("touch " .. session_file_path)
+            end
 
-                if vim.fn.filereadable(session_file_path) == 0 then
-                    os.execute("rm -rf" .. session_file_path)
-                    os.execute("touch " .. session_file_path)
-                end
+            if vim.fn.filereadable(session_file_path) == 0 then
+                os.execute("rm -rf" .. session_file_path)
+                os.execute("touch " .. session_file_path)
             end
 
             vim.cmd("silent Obsession " .. session_file_path)
@@ -71,14 +62,20 @@ vim.api.nvim_create_autocmd("VimEnter", {
 })
 
 -- ----------------------------------------------
+-- Plugins
+-- ----------------------------------------------
+-- setup nested comments on attach
+vim.api.nvim_create_autocmd('BufEnter', { callback = function() MiniMisc.use_nested_comments() end })
+
+-- ----------------------------------------------
 -- UI
 -- ----------------------------------------------
--- Set cursorline when search highlight is active
+-- Show cursorline when search highlight is active
 vim.api.nvim_create_autocmd({ "CursorMoved" }, {
     group = ui,
     pattern = "*",
     callback = function()
-        if vim.opt.hlsearch:get() then
+        if vim.v.hlsearch == 1 then
             vim.opt.cursorlineopt = "both"
         else
             vim.opt.cursorlineopt = "number"
@@ -107,7 +104,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         ".bashrc",
     },
     callback = function()
-        vim.cmd.set("ft=sh")
+        vim.opt.filetype = "sh"
     end
 })
 
@@ -133,23 +130,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end
 })
 
--- helm
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-    group = ui,
-    pattern = {
-        "*/templates/*.yaml",
-        "*/templates/*.tpl",
-        "*.gotmpl",
-        "helmfile*.yaml",
-        "*.helm.yaml",
-    },
-    callback = function()
-        vim.cmd.set("ft=helm")
-        vim.cmd.setlocal([[commentstring={{/*\ %s\ */}}]])
-    end,
-})
-
-
 -- terraform
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
@@ -159,19 +139,10 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end,
 })
 
--- terraform vars
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    group = ui,
-    pattern = "terraform-vars",
-    callback = function()
-        vim.treesitter.start(0, "hcl")
-    end,
-})
-
 -- files that use tab indentation
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
-    pattern = { "gitconfig", "terminfo" },
+    pattern = { "gitconfig", "terminfo", "make", "cmake" },
     callback = function()
         vim.bo.expandtab = false
         vim.wo.listchars = table.concat({
@@ -184,6 +155,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end
 })
 
+-- Start in insert mode when opening a terminal (:term)
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
     pattern = "term",
@@ -221,7 +193,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
             vrenumber  = { mode = "v", lhs  = "gN",       rhs = function() vim.cmd("RenumberSelection") end,   opts = { group = "list", desc = "bullets renumber" } },
         }
 
-        if vim.g.bullets_enabled_file_types_tbl[vim.api.nvim_buf_get_option(0, "filetype")] then
+        if vim.g.bullets_enabled_file_types_tbl[vim.api.nvim_get_option_value("filetype", { buf = 0 })] then
             for _, value in pairs(bullets_mappings) do
                 vim.keymap.set(value["mode"], value["lhs"], value["rhs"], value["opts.desc"])
             end
@@ -233,30 +205,98 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     end
 })
 
--- Overpower some buffers
-vim.api.nvim_create_autocmd({ "WinEnter" }, {
-    group = user,
-    pattern = "*",
-    callback = function()
-        local bufnr = vim.fn.bufnr()
+-- ----------------------------------------------
+-- Easy Quit with q
+-- ----------------------------------------------
+-- Easy quit filetypes
+local quit_filetypes = {
+  "help",
+  "qf",
+  "man",
+  "checkhealth",
+  "lspinfo"
+}
 
-        if bufnr then
-            keymap.snap(bufnr)
-        end
+-- Easy quit buffer types
+local quit_buftypes = {
+  "prompt",
+  "quickfix",
+  "nofile"
+}
+
+-- Filetypes
+vim.api.nvim_create_autocmd("FileType", {
+  group = easy_quit_group,
+  pattern = quit_filetypes,
+  callback = function(args)
+    local bufnr = args.buf
+
+    -- For prompt buffers, always enable the q mapping
+    if vim.bo[bufnr].buftype == "prompt" then
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
+        noremap = true,
+        silent = true,
+        desc = "Close buffer with q"
+      })
+      return
     end
+
+    -- For other buffer types, only set the mapping if buffer is not modifiable and readonly
+    if not vim.bo[bufnr].modifiable and vim.bo[bufnr].readonly then
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
+        noremap = true,
+        silent = true,
+        desc = "Close buffer with q"
+      })
+    end
+  end
+})
+
+-- Buffer types
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = easy_quit_group,
+  callback = function(args)
+    local bufnr = args.buf
+    local buftype = vim.bo[bufnr].buftype
+
+    if not vim.tbl_contains(quit_buftypes, buftype) then
+      return
+    end
+
+    -- For prompt buffers, always enable the q mapping
+    if buftype == "prompt" then
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
+        noremap = true,
+        silent = true,
+        desc = "Close buffer with q"
+      })
+      return
+    end
+
+    -- For other buffer types, only set the mapping if buffer is not modifiable and readonly
+    if not vim.bo[bufnr].modifiable and vim.bo[bufnr].readonly then
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
+        noremap = true,
+        silent = true,
+        desc = "Close buffer with q"
+      })
+    end
+  end
 })
 
 -- ----------------------------------------------
--- Plugins
+-- Linting
 -- ----------------------------------------------
+-- Action lint, only run on yaml files under the `.github/` directory
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     group = plugin,
-    pattern = ".github/*/*", -- only run on YAML files in the `.github` dir
+    pattern = {"*.yaml", "*.yml"},
     callback = function()
-        local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+        local modifiable = vim.api.nvim_get_option_value("modifiable", { buf = 0})
         local filename = vim.api.nvim_buf_get_name(0)
+        local filepath = vim.fn.expand("%:p")
 
-        if modifiable and #filename > 0 then
+        if modifiable and #filename > 0 and string.match(filepath, "%.github/") then
             local lint = require("lint")
 
             lint.linters.actionlint.args = { "-config-file", ".github/actionlint.yml" }
@@ -265,11 +305,27 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     end
 })
 
+-- .env, .envrc
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+    group = plugin,
+    pattern = {"*.env", "*.envrc" },
+    callback = function()
+        local modifiable = vim.api.nvim_get_option_value("modifiable", { buf = 0})
+        local filename = vim.api.nvim_buf_get_name(0)
+
+        if modifiable and #filename > 0 then
+            local lint = require("lint")
+
+            lint.try_lint("dotenv-linter")
+        end
+    end
+})
+
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     group = plugin,
     pattern = "*",
     callback = function()
-        local modifiable = vim.api.nvim_buf_get_option(0, "modifiable")
+        local modifiable = vim.api.nvim_get_option_value("modifiable", { buf = 0 })
         local filename = vim.api.nvim_buf_get_name(0)
 
         if modifiable and #filename > 0 then
@@ -315,19 +371,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
             vim.wo.number = true
             vim.wo.relativenumber = true
         end
-    end
-})
-
--- Git commit messages
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    group = ui,
-    pattern = { "gitcommit" },
-    callback = function()
-        vim.wo.colorcolumn = ""
-        vim.wo.list = true
-        vim.wo.number = true
-        vim.wo.relativenumber = true
-        vim.wo.spell = true
     end
 })
 

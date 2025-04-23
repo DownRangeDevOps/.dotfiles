@@ -78,48 +78,6 @@ local function map(mode, lhs, rhs, opts)
 end
 M.map = map
 
--- You should have gone for the head...
-local function thanos_snap(bufnr)
-    local modifiable = vim.api.nvim_buf_get_option(bufnr, "modifiable")
-    local readonly = vim.api.nvim_buf_get_option(bufnr, "readonly")
-    local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
-    local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
-
-    -- file types
-    local the_unfortunate = {
-        "help",
-        "qf",
-        "man",
-        "checkhouth",
-        "lspinfo",
-        "checkhealth"
-    }
-
-    -- buf types
-    local the_disgraced = {
-        "quickfix",
-        "prompt",
-        "nofile"
-    }
-
-    local snap_while_wearing_a_gauntlet = function()
-        map("n", "q", ":quit",
-            { buffer = bufnr, group = "gui", desc = "don't @ me" })
-    end
-
-    if bufnr then
-        if buftype == "prompt" then
-            snap_while_wearing_a_gauntlet()
-        else
-            if not modifiable and readonly and (the_unfortunate[filetype] or the_disgraced[buftype]) then
-                snap_while_wearing_a_gauntlet()
-            end
-        end
-    end
-end
-
-M.snap = thanos_snap
-
 -- ----------------------------------------------
 -- Keymaps
 -- ----------------------------------------------
@@ -335,7 +293,7 @@ map("n", "<leader>mx", function()
         vim.cmd.echoerr('"' .. vim.fn.expand("%") .. ' is not a file"')
     end
 end, { group = "file", desc = "make file +x" })
-map("n", "<leader>fr", function() MiniMisc.find_root(0, { ".git", "Makefile"}) end, { group = "file", desc = "find project root"})
+map("n", "<leader>fr", function() MiniMisc.find_root(0, MISC_PROJECT_MARKERS) end, { group = "file", desc = "find project root"})
 
 -- Harpoon (https://github.com/ThePrimeagen/harpoon)
 -- :help harpoon
@@ -513,7 +471,7 @@ map("n", "<leader>?", function() require("telescope.builtin").oldfiles() end, { 
 map("n", "<leader>fm", function() require("telescope.builtin").man_pages() end, { group = "ts", desc = "fuzzy manpage" })
 map("n", "<leader>ff", function()
     local opts = {
-        cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
+        cwd = require("mini.misc").find_root(0, MISC_PROJECT_MARKERS),
         hidden = true,
         no_ignore = true
     }
@@ -525,7 +483,7 @@ end, { group = "ts", desc = "fuzzy files" })
 map("n", "<leader>fh", function() require("telescope.builtin").help_tags() end, { group = "ts", desc = "fuzzy help" })
 map("n", "<leader>rg", function()
     local opts = {
-        cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
+        cwd = require("mini.misc").find_root(0, MISC_PROJECT_MARKERS),
         grep_open_files = false,
     }
 
@@ -533,7 +491,7 @@ map("n", "<leader>rg", function()
 end, { group = "ts", desc = "ripgrep" })
 map("n", "<leader>fw", function()
     local opts = {
-        cwd = require("mini.misc").find_root(0, { ".git", "Makefile" }),
+        cwd = require("mini.misc").find_root(0, MISC_PROJECT_MARKERS),
         hidden = true,
         no_ignore = true,
     }
