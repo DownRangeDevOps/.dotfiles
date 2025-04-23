@@ -2,13 +2,25 @@
 -- nvim-notify (https://github.com/rcarriga/nvim-notify)
 -- :help Notify
 -- ----------------------------------------------
+-- Abstract the configuration as it's used twice
+local options = {
+    render = "compact",
+    stages = "fade_in_slide_out",
+    timeout = "3000", -- 3 seconds
+    top_down = false,
+}
+
 return {
     "rcarriga/nvim-notify",
     lazy = false,
+    opt = options,
     init = function()
         local notify = require("notify")
-        vim.notify = notify
+        notify.setup(options)
+        vim.notify = notify -- Override the default Vim notification with nvim-notify
 
+
+        -- Override vim.print to use nvim-notify
         print = function(...)
             local print_safe_args = {}
             local _ = { ... }

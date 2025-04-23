@@ -170,10 +170,48 @@ vim.o.spelllang = "en_us"
 -- ----------------------------------------------
 vim.lsp.set_log_level("off")
 
-local script_path = function()
-    local str = debug.getinfo(2, "S").source:sub(2)
-    return str:match("(.*/)")
-end
-M.script_path = script_path()
+-- Globals file markers for `mini.misc` project root helpers
+MISC_PROJECT_MARKERS = {
+    ".git", -- Handles both repositories and worktrees
 
-return M
+    -- DevOps tools I commonly use
+    ".pre-commit-config.yaml",
+    ".tool-versions", -- asdf version manager
+
+    -- CI/CD
+    ".github/workflows",
+    ".gitlab-ci.yml",
+
+    -- Python projects
+    "pyproject.toml",
+    "poetry.lock",
+
+    -- Golang projects
+    "go.mod",
+}
+
+-- Global fallback function for `mini.misc` project root helpers
+function MISC_FALLBACK()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local current_file = vim.api.nvim_buf_get_name(bufnr)
+
+  -- If current buffer has no name, use current working directory
+  if current_file == "" then
+    return vim.fn.getcwd()
+  end
+
+  -- Otherwise return the directory of the current file
+  return vim.fn.fnamemodify(current_file, ":h")
+end
+
+-- ----------------------------------------------
+-- Helpers
+-- ----------------------------------------------
+-- Get the current script's path for use in plugins
+-- local script_path = function()
+--     local str = debug.getinfo(2, "S").source:sub(2)
+--     return str:match("(.*/)")
+-- end
+-- M.script_path = script_path()
+--
+-- return M
