@@ -41,7 +41,12 @@ else
 fi
 
 # ------------------------------------------------
-# Set up terminal
+#  vale
+# ------------------------------------------------
+export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
+
+# ------------------------------------------------
+# fzf Catppuccin theme
 # ------------------------------------------------
 
 # shellcheck disable=SC1090
