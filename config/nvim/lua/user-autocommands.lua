@@ -12,7 +12,7 @@ local easy_quit_group = vim.api.nvim_create_augroup("EasyQuit", { clear = true }
 -- Neovim
 -- ----------------------------------------------
 -- auto-reload from disk
-vim.api.nvim_create_autocmd({"CursorHold", "FocusGained"}, {
+vim.api.nvim_create_autocmd({ "CursorHold", "FocusGained" }, {
     group = nvim,
     pattern = "*",
     callback = function()
@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- Plugins
 -- ----------------------------------------------
 -- setup nested comments on attach
-vim.api.nvim_create_autocmd('BufEnter', { callback = function() MiniMisc.use_nested_comments() end })
+vim.api.nvim_create_autocmd('BufEnter', { callback = function() require("mini.misc").use_nested_comments() end })
 
 -- ----------------------------------------------
 -- UI
@@ -111,7 +111,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 -- git commit message
 vim.api.nvim_create_autocmd({ "FileType" }, {
     group = ui,
-    pattern = {"COMMIT_EDITMSG", "gitcommit"},
+    pattern = { "COMMIT_EDITMSG", "gitcommit" },
     callback = function()
         vim.wo.colorcolumn = "72"
         vim.wo.list = true
@@ -173,24 +173,34 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     pattern = "*",
     callback = function()
         local bullets_mappings = {
-            promote = { mode = "i", lhs = "<C-d>", rhs = function()
-                vim.cmd("BulletPromote")
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-o>$", true, false, true), "n", false)
-                vim.api.nvim_feedkeys(" ", "i", true)
-            end, opts = { group = "list", desc = "bullets promote" } },
-            demote = { mode = "i", lhs = "<C-t>", rhs = function()
-                vim.cmd("BulletDemote")
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-o>$", true, false, true), "n", false)
-                vim.api.nvim_feedkeys(" ", "i", true)
-            end, opts = { group = "list", desc = "bullets demote" } },
+            promote    = {
+                mode = "i",
+                lhs = "<C-d>",
+                rhs = function()
+                    vim.cmd("BulletPromote")
+                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-o>$", true, false, true), "n", false)
+                    vim.api.nvim_feedkeys(" ", "i", true)
+                end,
+                opts = { group = "list", desc = "bullets promote" }
+            },
+            demote     = {
+                mode = "i",
+                lhs = "<C-t>",
+                rhs = function()
+                    vim.cmd("BulletDemote")
+                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-o>$", true, false, true), "n", false)
+                    vim.api.nvim_feedkeys(" ", "i", true)
+                end,
+                opts = { group = "list", desc = "bullets demote" }
+            },
 
-            vpromote   = { mode = "v", lhs  = "<C-d>",    rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },
-            vdemote    = { mode = "v", lhs  = "<C-t>",    rhs = function() vim.cmd("BulletDemoteVisual") end,  opts = { group = "list", desc = "bullets demote" } },
-            enter      = { mode = "i", lhs = "<CR>",      rhs = function() vim.cmd("InsertNewBullet") end,     opts = { group = "list", desc = "bullets newline" } },
-            checkbliox = { mode = "n", lhs = "<leader>x", rhs = function() vim.cmd("ToggleCheckbox") end,      opts = { group = "list", desc = "bullets toggle checkbox" } },
-            openline   = { mode = "n", lhs = "o",         rhs = function() vim.cmd("InsertNewBullet") end,     opts = { group = "list", desc = "bullets newline" } },
-            renumber   = { mode = "n", lhs = "gN",        rhs = function() vim.cmd("RenumberList") end,        opts = { group = "list", desc = "bullets renumber" } },
-            vrenumber  = { mode = "v", lhs  = "gN",       rhs = function() vim.cmd("RenumberSelection") end,   opts = { group = "list", desc = "bullets renumber" } },
+            vpromote   = { mode = "v", lhs = "<C-d>", rhs = function() vim.cmd("BulletPromoteVisual") end, opts = { group = "list", desc = "bullets promote" } },
+            vdemote    = { mode = "v", lhs = "<C-t>", rhs = function() vim.cmd("BulletDemoteVisual") end, opts = { group = "list", desc = "bullets demote" } },
+            enter      = { mode = "i", lhs = "<CR>", rhs = function() vim.cmd("InsertNewBullet") end, opts = { group = "list", desc = "bullets newline" } },
+            checkbliox = { mode = "n", lhs = "<leader>x", rhs = function() vim.cmd("ToggleCheckbox") end, opts = { group = "list", desc = "bullets toggle checkbox" } },
+            openline   = { mode = "n", lhs = "o", rhs = function() vim.cmd("InsertNewBullet") end, opts = { group = "list", desc = "bullets newline" } },
+            renumber   = { mode = "n", lhs = "gN", rhs = function() vim.cmd("RenumberList") end, opts = { group = "list", desc = "bullets renumber" } },
+            vrenumber  = { mode = "v", lhs = "gN", rhs = function() vim.cmd("RenumberSelection") end, opts = { group = "list", desc = "bullets renumber" } },
         }
 
         if vim.g.bullets_enabled_file_types_tbl[vim.api.nvim_get_option_value("filetype", { buf = 0 })] then
@@ -210,78 +220,82 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
 -- ----------------------------------------------
 -- Easy quit filetypes
 local quit_filetypes = {
-  "help",
-  "qf",
-  "man",
-  "checkhealth",
-  "lspinfo"
+    "help",
+    "qf",
+    "man",
+    "checkhealth",
+    "lspinfo"
 }
 
 -- Easy quit buffer types
 local quit_buftypes = {
-  "prompt",
-  "quickfix",
-  "nofile"
+    "prompt",
+    "quickfix",
+    "nofile"
 }
 
 -- Filetypes
 vim.api.nvim_create_autocmd("FileType", {
-  group = easy_quit_group,
-  pattern = quit_filetypes,
-  callback = function(args)
-    local bufnr = args.buf
+    group = easy_quit_group,
+    pattern = quit_filetypes,
+    callback = function(args)
+        local bufnr = args.buf
 
-    -- For prompt buffers, always enable the q mapping
-    if vim.bo[bufnr].buftype == "prompt" then
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
-        noremap = true,
-        silent = true,
-        desc = "Close buffer with q"
-      })
-      return
-    end
+        -- For prompt buffers, always enable the q mapping
+        if vim.bo[bufnr].buftype == "prompt" then
+            vim.keymap.set("n", "q", vim.cmd.quit, {
+                buffer = bufnr,
+                noremap = true,
+                silent = true,
+                desc = "Close buffer with q"
+            })
+            return
+        end
 
-    -- For other buffer types, only set the mapping if buffer is not modifiable and readonly
-    if not vim.bo[bufnr].modifiable and vim.bo[bufnr].readonly then
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
-        noremap = true,
-        silent = true,
-        desc = "Close buffer with q"
-      })
+        -- For other buffer types, only set the mapping if buffer is not modifiable and readonly
+        if not vim.bo[bufnr].modifiable and vim.bo[bufnr].readonly then
+            vim.keymap.set("n", "q", vim.cmd.quit, {
+                buffer = bufnr,
+                noremap = true,
+                silent = true,
+                desc = "Close buffer with q"
+            })
+        end
     end
-  end
 })
 
 -- Buffer types
 vim.api.nvim_create_autocmd("BufEnter", {
-  group = easy_quit_group,
-  callback = function(args)
-    local bufnr = args.buf
-    local buftype = vim.bo[bufnr].buftype
+    group = easy_quit_group,
+    callback = function(args)
+        local bufnr = args.buf
+        local buftype = vim.bo[bufnr].buftype
 
-    if not vim.tbl_contains(quit_buftypes, buftype) then
-      return
-    end
+        if not vim.tbl_contains(quit_buftypes, buftype) then
+            return
+        end
 
-    -- For prompt buffers, always enable the q mapping
-    if buftype == "prompt" then
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
-        noremap = true,
-        silent = true,
-        desc = "Close buffer with q"
-      })
-      return
-    end
+        -- For prompt buffers, always enable the q mapping
+        if buftype == "prompt" then
+            vim.keymap.set("n", "q", vim.cmd.quit, {
+                buffer = bufnr,
+                noremap = true,
+                silent = true,
+                desc = "Close buffer with q"
+            })
+            return
+        end
 
-    -- For other buffer types, only set the mapping if buffer is not modifiable and readonly
-    if not vim.bo[bufnr].modifiable and vim.bo[bufnr].readonly then
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "q", vim.cmd.quit, {
-        noremap = true,
-        silent = true,
-        desc = "Close buffer with q"
-      })
+        -- For other buffer types, only set the mapping if buffer is not modifiable and readonly
+        if not vim.bo[bufnr].modifiable and vim.bo[bufnr].readonly then
+            vim.keymap.set("n", "q", vim.cmd.quit, {
+                buffer = bufnr,
+                noremap = true,
+                silent = true,
+                desc = "Close buffer with q"
+            })
+        end
     end
-  end
 })
 
 -- ----------------------------------------------
@@ -290,9 +304,9 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- Action lint, only run on yaml files under the `.github/` directory
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     group = plugin,
-    pattern = {"*.yaml", "*.yml"},
+    pattern = { "*.yaml", "*.yml" },
     callback = function()
-        local modifiable = vim.api.nvim_get_option_value("modifiable", { buf = 0})
+        local modifiable = vim.api.nvim_get_option_value("modifiable", { buf = 0 })
         local filename = vim.api.nvim_buf_get_name(0)
         local filepath = vim.fn.expand("%:p")
 
@@ -308,9 +322,9 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 -- .env, .envrc
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     group = plugin,
-    pattern = {"*.env", "*.envrc" },
+    pattern = { "*.env", "*.envrc" },
     callback = function()
-        local modifiable = vim.api.nvim_get_option_value("modifiable", { buf = 0})
+        local modifiable = vim.api.nvim_get_option_value("modifiable", { buf = 0 })
         local filename = vim.api.nvim_buf_get_name(0)
 
         if modifiable and #filename > 0 then

@@ -46,11 +46,8 @@ fi
 export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
 
 # ------------------------------------------------
-# fzf Catppuccin theme
+# Interactive terminal configuration
 # ------------------------------------------------
-
-# shellcheck disable=SC1090
-source ~/.dotfiles/config/.termrc
 
 # History
 export HISTSIZE=500000
@@ -88,7 +85,11 @@ if [[ -z "${ZSH_VERSION:-}" ]]; then
 fi
 
 # Source Homebrew GitHub token
-if [[ -n "${PERSONAL_LAPTOP_USER:-}" && -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then source ~/.bash_secrets; fi
+if [[ -n "${PERSONAL_LAPTOP_USER:-}" && -d "/Users/${PERSONAL_LAPTOP_USER}" ]]; then
+    if [[ -f "${HOME}/.secrets" ]]; then
+        source "${HOME}/.secrets"
+    fi
+fi
 
 # Disable strictness, below here is all external code
 set +ua
