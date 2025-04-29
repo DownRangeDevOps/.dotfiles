@@ -5,12 +5,6 @@ if [[ -n "${DEBUG:-}" ]]; then
     log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
 fi
 
-# Doing this here so that the paths are not placed in front of everything in `set_path`
-if [[ -n ${HOMEBREW_PREFIX} && -n "$(command -v gcloud)" ]]; then
-    source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.zsh.inc" # gcloud completions
-    source "${HOMEBREW_PREFIX}/google-cloud-sdk/path.zsh.inc"             # add gcloud bins to path
-fi
-
 function set_path() {
     if [[ -n "${DEBUG:-}" ]]; then
         log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Resetting \$PATH"

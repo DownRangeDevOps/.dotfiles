@@ -1,0 +1,6 @@
+[alias]
+	push = push --signed
+	status = status --branch
+	stash = stash --all
+
+# vim: ft=gitconfig

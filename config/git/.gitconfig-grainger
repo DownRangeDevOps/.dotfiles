@@ -3,5 +3,17 @@
     signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGNwmFMT1LMa0GpaJDSTwY57bTt4LBtbiMVqDfubS9WW
 [gpg "ssh"]
 	allowedSignersFile = ~/.dotfiles/config/git/.gitconfig-signers-grainger
+[maintenance]
+	auto = true
+	strategy = incremental
+	repo = /Users/xjxf277/Grainger/work/dbx/admin/main
+	repo = /Users/xjxf277/Grainger/work/dbx/data/alt
+	repo = /Users/xjxf277/Grainger/work/dbx/data/main
+	repo = /Users/xjxf277/Grainger/work/dbx/unity/main
+	repo = /Users/xjxf277/Grainger/work/dbx/infra/main
+	repo = /Users/xjxf277/.dotfiles
+	repo = /Users/xjxf277/Dev/Reference/Example-Ops
+	repo = /Users/xjxf277/Grainger/work/model-serving/main
+	repo = /Users/xjxf277/Grainger/work/hackathon/danswer/main
 
 # vi: ft=gitconfig

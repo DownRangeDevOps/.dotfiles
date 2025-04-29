@@ -55,6 +55,61 @@ safe_source "${CONFIG_FILES_PREFIX}/.zaliases"
 # log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Done, .bash_profile loaded."
 
 # ------------------------------------------------
+# Set key repeat settings
+# ------------------------------------------------
+# Set key repeat rate (lower = faster, 1 is fastest)
+defaults write NSGlobalDomain KeyRepeat -int 1
+
+# Set delay until repeat begins (lower = shorter delay, 10 is shortest)
+defaults write NSGlobalDomain InitialKeyRepeat -int 10
+
+# ------------------------------------------------
+# Symlink dofiles
+# ------------------------------------------------
+LN_ARGS=(-s -f -v)
+if [[ -f "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/ln" ]]; then
+    LN_ARGS+=(-r)
+fi
+
+DOTFILES=(
+    .default-gems
+    .default-python-packages
+    .editorconfig
+    .gemrc
+    .gitconfig
+    .inputrc
+    .jshintrc
+    .markdownlint.yaml
+    .terraformrc
+    .tmux.conf
+    .tool-versions
+    .yamlfix.toml
+    .zaliases
+    .zprofile
+    .zsh_plugins.txt
+    .zshenv
+    .zshrc
+)
+
+for file in "${DOTFILES[@]}"; do
+    if [[ -n "${HOME}/${file}" ]];
+        ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/${file}" "${HOME}/"
+    fi
+done
+
+# ------------------------------------------------
+#  Terminal
+# ------------------------------------------------
+if [[ -d "${HOME}/.dotfiles/config/.terminfo" ]];
+    mkdir --parents "${HOME}/.local/share/terminfo"
+    mv --force "${HOME}/.dotfiles/config/.terminfo/*" "${HOME}/.local/share/terminfo/"
+fi
+
+# Use my terminfo
+export TERMINFO=~/.local/share/terminfo
+export TERMINFO_DIRS=~/.local/share/terminfo
+
+# ------------------------------------------------
 # fzf Catppuccin theme
 # ------------------------------------------------
 export FZF_DEFAULT_OPTS=" \
