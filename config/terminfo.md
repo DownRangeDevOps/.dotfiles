@@ -10,18 +10,18 @@ infocmp -x iterm2 > iterm2.terminfo
 Edit files, add: `Smulx=\E[4:%p1%dm,` after `smul` capability
 
 ```sh
-tic -x xterm256color.terminfo
-tic -x tmux-256color.terminfo
-tic -x iterm2.terminfo
+mkdir --parents "${HOME}/.terminfo"
+tic -xs -o "${HOME}/.terminfo" xterm256color.terminfo
+tic -xs -o "${HOME}/.terminfo" tmux-256color.terminfo
+tic -xs -o "${HOME}/.terminfo" iterm2.terminfo
 ```
 
 Add to .bash_profile or whatever your login shell sources on start
 
 ```sh
-# Use my ncurses and terminfo
+# Use my ncurses and terminfo (done by `path.sh`)
 export PATH="${HOMEBREW_PREFIX}/opt/ncurses/bin:$PATH"
-export TERMINFO=~/.local/share/terminfo
-export TERMINFO_DIRS=~/.local/share/terminfo
+export TERMINFO_DIRS="${HOME}/.terminfo:${TERMINFO_DIRS-/usr/share/terminfo}"
 ```
 
 Neovim config

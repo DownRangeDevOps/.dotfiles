@@ -66,7 +66,7 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 10
 # ------------------------------------------------
 # Symlink dofiles
 # ------------------------------------------------
-LN_ARGS=(-s -f -v)
+LN_ARGS=(-s -f)
 if [[ -f "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/ln" ]]; then
     LN_ARGS+=(-r)
 fi
@@ -91,23 +91,14 @@ DOTFILES=(
     .zshrc
 )
 
-for file in "${DOTFILES[@]}"; do
-    if [[ -n "${HOME}/${file}" ]];
-        ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/${file}" "${HOME}/"
-    fi
+for file in ${DOTFILES[@]}; do
+    ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/${file}" "${HOME}/"
 done
 
 # ------------------------------------------------
-#  Terminal
+#  Use my terminal definitions first, see `terminfo.md`
 # ------------------------------------------------
-if [[ -d "${HOME}/.dotfiles/config/.terminfo" ]];
-    mkdir --parents "${HOME}/.local/share/terminfo"
-    mv --force "${HOME}/.dotfiles/config/.terminfo/*" "${HOME}/.local/share/terminfo/"
-fi
-
-# Use my terminfo
-export TERMINFO=~/.local/share/terminfo
-export TERMINFO_DIRS=~/.local/share/terminfo
+export TERMINFO_DIRS="${HOME}/.terminfo:${TERMINFO_DIRS-/usr/share/terminfo}"
 
 # ------------------------------------------------
 # fzf Catppuccin theme

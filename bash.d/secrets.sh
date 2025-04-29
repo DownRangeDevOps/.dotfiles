@@ -6,4 +6,4 @@ if [[ -n "${DEBUG:-}" ]]; then
 fi
 
 # shellcheck disable=SC1090,SC1091
-safe_source "${HOME}/.bash_secrets"
+safe_source "${HOME}/.secrets"
