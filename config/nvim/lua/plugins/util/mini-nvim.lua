@@ -2,6 +2,10 @@
 -- mini.nvim: helpful utils (https://github.com/echasnovski/mini.nvim)
 -- :help mini.nvim
 return {
+    -- Icons used by WhichKey (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-icons.md)
+    -- :help mini.icons
+    { "echasnovski/mini.nvim", version = false },
+
     -- align/columns (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-align.md)
     -- :help mini.align
     {

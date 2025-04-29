@@ -104,46 +104,46 @@ safe_source "${BASH_D_PATH}/path.sh"
 safe_source "${BASH_D_PATH}/bash.sh"
 safe_source "${CONFIG_FILES_PREFIX}/.zaliases"
 
-# ------------------------------------------------
-# Set base Homebrew paths
-# ------------------------------------------------
-if [[ -n "$(command -v brew)" ]]; then
-    if [[ $(uname -m) == "arm64" ]]; then
-        # Source brew shellenv but with safer FPATH handling
-        BREW_OUTPUT=$(/opt/homebrew/bin/brew shellenv | grep -v "fpath")
-        eval "$BREW_OUTPUT"
-
-        # Add Homebrew completions to FPATH manually
-        FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
-    else
-        # Source brew shellenv but with safer FPATH handling
-        BREW_OUTPUT=$(/usr/local/bin/brew shellenv | grep -v "fpath")
-        eval "$BREW_OUTPUT"
-
-        # Add Homebrew completions to FPATH manually
-        FPATH="/usr/local/share/zsh/site-functions:$FPATH"
-    fi
-
-    # Builtin docs: https://linux.die.net/man/1/zshbuiltins
-    # -U: Load the function without aliasing
-    # -z: Only load `zsh` functions
-    # -C: Skip security checks
-
-    # Only initialize completions if not already initialized
-    # This avoids double initialization
-    if [[ -n "${ZSH_VERSION:-}" ]]; then
-        # Load and initialize Zsh completion system once
-        autoload -Uz compinit
-        compinit -C -d "${HOME}/.zcompdump"
-
-        # Make compdef available
-        autoload -Uz compdef
-
-        # Set up caching for completions
-        zstyle ':completion:*' use-cache on
-        zstyle ':completion:*' cache-path ~/.zsh/cache
-    fi
-fi
+# # ------------------------------------------------
+# # Set base Homebrew paths
+# # ------------------------------------------------
+# if [[ -n "$(command -v brew)" ]]; then
+#     if [[ $(uname -m) == "arm64" ]]; then
+#         # Source brew shellenv but with safer FPATH handling
+#         BREW_OUTPUT=$(/opt/homebrew/bin/brew shellenv | grep -v "fpath")
+#         eval "$BREW_OUTPUT"
+#
+#         # Add Homebrew completions to FPATH manually
+#         FPATH="/opt/homebrew/share/zsh/site-functions:$FPATH"
+#     else
+#         # Source brew shellenv but with safer FPATH handling
+#         BREW_OUTPUT=$(/usr/local/bin/brew shellenv | grep -v "fpath")
+#         eval "$BREW_OUTPUT"
+#
+#         # Add Homebrew completions to FPATH manually
+#         FPATH="/usr/local/share/zsh/site-functions:$FPATH"
+#     fi
+#
+#     # Builtin docs: https://linux.die.net/man/1/zshbuiltins
+#     # -U: Load the function without aliasing
+#     # -z: Only load `zsh` functions
+#     # -C: Skip security checks
+#
+#     # Only initialize completions if not already initialized
+#     # This avoids double initialization
+#     if [[ -n "${ZSH_VERSION:-}" ]]; then
+#         # Load and initialize Zsh completion system once
+#         autoload -Uz compinit
+#         compinit -C -d "${HOME}/.zcompdump"
+#
+#         # Make compdef available
+#         autoload -Uz compdef
+#
+#         # Set up caching for completions
+#         zstyle ':completion:*' use-cache on
+#         zstyle ':completion:*' cache-path ~/.zsh/cache
+#     fi
+# fi
 
 # ------------------------------------------------
 # Load antidote

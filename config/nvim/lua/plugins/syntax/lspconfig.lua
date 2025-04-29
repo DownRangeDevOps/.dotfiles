@@ -165,6 +165,60 @@ return {
                     "williamboman/mason.nvim",
                     lazy = false,
                     config = true,
+                    init = function()
+                        local registry = require("mason-registry")
+                        local installed_packages = registry.get_all_packages()
+                        local notify = require("notify")
+                        local required_packages = {
+                            "actionlint",
+                            "ansible-lint",
+                            "codespell",
+                            "djlint",
+                            "eslint_d",
+                            "gitlint",
+                            "hadolint",
+                            "jsonlint",
+                            "markdownlint-cli2",
+                            "mypy",
+                            "revive",
+                            "rubocop",
+                            "ruff",
+                            "shellcheck",
+                            "tflint",
+                            "vint",
+                            "vale",
+                            "yamllint",
+                        }
+
+                        -- Extract just the names from installed packages
+                        local installed_names = {}
+                        for _, pkg in ipairs(installed_packages) do
+                            table.insert(installed_names, pkg.name)
+                        end
+
+                        -- Find packages that need to be installed
+                        local packages_to_install = {}
+                        for _, required_pkg in ipairs(required_packages) do
+                            local is_installed = false
+                            for _, installed_pkg in ipairs(installed_names) do
+                                if installed_pkg == required_pkg then
+                                    is_installed = true
+                                    break
+                                end
+                            end
+
+                            if not is_installed then
+                                table.insert(packages_to_install, required_pkg)
+                            end
+                        end
+
+                        -- Create command string for MasonInstall
+                        if #packages_to_install > 0 then
+                            local install_cmd = "MasonInstall " .. table.concat(packages_to_install, " ")
+
+                            vim.cmd(install_cmd)
+                        end
+                    end
                 },
 
                 -- LazyDev: lua-ls configuration for nvim runtime and api (https://github.com/folke/lazydev.nvim)
@@ -205,20 +259,26 @@ return {
                     -- Mason helper for nvim-lint integration
                     "rshkarin/mason-nvim-lint",
                     opts = {
+                        -- TODO: Installation always seems to fail
                         ensure_installed = {
-                            "actionlint",
-                            "codespell",
-                            "djlint",
-                            "gitleaks",
-                            "jsonlint",
-                            "markdownlint-cli2",
-                            "mypy",
-                            "revive",
-                            "rubocop",
-                            "ruff",
-                            "shellcheck",
-                            "vint",
-                            "yamllint",
+                            -- "actionlint",
+                            -- "ansible-lint",
+                            -- "codespell",
+                            -- "djlint",
+                            -- "eslint_d",
+                            -- "gitlint",
+                            -- "hadolint",
+                            -- "jsonlint",
+                            -- "markdownlint-cli2",
+                            -- "mypy",
+                            -- "revive",
+                            -- "rubocop",
+                            -- "ruff",
+                            -- "shellcheck",
+                            -- "tflint",
+                            -- "vint",
+                            -- "vale",
+                            -- "yamllint",
                         },
                         automatic_installation = false,
                     },
@@ -235,24 +295,23 @@ return {
                 -- with autocommands. See `user-autocommands.lua`.
                 local linter_to_ft = {
                     ["ansible.yaml"] = { "ansible-lint" },
-                    dockerfile       = { "synk", "trivy", "hadolint" },
-                    go               = { "revive", "djlint", "synk", "trivy" },
-                    helm             = { "kube-linter", "snyk", "trivy" },
+                    dockerfile       = { "hadolint" },
+                    gitcommmit       = { "gitlint" },
+                    go               = { "revive", "djlint" },
+                    javascript       = { "eslint_d" },
                     jinja            = { "djlint" },
                     json             = { "jsonlint" },
                     markdown         = { "markdownlint-cli2", "vale" },
-                    python           = { "ruff", "mypy", "snyk", "trivy" },
+                    python           = { "ruff", "mypy" },
                     rst              = { "vale" },
-                    rust             = { "snyk", "trivy" },
-                    ruby             = { "rubocop", "snyk" },
+                    ruby             = { "rubocop" },
                     sh               = { "shellcheck" },
-                    terraform        = { "tflint", "snyk", "trivy" },
+                    terraform        = { "tflint" },
                     tex              = { "vale" },
                     text             = { "vale" },
+                    typescript       = { "eslint_d" },
                     vim              = { "vint" },
                     yaml             = { "yamllint" },
-                    typescript       = { "eslint_d", "snyk", "trivy" },
-                    javascript       = { "eslint_d", "snyk", "trivy" },
                     zsh              = { "shellcheck" },
                 }
 
@@ -260,10 +319,13 @@ return {
                 for ft, _ in pairs(linters_by_ft) do
                     table.insert(linters_by_ft[ft], "editorconfig-checker")
                     table.insert(linters_by_ft[ft], "codespell")
-                    table.insert(linters_by_ft[ft], "gitleaks")
                 end
 
-                linters_by_ft = linter_to_ft
+                local lint = require("lint")
+
+                for ft, linters in pairs(linter_to_ft) do
+                    lint.linters_by_ft[ft] = linters
+                end
             end,
         },
     },
