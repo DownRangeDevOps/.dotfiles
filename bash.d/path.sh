@@ -1,13 +1,13 @@
-# shellcheck shell=bash disable=SC2296,SC1091
+# shellcheck shell=bash disable=SC1091
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [$0]"
 fi
 
 function set_path() {
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Resetting \$PATH"
+        log debug "[$(basename "$0")]: Resetting \$PATH"
     fi
 
     local tool

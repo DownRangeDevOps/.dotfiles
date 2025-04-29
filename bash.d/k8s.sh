@@ -1,4 +1,4 @@
-# shellcheck shell=bash disable=SC2296
+# shellcheck shell=bash
 
 # Get pods using a selector
 function kgps() {

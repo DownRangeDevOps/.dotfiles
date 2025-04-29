@@ -1,11 +1,11 @@
-# shellcheck shell=bash disable=SC1090,SC1091,SC2034,SC2296
+# shellcheck shell=bash disable=SC1090,SC1091,SC2034
 if [[ -n "${DEBUG:-}" ]]; then
     set +ua
     [[ -f "${HOME}/.dotfiles/lib/log.sh" ]] && "${HOME}/.dotfiles/lib/log.sh"
     set -ua
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading printing helpers..."
+    log debug "==> [$0]"
+    log debug "[$(basename "$0")]: Loading printing helpers..."
 fi
 
 # Colors
@@ -89,7 +89,7 @@ function prompt_to_continue() {
         return 0
     else
         printf "\n%s\n\n" "${BLUE}${2:-Ok, exiting.}${RESET}"
-        [[ $0 == "${BASH_SOURCE[0]:-${(%):-%x}}" ]] && exit 3 || return 3
+        [[ $0 == "$0" ]] && exit 3 || return 3
     fi
 }
 

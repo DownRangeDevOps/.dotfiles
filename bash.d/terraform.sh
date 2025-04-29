@@ -1,22 +1,22 @@
-# shellcheck shell=bash disable=SC2296
+# shellcheck shell=bash
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [$0]"
 fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading config..."
+    log debug "[$(basename "$0")]: Loading config..."
 fi
 
 # ------------------------------------------------
 #  helpers
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
+    log debug "[$(basename "$0")]: Loading helpers..."
 fi
 
 function __get_terraform_workspace() {
