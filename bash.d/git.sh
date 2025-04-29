@@ -1,8 +1,8 @@
-# shellcheck shell=bash disable=SC2296
+# shellcheck shell=bash
 
 if [[ -n ${DEBUG:-} ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [$0]"
 fi
 
 # ------------------------------------------------
@@ -47,7 +47,7 @@ __git_add_completion_to_aliases
 #  Private
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading private functions..."
+    log debug "[$(basename "$0")]: Loading private functions..."
 fi
 
 # Repository information
@@ -167,14 +167,14 @@ function git_status_vs_develop() {
 
 # diffing
 function __git_diff_develop() {
-    git diff ${@} origin/develop...
+    git diff "${@}" origin/develop...
 }
 
 function __git_diff_master() {
     local main_branch
     main_branch="$(__git_master_or_main)"
 
-    git diff ${@} origin/${main_branch}...
+    git diff "${@}" "origin/${main_branch}..."
 }
 
 function __git_diff_so_fancy_with_less() {
@@ -191,7 +191,7 @@ function __git_get_merged_branches() {
 #  Public
 # ------------------------------------------------
 if [[ -n ${DEBUG:-} ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading public functions..."
+    log debug "[$(basename "$0")]: Loading public functions..."
 fi
 
 # Info

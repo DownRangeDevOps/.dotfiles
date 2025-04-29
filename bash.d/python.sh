@@ -1,15 +1,15 @@
-# shellcheck shell=bash disable=SC2296,SC1091
+# shellcheck shell=bash disable=SC1091
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [$0]"
 fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading config..."
+    log debug "[$(basename "$0")]: Loading config..."
 fi
 
 export BETTER_EXCEPTIONS=1 # python better exceptions
@@ -31,7 +31,7 @@ eval "$(register-python-argcomplete --shell zsh pipx)" # auto-completion
 #  helpers
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
+    log debug "[$(basename "$0")]: Loading helpers..."
 fi
 
 # Megalinter helper

@@ -1,15 +1,15 @@
-# shellcheck shell=bash disable=SC1090,SC1091,SC2296
+# shellcheck shell=bash disable=SC1090,SC1091
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [$0]"
 fi
 
 # ------------------------------------------------
 #  config
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring environment..."
+    log debug "[$(basename "$0")]: Configuring environment..."
 fi
 
 # openssl
@@ -51,7 +51,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 #  helpers
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading helpers..."
+    log debug "[$(basename "$0")]: Loading helpers..."
 fi
 
 function find_replace() {
@@ -100,7 +100,7 @@ function list_dir() {
 #  utils
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Configuring utils and loading util functions..."
+    log debug "[$(basename "$0")]: Configuring utils and loading util functions..."
 fi
 
 function nvim() {
@@ -149,7 +149,7 @@ function mysqlpw() {
 # bash.d
 # ------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading bash.d files..."
+    log debug "[$(basename "$0")]: Loading bash.d files..."
 fi
 
 # Source the remaining `bash.d/*.sh` files
@@ -158,7 +158,7 @@ if [[ -n "${ZSH_VERSION:-}" ]]; then
         for file in "${BASH_D_PATH}"/*(N.); do
             if [[ ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
                 if [[ -n "${DEBUG:-}" ]]; then
-                    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading ${file} ..."
+                    log debug "[$(basename "$0")]: Loading ${file} ..."
                 fi
 
                 safe_source "${file}"
@@ -172,7 +172,7 @@ else
         for file in "${BASH_D_PATH}"/*; do
             if [[ -f "${file}" && ! "${file}" =~ (lib.sh|path.sh|bash.sh) ]]; then
                 if [[ -n "${DEBUG:-}" ]]; then
-                    log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Loading ${file} ..."
+                    log debug "[$(basename "$0")]: Loading ${file} ..."
                 fi
 
                 safe_source "${file}"

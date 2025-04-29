@@ -1,8 +1,8 @@
-# shellcheck shell=bash disable=SC2296
+# shellcheck shell=bash
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [$0]"
 fi
 
 # shellcheck disable=SC1090,SC1091

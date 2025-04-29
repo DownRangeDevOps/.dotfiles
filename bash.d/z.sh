@@ -1,8 +1,8 @@
-# shellcheck shell=bash disable=SC2296
+# shellcheck shell=bash
 
 if [[ -n "${DEBUG:-}" ]]; then
     log debug ""
-    log debug "==> [${BASH_SOURCE[0]:-${(%):-%x}}]"
+    log debug "==> [$0]"
 fi
 
 # ------------------------------------------------
@@ -10,7 +10,7 @@ fi
 # ------------------------------------------------
 function z() {
     if [[ -n "${DEBUG:-}" ]]; then
-        log debug "[$(basename "${BASH_SOURCE[0]:-${(%):-%x}}")]: Initializing z..."
+        log debug "[$(basename "$0")]: Initializing z..."
     fi
 
     unset -f z

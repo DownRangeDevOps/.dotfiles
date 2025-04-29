@@ -1,4 +1,4 @@
-# shellcheck shell=bash disable=SC2296
+# shellcheck shell=bash
 
 function ghpr() {
     local options="uc"
