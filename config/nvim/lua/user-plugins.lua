@@ -2,6 +2,8 @@
 -- Install Lazy.nvim (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-installation
 -- ----------------------------------------------
+local M = {}
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
@@ -96,41 +98,46 @@ require("nvim-treesitter.install").prefer_git = true
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
--- ----------------------------------------------
--- Mason: lsp configuration (https://github.com/williamboman/mason.nvim)
--- :help mason
--- ----------------------------------------------
-local mason_lspconfig = require("mason-lspconfig")
 
--- Ensure these language servers are installed:
-local mason_lsp_required_servers = {
-    -- "ansible-language-server",
-    -- "bash-language-server",
-    -- "css-lsp",
-    -- "docker-compose-language-service",
-    -- "dockerfile-language-server",
-    -- "eslint-lsp",
-    -- "gopls",
-    -- "helm-ls",
-    -- "html-lsp",
-    -- "jq-lsp",
-    -- "json-lsp",
-    -- "lemminx",
-    -- "ltex-ls",
-    -- "lua-language-server",
-    -- "marksman",
-    -- "neocmakelsp",
-    -- "nginx-language-server",
-    -- "python-lsp-server",
-    -- "rubocop",
-    -- "ruby-lsp",
-    -- "ruff",
-    -- "sqlls",
-    -- "taplo",
-    -- "terraform-ls",
-    -- "tflint",
-    -- "typescript-language-server",
-    -- "vale-ls",
-    -- "vim-language-server",
-    -- "yaml-language-server",
+-- ----------------------------------------------
+-- Plugin config
+-- ----------------------------------------------
+
+-- Editorconfig
+vim.g.EditorConfig_exclude_patterns = { "fugitive://.\\*", "scp://.\\*" }
+
+vim.lsp.set_log_level("off")
+
+-- Globals file markers for `mini.misc` project root helpers
+MISC_PROJECT_MARKERS = {
+    ".git", -- Handles both repositories and worktrees
+
+    -- DevOps tools I commonly use
+    ".pre-commit-config.yaml",
+    ".tool-versions", -- asdf version manager
+
+    -- CI/CD
+    ".github/workflows",
+    ".gitlab-ci.yml",
+
+    -- Python projects
+    "pyproject.toml",
+    "poetry.lock",
+
+    -- Golang projects
+    "go.mod",
 }
+
+-- Global fallback function for `mini.misc` project root helpers
+function MISC_FALLBACK()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local current_file = vim.api.nvim_buf_get_name(bufnr)
+
+  -- If current buffer has no name, use current working directory
+  if current_file == "" then
+    return vim.fn.getcwd()
+  end
+
+  -- Otherwise return the directory of the current file
+  return vim.fn.fnamemodify(current_file, ":h")
+end

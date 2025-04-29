@@ -4,16 +4,14 @@ helm 3.17.3
 java adoptopenjdk-jre-24.0.0+36
 julia 1.11.4
 lua 5.1
-nodejs 23.11.0
+nodejs 22.15.0
 python 3.13.2
 ruby 3.3.4
 rust 1.85.1
-
 # Homebrew does not have a formula for `kubectl` 1.27.x so we'll manage those tools here
 kubeconform 0.6.7
 kubectl 1.27.16
 kubectx 0.9.5
-
 # Homebrew no long supporting because of license changes
 terraform 1.11.3
 vault 1.19.2

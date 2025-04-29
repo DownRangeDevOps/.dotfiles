@@ -61,7 +61,7 @@ safe_source "${CONFIG_FILES_PREFIX}/.zaliases"
 defaults write NSGlobalDomain KeyRepeat -int 1
 
 # Set delay until repeat begins (lower = shorter delay, 10 is shortest)
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 # ------------------------------------------------
 # Symlink dofiles
@@ -91,7 +91,7 @@ DOTFILES=(
     .zshrc
 )
 
-for file in ${DOTFILES[@]}; do
+for file in "${DOTFILES[@]}"; do
     ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/${file}" "${HOME}/"
 done
 
@@ -145,11 +145,17 @@ fi
 # Enable ASDF
 # ------------------------------------------------
 if [[ -n "$(command -v asdf)" ]]; then
-    "${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
-    ASDF_PYAPP_DEFAULT_PYTHON_PATH="${HOME}/.asdf/shims/python"
+    export ASDF_PYAPP_DEFAULT_PYTHON_PATH="${HOME}/.asdf/shims/python"
+    source "${HOMEBREW_PREFIX}/opt/asdf/libexec/asdf.sh"
 else
     printf_warning 'ASDF does not seem to be installed: `brew install asdf`'
 fi
+
+# ------------------------------------------------
+# Rebuild zsh auto-completions
+# ------------------------------------------------
+autoload -Uz compinit
+compinit
 
 export ZSH_PROFILE_SOURCED=1
 # vim: ft=zsh

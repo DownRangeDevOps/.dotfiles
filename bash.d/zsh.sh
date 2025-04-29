@@ -38,7 +38,7 @@ function zvm_after_select_vi_mode() {
 
 function zvm_config() {
     ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
-    ZVM_VI_INSERT_ESCAPE_BINDKEY=j
+    ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
 
     zvm_init
 }

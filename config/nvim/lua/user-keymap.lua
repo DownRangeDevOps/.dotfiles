@@ -333,21 +333,6 @@ map("n", "<leader>lgt", function() vim.cmd("LazyGitCurrentFile") end, { group = 
 map("n", "<leader>lgf", function() vim.cmd("LazyGitFilter") end, { group = "git", desc = "LazyGitFilter" })
 map("n", "<leader>lgff", function() vim.cmd("LazyGitFilterCurrentFile") end, { group = "git", desc = "LazyGitFilterCurrentFile" })
 
--- gitsigns
--- :help gitsigns.txt
-map("n", "<C-e>", "5<C-e>", { group = "nav", desc = "scroll down 5 lines" })
-local gitsigns_maps = function(bufnr)
-    vim.keymap.set("n", "<leader>p", require("gitsigns").nav_hunk("prev", { preview = true }), { buffer = bufnr, desc = "go prev hunk" })
-    vim.keymap.set("n", "<leader>n", require("gitsigns").nav_hunk("next", { preview = true }), { buffer = bufnr, desc = "go next hunk" })
-    vim.keymap.set("n", "<leader>hp", require("gitsigns").preview_hunk, { buffer = bufnr, desc = "preview hunk" })
-    vim.keymap.set("n", "<leader>hu", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
-    vim.keymap.set("n", "<leader>sh", require("gitsigns").stage_hunk, { buffer = bufnr, desc = "stage hunk" })
-    vim.keymap.set("n", "<leader>sb", require("gitsigns").stage_buffer, { buffer = bufnr, desc = "stage hunk" })
-    vim.keymap.set("n", "<leader>rh", require("gitsigns").reset_hunk, { buffer = bufnr, desc = "reset hunk" })
-    vim.keymap.set("n", "<leader>rb", require("gitsigns").reset_buffer, { buffer = bufnr, desc = "reset hunk" })
-end
-M.gitsigns_maps = gitsigns_maps
-
 -- use magic when searching
 -- :help magic
 local set_magic_prefix = function(keymap, search_prefix)
