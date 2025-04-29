@@ -2,16 +2,22 @@
 	name = Ryan Fisher
 	gpgkey = 4AEE18F83AFDEB23 # github.com webflow
 	email = ryan.fisher@grainger.com
+
+# Grainger settings
 [includeIf "gitdir:/Users/ryanfisher/dev/grainger"]
 	path = ~/.dotfiles/config/git/.gitconfig-grainger
 [includeIf "gitdir:/Users/xjxf277/"]
 	path = ~/.dotfiles/config/git/.gitconfig-grainger
 
-# Personal ssh key
+# Personal settings
 [includeIf "gitdir:/Users/ryanfisher/"]
 	path = ~/.dotfiles/config/git/.gitconfig-personal
 [includeIf "gitdir:/Users/xjxf277/Documents/"]
 	path = ~/.dotfiles/config/git/.gitconfig-personal
+
+[include]
+	path = ~/.dotfiles/config/git/.gitconfig_aliases
+
 [gpg]
 	format = ssh
 [gpg "ssh"]
@@ -19,8 +25,6 @@
 [commit]
 	gpgsign = true
 	template = ~/.dotfiles/config/git/.gitconfig_commit_tmpl
-[include]
-	path = ~/.dotfiles/config/git/.gitconfig_aliases
 [core]
 	excludesfile = ~/.dotfiles/config/git/.gitignore_global
 	autocrlf = input
@@ -81,31 +85,15 @@
 	window = 0
 [advice]
 	ignoredHook = false
-[maintenance]
-	auto = true
-	strategy = incremental
-	repo = /Users/xjxf277/Grainger/work/dbx/admin/main
-	repo = /Users/xjxf277/Grainger/work/dbx/data/alt
-	repo = /Users/xjxf277/Grainger/work/dbx/data/main
-	repo = /Users/xjxf277/Grainger/work/dbx/unity/main
-	repo = /Users/xjxf277/Grainger/work/dbx/infra/main
-	repo = /Users/xjxf277/.dotfiles
-	repo = /Users/xjxf277/Dev/Reference/Example-Ops
-	repo = /Users/xjxf277/Grainger/work/model-serving/main
-	repo = /Users/xjxf277/Grainger/work/hackathon/danswer/main
 [core "gc"]
 	writeCommitGraph = true
 [difftool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
-	path = 
+	path =
 [mergetool "sourcetree"]
 	cmd = nvim -f -c DiffviewOpen
 	trustExitCode = true
 [index]
 	version = 4
-[alias]
-	push = push --signed
-	status = status --branch
-	stash = stash --all
 [gc]
 	cruftPacks = true

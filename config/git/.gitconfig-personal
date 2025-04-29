@@ -3,5 +3,9 @@
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyfjN2C677gfJWdPPkmP9jMYaZMIRyB2qpJ4ykrHx46
 [gpg "ssh"]
 	allowedSignersFile = ~/.dotfiles/config/git/.gitconfig-signers-personal
+[maintenance]
+	auto = true
+	strategy = incremental
+	repo = /Users/xjxf277/.dotfiles
 
-# vi: ft=gitconfig
+# vim: ft=gitconfig
