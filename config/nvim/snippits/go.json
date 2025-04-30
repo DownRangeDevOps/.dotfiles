@@ -1,0 +1,58 @@
+{
+  "go_main": {
+    "prefix": ["go-main"],
+    "body": [
+      "package main",
+      "",
+      "import (",
+      "\t\"${1:fmt}\"",
+      "\t\"${2:log}\"",
+      ")",
+      "",
+      "func main() {",
+      "\t${3:// Code here}",
+      "}"
+    ],
+    "description": "Go main function template"
+  },
+  "go_cli_cobra": {
+    "prefix": ["go-cobra-cmd"],
+    "body": [
+      "package cmd",
+      "",
+      "import (",
+      "\t\"fmt\"",
+      "",
+      "\t\"github.com/spf13/cobra\"",
+      ")",
+      "",
+      "// ${1:cmd}Cmd represents the ${1:cmd} command",
+      "var ${1:cmd}Cmd = &cobra.Command{",
+      "\tUse:   \"${1:cmd}\",",
+      "\tShort: \"${2:Short description}\",",
+      "\tLong: `${3:Long description}`,",
+      "\tRun: func(cmd *cobra.Command, args []string) {",
+      "\t\t${4:// Code here}",
+      "\t},",
+      "}",
+      "",
+      "func init() {",
+      "\trootCmd.AddCommand(${1:cmd}Cmd)",
+      "",
+      "\t// Flags and configuration settings",
+      "\t${1:cmd}Cmd.Flags().${5:StringVarP}(&${6:variable}, \"${7:flag}\", \"${8:shorthand}\", \"${9:default}\", \"${10:description}\")",
+      "}"
+    ],
+    "description": "Cobra command for Go CLI tool"
+  },
+  "go_function": {
+    "prefix": ["go-func"],
+    "body": [
+      "// ${1:FunctionName} ${2:description}",
+      "func ${1:FunctionName}(${3:params}) ${4:returnType} {",
+      "\t${5:// Code here}",
+      "}"
+    ],
+    "description": "Go function with documentation"
+  }
+}

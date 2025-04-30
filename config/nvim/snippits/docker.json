@@ -1,0 +1,58 @@
+{
+  "docker_compose": {
+    "prefix": ["docker-compose"],
+    "body": [
+      "version: '3.8'",
+      "",
+      "services:",
+      "  ${1:service-name}:",
+      "    image: ${2:image-name}:${3:tag}",
+      "    container_name: ${4:container-name}",
+      "    restart: ${5:unless-stopped}",
+      "    environment:",
+      "      - ${6:ENV_VAR}=${7:value}",
+      "    ports:",
+      "      - \"${8:host-port}:${9:container-port}\"",
+      "    volumes:",
+      "      - ${10:host-path}:${11:container-path}",
+      "    networks:",
+      "      - ${12:network-name}",
+      "",
+      "networks:",
+      "  ${12:network-name}:",
+      "    driver: bridge",
+      ""
+    ],
+    "description": "Docker Compose template"
+  },
+  "dockerfile": {
+    "prefix": ["dockerfile"],
+    "body": [
+      "FROM ${1:base-image}:${2:tag}",
+      "",
+      "LABEL maintainer=\"${3:Your Name <your.email@example.com>}\"",
+      "",
+      "# Set working directory",
+      "WORKDIR /app",
+      "",
+      "# Install dependencies",
+      "RUN ${4:apt-get update && apt-get install -y \\}",
+      "    ${5:package-name} \\",
+      "    && rm -rf /var/lib/apt/lists/*}",
+      "",
+      "# Copy source code",
+      "COPY ${6:. .}",
+      "",
+      "# Set environment variables",
+      "ENV ${7:ENV_VAR}=${8:value}",
+      "",
+      "# Expose port",
+      "EXPOSE ${9:8080}",
+      "",
+      "# Run command",
+      "CMD [\"${10:executable}\", \"${11:param1}\", \"${12:param2}\"]",
+      ""
+    ],
+    "description": "Dockerfile template"
+  }
+}

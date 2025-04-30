@@ -6,6 +6,8 @@
 	<true/>
 	<key>AboutToPasteTabsWithCancel_selection</key>
 	<integer>2</integer>
+	<key>AddNewTabAtEndOfTabs</key>
+	<false/>
 	<key>AdjustWindowForFontSizeChange</key>
 	<true/>
 	<key>AllowClipboardAccess</key>

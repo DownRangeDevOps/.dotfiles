@@ -1,0 +1,82 @@
+{
+  "terraform": {
+    "prefix": ["terraform-module"],
+    "body": [
+      "module \"${1:name}\" {",
+      "  source = \"${2:module_source}\"",
+      "  version = \"${3:1.0.0}\"",
+      "",
+      "  # Common parameters",
+      "  name        = \"${4:resource_name}\"",
+      "  environment = var.environment",
+      "  tags        = var.tags",
+      "",
+      "  # Module specific parameters",
+      "  ${5:param1} = ${6:value1}",
+      "  ${7:param2} = ${8:value2}",
+      "}"
+    ],
+    "description": "Terraform module block"
+  },
+  "terraform_aws_resource": {
+    "prefix": ["aws-resource"],
+    "body": [
+      "resource \"aws_${1:service}_${2:resource}\" \"${3:name}\" {",
+      "  ${4:property} = ${5:value}",
+      "  ${6:property} = ${7:value}",
+      "",
+      "  tags = merge(var.tags, {",
+      "    Name = \"${8:resource_name}\"",
+      "  })",
+      "}"
+    ],
+    "description": "AWS resource in Terraform"
+  },
+  "terraform_output": {
+    "prefix": ["output"],
+    "body": [
+      "output \"${1:name}\" {",
+      "  description = \"${2:description}\"",
+      "  value       = ${3:value}",
+      "  sensitive   = ${4|false,true|}",
+      "}"
+    ],
+    "description": "Terraform output block"
+  },
+  "terraform_locals": {
+    "prefix": ["locals"],
+    "body": [
+      "locals {",
+      "  ${1:name} = ${2:value}",
+      "  ${3:name} = ${4:value}",
+      "}"
+    ],
+    "description": "Terraform locals block"
+  },
+  "terraform_databricks_cluster": {
+    "prefix": ["databricks-cluster"],
+    "body": [
+      "resource \"databricks_cluster\" \"${1:name}\" {",
+      "  cluster_name            = \"${2:cluster_name}\"",
+      "  spark_version           = \"${3:12.2.x-scala2.12}\"",
+      "  node_type_id            = \"${4:Standard_DS3_v2}\"",
+      "  autotermination_minutes = ${5:20}",
+      "",
+      "  autoscale {",
+      "    min_workers = ${6:1}",
+      "    max_workers = ${7:4}",
+      "  }",
+      "",
+      "  spark_conf = {",
+      "    \"spark.databricks.delta.preview.enabled\" = \"true\"",
+      "  }",
+      "",
+      "  custom_tags = {",
+      "    Environment = var.environment",
+      "    Owner       = var.owner",
+      "  }",
+      "}"
+    ],
+    "description": "Databricks cluster resource in Terraform"
+  }
+}
