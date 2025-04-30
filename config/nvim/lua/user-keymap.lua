@@ -95,7 +95,7 @@ vim.on_key(
                 "<ScrollWheelUp>", "<ScrollWheelDown>",
             }, vim.fn.keytrans(char))
 
-            if vim.opt.hlsearch:get() ~= new_hlsearch then
+            if vim.api.nvim_get_option_value("hlsearch", { scope = "global" }) ~= new_hlsearch then
                 vim.opt.hlsearch = new_hlsearch
             end
         end
@@ -116,7 +116,7 @@ map("n", "<Enter>", function()
 
     vim.fn.setreg("/", "åß∂ƒ")
 
-    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
+    if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "terminal" then
         vim.cmd.startinsert()
         vim.api.nvim_feedkeys(keypress, "m", false)
     else
@@ -124,7 +124,7 @@ map("n", "<Enter>", function()
     end
 end, { group = "gen", desc = "Enter"})
 map("n", "<C-C>", function()
-    if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
+    if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "terminal" then
         vim.cmd.startinsert()
         vim.api.nvim_feedkeys("", "n", false)
     else
