@@ -14,36 +14,50 @@
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 local keymap = require("user-keymap")
 local misc = require("mini.misc")
-local lsp_ensure_installed = {
-    "ansiblels",
-    "bashls",
-    "cssls",
-    "docker_compose_language_service",
-    "dockerls",
-    "eslint",
-    "gopls",
-    "helm_ls",
-    "html",
-    "jqls",
-    "jsonls",
-    "lemminx",
-    "ltex",
-    "lua_ls",
-    "marksman",
-    "neocmake",
-    "nginx_language_server",
-    "pylsp",
-    "rubocop",
-    "ruby_lsp",
-    "ruff",
-    "sqlls",
-    "taplo",
-    "terraformls",
-    "tflint",
-    "ts_ls",
-    "vale_ls",
-    "vimls",
-    "yamlls",
+local mason_ensure_installed = {
+  "actionlint",
+  "ansible-lint",
+  "ansible-language-server",
+  "bash-language-server",
+  "codespell",
+  "css-lsp",
+  "djlint",
+  "docker-compose-language-service",
+  "dockerfile-language-server",
+  "eslint_d",
+  "gitlint",
+  "gopls",
+  "hadolint",
+  "helm-ls",
+  "html-lsp",
+  "jq-lsp",
+  "jsonlint",
+  "json-lsp",
+  "lemminx",
+  "ltex-ls",
+  "lua-ls",
+  "markdownlint-cli2",
+  "marksman",
+  "mypy",
+  "neocmakelsp",
+  "nginx-language-server",
+  "python-lsp-server",
+  "revive",
+  "rubocop",
+  "ruby-lsp",
+  "ruff",
+  "shellcheck",
+  "sqlls",
+  "taplo",
+  "terraform-ls",
+  "tflint",
+  "ts-ls",
+  "vale",
+  "vale-ls",
+  "vim-language-server",
+  "vint",
+  "yamllint",
+  "yaml-language-server",
 }
 
 -- Language server customizations
@@ -144,7 +158,6 @@ return {
                 -- Configure mason-lspconfig handlers
                 require("mason-lspconfig").setup({
                     automatic_installation = false,
-                    ensure_installed = lsp_ensure_installed,
                     handlers = {
                         -- Default handler for all servers
                         function(server_name)
@@ -168,27 +181,6 @@ return {
                     init = function()
                         local registry = require("mason-registry")
                         local installed_packages = registry.get_all_packages()
-                        local notify = require("notify")
-                        local required_packages = {
-                            "actionlint",
-                            "ansible-lint",
-                            "codespell",
-                            "djlint",
-                            "eslint_d",
-                            "gitlint",
-                            "hadolint",
-                            "jsonlint",
-                            "markdownlint-cli2",
-                            "mypy",
-                            "revive",
-                            "rubocop",
-                            "ruff",
-                            "shellcheck",
-                            "tflint",
-                            "vint",
-                            "vale",
-                            "yamllint",
-                        }
 
                         -- Extract just the names from installed packages
                         local installed_names = {}
@@ -198,7 +190,7 @@ return {
 
                         -- Find packages that need to be installed
                         local packages_to_install = {}
-                        for _, required_pkg in ipairs(required_packages) do
+                        for _, required_pkg in ipairs(mason_ensure_installed) do
                             local is_installed = false
                             for _, installed_pkg in ipairs(installed_names) do
                                 if installed_pkg == required_pkg then
@@ -259,27 +251,6 @@ return {
                     -- Mason helper for nvim-lint integration
                     "rshkarin/mason-nvim-lint",
                     opts = {
-                        -- TODO: Installation always seems to fail
-                        ensure_installed = {
-                            -- "actionlint",
-                            -- "ansible-lint",
-                            -- "codespell",
-                            -- "djlint",
-                            -- "eslint_d",
-                            -- "gitlint",
-                            -- "hadolint",
-                            -- "jsonlint",
-                            -- "markdownlint-cli2",
-                            -- "mypy",
-                            -- "revive",
-                            -- "rubocop",
-                            -- "ruff",
-                            -- "shellcheck",
-                            -- "tflint",
-                            -- "vint",
-                            -- "vale",
-                            -- "yamllint",
-                        },
                         automatic_installation = false,
                     },
                 },
