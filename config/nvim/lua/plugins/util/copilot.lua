@@ -5,17 +5,19 @@
 return {
   "zbirenbaum/copilot.lua",
   cond = function()
-    local handle = io.popen("whoami")
+    local handle = io.popen("whoami | head -1 | tr -d '\n'")
     local username = ""
 
     if handle then
-      username = handle:read("*a"):gsub("%s+", "")  -- Remove whitespace/newlines
+      username = handle:read("*a")
       handle:close()
     end
 
     -- Check if env var matches username
-    local env_value = os.getenv("PERSONAL_LAPTOP_USER") or ""
-    return (env_value == username)
+    local env_value = vim.env.PERSONAL_LAPTOP_USER or ""
+
+    -- Debug
+    return (env_value ~= username)
   end,
   cmd = "Copilot",
   lazy = false,

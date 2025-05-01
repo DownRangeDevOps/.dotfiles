@@ -18,7 +18,7 @@
 
 return {
     "folke/which-key.nvim",
-    priority = 1000,
+    priority = 2000,
     lazy = false,
     config = true,
     init = function()

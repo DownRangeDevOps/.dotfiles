@@ -293,19 +293,7 @@ map("n", "<leader>mx", function()
         vim.cmd.echoerr('"' .. vim.fn.expand("%") .. ' is not a file"')
     end
 end, { group = "file", desc = "make file +x" })
-map("n", "<leader>fr", function() MiniMisc.find_root(0, MISC_PROJECT_MARKERS) end, { group = "file", desc = "find project root"})
-
--- Harpoon (https://github.com/ThePrimeagen/harpoon)
--- :help harpoon
-map("n", "<leader>hh", function() require("harpoon.ui").toggle_quick_menu() end, { group = "file", desc = "view live well" })
-map("n", "<leader>hf", function() require("harpoon.mark").toggle_file() end, { group = "file", desc = "harpoon/release" })
-map("n", "<leader>j", function() require("harpoon.ui").nav_file(1) end, { group = "file", desc = "first harpoon" })
-map("n", "<leader>k", function() require("harpoon.ui").nav_file(2) end, { group = "file", desc = "second harpoon" })
-map("n", "<leader>l", function() require("harpoon.ui").nav_file(3) end, { group = "file", desc = "third harpoon" })
-map("n", "<leader>;", function() require("harpoon.ui").nav_file(4) end, { group = "file", desc = "fourth harpoon" })
-map("n", "<C-j>", function() require("harpoon.ui").nav_prev() end, { group = "file", desc = "<< harpoon" })
-map("n", "<C-k>", function() require("harpoon.ui").nav_next() end, { group = "file", desc = "harpoon >>" })
-map("n", "<leader>hc", function() require("harpoon.mark").clear_all() end, { group = "file", desc = "release all harpoons" })
+map("n", "<leader>fr", function() require("mini.misc").find_root(0, MISC_PROJECT_MARKERS) end, { group = "file", desc = "find project root"})
 
 -- git (fugitive, gitsigns, DiffView, LazyGit)
 -- :help Git
@@ -410,20 +398,15 @@ map("t", "<C-k>", "<C-\\><C-n><C-w>k", { group = "nav", desc = "up window" })
 map("t", "<C-l>", "<C-\\><C-n><C-w>l", { group = "nav", desc = "right window" })
 
 -- my iTerm is setup to send mac ⌥ (option) key instead of meta, which will look like gibberish to most
-map("n", "˚", function() vim.cmd.resize("+4") end, { group = "nav", desc = "increase win height" })
-map("n", "∆", function() vim.cmd.resize("-4") end, { group = "nav", desc = "decrease win height" })
-map("n", "˙", function() vim.cmd("vertical resize +8") end, { group = "nav", desc = "increase win width" })
-map("n", "¬", function() vim.cmd("vertical resize -8") end, { group = "nav", desc = "decrease win width" })
-map("n", "–", function() vim.cmd.wincmd("_") end, { group = "nav", desc = "maximize window height" })
-
+map("n", "˚", function() vim.cmd.resize("+4") end, { group = "nav", desc = "increase win height" }) -- ⌥-k
+map("n", "∆", function() vim.cmd.resize("-4") end, { group = "nav", desc = "decrease win height" }) -- ⌥-j
+map("n", "˙", function() vim.cmd("vertical resize +8") end, { group = "nav", desc = "increase win width" }) -- ⌥-h
+map("n", "¬", function() vim.cmd("vertical resize -8") end, { group = "nav", desc = "decrease win width" }) -- ⌥-l
+map("n", "–", function() vim.cmd.wincmd("_") end, { group = "nav", desc = "maximize window height" }) -- ⌥--
 
 -- Tab navigation
-map("", "<leader>˙", function() vim.cmd.tabprevious() end, { group = "nav", desc = "prev window" })
-map("", "<leader>¬", function() vim.cmd.tabnext() end, { group = "nav", desc = "next window" })
-
--- Window scrolling
-map("n", "<C-y>", "4<C-y>", { group = "nav", desc = "scroll up 4 lines" })
-map("n", "<C-e>", "4<C-e>", { group = "nav", desc = "scroll down 4 lines" })
+map("", "<leader>˙", function() vim.cmd.tabprevious() end, { group = "nav", desc = "prev window" }) -- <space>⌥-j
+map("", "<leader>¬", function() vim.cmd.tabnext() end, { group = "nav", desc = "next window" }) -- <space>⌥-l
 
 -- ----------------------------------------------
 -- Plugin Keymaps
@@ -493,10 +476,6 @@ map("n", "<leader>e", vim.diagnostic.open_float, { group = "diag", desc = "show 
 map("n", "<leader>E", vim.diagnostic.setloclist, { group = "diag", desc = "open error list" })
 map("n", "[d", function() vim.diagnostic.get_pref() end, { group = "diag", desc = "previous message" })
 map("n", "]d", function() vim.diagnostic.get_next() end, { group = "diag", desc = "next message" })
-
--- trouble
--- :help trouble.nvim.txt
-map("n", "<leader>t", function() vim.cmd.TroubleToggle() end, { group = "lsp", desc = "toggle trouble" })
 
 -- others
 map("n", "<leader>fb", function() require("telescope.builtin").buffers() end, { group = "ts", desc = "fuzzy buffers" })

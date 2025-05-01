@@ -9,7 +9,6 @@ local signs = {
     [vim.diagnostic.severity.HINT] = "",
     [vim.diagnostic.severity.INFO] = "",
     [vim.diagnostic.severity.WARN] = "",
-
 }
 
 -- Map severity levels to highlight groups
