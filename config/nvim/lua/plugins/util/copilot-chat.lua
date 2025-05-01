@@ -11,37 +11,14 @@ return {
         },
         build = "make tiktoken",
         opts = {
-            -- defaults
-            -- debug = false,                                                   -- Enable debug logging
-            -- proxy = nil,                                                     -- [protocol://]host[:port] Use this proxy
-            -- allow_insecure = false,                                          -- Allow insecure server connections
-
-            -- yank_diff_register = '"',                                        -- Allow overriding the register for yanking diffs
-
-            -- system_prompt = prompts.COPILOT_INSTRUCTIONS,                    -- System prompt to use
-            -- model = 'gpt-4o',                                                -- GPT model to use, 'gpt-3.5-turbo', 'gpt-4', or 'gpt-4o'
-            -- temperature = 0.1,                                               -- GPT temperature
-
-            -- question_header = '## User ',                                    -- Header to use for user questions
-            -- answer_header = '## Copilot ',                                   -- Header to use for AI answers
-            -- error_header = '## Error ',                                      -- Header to use for errors
-            -- separator = '───',                                               -- Separator to use in chat
-
-            -- show_folds = true,                                               -- Shows folds for sections in chat
-            -- show_help = true,                                                -- Shows help message as virtual lines when waiting for user input
-            -- auto_follow_cursor = true,                                       -- Auto-follow cursor in chat
-            -- auto_insert_mode = false,                                        -- Automatically enter insert mode when opening window and if auto follow cursor is enabled on new prompt
-            -- clear_chat_on_new_prompt = false,                                -- Clears chat on every new prompt
-            -- highlight_selection = true,                                      -- Highlight selection in the source buffer when in the chat window
-
+            auto_follow_cursor = false,                                         -- Auto-follow cursor in chat (Default: true)
+            highlight_selection = true,                                      -- Highlight selection in the source buffer when in the chat window
             context = "buffers",                                                -- Default context to use, 'buffers', 'buffer' or none (can be specified manually in prompt via @).
-            -- history_path = vim.fn.stdpath('data') .. '/copilotchat_history', -- Default path to stored history
-            -- callback = nil,                                                  -- Callback to use when ask response is received
 
-            -- -- default selection (visual or line)
-            -- selection = function(source)
-            --     return select.visual(source) or select.line(source)
-            -- end,
+            -- default selection (visual or line)
+            selection = function(source)
+                return select.visual(source) or select.line(source)
+            end,
 
             -- prompts = {
             --     Explain = {

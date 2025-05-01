@@ -79,25 +79,10 @@ require("lazy").setup({
 vim.cmd.colorscheme("catppuccin")
 
 -- ----------------------------------------------
--- Telescope: load extensions (https://github.com/nvim-telescope/telescope.nvim#extensions)
--- :help telescope.extensions()
--- ----------------------------------------------
-require("telescope").load_extension("fzf")
-require("telescope").load_extension("harpoon")
-
--- ----------------------------------------------
 -- Treesitter (https://github.com/nvim-treesitter/nvim-treesitter#i-want-to-use-git-instead-of-curl-for-downloading-the-parsers)
 -- :help nvim-treesitter
 -- ----------------------------------------------
 require("nvim-treesitter.install").prefer_git = true
-
--- ----------------------------------------------
--- nvim-cmp: broadcast capabilities to lsp (https://github.com/hrsh7th/nvim-cmp)
--- :help vim.lsp.protocol.make_client_capabilities()
--- ----------------------------------------------
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
 
 -- ----------------------------------------------
 -- Plugin config

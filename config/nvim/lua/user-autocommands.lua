@@ -32,32 +32,63 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
     end
 })
 
+-- Always create and use a session file and ensure window heights are maximized
 vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
     pattern = "*",
     callback = function()
-        -- maximize window height on start... Probably a toggle term issue
+        -- Maximize window height on start
         vim.cmd.wincmd("_")
 
-        -- set by .envrc
-        local session_file_path = vim.env.NVIM_SESSION_FILE_PATH
-
-        -- Ensure the session path and file exist and are readable
-        if session_file_path then
-            local session_dir = session_file_path:match("(.*/)")
-
-            if session_dir and vim.fn.isdirectory(session_dir) == 0 then
-                os.execute("mkdir --parents " .. session_dir)
-                os.execute("touch " .. session_file_path)
+        -- Helper to create directories
+        local function ensure_dir_exists(dir)
+            if vim.fn.isdirectory(dir) == 0 then
+                vim.fn.mkdir(dir, "p")
             end
-
-            if vim.fn.filereadable(session_file_path) == 0 then
-                os.execute("rm -rf" .. session_file_path)
-                os.execute("touch " .. session_file_path)
-            end
-
-            vim.cmd("silent Obsession " .. session_file_path)
         end
+
+        -- Helper to hash a string
+        local function hash_string(str)
+            return vim.fn.sha256(str):sub(1, 5)
+        end
+
+        -- Determine session file path
+        local session_file_path = vim.env.NVIM_SESSION_FILE_PATH
+        if not session_file_path then
+            local base_path = vim.env.HOME .. "/.config/nvim/sessions/"
+            ensure_dir_exists(base_path)
+
+            if vim.fn.system("git rev-parse --is-inside-work-tree"):match("true") then
+                local remote_url = vim.fn.system("git config --get remote.origin.url"):gsub("\n", "")
+                if remote_url ~= "" then
+                    session_file_path = base_path .. vim.fn.fnamemodify(remote_url, ":t")
+                else
+                    local repo_path = vim.fn.system("git rev-parse --show-toplevel"):gsub("\n", "")
+                    session_file_path = base_path .. vim.fn.fnamemodify(repo_path, ":t") .. ".git"
+                end
+            else
+                local project_root = require("mini.misc").find_root(0)
+                if project_root then
+                    session_file_path = base_path .. vim.fn.fnamemodify(project_root, ":t")
+                else
+                    session_file_path = base_path .. "default"
+                end
+            end
+
+            -- Append hash to session name
+            local full_path = vim.fn.fnamemodify(session_file_path, ":p")
+            session_file_path = session_file_path .. "-" .. hash_string(full_path)
+        end
+
+        -- Ensure session directory and file exist
+        local session_dir = vim.fn.fnamemodify(session_file_path, ":h")
+        ensure_dir_exists(session_dir)
+        if vim.fn.filereadable(session_file_path) == 0 then
+            vim.fn.writefile({}, session_file_path)
+        end
+
+        -- Use or create session with Obsession
+        vim.cmd("silent Obsession " .. session_file_path)
     end
 })
 

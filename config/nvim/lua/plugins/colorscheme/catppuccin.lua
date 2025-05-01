@@ -5,7 +5,7 @@
 return {
     "catppuccin/nvim",
     name = "catppuccin", -- required because of /nvim
-    priority = 1000,
+    priority = 9999,
     lazy = false,
     opts = {
         transparent_background = false,

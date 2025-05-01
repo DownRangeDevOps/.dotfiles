@@ -11,13 +11,35 @@ return {
     { "tpope/vim-unimpaired",  lazy = false }, -- Navigation pairs like [q (https://github.com/tpope/vim-unimpaired)
     { "windwp/nvim-autopairs", lazy = true, event = "InsertEnter", opts = {} }, -- auto-pairs (https://github.com/windwp/nvim-autopairs)
 
+    -- TODO: How to fix recursive dependency on user-keymap
     -- Quick-switch files (https://github.com/ThePrimeagen/harpoon)
-    {
-        "ThePrimeagen/harpoon",
-        branch = "harpoon2",
-        lazy = false,
-        dependencies = { "nvim-lua/plenary.nvim", branch = "master" }
-    },
+    -- {
+    --     "ThePrimeagen/harpoon",
+    --     branch = "harpoon2",
+    --     lazy = false,
+    --     dependencies = { "nvim-lua/plenary.nvim", branch = "master" },
+    --     conf = function()
+    --         -- Harpoon (https://github.com/ThePrimeagen/harpoon)
+    --         -- :help harpoon
+    --         local harpoon = require("harpoon")
+    --         harpoon:setup()
+    --
+    --         local harpoon_extensions = require("harpoon.extensions")
+    --         harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
+    --
+    --         local map = vim.keymap.set
+    --
+    --         map("n", "<leader>hh", function() harpoon:ui:toggle_quick_menu(harpoon:list()) end, { group = "file", desc = "view live well" })
+    --         map("n", "<leader>a", function() harpoon:list():add() end, { group = "file", desc = "harpoon this file" })
+    --         map("n", "<leader>j", function() harpoon:list():select(1) end, { group = "file", desc = "first harpoon" })
+    --         map("n", "<leader>k", function() harpoon:list():select(2) end, { group = "file", desc = "second harpoon" })
+    --         map("n", "<leader>l", function() harpoon:list():select(3) end, { group = "file", desc = "third harpoon" })
+    --         map("n", "<leader>;", function() harpoon:list():select(4) end, { group = "file", desc = "fourth harpoon" })
+    --         map("n", "<C-j>", function() harpoon:list():prev() end, { group = "file", desc = "<< harpoon" })
+    --         map("n", "<C-k>", function() harpoon:list():next() end, { group = "file", desc = "harpoon >>" })
+    --         map("n", "<leader>hc", function() harpoon:list().clear() end, { group = "file", desc = "release all harpoons" })
+    --     end,
+    -- },
 
     -- No-delay multi-key escape (https://github.com/max397574/better-escape.nvim)
     {

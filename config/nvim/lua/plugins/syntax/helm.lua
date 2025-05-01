@@ -5,5 +5,5 @@
 return {
     "towolf/vim-helm",
     lazy = false,
-    priority = 9999, -- make sure to load this first so yamlls doesn't run on helm files
+    priority = 1000, -- make sure to load this first so yamlls doesn't run on helm files
 }

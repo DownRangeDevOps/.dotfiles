@@ -24,7 +24,7 @@ return {
                 local ls = require("luasnip")
 
                 -- Load friendly-snippets
-                ls.loaders.from_vscode.lazy_load()
+                require("luasnip.loaders.from_vscode").lazy_load()
 
                 -- DevOps-specific snippet extensions
                 ls.filetype_extend("terraform", {"hcl"})
@@ -32,19 +32,20 @@ return {
                 ls.filetype_extend("go", {"golang"})
 
                 -- Load your custom snippets
-                ls.loaders.from_vscode.lazy_load({
+                require("luasnip.loaders.from_vscode").lazy_load({
                     paths = {
                         vim.env.HOME .. ".dotfiles/config/nvim/snippets",
                     },
                 })
             end,
+            dependencies = {
+                -- Adds a number of user-friendly snippets (https://github.com/rafamadriz/friendly-snippets)
+                { "rafamadriz/friendly-snippets", lazy = true, event = "InsertEnter" },
+            }
         },
 
         -- LuaSnip completion source for snippet integration (https://github.com/saadparwaiz1/cmp_luasnip)
         { "saadparwaiz1/cmp_luasnip", lazy = true, event = "InsertEnter" },
-
-        -- Adds a number of user-friendly snippets (https://github.com/rafamadriz/friendly-snippets)
-        { "rafamadriz/friendly-snippets", lazy = true, event = "InsertEnter" },
 
         -- LSP and other base completion sources
         { "hrsh7th/cmp-nvim-lsp", lazy = false }, -- LSP source for completions (https://github.com/hrsh7th/cmp-nvim-lsp)
@@ -94,11 +95,10 @@ return {
         local cmp = require("cmp")
         local cmp_compare = require("cmp.config.compare")
         local luasnip = require("luasnip")
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
         local format = require("cmp_git.format")
         local sort = require("cmp_git.sort")
         local has_words_before = function()
-            if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+            if vim.api.nvim_get_option_value("buftype", { scope = "local" }) == "prompt" then return false end
 
             local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 
@@ -265,25 +265,25 @@ return {
                     select = false,
                 },
 
-                ["<Tab>"] = cmp.mapping(function(fallback)
-                    if cmp.visible() and has_words_before() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                    elseif luasnip.expand_or_locally_jumpable() then
-                        luasnip.expand_or_jump()
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
+            ["<Tab>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                elseif luasnip.expand_or_locally_jumpable() then
+                    luasnip.expand_or_jump()
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
 
-                ["<S-Tab>"] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_prev_item()
-                    elseif luasnip.locally_jumpable(-1) then
-                        luasnip.jump(-1)
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
+            ["<S-Tab>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+                elseif luasnip.locally_jumpable(-1) then
+                    luasnip.jump(-1)
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
             },
         })
 

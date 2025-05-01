@@ -17,15 +17,14 @@ return {
         event_handlers = {
             {
                 event = "neo_tree_buffer_enter",
-                handler = function(arg)
+                handler = function()
                     vim.wo.number = true
                     vim.wo.relativenumber = true
                 end
             },
             {
                 event = "neo_tree_popup_input_ready",
-                ---@param input NuiInput
-                handler = function(input)
+                handler = function()
                     vim.cmd("stopinsert") -- enter input popup with normal mode by default.
                 end,
             },

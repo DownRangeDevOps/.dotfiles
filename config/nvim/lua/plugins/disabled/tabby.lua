@@ -6,7 +6,6 @@ return {
     "nanozuki/tabby.nvim",
     -- event = "VimEnter", -- if you want to lazy load which isn't really needed, tabby loads fast
     dependencies = "nvim-tree/nvim-web-devicons",
-    dependencies = "nvim-tree/nvim-web-devicons",
     config = function()
         require("tabby.tabline").use_preset("active_wins_at_tail", {
             theme = {
