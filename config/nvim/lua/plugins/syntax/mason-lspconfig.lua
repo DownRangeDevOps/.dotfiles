@@ -44,12 +44,6 @@ local mason_lsp_server_configs = {
             },
         },
     },
-    ltex = {
-        ltex = {
-            root_dir = vim.env.HOME .. "/.local/share/nvim/mason/packages/ltex-ls",
-            language = "en-US",
-        },
-    },
     pylsp = {
         pylsp = {
             plugins = {

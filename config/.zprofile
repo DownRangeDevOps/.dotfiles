@@ -58,10 +58,10 @@ safe_source "${CONFIG_FILES_PREFIX}/.zaliases"
 # Set key repeat settings
 # ------------------------------------------------
 # Set key repeat rate (lower = faster, 1 is fastest)
-defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain KeyRepeat -int 2
 
 # Set delay until repeat begins (lower = shorter delay, 10 is shortest)
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain InitialKeyRepeat -int 20
 
 # ------------------------------------------------
 # Symlink dofiles

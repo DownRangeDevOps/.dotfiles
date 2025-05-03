@@ -103,18 +103,6 @@ if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "$0")]: Configuring utils and loading util functions..."
 fi
 
-function nvim() {
-    if [[ "${NVIM_SESSION_FILE_PATH:-}" ]]; then
-        if [[ ! -f "${NVIM_SESSION_FILE_PATH:-}" ]]; then
-            touch "${NVIM_SESSION_FILE_PATH}"
-        fi
-
-        command nvim -S "${NVIM_SESSION_FILE_PATH:-}" "$@"
-    else
-        command nvim "$@"
-    fi
-}
-
 function rg() {
     "${HOMEBREW_PREFIX}/bin/rg" \
         --follow \

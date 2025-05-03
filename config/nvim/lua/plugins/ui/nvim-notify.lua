@@ -16,9 +16,11 @@ return {
     opt = options,
     init = function()
         local notify = require("notify")
-        notify.setup(options)
-        vim.notify = notify -- Override the default Vim notification with nvim-notify
 
+        notify.setup(options)
+
+        -- Override the default Vim notification with nvim-notify
+        vim.notify = notify
 
         -- Override vim.print to use nvim-notify
         print = function(...)

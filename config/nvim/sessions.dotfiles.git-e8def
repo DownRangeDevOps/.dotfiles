@@ -1,0 +1,296 @@
+let SessionLoad = 1
+let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
+let v:this_session=expand("<sfile>:p")
+silent only
+silent tabonly
+cd ~/.dotfiles/config
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+let s:shortmess_save = &shortmess
+if &shortmess =~ 'A'
+  set shortmess=aoOA
+else
+  set shortmess=aoO
+endif
+badd +4 nvim/init.lua
+badd +0 ansible.default.cfg
+badd +0 yamllint/config
+badd +0 .gitconfig
+badd +0 .zshenv
+badd +0 .editorconfig
+badd +0 starship.toml
+badd +0 .zprofile
+badd +0 .zshrc
+badd +0 nvim/sessions.dotfiles.git-e8def
+badd +0 nvim/doc/mason.txt
+badd +0 nvim/doc/abolish.vim
+badd +0 nvim/custom-words.add
+badd +0 nvim/snippits/github.json
+badd +0 nvim/snippits/terraform.json
+badd +0 nvim/snippits/docker.json
+badd +0 nvim/snippits/k8s.json
+badd +0 nvim/snippits/go.json
+badd +0 nvim/sessions/.dotfiles.git-877ae
+badd +0 nvim/lazy-lock.json
+badd +0 nvim/lua/lib/deep-merge.lua
+badd +0 nvim/lua/user-autocommands.lua
+badd +0 nvim/lua/user-keymap.lua
+badd +0 nvim/lua/plugins/syntax/mason.lua
+badd +0 nvim/lua/plugins/syntax/treesitter.lua
+badd +0 nvim/lua/plugins/syntax/treesitter-playground.lua
+badd +0 nvim/lua/plugins/syntax/vim-markdowntoc.lua
+badd +0 nvim/lua/plugins/syntax/bullets.lua
+badd +0 nvim/lua/plugins/syntax/markdown-table.lua
+badd +0 nvim/lua/plugins/syntax/mason-lspconfig.lua
+badd +0 nvim/lua/plugins/syntax/nvim-cmp.lua
+badd +0 nvim/lua/plugins/syntax/helm.lua
+badd +0 nvim/lua/plugins/syntax/lspconfig.lua
+badd +0 nvim/lua/plugins/syntax/markdown.lua
+badd +0 nvim/lua/plugins/syntax/nvim-lint.lua
+badd +0 nvim/lua/plugins/disabled/filetype.lua
+badd +0 nvim/lua/plugins/disabled/tabby.lua
+badd +0 nvim/lua/plugins/disabled/markdown-preview-with-toggle-not-working.lua
+badd +0 nvim/lua/plugins/disabled/taboo.lua
+badd +0 nvim/lua/plugins/disabled/lspconfig.lua.backup
+badd +0 nvim/lua/plugins/disabled/markdown-preview.lua
+badd +0 nvim/lua/plugins/disabled/barbar.lua
+badd +0 nvim/lua/plugins/disabled/fzf.lua
+badd +0 nvim/lua/plugins/colorscheme/catppuccin.lua
+badd +0 nvim/lua/plugins/util/copilot.lua
+badd +0 nvim/lua/plugins/util/telescope.lua
+badd +0 nvim/lua/plugins/util/neogit.lua
+badd +0 nvim/lua/plugins/util/yanky.lua
+badd +0 nvim/lua/plugins/util/refactoring.lua
+badd +0 nvim/lua/plugins/util/diffview.lua
+badd +0 nvim/lua/plugins/util/f-string-toggle.lua
+badd +0 nvim/lua/plugins/util/trouble.lua
+badd +0 nvim/lua/plugins/util/copilot-chat.lua
+badd +0 nvim/lua/plugins/util/lazygit.lua
+badd +0 nvim/lua/plugins/util/mini-nvim.lua
+badd +0 nvim/lua/plugins/util/auto-save.lua
+badd +0 nvim/lua/plugins/util/toggleterm.lua
+badd +0 nvim/lua/plugins/util/vimspector.lua
+badd +0 flake8
+badd +0 lazygit.yml
+badd +0 nvim/lua/plugins/util/which-key.lua
+badd +0 .zaliases
+badd +0 nvim/lua/user-diagnostics.lua
+badd +0 nvim/lua/plugins/util/pencil.lua
+badd +0 nvim/requirements.txt
+badd +0 nvim/lua/user-plugins.lua
+badd +0 nvim/lua/user-commands.lua
+badd +0 markdown-toc-config.json
+badd +0 nvim/spell/en.utf-8.add.spl
+badd +0 nvim/spell/en.utf-8.add
+badd +0 nvim/lua/plugins/core/core.lua
+badd +0 nvim/lua/plugins/ui/nvim-notify.lua
+badd +0 nvim/lua/plugins/ui/nvim-cursorline.lua
+badd +0 nvim/lua/plugins/ui/nvim-window.lua
+badd +0 vale/.vale.ini
+badd +0 nvim/lua/plugins/ui/marks.lua
+badd +0 nvim/lua/plugins/ui/indent-blankline.lua
+badd +0 nvim/lua/plugins/ui/gitsigns.lua
+badd +0 nvim/lua/plugins/ui/neo-tree.lua
+badd +0 nvim/lua/plugins/ui/lualine.lua
+badd +0 nvim/lua/plugins/ui/colorizer.lua
+badd +0 nvim/lua/plugins/ui/nvim-ufo.lua
+badd +0 vale/styles/Google/meta.json
+badd +0 vale/styles/Google/Acronyms.yml
+badd +0 vale/styles/Google/Semicolons.yml
+badd +0 vale/styles/Google/GenderBias.yml
+badd +0 vale/styles/Google/Spelling.yml
+badd +0 vale/styles/Google/FirstPerson.yml
+badd +0 vale/styles/Google/Contractions.yml
+badd +0 vale/styles/Google/Periods.yml
+badd +0 vale/styles/Google/Slang.yml
+badd +0 vale/styles/Google/OxfordComma.yml
+badd +0 vale/styles/Google/Will.yml
+badd +0 vale/styles/Google/vocab.txt
+badd +0 vale/styles/Google/Spacing.yml
+badd +0 vale/styles/Google/EmDash.yml
+badd +0 vale/styles/Google/DateFormat.yml
+badd +0 vale/styles/Google/Ranges.yml
+badd +0 vale/styles/Google/OptionalPlurals.yml
+badd +0 vale/styles/Google/Ellipses.yml
+badd +0 vale/styles/Google/Colons.yml
+badd +0 vale/styles/Google/Passive.yml
+badd +0 vale/styles/Google/LyHyphens.yml
+badd +0 vale/styles/Google/Ordinal.yml
+badd +0 vale/styles/Google/Quotes.yml
+badd +0 vale/styles/Google/Exclamation.yml
+badd +0 vale/styles/Google/Gender.yml
+badd +0 vale/styles/Google/Latin.yml
+badd +0 vale/styles/Google/Parens.yml
+badd +0 vale/styles/Google/We.yml
+badd +0 vale/styles/Google/Units.yml
+badd +0 vale/styles/Google/HeadingPunctuation.yml
+badd +0 vale/styles/Google/AMPM.yml
+badd +0 vale/styles/Google/Headings.yml
+badd +0 vale/styles/Google/WordList.yml
+badd +0 vale/styles/proselint/meta.json
+badd +0 vale/styles/proselint/GenderBias.yml
+badd +0 vale/styles/proselint/Spelling.yml
+badd +0 vale/styles/proselint/Cliches.yml
+badd +0 vale/styles/proselint/DateRedundancy.yml
+badd +0 vale/styles/proselint/DateCase.yml
+badd +0 vale/styles/proselint/Annotations.yml
+badd +0 vale/styles/proselint/Apologizing.yml
+badd +0 vale/styles/proselint/Archaisms.yml
+badd +0 vale/styles/proselint/Hedging.yml
+badd +0 vale/styles/proselint/Airlinese.yml
+badd +0 vale/styles/proselint/Very.yml
+badd +0 vale/styles/proselint/Oxymorons.yml
+badd +0 vale/styles/proselint/CorporateSpeak.yml
+badd +0 vale/styles/proselint/Skunked.yml
+badd +0 vale/styles/proselint/DateMidnight.yml
+badd +0 vale/styles/proselint/LGBTOffensive.yml
+badd +0 vale/styles/proselint/Typography.yml
+badd +0 vale/styles/proselint/README.md
+badd +0 vale/styles/proselint/Diacritical.yml
+badd +0 vale/styles/proselint/RASSyndrome.yml
+badd +0 vale/styles/proselint/Currency.yml
+badd +0 vale/styles/proselint/Hyperbole.yml
+badd +0 vale/styles/proselint/Cursing.yml
+badd +0 vale/styles/proselint/Uncomparables.yml
+badd +0 vale/styles/proselint/Malapropisms.yml
+badd +0 vale/styles/proselint/Needless.yml
+badd +0 vale/styles/proselint/Jargon.yml
+badd +0 vale/styles/proselint/But.yml
+badd +0 vale/styles/proselint/P-Value.yml
+badd +0 vale/styles/proselint/GroupTerms.yml
+badd +0 vale/styles/proselint/Nonwords.yml
+badd +0 vale/styles/proselint/AnimalLabels.yml
+badd +0 vale/styles/proselint/LGBTTerms.yml
+badd +0 vale/styles/proselint/DateSpacing.yml
+badd +0 vale/styles/proselint/DenizenLabels.yml
+badd +0 vale/styles/write-good/meta.json
+badd +0 vale/styles/write-good/Cliches.yml
+badd +0 vale/styles/write-good/README.md
+badd +0 vale/styles/write-good/So.yml
+badd +0 vale/styles/write-good/Illusions.yml
+badd +0 vale/styles/write-good/TooWordy.yml
+badd +0 vale/styles/write-good/Passive.yml
+badd +0 vale/styles/write-good/Weasel.yml
+badd +0 vale/styles/write-good/ThereIs.yml
+badd +0 vale/styles/write-good/E-Prime.yml
+badd +1 config/terminfo.md
+badd +0 terminfo/terminfo.md
+badd +1 terminfo/iterm2.terminfo
+badd +1 terminfo/tmux-256color.terminfo
+badd +0 terminfo/xterm256color.terminfo
+argglobal
+%argdel
+edit terminfo/iterm2.terminfo
+let s:save_splitbelow = &splitbelow
+let s:save_splitright = &splitright
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+wincmd _ | wincmd |
+vsplit
+2wincmd h
+wincmd w
+wincmd w
+let &splitbelow = s:save_splitbelow
+let &splitright = s:save_splitright
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+exe 'vert 1resize ' . ((&columns * 142 + 213) / 427)
+exe 'vert 2resize ' . ((&columns * 141 + 213) / 427)
+exe 'vert 3resize ' . ((&columns * 142 + 213) / 427)
+argglobal
+balt nvim/init.lua
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=99
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal nofoldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 1 - ((0 * winheight(0) + 31) / 63)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 1
+normal! 039|
+lcd ~/.dotfiles/config
+wincmd w
+argglobal
+if bufexists(fnamemodify("~/.dotfiles/config/terminfo/tmux-256color.terminfo", ":p")) | buffer ~/.dotfiles/config/terminfo/tmux-256color.terminfo | else | edit ~/.dotfiles/config/terminfo/tmux-256color.terminfo | endif
+if &buftype ==# 'terminal'
+  silent file ~/.dotfiles/config/terminfo/tmux-256color.terminfo
+endif
+balt ~/.dotfiles/config/terminfo/iterm2.terminfo
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=99
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal nofoldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 1 - ((0 * winheight(0) + 31) / 63)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 1
+normal! 0
+lcd ~/.dotfiles/config
+wincmd w
+argglobal
+if bufexists(fnamemodify("~/.dotfiles/config/terminfo/xterm256color.terminfo", ":p")) | buffer ~/.dotfiles/config/terminfo/xterm256color.terminfo | else | edit ~/.dotfiles/config/terminfo/xterm256color.terminfo | endif
+if &buftype ==# 'terminal'
+  silent file ~/.dotfiles/config/terminfo/xterm256color.terminfo
+endif
+balt ~/.dotfiles/config/terminfo/tmux-256color.terminfo
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=99
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal nofoldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 1 - ((0 * winheight(0) + 31) / 63)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 1
+normal! 0
+lcd ~/.dotfiles/config
+wincmd w
+exe 'vert 1resize ' . ((&columns * 142 + 213) / 427)
+exe 'vert 2resize ' . ((&columns * 141 + 213) / 427)
+exe 'vert 3resize ' . ((&columns * 142 + 213) / 427)
+tabnext 1
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20
+let &shortmess = s:shortmess_save
+let &winminheight = s:save_winminheight
+let &winminwidth = s:save_winminwidth
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if filereadable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &g:so = s:so_save | let &g:siso = s:siso_save
+let g:this_session = v:this_session
+let g:this_obsession = v:this_session
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

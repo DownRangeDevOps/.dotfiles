@@ -1,6 +1,7 @@
 -- ----------------------------------------------
 -- Core
 -- ----------------------------------------------
+vim.env.TERM = "iterm2"
 vim.env.EDITOR="nvr -cc split" -- prevent nested nvim instances
 vim.g.auto_save = true -- used by auto-save autocmd
 vim.g.netrw_altfile = 1
@@ -133,11 +134,24 @@ vim.o.foldenable = false
 -- vim.o.shell = vim.env.HOMEBREW_PREFIX .. "/bin/zsh"
 vim.g.shell = "zsh --login"
 vim.o.termguicolors = true
+
+-- Configure custom cursor styling for different modes in NeoVim.
+-- This setting defines how the cursor appears in various modes:
+--
+-- * "n-c-v-sm:block": Normal, Command-line, Visual, and Select modes use a block cursor.
+-- * "i-ci-ve:ver25": Insert, Command-line Insert, and Visual Exclusive modes use a vertical bar cursor (25% width).
+-- * "r-cr-o:hor20": Replace, Command-line Replace, and Operator-pending modes use a horizontal bar cursor (20% height).
+-- * "a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor": All modes use a blinking cursor with:
+--     * No initial delay (blinkwait0)
+--     * 500ms off time (blinkoff500)
+--     * 500ms on time (blinkon500)
+--     * Custom cursor shapes defined by "Cursor" and "lCursor" highlight groups.
+
 vim.o.guicursor = table.concat({
-    "n-c-v-sm:block",
-    "i-ci-ve:ver25",
-    "r-cr-o:hor20",
-    "a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor",
+    "n-c-v-sm:block", -- Block cursor for Normal, Command-line, Visual, and Select modes
+    "i-ci-ve:ver25",  -- Vertical bar cursor (25% width) for Insert, Command-line Insert, and Visual Exclusive modes
+    "r-cr-o:hor20",   -- Horizontal bar cursor (20% height) for Replace, Command-line Replace, and Operator-pending modes
+    "a:blinkwait0-blinkoff500-blinkon500-Cursor/lCursor", -- Blinking cursor with custom timing and highlight groups
 }, ",")
 
 -- ----------------------------------------------

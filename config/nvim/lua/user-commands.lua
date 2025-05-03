@@ -23,6 +23,8 @@ vim.api.nvim_create_user_command(
         end
 
         local res = handle:read("*a")
+        local files_found = #res
+
         handle:close()
 
         if res then
@@ -41,7 +43,7 @@ vim.api.nvim_create_user_command(
                 end
             end
 
-            vim.print("Project files loaded.")
+            vim.print(files_found .. " Project files loaded.")
         else
             vim.print("No files found.")
         end

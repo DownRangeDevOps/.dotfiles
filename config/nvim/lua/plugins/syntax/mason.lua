@@ -27,7 +27,7 @@ local mason_ensure_installed = {
   "jsonlint",
   "json-lsp",
   "lemminx",
-  "ltex-ls",
+  "ltex-ls-plus",
   "lua-language-server",
   "markdownlint-cli2",
   "marksman",

@@ -22,14 +22,16 @@ return {
             config = function()
                 -- Configure LuaSnip
                 local ls = require("luasnip")
+                local types = require("luasnip.util.types")
+                local ls_vs = require("luasnip.loaders.from_vscode")
 
                 -- Load friendly-snippets
                 require("luasnip.loaders.from_vscode").lazy_load()
 
                 -- DevOps-specific snippet extensions
-                ls.filetype_extend("terraform", {"hcl"})
-                ls.filetype_extend("yaml", {"kubernetes"})
-                ls.filetype_extend("go", {"golang"})
+                ls.filetype_extend("terraform", { "hcl" })
+                ls.filetype_extend("yaml", { "kubernetes" })
+                ls.filetype_extend("go", { "golang" })
 
                 -- Load your custom snippets
                 require("luasnip.loaders.from_vscode").lazy_load({
@@ -45,33 +47,30 @@ return {
         },
 
         -- LuaSnip completion source for snippet integration (https://github.com/saadparwaiz1/cmp_luasnip)
-        { "saadparwaiz1/cmp_luasnip", lazy = true, event = "InsertEnter" },
+        { "saadparwaiz1/cmp_luasnip",            lazy = true, event = "InsertEnter" },
 
         -- LSP and other base completion sources
-        { "hrsh7th/cmp-nvim-lsp", lazy = false }, -- LSP source for completions (https://github.com/hrsh7th/cmp-nvim-lsp)
-        { "hrsh7th/cmp-buffer", lazy = false }, -- Buffer words completion source (https://github.com/hrsh7th/cmp-buffer)
-        { "hrsh7th/cmp-path", lazy = false }, -- Filesystem path completion source (https://github.com/hrsh7th/cmp-path)
-        { "hrsh7th/cmp-cmdline", lazy = false }, -- Command-line completion source (https://github.com/hrsh7th/cmp-cmdline)
-        { "petertriho/cmp-git", lazy = false }, -- Git commit/issue completion source (https://github.com/petertriho/cmp-git)
+        { "hrsh7th/cmp-nvim-lsp",                lazy = false }, -- LSP source for completions (https://github.com/hrsh7th/cmp-nvim-lsp)
+        { "hrsh7th/cmp-buffer",                  lazy = false }, -- Buffer words completion source (https://github.com/hrsh7th/cmp-buffer)
+        { "hrsh7th/cmp-path",                    lazy = false }, -- Filesystem path completion source (https://github.com/hrsh7th/cmp-path)
+        { "hrsh7th/cmp-cmdline",                 lazy = false }, -- Command-line completion source (https://github.com/hrsh7th/cmp-cmdline)
+        { "petertriho/cmp-git",                  lazy = false }, -- Git commit/issue completion source (https://github.com/petertriho/cmp-git)
         { "hrsh7th/cmp-nvim-lsp-signature-help", lazy = false }, -- Function signature completion helper (https://github.com/hrsh7th/cmp-nvim-lsp-signature-help)
 
         -- Add Neovim Lua API completions (useful for modifying your config) (https://github.com/hrsh7th/cmp-nvim-lua)
-        { "hrsh7th/cmp-nvim-lua", lazy = true, ft = "lua" },
+        { "hrsh7th/cmp-nvim-lua",                lazy = true, ft = "lua" },
 
         -- Add tmux completions (good for Go imports and shell commands) (https://github.com/andersevenrud/cmp-tmux)
-        { "andersevenrud/cmp-tmux", lazy = true },
+        { "andersevenrud/cmp-tmux",              lazy = true },
 
         -- Add calculator (useful for quick calculations) (https://github.com/hrsh7th/cmp-calc)
-        { "hrsh7th/cmp-calc", lazy = true },
+        { "hrsh7th/cmp-calc",                    lazy = true },
 
         -- Add crates.io completions for Cargo.toml (https://github.com/saecki/crates.nvim)
         {
             "saecki/crates.nvim",
             lazy = true,
-            ft = {"rust", "toml"},
-            config = function()
-                require("crates").setup()
-            end,
+            ft = { "rust", "toml" },
         },
 
         -- Auto complete rule: Sort underscores last (https://github.com/lukas-reineke/cmp-under-comparator)
@@ -80,7 +79,7 @@ return {
         -- Copilot integration for AI completions (https://github.com/zbirenbaum/copilot-cmp)
         {
             "zbirenbaum/copilot-cmp",
-            config = function ()
+            config = function()
                 local conf = {
                     suggestion = { enabled = false },
                     panel = { enabled = false },
@@ -97,17 +96,9 @@ return {
         local luasnip = require("luasnip")
         local format = require("cmp_git.format")
         local sort = require("cmp_git.sort")
-        local has_words_before = function()
-            if vim.api.nvim_get_option_value("buftype", { scope = "local" }) == "prompt" then return false end
-
-            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-
-            return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
-        end
 
         luasnip.config.setup {}
 
-        ---@diagnostic disable `lua_ls` isn't recognizing optional params
         keymap.cmp = cmp.setup({
             revision = 0,
             enabled = true,
@@ -147,24 +138,25 @@ return {
 
             -- Better organized sources with group indices
             sources = {
-                { name = "nvim_lsp", group_index = 1 },
-                { name = "copilot", group_index = 1 },
+                { name = "nvim_lsp",                group_index = 1 },
+                { name = "copilot",                 group_index = 1 },
                 { name = 'nvim_lsp_signature_help', group_index = 1 },
-                { name = "nvim_lua", group_index = 1, ft = "lua" }, -- Neovim Lua API
-                { name = 'luasnip', group_index = 2 },
-                { name = "git", group_index = 2 },
-                { name = "crates", group_index = 2 }, -- Rust crates
-                { name = 'treesitter', group_index = 3 },
-                { name = "buffer", keyword_length = 3, group_index = 3 }, -- Only suggest after 3 chars
-                { name = "path", option = { trailing_slash = true }, group_index = 3 },
-                { name = "tmux", option = { all_panes = true }, group_index = 3 }, -- Tmux panes
-                { name = "calc", group_index = 3 }, -- Calculator
+                { name = "nvim_lua",                group_index = 1,                    ft = "lua" }, -- Neovim Lua API
+                { name = 'luasnip',                 group_index = 2 },
+                { name = "git",                     group_index = 2 },
+                { name = "crates",                  group_index = 2 },                                     -- Rust crates
+                { name = 'treesitter',              group_index = 3 },
+                { name = "buffer",                  keyword_length = 3,                 group_index = 3 }, -- Only suggest after 3 chars
+                { name = "path",                    option = { trailing_slash = true }, group_index = 3 },
+                { name = "tmux",                    option = { all_panes = true },      group_index = 3 }, -- Tmux panes
+                { name = "calc",                    group_index = 3 },                                     -- Calculator
             },
 
             -- Performance optimizations
+            ---@diagnostic disable-next-line: missing-fields
             performance = {
-                debounce = 50, -- Reduce source debounce time (default: 150ms)
-                throttle = 20, -- Source throttling (default: 30ms)
+                debounce = 50,          -- Reduce source debounce time (default: 150ms)
+                throttle = 20,          -- Source throttling (default: 30ms)
                 fetching_timeout = 150, -- Timeout for fetching (default: 500ms)
 
                 -- Configure buffer source to avoid lag with large buffers
@@ -223,7 +215,7 @@ return {
 
                     -- Add icons and source information
                     vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind] or "", vim_item.kind)
-                    vim_item.menu = source_names[entry.source.name] or "[" .. entry.source.name .. "]"
+                    vim_item.menu = source_names[entry.source.name] or ("[" .. entry.source.name .. "]")
 
                     -- Indicate if item is from Copilot
                     if entry.source.name == "copilot" then
@@ -238,7 +230,7 @@ return {
             -- Window styling
             window = {
                 completion = {
-                    winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+                    winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None,CursorLine:PmenuSel",
                     col_offset = -3,
                     side_padding = 0,
                 },
@@ -265,34 +257,35 @@ return {
                     select = false,
                 },
 
-            ["<Tab>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                elseif luasnip.expand_or_locally_jumpable() then
-                    luasnip.expand_or_jump()
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
+                ["<Tab>"] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+                    elseif luasnip.expand_or_locally_jumpable() then
+                        luasnip.expand_or_jump()
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
 
-            ["<S-Tab>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-                elseif luasnip.locally_jumpable(-1) then
-                    luasnip.jump(-1)
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
+                ["<S-Tab>"] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+                    elseif luasnip.locally_jumpable(-1) then
+                        luasnip.jump(-1)
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
             },
         })
 
         -- Git setup (keeping existing configuration)
+        ---@diagnostic disable-next-line: missing-fields
         require("cmp_git").setup({
             -- defaults
             filetypes = { "gitcommit", "octo" },
             remotes = { "upstream", "origin" }, -- in order of most to least prioritized
-            enableRemoteUrlRewrites = false, -- enable git url rewrites
+            enableRemoteUrlRewrites = false,    -- enable git url rewrites
             git = {
                 commits = {
                     limit = 100,
@@ -301,7 +294,7 @@ return {
                 },
             },
             github = {
-                hosts = {},  -- list of private instances of github
+                hosts = {}, -- list of private instances of github
                 issues = {
                     fields = { "title", "number", "body", "updatedAt", "state" },
                     filter = "all", -- assigned, created, mentioned, subscribed, all, repos
@@ -324,7 +317,7 @@ return {
                 },
             },
             gitlab = {
-                hosts = {},  -- list of private instances of gitlab
+                hosts = {}, -- list of private instances of gitlab
                 issues = {
                     limit = 100,
                     state = "opened", -- opened, closed, all
@@ -347,42 +340,26 @@ return {
                 {
                     debug_name = "git_commits",
                     trigger_character = ":",
-                    action = function(sources, trigger_char, callback, params, git_info)
+
+                    -- NOTE: Using underscore prefix to indicate intentionally unused parameter
+                    ---@diagnostic disable-next-line unused-local
+                    action = function(sources, trigger_char, callback, params, _git_info)
                         return sources.git:get_commits(callback, params, trigger_char)
-                    end,
-                },
-                {
-                    debug_name = "gitlab_issues",
-                    trigger_character = "#",
-                    action = function(sources, trigger_char, callback, params, git_info)
-                        return sources.gitlab:get_issues(callback, git_info, trigger_char)
-                    end,
-                },
-                {
-                    debug_name = "gitlab_mentions",
-                    trigger_character = "@",
-                    action = function(sources, trigger_char, callback, params, git_info)
-                        return sources.gitlab:get_mentions(callback, git_info, trigger_char)
-                    end,
-                },
-                {
-                    debug_name = "gitlab_mrs",
-                    trigger_character = "!",
-                    action = function(sources, trigger_char, callback, params, git_info)
-                        return sources.gitlab:get_merge_requests(callback, git_info, trigger_char)
                     end,
                 },
                 {
                     debug_name = "github_issues_and_pr",
                     trigger_character = "#",
-                    action = function(sources, trigger_char, callback, params, git_info)
+                    ---@diagnostic disable-next-line unused-local
+                    action = function(sources, trigger_char, callback, _params, git_info)
                         return sources.github:get_issues_and_prs(callback, git_info, trigger_char)
                     end,
                 },
                 {
                     debug_name = "github_mentions",
                     trigger_character = "@",
-                    action = function(sources, trigger_char, callback, params, git_info)
+                    ---@diagnostic disable-next-line unused-local
+                    action = function(sources, trigger_char, callback, _params, git_info)
                         return sources.github:get_mentions(callback, git_info, trigger_char)
                     end,
                 },
@@ -394,18 +371,18 @@ return {
             sources = cmp.config.sources({
                 { name = 'git' },
             }, {
-                    { name = 'buffer' },
-                })
+                { name = 'buffer' },
+            })
         })
 
         -- Terraform-specific setup
         cmp.setup.filetype('terraform', {
             sources = cmp.config.sources({
                 { name = "nvim_lsp", group_index = 1 },
-                { name = "copilot", group_index = 1 },
-                { name = 'luasnip', group_index = 2 },
-                { name = "buffer", keyword_length = 3, group_index = 3 },
-                { name = "path", group_index = 3 },
+                { name = "copilot",  group_index = 1 },
+                { name = 'luasnip',  group_index = 2 },
+                { name = "buffer",   keyword_length = 3, group_index = 3 },
+                { name = "path",     group_index = 3 },
             })
         })
 
@@ -413,10 +390,10 @@ return {
         cmp.setup.filetype('yaml', {
             sources = cmp.config.sources({
                 { name = "nvim_lsp", group_index = 1 },
-                { name = "copilot", group_index = 1 },
-                { name = 'luasnip', group_index = 2 },
-                { name = "buffer", keyword_length = 3, group_index = 3 },
-                { name = "path", group_index = 3 },
+                { name = "copilot",  group_index = 1 },
+                { name = 'luasnip',  group_index = 2 },
+                { name = "buffer",   keyword_length = 3, group_index = 3 },
+                { name = "path",     group_index = 3 },
             })
         })
 
@@ -424,16 +401,16 @@ return {
         cmp.setup.filetype('go', {
             sources = cmp.config.sources({
                 { name = "nvim_lsp", group_index = 1 },
-                { name = "copilot", group_index = 1 },
-                { name = 'luasnip', group_index = 2 },
-                { name = "buffer", keyword_length = 3, group_index = 3 },
-                { name = "path", group_index = 3 },
-                { name = "tmux", group_index = 3 }, -- Help with imports
+                { name = "copilot",  group_index = 1 },
+                { name = 'luasnip',  group_index = 2 },
+                { name = "buffer",   keyword_length = 3, group_index = 3 },
+                { name = "path",     group_index = 3 },
+                { name = "tmux",     group_index = 3 }, -- Help with imports
             })
         })
 
         -- `/`, `?` cmdline setup
-        cmp.setup.cmdline({"/", "?" }, {
+        cmp.setup.cmdline({ "/", "?" }, {
             mapping = cmp.mapping.preset.cmdline(),
             sources = {
                 { name = "buffer" }
@@ -444,8 +421,8 @@ return {
         cmp.setup.cmdline(":", {
             mapping = cmp.mapping.preset.cmdline(),
             sources = cmp.config.sources({
-                { name = "path" }
-            },
+                    { name = "path" }
+                },
                 {
                     {
                         name = "cmdline",

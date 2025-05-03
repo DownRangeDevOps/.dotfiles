@@ -11,14 +11,14 @@ return {
         },
         build = "make tiktoken",
         opts = {
-            auto_follow_cursor = false,                                         -- Auto-follow cursor in chat (Default: true)
-            highlight_selection = true,                                      -- Highlight selection in the source buffer when in the chat window
-            context = "buffers",                                                -- Default context to use, 'buffers', 'buffer' or none (can be specified manually in prompt via @).
+            auto_follow_cursor = false, -- Auto-follow cursor in chat (Default: true)
+            highlight_selection = true, -- Highlight selection in the source buffer when in the chat window
+            context = "buffers",        -- Default context to use, 'buffers', 'buffer' or none (can be specified manually in prompt via @).
 
             -- default selection (visual or line)
-            selection = function(source)
-                return select.visual(source) or select.line(source)
-            end,
+            -- selection = function(source)
+            --     return select.visual(source) or select.line(source)
+            -- end,
 
             -- prompts = {
             --     Explain = {
@@ -85,10 +85,10 @@ return {
                     normal = 'q',
                     insert = '<C-c>'
                 },
-                reset = {
-                    normal = '<C-c>',
-                    insert = '<C-c>'
-                },
+                -- reset = {
+                --     normal = '<C-c>',
+                --     insert = '<C-c>'
+                -- },
                 submit_prompt = {
                     normal = '<CR>',
                     insert = '<C-s>'
