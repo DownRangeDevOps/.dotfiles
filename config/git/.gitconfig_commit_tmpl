@@ -1,7 +1,21 @@
 ${SUBJECT}
 
 ${REFERENCE}
-
-# Git commit message references:
-#    * Conventional commits: https://www.conventionalcommits.org/en/v1.0.0/#summary
-#    * A note about git commit messages: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+#
+# Write clear, specific details about WHY this change is necessary
+# and any non-obvious implementation choices.
+#
+# Guidelines:
+# - Use [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary)
+# - Use imperative voice ("Add feature" not "Added feature")
+# - Separate subject from body with blank line
+# - Reference tickets and issues in the footer `[ticket]:https://example.com/ticket-123`
+# - Format commit messages to fit GitHub pull request fields:
+#   - Limit first line to 50 chars `type(scope): description [[ticket-123]]`
+#   - Wrap text at 72 chars
+#
+# Structure:
+# 1. What was changed? (already in subject)
+# 2. Why was it changed? (root cause/reason)
+# 3. How does it address the issue?
+# 4. What side effects might this change have?

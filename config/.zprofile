@@ -17,6 +17,7 @@ export DOTFILES_PREFIX="${HOME}/.dotfiles"
 export CONFIG_FILES_PREFIX="${DOTFILES_PREFIX}/config"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
+export VIM_SESSION_FILE=".session.vim"
 
 # Vale global config
 export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"

@@ -133,6 +133,16 @@ function mysqlpw() {
         '
 }
 
+function nvim() {
+    if [[ -f "${VIM_SESSION_FILE}" ]]; then
+        command nvim -S "${VIM_SESSION_FILE}" "$@"
+    elif [[ -f "./.session.vim" ]]; then
+        command nvim -S ./.session.vim "$@"
+    else
+        command nvim "$@"
+    fi
+}
+
 # ------------------------------------------------
 # bash.d
 # ------------------------------------------------

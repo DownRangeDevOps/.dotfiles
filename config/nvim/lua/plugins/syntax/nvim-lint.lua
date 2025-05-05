@@ -6,6 +6,7 @@
 --  2. mason-lspconfig.nvim
 --  3. LSP Servers via `nvim-lspconfig`
 -- ----------------------------------------------
+
 return {
     -- An asynchronous linter plugin for Neovim (https://github.com/mfussenegger/nvim-lint)
     -- :help lint
@@ -37,7 +38,13 @@ return {
             javascript       = { "eslint_d" },
             jinja            = { "djlint" },
             json             = { "jsonlint" },
-            markdown         = { "markdownlint-cli2", "vale" },
+            markdown         = {
+                {
+                    cmd = "markdownlint-cli2",
+                    args = { "--config", vim.fn.expand("~/.dotfiles/config/.markdownlint.yaml") },
+                },
+                "vale"
+            },
             python           = { "ruff", "mypy" },
             rst              = { "vale" },
             ruby             = { "rubocop" },

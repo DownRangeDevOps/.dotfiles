@@ -62,6 +62,7 @@ secring.*
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+.session.vim
 Session.vim
 Sessionx.vim
 .netrwhist
