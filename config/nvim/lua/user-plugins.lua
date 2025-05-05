@@ -2,11 +2,43 @@
 -- Install Lazy.nvim (https://github.com/folke/lazy.nvim)
 -- :help lazy.nvim-lazy.nvim-installation
 -- ----------------------------------------------
-local M = {}
+-- Globals file markers for `mini.misc` project root helpers
+MISC_PROJECT_MARKERS = {
+    ".git", -- Handles both repositories and worktrees
+
+    -- DevOps tools I commonly use
+    ".pre-commit-config.yaml",
+    ".tool-versions", -- asdf version manager
+
+    -- CI/CD
+    ".github/workflows",
+    ".gitlab-ci.yml",
+
+    -- Python projects
+    "pyproject.toml",
+    "poetry.lock",
+
+    -- Golang projects
+    "go.mod",
+}
+
+-- Global fallback function for `mini.misc` project root helpers
+function MISC_FALLBACK()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local current_file = vim.api.nvim_buf_get_name(bufnr)
+
+  -- If current buffer has no name, use current working directory
+  if current_file == "" then
+    return vim.fn.getcwd()
+  end
+
+  -- Otherwise return the directory of the current file
+  return vim.fn.fnamemodify(current_file, ":h")
+end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
         "git",
         "clone",
@@ -92,37 +124,3 @@ require("nvim-treesitter.install").prefer_git = true
 vim.g.EditorConfig_exclude_patterns = { "fugitive://.\\*", "scp://.\\*" }
 
 vim.lsp.set_log_level("off")
-
--- Globals file markers for `mini.misc` project root helpers
-MISC_PROJECT_MARKERS = {
-    ".git", -- Handles both repositories and worktrees
-
-    -- DevOps tools I commonly use
-    ".pre-commit-config.yaml",
-    ".tool-versions", -- asdf version manager
-
-    -- CI/CD
-    ".github/workflows",
-    ".gitlab-ci.yml",
-
-    -- Python projects
-    "pyproject.toml",
-    "poetry.lock",
-
-    -- Golang projects
-    "go.mod",
-}
-
--- Global fallback function for `mini.misc` project root helpers
-function MISC_FALLBACK()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local current_file = vim.api.nvim_buf_get_name(bufnr)
-
-  -- If current buffer has no name, use current working directory
-  if current_file == "" then
-    return vim.fn.getcwd()
-  end
-
-  -- Otherwise return the directory of the current file
-  return vim.fn.fnamemodify(current_file, ":h")
-end

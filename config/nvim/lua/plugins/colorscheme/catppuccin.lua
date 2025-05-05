@@ -46,6 +46,9 @@ return {
                     Normal = { bg = mocha.mantle },
                     Search = { fg = mocha.crust, bg = mocha.overlay2 },
 
+                    -- :help Pmenu, :help PmenuSel (Select menu highlighting)
+                    -- Pmenu
+
                     -- :help listcars
                     NonText = { fg = mocha.surface1 },
                     Whitespace = { fg = mocha.surface1 },
@@ -68,6 +71,29 @@ return {
 
                     -- Neotree
                     NeoTreeSymbolicLinkTarget = { fg = mocha.teal },
+
+                    -- Nvim-Notify
+                    NotifyERRORBorder = { fg = mocha.maroon },
+                    NotifyWARNBorder = { fg = mocha.yellow },
+                    NotifyINFOBorder = { fg = mocha.blue },
+                    NotifyDEBUGBorder = { fg = mocha.surface1 },
+                    NotifyTRACEBorder = { fg = mocha.pink },
+                    NotifyERRORIcon = { fg = mocha.red },
+                    NotifyWARNIcon = { fg = mocha.peach },
+                    NotifyINFOIcon = { fg = mocha.sapphire },
+                    NotifyDEBUGIcon = { fg = mocha.overlay0 },
+                    NotifyTRACEIcon = { fg = mocha.mauve },
+                    NotifyERRORTitle = { fg = mocha.red },
+                    NotifyWARNTitle = { fg = mocha.peach },
+                    NotifyINFOTitle = { fg = mocha.sapphire },
+                    NotifyDEBUGTitle = { fg = mocha.overlay0 },
+                    NotifyTRACETitle = { fg = mocha.mauve },
+                    NotifyERRORBody = { fg = mocha.text },
+                    NotifyWARNBody = { fg = mocha.text },
+                    NotifyINFOBody = { fg = mocha.text },
+                    NotifyDEBUGBody = { fg = mocha.text },
+                    NotifyTRACEBody = { fg = mocha.text },
+
                 }
             end,
         },

@@ -17,6 +17,7 @@ export DOTFILES_PREFIX="${HOME}/.dotfiles"
 export CONFIG_FILES_PREFIX="${DOTFILES_PREFIX}/config"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
+export VIM_SESSION_FILE=".session.vim"
 
 # Vale global config
 export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
@@ -58,10 +59,10 @@ safe_source "${CONFIG_FILES_PREFIX}/.zaliases"
 # Set key repeat settings
 # ------------------------------------------------
 # Set key repeat rate (lower = faster, 1 is fastest)
-defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain KeyRepeat -int 2
 
 # Set delay until repeat begins (lower = shorter delay, 10 is shortest)
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain InitialKeyRepeat -int 20
 
 # ------------------------------------------------
 # Symlink dofiles

@@ -1,4 +1,4 @@
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2296
 
 if [[ -n ${DEBUG:-} ]]; then
     log debug ""
@@ -182,8 +182,17 @@ function __git_diff_so_fancy_with_less() {
 }
 
 function __git_get_merged_branches() {
+    local protected_branches
+
+    # shellcheck disable=SC2206
+    protected_branches="$(gh api repos/:owner/:repo/branches |
+        jq -r '.[] |
+        select(.protected == true) |
+        .name' |
+        paste -sd '|' -)"
+
     git branch --all --merged "origin/$(__git_master_or_main)" |
-        "${HOMEBREW_PREFIX}/bin/rg" --invert-match "(\*|master|main|develop|release)" |
+        "${HOMEBREW_PREFIX}/bin/rg" --invert-match "(\*|${protected_branches})" |
         tr -d " "
 }
 
@@ -506,32 +515,118 @@ function git_commit_push() {
 
     $COMMAND
 }
-
+# -------------------------------
 # Utils
+# -------------------------------
+
+# Gets the closest protected branch that is a direct parent of the current branch
+# and returns its full remote ref (e.g., "origin/main")
 function git_get_branch_base_ref() {
-    local base
-    local main_sha
-    local head_sha
+    local remote_name="${1:-origin}"
+    local current_branch
+    local protected_branches
+    local branch_found=false
 
-    main_sha=$(git rev-parse "origin/$(__git_master_or_main)")
-    head_sha=$(git rev-parse HEAD)
+    # Get current branch name
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
 
-    local git_args=(
-        "for-each-ref"
-        "--sort=-committerdate"
-        "--format"
-        "%(refname:short)"
-        "--merged=HEAD"
-        "--contains"
-        "${main_sha}"
-        "--no-contains"
-        "${head_sha}"
-        "refs/remotes/origin/"
-    )
+    # Ensure we have the latest from remote
+    git fetch "$remote_name" &>/dev/null
 
-    base=$(git "${git_args[@]}" | grep -e "^origin/.*" | head -n 1)
+    # Get list of protected branches
+    protected_branches=$(gh api "repos/:owner/:repo/branches" |
+                         jq -r '.[] | select(.protected == true) | .name')
 
-    printf "%s\n" "${base}"
+    if [[ -z "$protected_branches" ]]; then
+        # Fallback to main/master if no protected branches found
+        protected_branches=$(__git_master_or_main)
+    fi
+
+    # Use git log to find the branch point
+    # First, create a list of all remote branch tips
+    local all_branch_tips
+    all_branch_tips=$(git for-each-ref --format="%(objectname)" "refs/remotes/$remote_name/*")
+
+    # Find the closest branch using git rev-list
+    for branch in $protected_branches; do
+        # Skip branches that don't exist on remote
+        if ! git rev-parse --verify --quiet "$remote_name/$branch" &>/dev/null; then
+            continue
+        fi
+
+        # Get the commit where the current branch diverged from this protected branch
+        local fork_point
+        fork_point=$(git rev-list -n1 "$(git rev-parse "$remote_name/$branch")" --boundary HEAD...^"$remote_name/$branch" |
+                     grep "^-" | cut -c2-)
+
+        if [[ -n "$fork_point" ]]; then
+            # Check if this fork point is the tip of the remote branch
+            local branch_tip
+            branch_tip=$(git rev-parse "$remote_name/$branch")
+
+            if echo "$fork_point" | grep -q "$branch_tip"; then
+                # This is a direct parent branch!
+                printf "%s\n" "$remote_name/$branch"
+                branch_found=true
+                break
+            else
+                # Check if any commit between the fork point and the branch tip is contained
+                # in our current branch - this indicates this is a parent
+                local contains_fork_point
+                contains_fork_point=$(git branch -r --contains "$fork_point" | grep "^[[:space:]]*$remote_name/$branch\$")
+
+                if [[ -n "$contains_fork_point" ]]; then
+                    printf "%s\n" "$remote_name/$branch"
+                    branch_found=true
+                    break
+                fi
+            fi
+        fi
+    done
+
+    # If no direct parent branch found, try a different approach - use branching history
+    if [[ "$branch_found" == "false" ]]; then
+        # Sort branches by commit time to find the most recent one that's an ancestor
+        for branch in $(for b in $protected_branches; do
+                           if git rev-parse --verify --quiet "$remote_name/$b" &>/dev/null; then
+                               git show -s --format="%ct $b" "$remote_name/$b"
+                           fi
+                        done | sort -nr | cut -d' ' -f2-); do
+
+            # Check if the branch is an ancestor of our current branch
+            if git merge-base --is-ancestor "$remote_name/$branch" HEAD 2>/dev/null; then
+                # This is the most recent ancestor branch
+                printf "%s\n" "$remote_name/$branch"
+                branch_found=true
+                break
+            fi
+        done
+    fi
+
+    # If still no branch found, fall back to default branch
+    if [[ "$branch_found" == "false" ]]; then
+        printf "%s\n" "$remote_name/$(__git_master_or_main)"
+    fi
+}
+
+# Get the SHA of the branch base reference
+function git_get_branch_base_sha() {
+    local base_ref
+    base_ref=$(git_get_branch_base_ref)
+
+    if [[ -n "$base_ref" ]]; then
+        git rev-parse "$base_ref"
+    fi
+}
+
+# Gets the SHA of the closest protected parent branch
+function git_get_branch_base_sha() {
+    local base_ref
+    base_ref=$(git_get_branch_base_ref)
+
+    if [[ -n "$base_ref" ]]; then
+        git rev-parse "$base_ref"
+    fi
 }
 
 function git_get_commits_by_this_branch() {
@@ -683,22 +778,15 @@ function git_delete_merged_branches() {
     git fetch --prune &>/dev/null
     git remote prune origin &>/dev/null
 
-    if [[ -n "${ZSH_VERSION}" ]]; then
-        local_branches=(${(f)"$(__git_get_merged_branches |
-            grep --extended-regexp --invert-match "^\s*remotes/origin/" |
-            grep --extended-regexp --invert-match "${cur_branch}")"})
+    # shellcheck disable=SC2206
+    local_branches=(${(f)"$(__git_get_merged_branches |
+        grep --extended-regexp --invert-match "^\s*remotes/origin/" |
+        grep --extended-regexp --invert-match "${cur_branch}")"})
 
-        remote_branches=(${(f)"$(__git_get_merged_branches |
-            grep --extended-regexp "^\s*remotes/origin/" |
-            sed --regexp-extended "s/^\s*remotes\/origin\///g")"})
-    else
-        readarray -t local_branches < <(__git_get_merged_branches |
-            grep --extended-regexp --invert-match "^\s*remotes/origin/")
-
-        readarray -t remote_branches < <(__git_get_merged_branches |
-            grep --extended-regexp "^\s*remotes/origin/" |
-            sed --regexp-extended "s/^\s*remotes\/origin\///g")
-    fi
+    # shellcheck disable=SC2206
+    remote_branches=(${(f)"$(__git_get_merged_branches |
+        grep --extended-regexp "^\s*remotes/origin/" |
+        sed --regexp-extended "s/^\s*remotes\/origin\///g")"})
 
     if [[ ${#local_branches[@]} -gt 0 || ${#remote_branches[@]} -gt 0 ]]; then
         printf_callout "Branches that have been merged to $(__git_master_or_main):"
