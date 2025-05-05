@@ -1,155 +1,430 @@
-#!/usr/bin/env bash
-# shellcheck disable=SC1091
+#!/usr/bin/env python3
+"""Git hook to prepare commit messages with conventional commit styling and ticket linking.
 
-# USAGE: git commit
+This prepare-commit-msg hook automatically formats your commit messages based on branch
+naming conventions and links them to your project tracking system. It extracts information
+from your current branch name, including commit type, scope, and ticket ID, then formats
+a proper conventional commit message.
+
+Functionality:
+    * Extracts commit type (feat, fix, etc.) and scope from branch name
+    * Identifies ticket IDs (like ABC-123) from branch name
+    * Formats subject line following conventional commit standards
+    * Adds Markdown reference links to project tracker tickets
+    * Automatically detects user initials if not specified
+    * Gracefully handles variations in branch naming
+
+Example branch names that will be parsed correctly:
+    * feature/ABC-123--add-new-login
+        → feat: Add new login [[ABC-123]]
+    * fix-ui/JRA-456--button-alignment
+        → fix(ui): Button alignment [[JRA-456]]
+    * rf/docs/update-readme
+        → docs: Update readme
+    * refactor/auth--jwt-implementation
+        → refactor: Jwt implementation
+    * ABC-789--security-fix
+        → Security fix [[ABC-789]]
+
+Environment variables:
+    * PROJECT_TRACKER_URL: Base URL for ticket links (e.g., "https://jira.company.com/browse")
+    * USER_INITIALS: Your initials (auto-detected from git config if not set)
+    * COMMIT_TYPES: Regex for valid commit types (defaults to conventional commit types)
+
+Installation:
+    1. Save this script as `.git/hooks/prepare-commit-msg` in your repository
+    2. Make it executable: `chmod +x .git/hooks/prepare-commit-msg`
+    3. Set up a commit template (see below)
+    4. Configure environment variables for your tracker
+"""
+
+import os
+import re
+import sys
+import logging
+import subprocess
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+
+# Configure logging
+logging.basicConfig(level=logging.WARNING, format='%(levelname)s: %(message)s')
+logger = logging.getLogger("prepare-commit-msg")
+
+
+def run_cmd(cmd: List[str]) -> str:
+    """Execute a shell command and return its output.
+
+    Args:
+        cmd: A list of command arguments to execute
+
+    Returns:
+        The command's standard output as a string, or empty string on error
+    """
+    try:
+        return subprocess.check_output(cmd, universal_newlines=True).strip()
+    except subprocess.CalledProcessError:
+        return ""
+    except Exception as e:
+        logger.error(f"Command execution error: {e}")
+        return ""
+
+
+def get_git_config(key: str) -> str:
+    """Retrieve a value from git config.
+
+    Args:
+        key: The git config key to retrieve
+
+    Returns:
+        The config value, or empty string if not set
+    """
+    return run_cmd(["git", "config", "--get", key])
+
+
+def get_current_branch() -> str:
+    """Get the name of the current git branch.
+
+    Returns:
+        The current branch name, or empty string if detection fails
+    """
+    return run_cmd(["git", "branch", "--show-current"])
+
+
+def get_commit_template_path() -> Optional[Path]:
+    """Locate the git commit template file.
+
+    Checks for commit.template in git config, then searches common locations.
+
+    Returns:
+        Path to the template file, or None if not found
+    """
+    try:
+        template_path = get_git_config("commit.template")
+        if template_path:
+            if template_path.startswith("~"):
+                template_path = os.path.expanduser(template_path)
+
+            path = Path(template_path)
+            if path.exists():
+                return path
+
+        # Search common locations
+        home = Path.home()
+        common_locations = [
+            home / ".git" / "commit-template",
+            home / ".config" / "git" / "commit-template",
+            home / ".dotfiles" / "git" / "commit-template",
+            Path(".git") / "commit-template"
+        ]
+
+        for loc in common_locations:
+            if loc.exists():
+                return loc
+
+        return None
+    except Exception as e:
+        logger.error(f"Error finding commit template: {e}")
+        return None
+
+
+def detect_user_initials() -> str:
+    """Attempt to extract user initials from git config.
+
+    Tries multiple strategies:
+    1. Extract from user.email (e.g., john.doe@company.com -> jd)
+    2. Extract from user.name (e.g., John Doe -> jd)
+    3. Use first two letters of email
+
+    Returns:
+        Detected initials or empty string if detection fails
+    """
+    user_initials = ""
+
+    try:
+        name = get_git_config("user.name")
+        if name:
+            # Use first letter of each word in name
+            parts = [word[0].lower() for word in name.split() if word]
+            return ''.join(parts[:2])  # Limit to first two initials
+
+        email = get_git_config("user.email")
+        if email:
+            # Try to match pattern like "first.last@domain.com"
+            match = re.match(r'^([a-z]).*\.([a-z])[^@]*@', email.lower())
+            if match:
+                return match.group(1) + match.group(2)
+
+            # Fallback to first two chars of email
+            return email[:2].lower()
+
+        return ""
+    except Exception as e:
+        logger.error(f"Error detecting user initials: {e}")
+        return ""
+
+
+def parse_branch_name(branch: str, user_initials: str, commit_types_pattern: str) -> Dict[str, str]:
+    """Extract meaningful components from a git branch name.
+
+    Parses branch name to identify type, scope, ticket ID, and subject.
+    Handles various formats of branch names with delimiters / and --.
+
+    Args:
+        branch: The branch name to parse
+        user_initials: User initials to filter out from branch name
+        commit_types_pattern: Regex pattern for commit types
+
+    Returns:
+        Dictionary with extracted type, scope, ticket_id, and subject
+    """
+    result = {
+        "type": "",
+        "scope": "",
+        "ticket_id": "",
+        "subject": ""
+    }
+
+    if not branch:
+        return result
+
+    try:
+        # Split by "/" and "--" to get branch components
+        parts = []
+        for part in branch.split("/"):
+            parts.extend(part.split("--"))
+
+        # Clean up parts
+        parts = [p.strip() for p in parts if p.strip()]
+        if not parts:
+            return result
+
+        # Extract commit type and scope
+        commit_types_regex = re.compile(commit_types_pattern, re.IGNORECASE)
+        for i, part in enumerate(parts):
+            match = commit_types_regex.match(part)
+            if match:
+                type_with_scope = part
+                type_scope_parts = type_with_scope.split("-", 1)
+                result["type"] = type_scope_parts[0]
+                if len(type_scope_parts) > 1:
+                    result["scope"] = type_scope_parts[1]
+                parts.pop(i)
+                break
+
+        # Special case: Common feature branch format "feature/..."
+        for i, part in enumerate(parts):
+            if part.lower() == "feature":
+                result["type"] = "feat"
+                parts.pop(i)
+                break
+
+        # Extract ticket ID
+        ticket_pattern = re.compile(r'[A-Za-z]+[0-9]*-[0-9]+')
+        for i, part in enumerate(parts):
+            match = ticket_pattern.search(part)
+            if match:
+                result["ticket_id"] = match.group(0)
+                if part == result["ticket_id"]:
+                    parts.pop(i)
+                break
+
+        # Remove user initials
+        if user_initials:
+            for i, part in enumerate(parts):
+                if part.lower() == user_initials.lower():
+                    parts.pop(i)
+                    break
+
+        # Format remaining parts as subject
+        subject = " ".join(parts)
+        subject = re.sub(r'-', ' ', subject)
+        if subject:
+            subject = subject[0].upper() + subject[1:]
+
+        result["subject"] = subject
+        return result
+    except Exception as e:
+        logger.error(f"Error parsing branch name: {e}")
+        return result
+
+
+def format_commit_subject(components: Dict[str, str]) -> str:
+    """Format a conventional commit subject line.
+
+    Creates a commit subject following conventional commit format:
+    type(scope): Subject [[Ticket-ID]]
+
+    Args:
+        components: Dictionary with type, scope, ticket_id, and subject
+
+    Returns:
+        Formatted commit subject line
+    """
+    try:
+        parts = []
+
+        # Add type(scope):
+        if components["type"]:
+            if components["scope"]:
+                parts.append(f"{components['type']}({components['scope']}):")
+            else:
+                parts.append(f"{components['type']}:")
+
+        # Add subject
+        if components["subject"]:
+            parts.append(components["subject"])
+
+        # Add ticket ID in double brackets
+        if components["ticket_id"]:
+            parts.append(f"[[{components['ticket_id']}]]")
+
+        return " ".join(parts)
+    except Exception as e:
+        logger.error(f"Error formatting commit subject: {e}")
+        return components.get("subject", "")
+
+
+def expand_template_variables(template_content: str, variables: Dict[str, str]) -> str:
+    """Replace placeholder variables in a template string.
+
+    Args:
+        template_content: Template string with ${VAR} placeholders
+        variables: Dictionary of variable names and values
+
+    Returns:
+        Template with variables replaced
+    """
+    try:
+        result = template_content
+        for key, value in variables.items():
+            placeholder = f"${{{key}}}"
+            result = result.replace(placeholder, value)
+        return result
+    except Exception as e:
+        logger.error(f"Error expanding template variables: {e}")
+        return template_content
+
+
+def create_default_template() -> str:
+    """Create a default commit message template.
+
+    Returns:
+        A commit message template with placeholders
+    """
+    return """${SUBJECT}
+
+${REFERENCE}
 #
-# SYNOPSIS:
-#       Parse the current git branch name and break it into parts on the
-#       delimiter "--". Use `envsubst` to replace the variables in SHELL_FORMAT
-#       contained in the current commit message template file
-#       (`commit.template`) and write the results to `$COMMIT_MSG_FILE`.
+# Write clear, specific details about WHY this change is necessary
+# and any non-obvious implementation choices.
 #
-# USAGE:
-#       Supported branch elements:
+# Guidelines:
+# - Use imperative mood ("Add feature" not "Added feature")
+# - Limit first line to 50 chars (type(scope): description [[ticket]])
+# - Wrap text at 72 chars
+# - Separate subject from body with blank line
+# - Reference tickets and issues in the footer
 #
-#       | element   | required     | format (leading)  | (trailing)           |
-#       | --------- | ------------ | ----------------- | ---------------------|
-#       | subject   | yes          | `subject`         | `.../subject`        |
-#       | initials  | no (removed) | `xx/...`          | `.../xx/...`         |
-#       | type      | no           | `type/...`        | `.../type/...`       |
-#       | scope     | no           | `type-scope/...`  | `.../type-scope/...` |
-#       | ticket id | no           | `ticket_id--...`  | `.../ticket_id--...` |
-#
-#       Supported change types (based on the Angular conventions:
-#       https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
-#
-#       * feat(ure): A new feature
-#       * fix: A bug fix
-#       * build: Changes that affect the build system or external dependencies
-#       * chore: A non-functional/non-logic change that doesn't change style (e.g. README update)
-#       * ci: Changes to our CI configuration files and scripts
-#       * docs: Documentation only changes
-#       * style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-#       * refactor: A code change that neither fixes a bug nor adds a feature
-#       * perf: A code change that improves performance without altering behavior
-#       * test: Adding missing tests or correcting existing tests
-#
-#       Examples:
-#
-#       <subject>
-#       <ticket-id>--<subject>
-#       <user-initials>/<subject>
-#       <user-initials>/<ticket-id>--<subject>
-#       <user-initials>/<issue-type>/<ticket-id>--<subject>
-#       <user-initials>/<issue-type>-<issue-scope>/<ticket-id>--<subject>
-#       <issue-type>/<user-initials>/<subject>
-#       <issue-type>-<issue-scope>/<user-initials>/<subject>
-#       <issue-type>/<user-initials>/<ticket-id>--<subject>
-#       <issue-type>-<issue-scope>/<user-initials>/<ticket-id>--<subject>
-#
-# OPTIONS:
-#       If `$PROJECT_TRACKER_URL` is set and <ticket-id> present:
-#           * A markdown reference link will be appended to the end of the commit message
-#           * [[<ticket-id>]] will be appended to <subject>
-#           * <ticket-id> in the commit message will be formatted as markdown
-#             links (e.g. [<ticket-id>])
+# Structure:
+# 1. What was changed? (already in subject)
+# 2. Why was it changed? (root cause/reason)
+# 3. How does it address the issue?
+# 4. What side effects might this change have?
+"""
 
-COMMIT_MSG_FILE=$1
-COMMIT_SOURCE=$2
-# SHA1=$3
 
-function search_arr() {
-    MATCH=""
+def main():
+    """Main entry point for the prepare-commit-msg hook."""
+    # Validate arguments
+    if len(sys.argv) < 2:
+        logger.error("Missing commit message file argument")
+        sys.exit(1)
 
-    local i=0
-    local grep_cmd=(
-        "grep"
-        "--extended-regexp"
-        "--ignore-case"
-        "--only-matching"
-    )
-    local pattern="$1"
-    shift
+    commit_msg_file = sys.argv[1]
+    commit_source = sys.argv[2] if len(sys.argv) > 2 else ""
 
-    for part in "$@"; do
-        if "${grep_cmd[@]}" "${pattern}" <<<"${part}" &>/dev/null; then
-            # match="${part}"
-            MATCH=${part}
-            unset "BRANCH_PARTS[$i]"
-            break
-        fi
+    # Only proceed if called from the template
+    if commit_source != "template":
+        sys.exit(0)
 
-        i=$((i + 1))
-    done
-}
+    # Get environment variables with defaults
+    default_commit_types = "^feat|^fix|^build|^chore|^ci|^docs|^style|^refactor|^perf|^test"
+    commit_types = os.environ.get("COMMIT_TYPES", default_commit_types)
 
-function parse() {
-    local branch_type
-    local branch_scope
-    local tmp
-    local ticket_id
+    try:
+        user_initials = get_git_config("hook.userInitials")
+    except Exception as e:
+        logger.error(f"Project tracker URL was not found in .gitconfig: {e}")
+        user_initials = os.environ.get("USER_INITIALS", detect_user_initials())
+        logger.info(f"Project tracker URL set to {user_initials}")
+        pass
 
-    search_arr "${COMMIT_TYPES}" "${BRANCH_PARTS[@]}"
-    BRANCH_PARTS=("${BRANCH_PARTS[@]}")
-    mapfile -t tmp < <(awk NF=NF FS="-" OFS="\n" <<<"${MATCH}")
-    branch_type="${tmp[0]:-}"
+    try:
+        project_tracker_url = get_git_config("hook.projectTrackerUrl")
+    except Exception as e:
+        logger.error(f"Project tracker URL was not found in .gitconfig: {e}")
+        project_tracker_url = os.environ.get("PROJECT_TRACKER_URL", "")
+        logger.info(f"Project tracker URL set to {project_tracker_url}")
+        pass
 
-    if [[ "${#tmp[@]}" -gt 1 ]]; then
-        branch_scope="${tmp[*]:1}"
-    else
-        branch_scope=""
-    fi
+    # Get current branch name
+    branch = os.environ.get("CUR_BRANCH", get_current_branch())
+    if not branch:
+        logger.warning("Could not determine current branch name")
+        sys.exit(0)
 
-    search_arr "[A-Za-z]+[0-9]*-[0-9]+" "${BRANCH_PARTS[@]}"
-    BRANCH_PARTS=("${BRANCH_PARTS[@]}")
-    ticket_id="${MATCH}"
+    # Parse branch name
+    components = parse_branch_name(branch, user_initials, commit_types)
 
-    # Remove user initials
-    search_arr "${USER_INITIALS}" "${BRANCH_PARTS[@]}"
-    BRANCH_PARTS=("${BRANCH_PARTS[@]}")
+    # Warn about missing project tracker URL if ticket ID is found
+    if components["ticket_id"] and not project_tracker_url:
+        logger.warning(
+            "Ticket ID found but `projectTrackerUrl` was not found in your "
+            "`.gitconfig` `[hook]` section nor was PROJECT_TRACKER_URL set in "
+            "your enviornment. Links will not be generated. Adjust your git "
+            "configuratioan or set the environment variable to enable ticket linking."
+        )
 
-    # Join the rest
-    branch_name="$(join " " "${BRANCH_PARTS[@]}")"
+    # Format subject line
+    subject = format_commit_subject(components)
 
-    local SUBJECT_PARTS=()
+    # Get template file
+    template_path = get_commit_template_path()
+    if not template_path:
+        logger.info("No commit template found, using default template")
+        template_content = create_default_template()
+    else:
+        try:
+            with open(template_path, 'r') as f:
+                template_content = f.read()
+        except Exception as e:
+            logger.warning(f"Failed to read template file: {e}")
+            template_content = create_default_template()
 
-    if [[ -n ${branch_type:-} && -n ${branch_scope:-} ]]; then
-        SUBJECT_PARTS+=("${branch_type}(${branch_scope}):")
-    elif [[ -n ${branch_type:-} ]]; then
-        SUBJECT_PARTS+=("${branch_type}:")
-    fi
+    # Prepare variables for substitution
+    variables = {"SUBJECT": subject, "REFERENCE": ""}
 
-    if [[ -n ${branch_name:-} ]]; then
-        SUBJECT_PARTS+=("$(sed -E "s/-/ /g" <<<"${branch_name^}")")
-    fi
+    # Add reference link if project tracker URL and ticket ID are available
+    if project_tracker_url and components["ticket_id"]:
+        # Remove trailing slash from URL if present
+        project_tracker_url = project_tracker_url.rstrip('/')
+        variables["REFERENCE"] = (
+            f"[{components['ticket_id']}]: "
+            f"{project_tracker_url}/{components['ticket_id']}"
+        )
 
-    if [[ -n ${ticket_id:-} ]]; then
-        SUBJECT_PARTS+=("[[${ticket_id}]]")
-    fi
+    # Replace variables in template
+    result = expand_template_variables(template_content, variables)
 
-    export SUBJECT="${SUBJECT_PARTS[*]}"
+    # Write to commit message file
+    try:
+        with open(commit_msg_file, 'w') as f:
+            f.write(result)
+    except Exception as e:
+        logger.error(f"Failed to write commit message: {e}")
+        sys.exit(1)
 
-    if [[ -n ${PROJECT_TRACKER_URL:-} && -n ${ticket_id:-} ]]; then
-        PROJECT_TRACKER_URL=$(sed -E 's/\/$//' <<<"${PROJECT_TRACKER_URL}")
-        export REFERENCE="[${ticket_id}]: ${PROJECT_TRACKER_URL}/${ticket_id}"
-        # shellcheck disable=SC2016  # literal expression intended
-        envsubst '${SUBJECT} ${REFERENCE}' <"${TEMPLATE_FILE}" >"${COMMIT_MSG_FILE}"
-    else
-        # shellcheck disable=SC2016  # literal expression intended
-        envsubst '${SUBJECT}' <"${TEMPLATE_FILE}" >"${COMMIT_MSG_FILE}"
-    fi
 
-    unset SUBJECT
-    unset REFERENCE
-}
-
-if [[ ${COMMIT_SOURCE} == "template" && -n "$(command -v envsubst)" ]]; then
-    source "${HOME}/.dotfiles/bash.d/lib.sh"
-    COMMIT_TYPES="${COMMIT_TYPES:-^feat|^fix|^build|^chore|^ci|^docs|^style|^refactor|^perf|^test}"
-    USER_INITIALS="${USER_INITIALS:-rf}"
-    CUR_BRANCH="${CUR_BRANCH:-$(git branch --show-current)}"
-    TEMPLATE_FILE="${HOME}/$(git config commit.template | sed -E "s/^~//")"
-    mapfile -t BRANCH_PARTS < <(awk NF=NF FS="/|--" OFS="\n" <<<"${CUR_BRANCH}")
-
-    parse
-fi
+if __name__ == "__main__":
+    main()
