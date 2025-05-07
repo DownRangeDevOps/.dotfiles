@@ -43,18 +43,21 @@ return {
                     cmd = "markdownlint-cli2",
                     args = { "--config", vim.fn.expand("~/.dotfiles/config/.markdownlint.yaml") },
                 },
-                "vale"
+                "vale",
             },
             python           = { "ruff", "mypy" },
-            rst              = { "vale" },
+            rst              = { "vale", },
             ruby             = { "rubocop" },
             sh               = { "shellcheck" },
             terraform        = { "tflint" },
-            tex              = { "vale" },
-            text             = { "vale" },
+            tex              = { "vale", },
+            text             = { "vale", },
             typescript       = { "eslint_d" },
             vim              = { "vint" },
-            yaml             = { "yamllint" },
+            yaml             = {
+                cmd = "yamllint",
+                args = { "--config-file", vim.fn.expand("~/.dotfiles/config/yamllint/config") },
+            },
             zsh              = { "shellcheck" },
         }
 

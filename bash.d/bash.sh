@@ -117,11 +117,11 @@ function rg() {
 }
 
 function markdownlint-cli2() {
-    command markdownlint-cli2 --config ~/.markdownlint.yaml "$@"
+    command markdownlint-cli2 "$@" --config "${HOME}/.markdownlint.yaml"
 }
 
 function yamlfix() {
-    command yamlfix --config-file ~/.yamlfix.toml "$@"
+    command yamlfix --config-file "${HOME}/.dotfiles/config/.yamlfix.toml" "$@"
 }
 
 # Generate password hash for MySQL

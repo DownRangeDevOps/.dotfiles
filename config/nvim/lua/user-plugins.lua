@@ -1,7 +1,3 @@
--- ----------------------------------------------
--- Install Lazy.nvim (https://github.com/folke/lazy.nvim)
--- :help lazy.nvim-lazy.nvim-installation
--- ----------------------------------------------
 -- Globals file markers for `mini.misc` project root helpers
 MISC_PROJECT_MARKERS = {
     ".git", -- Handles both repositories and worktrees
@@ -36,6 +32,10 @@ function MISC_FALLBACK()
   return vim.fn.fnamemodify(current_file, ":h")
 end
 
+-- ----------------------------------------------
+-- Install Lazy.nvim (https://github.com/folke/lazy.nvim)
+-- :help lazy.nvim-lazy.nvim-installation
+-- ----------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.uv.fs_stat(lazypath) then
