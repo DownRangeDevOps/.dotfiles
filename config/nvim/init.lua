@@ -123,6 +123,10 @@ vim.o.wrap = false
 vim.o.linebreak = true
 vim.o.breakindent = true
 
+-- Formatting
+vim.o.formatoptions = vim.o.formatoptions .. "n" -- Recognize numbered lists
+vim.o.formatlistpat = [[^\\s*\\d\\+[\\]:.)}\\t ]\\s*\\\|^\\s*[-*+]\\s\\+]]
+
 -- Folding (nvim-ufo)
 vim.o.foldcolumn = "1"
 vim.o.foldlevel = 99
