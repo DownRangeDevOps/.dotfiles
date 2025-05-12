@@ -103,19 +103,6 @@ if [[ -n "${DEBUG:-}" ]]; then
     log debug "[$(basename "$0")]: Configuring utils and loading util functions..."
 fi
 
-function rg() {
-    "${HOMEBREW_PREFIX}/bin/rg" \
-        --follow \
-        --hidden \
-        --no-config \
-        --smart-case \
-        --colors 'match:style:bold' \
-        --colors 'match:fg:205,214,244' \
-        --colors 'match:bg:62,87,103' \
-        --glob '!.git' \
-        "$@"
-}
-
 function markdownlint-cli2() {
     command markdownlint-cli2 "$@" --config "${HOME}/.markdownlint.yaml"
 }
