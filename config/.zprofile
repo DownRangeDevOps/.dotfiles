@@ -87,6 +87,7 @@ HOME_DOTFILES=(
     .default-gems
     .default-python-packages
     .editorconfig
+    .fdignore
     .gemrc
     .gitconfig
     .inputrc
@@ -110,8 +111,6 @@ for file in "${HOME_DOTFILES[@]}"; do
 done
 
 # Symlink config files and directories
-mkdir -p "${HOME}/.config/fd/" 1>/dev/null
-[[ ! -h "${HOME}/.config/fd/.fdignore" ]] && ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/.fdignore" "${HOME}/.config/fd/.fdignore"
 [[ ! -h "${HOME}/.config/nvim" ]] && ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/nvim" "${HOME}/.config/nvim"
 [[ ! -h "${HOME}/.config/yamllint" ]] && ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/yamllint" "${HOME}/.config/yamllint"
 
