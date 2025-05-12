@@ -18,6 +18,10 @@ export CONFIG_FILES_PREFIX="${DOTFILES_PREFIX}/config"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 export VIM_SESSION_FILE=".session.vim"
+PHYSICAL_CPUS=$(( $(sysctl -n hw.physicalcpu) - 2 ))
+LOGICAL_CPUS=$(( $(sysctl -n hw.logicalcpu) - 2 ))
+export PHYSICAL_CPUS
+export LOGICAL_CPUS
 
 # Vale global config
 export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
@@ -109,14 +113,66 @@ done
 export TERMINFO_DIRS="${HOME}/.terminfo:${TERMINFO_DIRS-/usr/share/terminfo}"
 
 # ------------------------------------------------
-# fzf Catppuccin theme
+# ripgrep
 # ------------------------------------------------
+export RIPGREP_CONFIG_PATH="$HOME/.dotfiles/config/.ripgreprc"
+
+# ------------------------------------------------
+# fzf
+# ------------------------------------------------
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+
+export FZF_DEFAULT_COMMAND="\
+    ${HOMEBREW_PREFIX}/bin/fd \
+    --hidden \
+    --follow \
+    --threads ${LOGICAL_CPUS} \
+    --exclude '.git' \
+    --exclue '.git' \
+    --exclue '.svn' \
+    --exclue '.hg' \
+    --exclue 'node_modules' \
+    --exclue 'vendor' \
+    --exclue '__pycache__' \
+    --exclue 'dist' \
+    --exclue 'build' \
+    --exclue 'target' \
+    --exclue 'bin' \
+    --exclue 'obj' \
+    --exclue '.vscode' \
+    --exclue '.idea' \
+    --exclue '.DS_Store' \
+    --exclue 'Thumbs.db' \
+    --exclue '*.tmp' \
+    --exclue '*.log' \
+    --exclue '*.swp' \
+    --exclue '*~' \
+    --exclue '*.pyc' \
+    --exclue '*.pyo' \
+    --exclue '*.egg-info/*' \
+    --exclue '.pytest_cache/*' \
+    --exclue '.tox/*' \
+    --exclue '.mypy_cache/*' \
+    --exclue '*.class' \
+    --exclue '.gradle/*' \
+    --exclue '.mvn/*' \
+    --exclue '*.min.js' \
+    --exclue '*.bundle.js' \
+    --exclue '.eslintcache' \
+    --exclue 'coverage/*' \
+    --exclue 'target/*' \
+    --exclue 'cargo.lock' \
+    --exclue 'go.sum' \
+    "
+
+# fzf Catppuccin theme
 export FZF_DEFAULT_OPTS=" \
---color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
---color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
---color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
---color=selected-bg:#45475a \
---color=border:#313244,label:#cdd6f4"
+    --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+    --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+    --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+    --color=selected-bg:#45475a \
+    --color=border:#313244,label:#cdd6f4"
 
 # ------------------------------------------------
 # Set up Virtualenv Wrapper

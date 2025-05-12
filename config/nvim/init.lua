@@ -14,18 +14,7 @@ vim.o.timeoutlen = 500
 vim.o.undofile = true
 vim.o.updatetime = 250
 
-vim.o.grepprg = table.concat({
-    "${HOMEBREW_PREFIX}/bin/rg",
-    " --follow",
-    " --hidden",
-    " --no-config",
-    " --smart-case",
-    " --colors 'match:style:bold'",
-    " --colors 'match:fg:205,214,244'",
-    " --colors 'match:bg:62,87,103'",
-    " --glob '!.git'",
-    " $@",
-}, ",")
+vim.o.grepprg = "${HOMEBREW_PREFIX}/bin/rg $@",
 
 vim.o.diffopt = table.concat({
     "filler",
