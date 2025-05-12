@@ -4,69 +4,70 @@
 # Include hidden files
 --hidden
 
+# Use all but two threads when running parallel jobs
+--threads "${LOGICAL_CPUS}"
+
 # Case insensitive search unless it contains capital letter(s)
 --smart-case
 
 # Highlight matches
---colors=match:style:bold
---colors=match:fg:205,214,244
---colors=match:bg:62,87,103
---colors=line:fg:166,227,161
---colors=path:fg:243,139,168
+--colors 'match:style:bold'
+--colors 'match:fg:205,214,244'
+--colors 'match:bg:62,87,103'
 
 # Ignore version control
---glob=!.git
---glob=!.svn
---glob=!.hg
+--glob='!.git'
+--glob='!.svn'
+--glob='!.hg'
 
 # Ignore Dependencies
---glob=!node_modules
---glob=!vendor
---glob=!__pycache__
+--glob='!node_modules'
+--glob='!vendor'
+--glob='!__pycache__'
 
 # Ignore Build output
---glob=!dist
---glob=!build
---glob=!target
---glob=!bin
---glob=!obj
+--glob='!dist'
+--glob='!build'
+--glob='!target'
+--glob='!bin'
+--glob='!obj'
 
 # Ignore IDE
---glob=!.vscode
---glob=!.idea
+--glob='!.vscode'
+--glob='!.idea'
 
 # Ignore OS files
---glob=!.DS_Store
---glob=!Thumbs.db
+--glob='!.DS_Store'
+--glob='!Thumbs.db'
 
 # Ignore Temporary files
---glob=!*.tmp
---glob=!*.log
---glob=!*.swp
---glob=!*~
+--glob='!*.tmp'
+--glob='!*.log'
+--glob='!*.swp'
+--glob='!*~'
 
 # Ignore Python auto-generated files and test/lint caches
---glob=!*.pyc
---glob=!*.pyo
---glob=!*.egg-info/*
---glob=!.pytest_cache/*
---glob=!.tox/*
---glob=!.mypy_cache/*
+--glob='!*.pyc'
+--glob='!*.pyo'
+--glob='!*.egg-info/*'
+--glob='!.pytest_cache/*'
+--glob='!.tox/*'
+--glob='!.mypy_cache/*'
 
 # Ignore Java compiled files and build system caches
---glob=!*.class
---glob=!.gradle/*
---glob=!.mvn/*
+--glob='!*.class'
+--glob='!.gradle/*'
+--glob='!.mvn/*'
 
 # Ignore JavaScript/TypeScript compiled/minified files and linter caches
---glob=!*.min.js
---glob=!*.bundle.js
---glob=!.eslintcache
---glob=!coverage/*
+--glob='!*.min.js'
+--glob='!*.bundle.js'
+--glob='!.eslintcache'
+--glob='!coverage/*'
 
 # Ignore Rust build output and auto-generated files
---glob=!target/*
---glob=!cargo.lock
+--glob='!target/*'
+--glob='!cargo.lock'
 
 # Ignore Go dependency checksum files
---glob=!go.sum
+--glob='!go.sum'

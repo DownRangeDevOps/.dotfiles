@@ -121,12 +121,18 @@ function mysqlpw() {
 }
 
 function nvim() {
-    if [[ -f "${VIM_SESSION_FILE}" ]]; then
-        command nvim -S "${VIM_SESSION_FILE}" "$@"
-    elif [[ -f "./.session.vim" ]]; then
-        command nvim -S ./.session.vim "$@"
+    if [[ "$1" == "--clear-session" ]]; then
+        rm -f ./.session.vim "${VIM_SESSION_FILE:-}"
+        shift
+        command nvim
     else
-        command nvim "$@"
+        if [[ -f "${VIM_SESSION_FILE}" ]]; then
+            command nvim -S "${VIM_SESSION_FILE}" "$@"
+        elif [[ -f "./.session.vim" ]]; then
+            command nvim -S ./.session.vim "$@"
+        else
+            command nvim "$@"
+        fi
     fi
 }
 
