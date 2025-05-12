@@ -16,7 +16,7 @@
 	repo = /Users/xjxf277/Grainger/work/model-serving/main
 	repo = /Users/xjxf277/Grainger/work/hackathon/danswer/main
 [hook]
-	projectTrackerUrl = https://jira.company.com/browse
+	projectTrackerUrl = https://grainger.atlassian.net/browse/
 	userInitials = rf
 
 # vi: ft=gitconfig

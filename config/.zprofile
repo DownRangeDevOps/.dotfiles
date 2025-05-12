@@ -23,6 +23,13 @@ export VIM_SESSION_FILE=".session.vim"
 export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
 export VALE_STYLES_PATH="${HOME}/.dotfiles/config/vale/styles"
 
+# Set default project tracker base URL
+if [[ "$(whoami)" == "xjxf277" ]]; then
+    export PROJECT_TRACKER_URL="https://grainger.atlassian.net/browse/"
+else
+    export PROJECT_TRACKER_URL="https://github.com/DownRangeDevOps/.dotfiles/issues/"
+fi
+
 # Reset path to always start fresh
 export PATH=""
 
