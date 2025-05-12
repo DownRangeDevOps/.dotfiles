@@ -14,7 +14,7 @@ vim.o.timeoutlen = 500
 vim.o.undofile = true
 vim.o.updatetime = 250
 
-vim.o.grepprg = "${HOMEBREW_PREFIX}/bin/rg $@",
+vim.o.grepprg = "${HOMEBREW_PREFIX}/bin/rg $@"
 
 vim.o.diffopt = table.concat({
     "filler",
