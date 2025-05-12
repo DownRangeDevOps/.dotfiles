@@ -1,6 +1,7 @@
 [General]
+allowMultipleGuiInstances=true
 autoCloseIdleDaemon=true
-buttons=@Variant(\0\0\0\x7f\0\0\0\vQList<int>\0\0\0\0\x16\0\0\0\0\0\0\0\x1\0\0\0\x2\0\0\0\x3\0\0\0\x4\0\0\0\x5\0\0\0\x6\0\0\0\x12\0\0\0\xf\0\0\0\x13\0\0\0\a\0\0\0\b\0\0\0\t\0\0\0\x10\0\0\0\n\0\0\0\v\0\0\0\r\0\0\0\x17\0\0\0\f\0\0\0\x11\0\0\0\x14\0\0\0\x15)
+buttons=@Variant(\0\0\0\x7f\0\0\0\vQList<int>\0\0\0\0\x10\0\0\0\0\0\0\0\x1\0\0\0\x2\0\0\0\x3\0\0\0\x4\0\0\0\x5\0\0\0\x6\0\0\0\x12\0\0\0\xf\0\0\0\a\0\0\0\t\0\0\0\x10\0\0\0\n\0\0\0\v\0\0\0\x17\0\0\0\f)
 contrastOpacity=127
 copyPathAfterSave=true
 drawColor=#ff00ff
@@ -10,4 +11,12 @@ saveAsFileExtension=png
 saveLastRegion=false
 savePath=/Users/xjxf277/Desktop/tmp
 savePathFixed=true
+showMagnifier=true
+showStartupLaunchMessage=false
 startupLaunch=true
+uploadClientSecret=f8baabdeb34fbb7
+userColors=picker, #ff0025, #40a02b, #1e66f5, #ffffff, #000000, #179299, #04a5e5, #7287fd, #b4befe, #cba6f7, #f38ba8, #11111b, #313244, #6c7086, #a6adc8, #c0c0c0
+
+[Shortcuts]
+SCREENSHOT_HISTORY=
+TAKE_SCREENSHOT=
