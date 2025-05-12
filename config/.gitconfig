@@ -97,6 +97,3 @@
 	version = 4
 [gc]
 	cruftPacks = true
-[maintenance "gc"]
-	enabled = true
-	schedule = weekly

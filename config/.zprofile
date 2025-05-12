@@ -83,11 +83,10 @@ if [[ -f "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/ln" ]]; then
     LN_ARGS+=(-r)
 fi
 
-HOME_DOTFILES=(
+DOTFILES=(
     .default-gems
     .default-python-packages
     .editorconfig
-    .fdignore
     .gemrc
     .gitconfig
     .inputrc
@@ -104,21 +103,8 @@ HOME_DOTFILES=(
     .zshrc
 )
 
-for file in "${HOME_DOTFILES[@]}"; do
-    if [[ ! -h "${HOME}/${file}" ]]; then
-        ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/${file}" "${HOME}/"
-    fi
-done
-
-# Symlink config files and directories
-[[ ! -h "${HOME}/.config/nvim" ]] && ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/nvim" "${HOME}/.config/nvim"
-[[ ! -h "${HOME}/.config/yamllint" ]] && ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/yamllint" "${HOME}/.config/yamllint"
-
-mkdir -p "${HOME}/.config/karabiner/assets/" 1>/dev/null
-for file in $(command ls "${HOME}/.dotfiles/config/karabiner"); do
-    if [[ ! -h "${HOME}/.config/karabiner/assets/complex_modifications/${file}" ]]; then
-        ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/karabiner/${file}" "${HOME}/.config/karabiner/assets/complex_modifications/${file}"
-    fi
+for file in "${DOTFILES[@]}"; do
+    ln "${LN_ARGS[@]}" "${HOME}/.dotfiles/config/${file}" "${HOME}/"
 done
 
 # ------------------------------------------------
@@ -130,9 +116,6 @@ export TERMINFO_DIRS="${HOME}/.terminfo:${TERMINFO_DIRS-/usr/share/terminfo}"
 # ripgrep
 # ------------------------------------------------
 export RIPGREP_CONFIG_PATH="$HOME/.dotfiles/config/.ripgreprc"
-function rg() {
-     "${HOMEBREW_PREFIX}/bin/rg" --threads="$(printf "%d" "${LOGICAL_CPUS}")" "$@"
-}
 
 # ------------------------------------------------
 # fzf
