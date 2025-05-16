@@ -1,0 +1,24 @@
+ {
+  "title": "Flameshot Screenshot Shortcut",
+  "rules": [
+    {
+      "description": "Cmd+Shift+S to take Flameshot screenshot",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "c",
+            "modifiers": {
+              "mandatory": ["control", "command", "shift"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "osascript -e 'tell application \"System Events\" to click menu bar item \"Flameshot\" of menu bar 1 of application process \"Flameshot\"' -e 'delay 0.1' -e 'tell application \"System Events\" to click menu item \"Take screenshot\" of menu 1 of menu bar item \"Flameshot\" of menu bar 1 of application process \"Flameshot\"'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

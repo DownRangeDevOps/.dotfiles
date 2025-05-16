@@ -19,3 +19,6 @@
 [submodule "external/aws-tools"]
 	path = external/aws-tools
 	url = git@github.com:dryoni/aws-tools.git
+[submodule "external/terraform-aws-win-python-ec2"]
+	path = external/terraform-aws-win-python-ec2
+	url = git@github.com:plus3it/terraform-aws-win-python-ec2.git
