@@ -7,8 +7,5 @@
 	auto = true
 	strategy = incremental
 	repo = /Users/xjxf277/.dotfiles
-[hook]
-	projectTrackerUrl = https://github.com/users/DownRangeDevOps/projects/1
-	userInitials = rf
 
 # vim: ft=gitconfig

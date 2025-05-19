@@ -3,6 +3,8 @@
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGNwmFMT1LMa0GpaJDSTwY57bTt4LBtbiMVqDfubS9WW
 [gpg "ssh"]
 	allowedSignersFile = ~/.dotfiles/config/git/.gitconfig-signers-grainger
+[url "ssh://git@github.com/wwg-internal/"]
+	insteadOf = https://github.com/wwg-internal/
 [hook]
 	projectTrackerUrl = https://grainger.atlassian.net/browse/
 	userInitials = rf

@@ -3,11 +3,11 @@
 -- ----------------------------------------------
 -- Open all project files in hidden buffers so that they are available to Copilot context
 local async = require("plenary.async")
+local notify = require("notify")
 
 vim.api.nvim_create_user_command(
     "LoadProjectFiles",
     async.void(function()
-
         -- Clear all hidden buffers first
         vim.cmd.WipeAllBuffers()
 
@@ -16,20 +16,41 @@ vim.api.nvim_create_user_command(
             return stat and stat.type == "file"
         end
 
-        local handle = io.popen("rg --files --hidden --max-filesize 1M --no-ignore-vcs --glob '!{.git,node_modules,dist}/**'")
+        local rg_cmd = table.concat({
+            vim.env.HOMEBREW_PREFIX .. "/bin/rg",
+            "--files",
+            "--hidden",
+            "--max-filesize=1M",
+            "--no-ignore-vcs",
+            "--glob='!{.git,node_modules,dist}/**'",
+            MiniMisc.find_root(0),
+        }, " ")
+
+        local handle, err = io.popen(rg_cmd)
+
         if not handle then
-            vim.print("Failed to execute rg command.")
+            notify(err or "Error", "error", {
+                title = "Failed to execute rg command."
+            })
             return
         end
 
         local res = handle:read("*a")
-        local files_found = #res
+
+        if not res then
+            notify(res or "No results", "error", {
+                title = "No results found"
+            })
+            return
+        end
 
         handle:close()
 
         if res then
             local buffers = vim.api.nvim_list_bufs()
             local loaded_files = {}
+            local loaded_files_count = 0
+
             for _, buf in ipairs(buffers) do
                 local buf_name = vim.api.nvim_buf_get_name(buf)
                 if buf_name ~= "" then
@@ -40,10 +61,11 @@ vim.api.nvim_create_user_command(
             for path in res:gmatch("[^\r\n]+") do
                 if path ~= "" and is_regular_file(path) and not loaded_files[path] then
                     vim.cmd.badd(path)
+                    loaded_files_count = loaded_files_count + 1
                 end
             end
 
-            vim.print(files_found .. " Project files loaded.")
+            vim.print(loaded_files_count .. " Project files loaded.")
         else
             vim.print("No files found.")
         end
@@ -80,13 +102,22 @@ vim.api.nvim_create_user_command(
         -- close all hidden buffers
         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
             if not visible[buf] then
-                if vim.api.nvim_get_option_value("buftype", { scope = "local" }) == "terminal" then
+                local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf }) or ""
+
+                if buftype == "terminal" then
                     vim.cmd("bw! " .. buf)
                 else
-                    vim.cmd.bw(buf)
+                    local _, _ = pcall(function()
+                        vim.api.nvim_buff_call(buf, function()
+                            vim.cmd("silent! write")
+                        end)
+                    end)
+
+                    vim.cmd("bw " .. buf)
                 end
-                count = count + 1
             end
+
+            count = count + 1
         end
         vim.print(count .. " hidden buffers have been closed")
     end,

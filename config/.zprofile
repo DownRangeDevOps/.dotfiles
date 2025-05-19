@@ -18,17 +18,26 @@ export CONFIG_FILES_PREFIX="${DOTFILES_PREFIX}/config"
 export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 export VIM_SESSION_FILE=".session.vim"
+
 PHYSICAL_CPUS=$(( $(sysctl -n hw.physicalcpu) - 2 ))
 LOGICAL_CPUS=$(( $(sysctl -n hw.logicalcpu) - 2 ))
 export PHYSICAL_CPUS
 export LOGICAL_CPUS
 
+CURRENT_USER="$(whoami)"
+export CURRENT_USER
+
 # Vale global config
 export VALE_CONFIG_PATH="${HOME}/.dotfiles/config/vale/.vale.ini"
 export VALE_STYLES_PATH="${HOME}/.dotfiles/config/vale/styles"
 
+# Go global config
+if [[ "${CURRENT_USER}" == "xjxf277" ]]; then
+    export GOPRIVATE=github.com/wwg-internal
+fi
+
 # Set default project tracker base URL
-if [[ "$(whoami)" == "xjxf277" ]]; then
+if [[ "${CURRENT_USER}" == "xjxf277" ]]; then
     export PROJECT_TRACKER_URL="https://grainger.atlassian.net/browse/"
 else
     export PROJECT_TRACKER_URL="https://github.com/DownRangeDevOps/.dotfiles/issues/"
@@ -83,7 +92,7 @@ if [[ -f "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin/ln" ]]; then
     LN_ARGS+=(-r)
 fi
 
-HOME_DOTFILES=(
+DOTFILES=(
     .default-gems
     .default-python-packages
     .editorconfig
@@ -130,9 +139,6 @@ export TERMINFO_DIRS="${HOME}/.terminfo:${TERMINFO_DIRS-/usr/share/terminfo}"
 # ripgrep
 # ------------------------------------------------
 export RIPGREP_CONFIG_PATH="$HOME/.dotfiles/config/.ripgreprc"
-function rg() {
-     "${HOMEBREW_PREFIX}/bin/rg" --threads="$(printf "%d" "${LOGICAL_CPUS}")" "$@"
-}
 
 # ------------------------------------------------
 # fzf
