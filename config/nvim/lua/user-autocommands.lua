@@ -324,6 +324,7 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
             local lint = require("lint")
 
             lint.linters.actionlint.args = { "-config-file", ".github/actionlint.yml" }
+            vim.diagnostic.reset()
             lint.try_lint("actionlint")
         end
     end
@@ -353,7 +354,9 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
         local filename = vim.api.nvim_buf_get_name(0)
 
         if modifiable and #filename > 0 then
-            require("lint").try_lint()
+            local lint = require("lint")
+
+            lint.try_lint()
         end
     end
 })

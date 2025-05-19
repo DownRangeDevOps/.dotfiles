@@ -5,6 +5,7 @@
 .mailmap
 .ssh/
 .tmuxinator/
+.terraform/
 app-settings/
 assets/
 backup/

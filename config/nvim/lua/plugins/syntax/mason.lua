@@ -17,6 +17,7 @@ local mason_ensure_installed = {
   "djlint",
   "docker-compose-language-service",
   "dockerfile-language-server",
+  "dotenv-linter",
   "eslint_d",
   "gitlint",
   "gopls",
@@ -34,6 +35,7 @@ local mason_ensure_installed = {
   "mypy",
   "neocmakelsp",
   "nginx-language-server",
+  "powershell-editor-services",
   "python-lsp-server",
   "revive",
   "rubocop",
@@ -58,8 +60,16 @@ return {
     -- :help mason.nvim
     "williamboman/mason.nvim",
     lazy = false,
-    config = true,
     priority = 3000,
+    opts = {
+        ui = {
+            icons = {
+                package_installed = "✓",
+                package_pending = "➜",
+                package_uninstalled = "✗"
+            }
+        }
+    },
     init = function()
         local registry = require("mason-registry")
         local installed_packages = registry.get_all_packages()
