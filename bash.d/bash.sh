@@ -125,14 +125,14 @@ function nvim() {
         rm -f ./.session.vim "${VIM_SESSION_FILE:-}"
         shift
         command nvim
-    else
+    elif [[ "$(__git_is_repo)" ]]; then
         if [[ -f "${VIM_SESSION_FILE}" ]]; then
             command nvim -S "${VIM_SESSION_FILE}" "$@"
         elif [[ -f "./.session.vim" ]]; then
             command nvim -S ./.session.vim "$@"
-        else
-            command nvim "$@"
         fi
+    else
+        command nvim "$@"
     fi
 }
 
