@@ -4,7 +4,6 @@ MISC_PROJECT_MARKERS = {
 
     -- DevOps tools I commonly use
     ".pre-commit-config.yaml",
-    ".tool-versions", -- asdf version manager
 
     -- CI/CD
     ".github/workflows",

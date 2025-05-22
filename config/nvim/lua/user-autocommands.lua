@@ -11,7 +11,7 @@ local easy_quit_group = vim.api.nvim_create_augroup("EasyQuit", { clear = true }
 -- ----------------------------------------------
 -- Neovim
 -- ----------------------------------------------
--- Always create and use a session file in the local directory
+-- Create and use a session file project root
 vim.api.nvim_create_autocmd("VimEnter", {
     group = nvim,
     pattern = "*",
@@ -19,34 +19,32 @@ vim.api.nvim_create_autocmd("VimEnter", {
         -- Maximize window height on start (happens, probably a toggle term issue)
         vim.cmd.wincmd("_")
 
-        -- Helper to get the project root
-        local function get_git_or_cwd()
-            local git_root = vim.fn.systemlist("git rev-parse --show-toplevel 2>/dev/null")[1]
-            if git_root and git_root ~= "" then
-                return git_root
-            else
-                return vim.fn.getcwd()
-            end
+        -- Create or use session file if we're in a git project
+        local is_git_project = function()
+            return vim.fn.system('git rev-parse --show-toplevel &>/dev/null; printf "%s" "$?"') == "0"
         end
 
         local session_file_name = vim.env.VIM_SESSION_FILE or ".session.vim"
-        local project_root = get_git_or_cwd()
+        local project_root = MiniMisc.find_root()
 
-        -- Helper to create session file
-        local function ensure_session_file_exists()
-            local full_session_path = project_root .. "/" .. session_file_name
+        if is_git_project then
 
-            if vim.fn.filereadable(full_session_path) == 0 then
-                vim.fn.writefile({}, full_session_path)
+            -- Helper to create session file
+            local function ensure_session_file_exists()
+                local full_session_path = project_root .. "/" .. session_file_name
+
+                if vim.fn.filereadable(full_session_path) == 0 then
+                    vim.fn.writefile({}, full_session_path)
+                end
+
+                return full_session_path
             end
 
-            return full_session_path
+            local session_path = ensure_session_file_exists()
+
+            -- Use or create session with Obsession
+            vim.cmd("silent Obsession " .. session_path)
         end
-
-        local session_path = ensure_session_file_exists()
-
-        -- Use or create session with Obsession
-        vim.cmd("silent Obsession " .. session_path)
     end
 })
 
