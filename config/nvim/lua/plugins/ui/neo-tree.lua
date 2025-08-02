@@ -66,11 +66,11 @@ return {
                 expand_node = function(state)
                     local origin_file = vim.fn.getreg("#")
 
-                    state.commands["open"](state)
-
-                    if origin_file ~= "" then
+                    if origin_file ~= "" and vim.fn.bufexists(origin_file) == 1 then
                         vim.fn.setreg("#", origin_file)
                     end
+
+                    state.commands["open"](state)
                 end,
             },
             window = {
