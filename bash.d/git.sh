@@ -519,94 +519,50 @@ function git_commit_push() {
 # Utils
 # -------------------------------
 
-# Gets the closest protected branch that is a direct parent of the current branch
-# and returns its full remote ref (e.g., "origin/main")
+# Gets the closest branch that is a direct parent of the current branch and
+# exists on `origin`. Then returns its full remote ref (e.g., "origin/main")
 function git_get_branch_base_ref() {
     local remote_name="${1:-origin}"
     local current_branch
-    local protected_branches
-    local branch_found=false
+    local remote_branches
+    local base_ref=""
+    local main_branch
+    local closest_branch=""
+    local closest_distance=999999
+    local branch
+    local merge_base
+    local branch_tip
+    local distance
 
-    # Get current branch name
     current_branch=$(git rev-parse --abbrev-ref HEAD)
-
-    # Ensure we have the latest from remote
     git fetch "$remote_name" &>/dev/null
 
-    # Get list of protected branches
-    protected_branches=$(gh api "repos/:owner/:repo/branches" |
-                         jq -r '.[] | select(.protected == true) | .name')
-
-    if [[ -z "$protected_branches" ]]; then
-        # Fallback to main/master if no protected branches found
-        protected_branches=$(__git_master_or_main)
-    fi
-
-    # Use git log to find the branch point
-    # First, create a list of all remote branch tips
-    local all_branch_tips
-    all_branch_tips=$(git for-each-ref --format="%(objectname)" "refs/remotes/$remote_name/*")
-
-    # Find the closest branch using git rev-list
-    for branch in $protected_branches; do
-        # Skip branches that don't exist on remote
-        if ! git rev-parse --verify --quiet "$remote_name/$branch" &>/dev/null; then
+    # Get remote branches, filter out HEAD and invalid names
+    remote_branches=$(git branch -r | grep "^  $remote_name/" | grep -v "^  $remote_name/$current_branch$" | sed "s/^  //")
+    while IFS= read -r branch; do
+        # Skip invalid branch names
+        if [[ "$branch" =~ [[:space:]:\'\"] ]]; then
             continue
         fi
-
-        # Get the commit where the current branch diverged from this protected branch
-        local fork_point
-        fork_point=$(git rev-list -n1 "$(git rev-parse "$remote_name/$branch")" --boundary HEAD...^"$remote_name/$branch" |
-                     grep "^-" | cut -c2-)
-
-        if [[ -n "$fork_point" ]]; then
-            # Check if this fork point is the tip of the remote branch
-            local branch_tip
-            branch_tip=$(git rev-parse "$remote_name/$branch")
-
-            if echo "$fork_point" | grep -q "$branch_tip"; then
-                # This is a direct parent branch!
-                printf "%s\n" "$remote_name/$branch"
-                branch_found=true
-                break
-            else
-                # Check if any commit between the fork point and the branch tip is contained
-                # in our current branch - this indicates this is a parent
-                local contains_fork_point
-                contains_fork_point=$(git branch -r --contains "$fork_point" | grep "^[[:space:]]*$remote_name/$branch\$")
-
-                if [[ -n "$contains_fork_point" ]]; then
-                    printf "%s\n" "$remote_name/$branch"
-                    branch_found=true
-                    break
-                fi
+        branch_tip=$(git rev-parse "$branch" 2>/dev/null) || continue
+        merge_base=$(git merge-base "$branch_tip" HEAD 2>/dev/null) || continue
+        if [[ "$merge_base" == "$branch_tip" ]]; then
+            distance=$(git rev-list --count "${merge_base}..HEAD")
+            if [[ $distance -lt $closest_distance ]]; then
+                closest_distance=$distance
+                closest_branch="$branch"
             fi
         fi
-    done
+    done <<< "$remote_branches"
 
-    # If no direct parent branch found, try a different approach - use branching history
-    if [[ "$branch_found" == "false" ]]; then
-        # Sort branches by commit time to find the most recent one that's an ancestor
-        for branch in $(for b in $protected_branches; do
-                           if git rev-parse --verify --quiet "$remote_name/$b" &>/dev/null; then
-                               git show -s --format="%ct $b" "$remote_name/$b"
-                           fi
-                        done | sort -nr | cut -d' ' -f2-); do
-
-            # Check if the branch is an ancestor of our current branch
-            if git merge-base --is-ancestor "$remote_name/$branch" HEAD 2>/dev/null; then
-                # This is the most recent ancestor branch
-                printf "%s\n" "$remote_name/$branch"
-                branch_found=true
-                break
-            fi
-        done
+    if [[ -n "$closest_branch" ]]; then
+        base_ref="$closest_branch"
+    else
+        main_branch="$(__git_master_or_main)"
+        base_ref="$remote_name/$main_branch"
     fi
 
-    # If still no branch found, fall back to default branch
-    if [[ "$branch_found" == "false" ]]; then
-        printf "%s\n" "$remote_name/$(__git_master_or_main)"
-    fi
+    printf "%s\n" "$base_ref"
 }
 
 # Get the SHA of the branch base reference

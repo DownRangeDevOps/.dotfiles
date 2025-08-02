@@ -1,78 +1,70 @@
 # shellcheck shell=bash
 
-function ghpr() {
-    local options="uc"
-    local long_options="update,check"
-    local title
-    local base
-    local base_args=()
-    local args=()
-    local tmpfile
-    local check
+function gh_pr() {
+    local origin_base_branch
+    local local_base_branch
+    local first_commit_subject
+    local pr_title
+    local args
+    local git_push_cmd
 
-    tmpfile="$(mktemp)"
+    git fetch --prune
 
-    glc --print >|"${tmpfile}"
+    git push "$(git config --default origin --get clone.defaultRemoteName)" \
+        --set-upstream \
+        --force-with-lease \
+        HEAD
 
-    base=$(git_get_branch_base_ref | sed -E "s/^origin\///")
-    title="$(git log --reverse --format='%s' "${base}"..HEAD | head -1)"
+    git fetch --prune
 
-    if [[ -n "${CODEOWNERS:-}" ]]; then
-        args+=("--add-assignee" "${CODEOWNERS}")
-    fi
+    printf "\n"
+    printf_callout "Setting the origin base branch."
+    origin_base_branch=$(git_get_branch_base_ref)
+    printf "%s\n\n" "Origin base branch: ${origin_base_branch}" | indent_output
 
-    base_args=(
+    printf_callout "Setting the local base branch."
+    local_base_branch=$(sed -E "s,^origin/,," <<< "${origin_base_branch}")
+    printf "%s\n\n" "Local base branch: ${local_base_branch}" | indent_output
+
+    printf_callout "Getting subject of the first commit of this branch."
+    first_commit_subject="$(git log --reverse --format='%s' "${origin_base_branch}..HEAD" | head -1)"
+
+    printf_callout "Creating the PR title."
+    pr_title=$(sed -E "s/\[\[/[/" <<<"${first_commit_subject}" | sed -E "s/\]\]/]/")
+    printf "%s\n\n" "PR title: ${pr_title}" | indent_output
+
+    pr_body_file="$(mktemp -p /tmp)"
+
+    printf_callout "Outputting PR body content to tempfile."
+    git_log_copy --print >| "${pr_body_file}"
+    printf "%s\n" "PR body:" | indent_output
+    indent_output < "${pr_body_file}"
+    printf "\n"
+
+    args=(
         "--title"
-        "'${title}'"
+        "${pr_title}"
         "--body-file"
-        "${tmpfile}"
-        "--base"
-        "${base}"
+        "${pr_body_file}"
     )
 
-    if [[ $# -ne 0 ]]; then
-        # Parse options
-        parsed=$(parse_opts "${options}" "${long_options}" "$0" "$@")
-        eval set -- "${parsed}"
-
-        while true; do
-            case "${1:-}" in
-            -u | --update)
-                args=("pr" "edit" "${base_args[@]}")
-                shift
-                ;;
-            -c | --check)
-                check="true"
-                args=(
-                    "Body:"
-                    "$(<"${tmpfile}")"
-                    ""
-                    "Command:"
-                    "${base_args[*]}"
-                )
-                shift
-                ;;
-            --)
-                shift
-                break
-                ;;
-            *)
-                printf_error "Unknown option: ${1}"
-                break
-                ;;
-            esac
-        done
+    if [[ "$(gh_check_for_pr)" == "true" ]]; then
+        printf "\n"
+        printf_callout "Updating pull request..."
+        gh pr edit "${args[@]}"
     else
-        args=("pr" "create" "${base_args[@]}")
+        printf "\n"
+        printf_callout "Creating pull request..."
+
+        args+=(
+            "--base"
+            "${local_base_branch}"
+        )
+
+        gh pr create "${args[@]}"
     fi
 
-    if [[ -n ${check:-} ]]; then
-        printf "%s\n" "${args[@]}"
-    else
-        gh "${args[@]}"
-    fi
-
-    rm -rf "${tmpfile}"
+    rm -f "${pr_body_file}"
 }
 
 # function gh() {
