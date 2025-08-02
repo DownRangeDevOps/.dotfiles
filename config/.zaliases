@@ -2,6 +2,13 @@
 #  general
 # ------------------------------------------------
 alias fabric="fabric-ai"
+# alias rg="\
+#     rg \
+#     --threads $(( $(sysctl -n hw.logicalcpu) - 2 )) \
+#     --colors 'match:style:bold' \
+#     --colors 'match:fg:205,214,244' \
+#     --colors 'match:bg:62,87,103' \
+# "
 
 # ------------------------------------------------
 #  bash
