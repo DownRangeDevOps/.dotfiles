@@ -19,11 +19,6 @@ export BASH_D_PATH="${DOTFILES_PREFIX}/bash.d"
 export PATH="${DOTFILES_PREFIX}/bin:${PATH}" # my bins
 export VIM_SESSION_FILE=".session.vim"
 
-PHYSICAL_CPUS=$(( $(sysctl -n hw.physicalcpu) - 2 ))
-LOGICAL_CPUS=$(( $(sysctl -n hw.logicalcpu) - 2 ))
-export PHYSICAL_CPUS
-export LOGICAL_CPUS
-
 CURRENT_USER="$(whoami)"
 export CURRENT_USER
 
